@@ -46,7 +46,7 @@ class LiveRoom(models.Model):
     creater = models.ForeignKey(User, default = get_User)#no need to CASCADE when user get deleted ,right?
     audience_amount = models.PositiveIntegerField(default = 0)#present live audience amount if is_living = True else total amount
     is_living = models.BooleanField(default = True)
-    create_time = models.DateTimeField(default= timezone.now)
+    create_time = models.DateTimeField(auto_now_add = True)
     end_time = models.DateTimeField(null = True,blank = True) # identified whether it's A Live or not by whether end_time is null
     slide_path = models.FileField(upload_to = get_file_path ,default = 'default')
     thumbnail_path = models.FileField(upload_to = get_file_path, default = 'default_thumbnail.jpg')

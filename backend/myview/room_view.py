@@ -1,7 +1,6 @@
 from django.http import HttpResponse
 from django.utils import timezone # put it into toolkits?
 from backend.models import User,LiveRoom,Punishment
-from backend.models import LiveRoom
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
