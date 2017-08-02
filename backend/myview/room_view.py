@@ -35,16 +35,18 @@ def endRoom(request):
     #room = request.session['room']
     session_user = { 'id': 1 }
     session_room = { 'id': 1 }
-    #request.session['user'] = session_user
+    request.session['user'] = session_user
     request.session['room'] = session_room
     if('user' in request.session):
+        user = request.session['user']
         if('room' in request.session):
             rooms = LiveRoom.objects.filter(id = session_room['id'])
             if(len(rooms) > 0):
                 room = rooms[0]
                 if(room.creater_id == user['id']):#creater_id : a way to save one query.  must end it by the creater !
-                    room.end_time = timezone.now
+                    room.end_time = timezone.now()
                     room.is_living = False
+                    room.save()
                     LOG("CQX-room_view.endRoom" , "Room: " + str(room.id) +"has been closed")
                     return HttpResponse(CODE['0'])
                 else:
