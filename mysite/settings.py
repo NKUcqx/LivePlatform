@@ -128,3 +128,14 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR,'frontend/dist/static'),
 ]
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'files/')
+MEDIA_URL = '/files/' #这个是在浏览器上访问该上传文件的url的前缀
+
+AUTH_USER_MODEL = "backend.User"
+
+EMAIL_HOST = 'smtp.163.com'
+EMAIL_HOST_USER = '15302178925@163.com'
+EMAIL_HOST_PASSWORD = 'a1511490'
+EMAIL_USE_TLS = True
+EMAIL_PORT= 25

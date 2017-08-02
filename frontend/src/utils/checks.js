@@ -10,6 +10,49 @@ export const checkSpecialChar = (str) => {
     return true
 }
 
+export const checkObjLegal = (obj) => {
+	for(item in obj) {
+		if(Object.prototype.toString.call(item) === "[object String]"){
+			if(item === '' || !checkSpecialChar(item)){
+				return false
+			}
+		}
+	}
+	return true
+}
+
+export const checkPassword = (rule, value, callback, rePass, obj, rePassProp) => {
+	if (value === '') {
+        callback(new Error('please input password'))
+    } else {
+        if (rePass !== '') {
+            // 对第二个密码框单独验证
+            obj.validateField(rePassProp)
+        }
+        callback()
+    }
+}
+
+export const checkRePassword = (rule, value, callback, password) => {
+	if (value === '') {
+        callback(new Error('please repeat password'))
+    } else if (value !== password) {
+        callback(new Error('not same as before'))
+    } else {
+        callback()
+    }
+}
+
+export const checkVerification = (rule, value, callback, code) => {
+	if(code === '' || value.toString().toLowerCase() !== code.toString().toLowerCase()){
+        callback(new Error('verification error'))    
+    }
+    else{
+        callback()
+    }
+}
+
+
 export default {
   checkSpecialChar,
 }

@@ -25,6 +25,10 @@ export const beforePost = (request) => {
  }
 } 
 
+export const countDown = (time) => {
+
+}
+
 export default {
   beforePost,
 }
