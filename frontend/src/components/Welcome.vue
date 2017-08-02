@@ -56,24 +56,6 @@ export default {
 </script>
 
 <style scoped>
-/*#welcome {
-	height: 732px;
-	background-repeat: no-repeat;
-	background-image: url("../assets/bg1.jpg");
-	border:1px solid white;
-}
-p{
-	color: white;
-	font-size: 50px;
-	padding-top: 250px;
-}
-.link {
-	display: inline-block;
-	color: white;
-	font-size: 40px;
-	text-decoration:none;
-}*/
-
 .demo-carousel {
 	background-repeat: no-repeat;
 	background-size: 100% 100%; 

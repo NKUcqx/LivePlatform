@@ -14,7 +14,7 @@
                     <p slot="title" class="title">Log in</p>
                     <Form ref="form" :model="form" :rules="rule" class="form">
                         <Form-item prop="user">
-                            <Input type="text" v-model="user" size="large" placeholder="Username">
+                            <Input type="text" v-model="form.user" size="large" placeholder="Username">
                                 <Icon type="ios-person-outline" slot="prepend"></Icon>
                             </Input>
                         </Form-item>
@@ -36,8 +36,8 @@
                             </Row>
                         </Form-item>
                         <Form-item id="buttons-item">
-                            <Button type="primary" @click="handleSubmit('form')" class="button">登录</Button>
-                            <Button type="text" class="button" @click="changeState()">找回密码</Button>
+                            <Button type="primary" @click="login()" class="button">Login</Button>
+                            <Button type="text" class="button" @click="changeState()">Retrieve</Button>
                         </Form-item>
                     </Form>
                 </Card>
@@ -45,7 +45,7 @@
                     <p slot="title" class="title">Retrieve password</p>
                     <Form ref="retrieveForm" :model="retrieve" :rules="rule2" class="form">
                         <Form-item prop="user">
-                            <Input type="text" v-model="user" size="large" placeholder="Username">
+                            <Input type="text" v-model="retrieve.user" size="large" placeholder="Username">
                                 <Icon type="ios-person-outline" slot="prepend"></Icon>
                             </Input>
                         </Form-item>
@@ -56,22 +56,15 @@
                         </Form-item>
                         <Form-item prop="reNewPassword">
                             <Input type="password" v-model="retrieve.reNewPassword" size="large" placeholder="Repeat New password">
-                                <Icon type="ios-locked-outline" slot="prepend"></Icon>
+                                <Icon type="eye-disabled" slot="prepend"></Icon>
                             </Input>
                         </Form-item>
                         <Form-item prop="pin">
-                            <Row>
-                                <Col span="12">
-                                <Input v-model="retrieve.verification" placeholder="Verification"><Icon type="star" slot="prepend"></Icon></Input>
-                                </Col>
-                                <Col span="6" offset="6">
-                                <Button type="primary" v-if="this.retrieve.isSent" @click="achieveVerification()">Achieve</Button>
-                                <Button type="primary" disabled v-else id="time-button">{{retrieve.time}}</Button>
-                                </Col>
-                            </Row>
+                            <!--NEED MODIFY-->
+                            <verification :send-type="typeOfUsername" :username="retrieve.user" father="login" ref="veri"></verification>
                         </Form-item>
                         <Form-item id="buttons-item">
-                            <Button type="primary" @click="handleSubmit('retrieveForm')" class="button">登录</Button>
+                            <Button type="primary" @click="confirm()" class="button">Confirm</Button>
                             <Button type="text" class="button" @click="changeState()">Back</Button>
                         </Form-item>
                     </Form>
@@ -84,16 +77,16 @@
 <script>
 
 import verification from 'verification-code'
-import { checkPassword, checkRePassword, checkVerification } from '../utils/checks'
+import { checkPassword, checkRePassword, checkVerification, checkForm, checkPhone, checkEmail } from '../utils/checks'
 import { mapGetters, mapMutations } from 'vuex'
-const countDownNum = 60
+import Verification from './tinyComponents/Verification'   //component
 
 export default {
+    components: {
+        Verification
+    },
     data () {
         const validatePin = (rule, value, callback) => {
-            checkVerification(rule, value, callback, this.pincode)
-        }
-        const validateVerification = (rule, value, callback) => {
             checkVerification(rule, value, callback, this.pincode)
         }
         const validatePass = (rule, value, callback) => {
@@ -101,30 +94,38 @@ export default {
         }
         const validatePassCheck = (rule, value, callback) => {
             checkRePassword(rule, value, callback, this.retrieve.newPassword)
-        } 
+        }
+        const validateUsername = (rule, value, callback) => {
+            if(value === ''){
+                callback(new Error('please input username'))
+            }
+            else if(!(checkPhone(value) || checkEmail(value))){
+                callback(new Error('this is not phone or email'))
+            }
+            else{
+                callback()
+            }
+        }
         return {
             // 0 means login 1 means retrieve password
             state: 0,
-            user: '',
-
             form: {
+                user: '',
                 password: '',
                 pin: '',
             },
             retrieve: {
+                user: '',
                 newPassword: '',
                 reNewPassword: '',
-                verification: '',
-                time: 60,
-                isSent: false,
             },
             rule: {
                 user: [
-                    { required: true, message: '请填写用户名', trigger: 'blur' }
+                    { required: true, validator: validateUsername, trigger: 'blur' }
                 ],
                 password: [
-                    { required: true, message: '请填写密码', trigger: 'blur' },
-                    { type: 'string', min: 6, max:25, message: '密码长度不能小于6位', trigger: 'blur' }
+                    { required: true, message: 'Please input password', trigger: 'blur' },
+                    { type: 'string', min: 6, max:25, message: 'Password should be 6 to 25 chars', trigger: 'blur' }
                 ],
                 pin: [
                     { required: true, validator: validatePin, trigger: 'blur' },
@@ -133,7 +134,7 @@ export default {
             },
             rule2: {
                 user: [
-                    { required: true, message: 'please input username', trigger: 'blur' }
+                    { required: true, validator: validateUsername, trigger: 'blur' }
                 ],
                 newPassword: [
                     { required: true, validator: validatePass, trigger: 'blur' },
@@ -141,10 +142,6 @@ export default {
                 ],
                 reNewPassword: [
                     { required: true, validator: validatePassCheck, trigger: 'blur' }
-                ],
-                verification: [
-                    { required: true, validator: validatePin, trigger: 'blur' },
-                    { type: 'string', min: 4, max: 4, message: 'verification must be 4 numbers', trigger: 'blur' }
                 ],
             },
             pinurl: '',
@@ -158,21 +155,15 @@ export default {
          ...mapGetters({
             page: 'getPage'
         }),
+        typeOfUsername() {
+            return 0
+        },
     },
     methods: {
         ...mapMutations({
           goLeft: 'goLeft',
           goRight: 'goRight'
         }),
-        handleSubmit(name) {
-            this.$refs[name].validate((valid) => {
-                if (valid) {
-                    this.$Message.success('Form legal!');
-                } else {
-                    this.$Message.error('Form illegal!');
-                }
-            })
-        },
         showPinImg() {
             let result = verification.create()
             this.pincode = result.code
@@ -180,8 +171,23 @@ export default {
             //console.log(this.pinurl)
         },
         changeState() {
-            this.state = (this.state == 0)? 1 : 0;
+            this.state = (this.state === 0)? 1 : 0;
+            this.retrieve.user = (this.state === 1)? this.form.user : this.retrieve.user
+            this.form.user = (this.state === 0)? this.retrieve.user : this.form.user
         },
+        isUsernameExist() {
+
+        },
+        login() {
+            if(checkForm(this, this.$refs['form'])){
+
+            }
+        },
+        confirm() {
+            if(checkForm(this, this.$refs['retrieveForm']) && this.$refs['veri'].validateForm()){
+
+            }
+        }
     }
 }
 </script>
