@@ -39,6 +39,7 @@
                             <Button type="primary" @click="handleSubmit('form')" class="button">登录</Button>
                             <Button type="text" class="button" @click="changeState()">找回密码</Button>
                         </Form-item>
+                            <Button type="button" @click="endRoom()" >123aws</Button>
                     </Form>
                 </Card>
                 <Card shadow class="card" v-else>
@@ -86,6 +87,8 @@
 import verification from 'verification-code'
 import { checkPassword, checkRePassword, checkVerification } from '../utils/checks'
 import { mapGetters, mapMutations } from 'vuex'
+import { beforePost, } from '../utils/utils'
+
 const countDownNum = 60
 
 export default {
@@ -182,6 +185,20 @@ export default {
         changeState() {
             this.state = (this.state == 0)? 1 : 0;
         },
+        endRoom(){
+            this.$http({
+                url: '/endroom/',
+                method: 'POST',
+                body: {
+                    
+                },
+                before: function(request){beforePost(request)},
+            }).then(function (res) {
+                alert(res.body)
+            }, function () {
+                alert("ajax failure")
+            })
+        }
     }
 }
 </script>
