@@ -5,6 +5,7 @@ from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from . import toolkits
+import os
 
 CODE = toolkits.CODE #assign to local name to reduce the usage of its long prefix
 bi2obj = toolkits.bi2obj
@@ -12,19 +13,32 @@ LOG = toolkits.Log
 
 def hasLogin(dic):
     return 'user' not in dic
-
+'''
+def createDir(room_id):#db will do this automaticlly
+    path = os.path.join(os.getcwd(),'files',str(room_id))
+    os.makedirs(path)
+    return room_id'''
 
 @require_POST
 def createRoom(request):
-    body = bi2obj(request)
-    #request.session['user'] = 
-    #if('user' not in request.session):
-        #return HttpResponse(CODE['5'])
-    #user = request.session['user']
-    #user_id = user['id']
-    room = LiveRoom(name = body['name'], creater_id = 1)
+    thumbnail = request.FILES.get('thumbnail',None)
+    slide = request.FILES.get('slide',None)
+    name = request.POST.get('name')
+    creater_id = request.POST.get('creater_id')
+    room = LiveRoom(name = name, creater_id = creater_id)
+    if(thumbnail):
+        thumbnail_type = os.path.splitext(thumbnail.name)[1]
+        if(thumbnail_type.endswith(('.jpg','.png','.jpeg','.gif'))):
+            room.thumbnail_path = thumbnail
+        else:
+            return HttpResponse(CODE['20'])
+    if(slide):
+        slide_type = os.path.splitext(slide.name)[1]
+        if(slide_type.endswith(('.ppt','.pptx','.pps'))):#any type else ?
+            room.slide_path = slide
+        else:
+            return HttpResponse(CODE['20'])
     room.save()
-    #LOG(room)
     return HttpResponse(room.id) # return the new room's id
 
 @require_POST
