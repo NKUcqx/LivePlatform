@@ -41,15 +41,7 @@
                     </Radio-group>
                 </Form-item>
                 <Form-item label="verification:" prop="verification">
-                <Row>
-                    <Col span="12">
-                    <Input v-model="signinfo.verification" placeholder="Input VERIFICATION"></Input>
-                    </Col>
-                    <Col span="6" offset="6">
-                    <Button type="primary" v-if="this.state === 'unsent'" @click="achieveVerification()">Achieve</Button>
-                    <Button type="primary" disabled v-else id="time-button">{{time}}</Button>
-                    </Col>
-                </Row>
+                    <verification :send-type="type" :username="getUsername" father="signup" ref="veri"></verification>
                 </Form-item>
                 <Form-item id="submit-item">
                     <Button type="primary" @click="signup()" id="submit">Signup</Button>
@@ -63,11 +55,15 @@
 
 <script>
 
-    import { checkPassword, checkRePassword, checkVerification } from '../utils/checks'
+    import Verification from './tinyComponents/Verification'
+    import { checkPassword, checkRePassword, checkVerification, checkForm, checkPhone } from '../utils/checks'
+    import { beforePost } from '../utils/utils'
     import { mapGetters, mapMutations } from 'vuex'
-    const countDownNum = 60
 
     export default {
+        components: {
+            Verification
+        },
         data() {
             //this is for check password
             const validatePass = (rule, value, callback) => {
@@ -76,15 +72,11 @@
             const validatePassCheck = (rule, value, callback) => {
                 checkRePassword(rule, value, callback, this.signinfo.password)
             }
-            const validateVerification = (rule, value, callback) => {
-                checkVerification(rule, value, callback, this.code)
-            }
             const validatePhone = (rule, value, callback) => {
-                let phoneRe = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/
                 if(value === ''){
                     callback(new Error('please input phone'))
                 }
-                else if(!phoneRe.test(value)){
+                else if(!checkPhone(value)){
                     callback(new Error('this is not phone numbers'))
                 }
                 else{
@@ -100,12 +92,9 @@
                     password: '',
                     passwordCheck: '',
                     nickname: '',    
-                    gender: '',
+                    gender: 'female',
                     verification: '',
                 },
-                time: countDownNum,
-                code: '',
-                state: 'unsent',
                 ruleSignup: {
                     email: [
                         { required: true, message: 'please input email', trigger: 'blur' },
@@ -124,10 +113,6 @@
                     nickname: [
                         { type: 'string', min: 6, max: 20, message: 'nickname must be more than 6 chars less than 20', trigger: 'blur' }
                     ],
-                    verification: [
-                        { required: true, validator: validateVerification, trigger: 'blur' },
-                        { type: 'string', min: 4, max: 4, message: 'verification must be 4 numbers', trigger: 'blur' }
-                    ],
                 },
             }
         },
@@ -145,6 +130,9 @@
                 this.code = Math.random()*8999+1000
                 return Math.floor(this.code)
             },
+            getUsername(){
+                return (this.type === 0)? this.signinfo.phone : this.signinfo.email
+            }
         },
         methods: {
             ...mapMutations({
@@ -154,62 +142,25 @@
             changeType() {
                 this.type = (this.type === 0)? 1 : 0 
             },
-            beginCountdown() {
-                const countDown = () => {
-                    this.time-=1
-                    if(this.time <= 0){
-                        this.state = 'unsent'
-                        clearInterval(interval)
-                        this.time = countDownNum
-                    }
-                }
-                let interval = setInterval(function(){countDown()}, 1000)
-            },
-            handleSent() {
-                let result = ''
-                this.$refs['signinfo'].validate((valid) => {
-                    result = valid
-                    if (valid) {
-                        this.$Message.success('Form legal')
-                    } else {
-                        this.$Message.error('Form illegal')
-                    }
-                })
-                return result
-            },
-            achieveVerification() {
-                this.state = 'sent'
-                this.beginCountdown();
-                (this.type === 0)? this.sendMessage() : this.sendEmail()                     
-            },
-            sendEmail() {
-            },
-            sendMessage() {
-                let randomCode = this.randomCode
-                this.code = randomCode
-                let data = {
-                    account: 'C78894239',
-                    password:'25ff6ea6a323a00581db9424daefb7c9',
-                    content:  'Your verification code is ' +randomCode+'. Do not reveal to others',
-                    mobile: this.signinfo.phone,
-                    format: 'json',
-                }
-                this.$http.jsonp(
-                    'http://106.ihuyi.com/webservice/sms.php?method=Submit',
-                {
-                    params: data,
-                    jsonp:'cb',
-                }).then(function (res) {
-                    this.$Message.success('Send Success')
-                    //console.log(res.body)
-                }, function (res) {
-                    this.$Message.success('Send Success')
-                    //console.log(res.status)
-                })
-            },
             signup() {
-                if(this.handleSent()){
-
+                if(checkForm(this, this.$refs['signinfo']) && this.$refs['veri'].validateForm()){
+                    let data = {
+                        username: this.getUsername,
+                        password: this.signinfo.password,
+                        gender: (this.signinfo.gender === 'male')? true : false,
+                        nickname: this.signinfo.nickname,
+                    }
+                    this.$http({
+                        url: '/signup/',
+                        method: 'POST',
+                        body: data,
+                        before: function(request){beforePost(request)},
+                    }).then(function (res) {
+                        //console.log(res.body)
+                        this.$router.push({path: '/home'})
+                    }, function (res) {
+                        alert(res.body)
+                    })
                 }     
             },
             
@@ -244,11 +195,11 @@
 }
 .link {
     /*padding-top: 30px;*/
-    color: white;
+    color: rgba(255, 255, 255, 0.3);
     font-size: 20px;
 }
 .link:hover {
-    color: rgb(235, 235, 235);
+    color: rgb(255, 255, 255);
     font-size: 22px;
     padding-bottom: 0px;
 }

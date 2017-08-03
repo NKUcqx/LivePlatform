@@ -20,14 +20,9 @@ export const beforePost = (request) => {
  }
  if (!(/^http:.*/.test(request.url) || /^https:.*/.test(request.url))) {
      // Only send the token to relative URLs i.e. locally.
-      alert(getCookie('csrftoken'))
       console.log(request.headers.set('X-CSRFToken', getCookie('csrftoken')))
  }
 } 
-
-export const countDown = (time) => {
-
-}
 
 export default {
   beforePost,

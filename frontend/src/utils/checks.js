@@ -10,6 +10,16 @@ export const checkSpecialChar = (str) => {
     return true
 }
 
+export const checkPhone = (phone) => {
+    let phoneRe = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/
+    return phoneRe.test(phone)
+}
+
+export const checkEmail = (email) => {
+    let emailRe = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/
+    return emailRe.test(email) 
+}
+
 export const checkObjLegal = (obj) => {
 	for(item in obj) {
 		if(Object.prototype.toString.call(item) === "[object String]"){
@@ -52,6 +62,18 @@ export const checkVerification = (rule, value, callback, code) => {
     }
 }
 
+export const checkForm = (obj, formRef) => {
+    let result = ''
+    formRef.validate((valid) => {
+        result = valid
+        if (valid) {
+            obj.$Message.success('Form legal')
+        } else {
+            obj.$Message.error('Form illegal')
+        }
+    })
+    return result
+}
 
 export default {
   checkSpecialChar,
