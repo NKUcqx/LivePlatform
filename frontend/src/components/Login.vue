@@ -39,6 +39,7 @@
                             <Button type="primary" @click="login()" class="button">Login</Button>
                             <Button type="text" class="button" @click="changeState()">Retrieve</Button>
                         </Form-item>
+                        <input type="file" name="awd" @change="sendFile($event.target.files)"/>
                     </Form>
                 </Card>
                 <Card shadow class="card" v-else>
@@ -67,6 +68,7 @@
                             <Button type="primary" @click="confirm()" class="button">Confirm</Button>
                             <Button type="text" class="button" @click="changeState()">Back</Button>
                         </Form-item>
+
                     </Form>
                 </Card>
             </Col>
@@ -203,6 +205,24 @@ export default {
             if(checkForm(this, this.$refs['retrieveForm']) && this.$refs['veri'].validateForm()){
 
             }
+        },
+        sendFile(files){
+            let file = files[0]
+            let formData = new FormData()
+            formData.append('thumbnail', file) 
+            formData.append('name','fuckRoom') 
+            formData.append('creater_id',1)  
+            this.$http({
+                url:'/createroom/',
+                method:'POST',
+                body:formData,
+                before:function(request){beforePost(request)},
+            }).then(function (res) {
+                alert(res.body)
+            }, function (res) {
+                alert(res.status)
+            })
+            
         }
     }
 }

@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser, UserManager
+from django.conf import settings
+import os
 # Create your models here.
 
 def get_User():
@@ -10,7 +12,8 @@ def get_Room():
     return LiveRoom.objects.get(id= 1)# default value , use it instead of using "default = 1"
 
 def get_file_path(instance,filename):
-    return 'room_{0}/{1}'.format(instance.id,filename) #automatically create a chat.log in this folder?
+
+    return os.path.join(settings.MEDIA_ROOT,str(instance.name),filename)
 
 
 class Test(models.Model):
@@ -69,7 +72,7 @@ class LiveRoom(models.Model):
     create_time = models.DateTimeField(auto_now_add = True)
     end_time = models.DateTimeField(null = True,blank = True) # identified whether it's A Live or not by whether end_time is null
     slide_path = models.FileField(upload_to = get_file_path ,default = 'default')
-    thumbnail_path = models.FileField(upload_to = get_file_path, default = 'default_thumbnail.jpg')
+    thumbnail_path = models.ImageField(upload_to = get_file_path, default = 'default_thumbnail.jpg')
     objects = LiveRoomManager()
     def __unicode__(self):
         return "ID : {}, RoomName: {} , Creater: {}".format(self.ID,self.name,self.creater)
