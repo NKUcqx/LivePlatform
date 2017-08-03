@@ -4,6 +4,7 @@ from backend.models import User,LiveRoom,Punishment
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+#from django.contrib.auth.decorators import login_required 
 from . import toolkits
 import os
 
@@ -11,8 +12,6 @@ CODE = toolkits.CODE #assign to local name to reduce the usage of its long prefi
 bi2obj = toolkits.bi2obj
 LOG = toolkits.Log
 
-def hasLogin(dic):
-    return 'user' not in dic
 '''
 def createDir(room_id):#db will do this automaticlly
     path = os.path.join(os.getcwd(),'files',str(room_id))
@@ -25,13 +24,16 @@ def gerRooms(request):
         rooms = rooms.filter(creater_id = request.GET.get('creater_id'))
     if('is_living' in request.GET):
         rooms = rooms.filter(is_living = request.GET.get('is_living'))
+    if('limit' in request.GET):
+        rooms = rooms[request.GET.get('start',0):request.GET.get('limit')]
     return rooms.values()
 
+#@login_required #will jump to settings.LOGIN_URL automatically when user hasn't log in (we need control redirect within frontend so..)
 @require_POST
 def createRoom(request):
-    #creater_id = request.session.get('_auth_user_id',None)
+    #creater_id = request.session.get('_auth_user_id',None)# will be elimated by django when user log out 
     creater_id = 1# temporary
-    if(creater_id):
+    if(creater_id):# can check log in status because of comments above
         thumbnail = request.FILES.get('thumbnail',None)
         slide = request.FILES.get('slide',None)
         name = request.POST.get('name')

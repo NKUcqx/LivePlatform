@@ -12,9 +12,7 @@ def get_Room():
     return LiveRoom.objects.get(id= 1)# default value , use it instead of using "default = 1"
 
 def get_file_path(instance,filename):
-
-    return os.path.join(settings.MEDIA_ROOT,str(instance.name),filename)
-
+    return '/'.join((str(instance.name),filename))
 
 class Test(models.Model):
 	content = models.TextField()
