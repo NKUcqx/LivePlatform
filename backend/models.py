@@ -42,6 +42,25 @@ class User(AbstractUser):
     )
     def __unicode__(self):
         return "ID : {}, UserName: {}".format(self.ID,self.username)
+
+class LiveRoomManager(models.Manager):
+    def room_count(self):
+        return self.count()
+    def room_creater_count(self,creater_id):
+        return self.filter(creater_id = creater_id).count()
+    def room_audience_count(self, amount_to, amount_from = 0):
+        return self.filter(audience_amount__gte = amount_from,audience_amount__lte = amount_to).count()
+    def room_living_count(self,is_living):
+        return self.filter(is_living = is_living).count()
+    def audience_count(self,room_id):
+        return self.get(id = room_id).audience_amount
+    '''def room_name_contains(self,name):
+        return self.filter(name__icontains = name)
+    def room_'''
+
+
+
+
 class LiveRoom(models.Model):
     name = models.CharField(max_length = 30)# ,db_index = True
     creater = models.ForeignKey(User, default = get_User)#no need to CASCADE when user get deleted ,right?
@@ -51,6 +70,7 @@ class LiveRoom(models.Model):
     end_time = models.DateTimeField(null = True,blank = True) # identified whether it's A Live or not by whether end_time is null
     slide_path = models.FileField(upload_to = get_file_path ,default = 'default')
     thumbnail_path = models.FileField(upload_to = get_file_path, default = 'default_thumbnail.jpg')
+    objects = LiveRoomManager()
     def __unicode__(self):
         return "ID : {}, RoomName: {} , Creater: {}".format(self.ID,self.name,self.creater)
 
