@@ -211,7 +211,8 @@
                 if(this.handleSent()){
 
                 }     
-            }
+            },
+            
         },
     }
 </script>

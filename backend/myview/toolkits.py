@@ -24,4 +24,4 @@ def bi2obj(request):# in binary form
 
 
 def Log(title, msg):
-    print(timezone.now + title +" : " + msg)
+    print(title +" : " + msg)

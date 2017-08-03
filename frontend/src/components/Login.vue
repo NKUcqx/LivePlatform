@@ -86,6 +86,7 @@
 import verification from 'verification-code'
 import { checkPassword, checkRePassword, checkVerification } from '../utils/checks'
 import { mapGetters, mapMutations } from 'vuex'
+
 const countDownNum = 60
 
 export default {
