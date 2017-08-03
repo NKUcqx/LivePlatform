@@ -57,6 +57,7 @@
 
     import Verification from './tinyComponents/Verification'
     import { checkPassword, checkRePassword, checkVerification, checkForm, checkPhone } from '../utils/checks'
+    import { beforePost } from '../utils/utils'
     import { mapGetters, mapMutations } from 'vuex'
 
     export default {
@@ -91,7 +92,7 @@
                     password: '',
                     passwordCheck: '',
                     nickname: '',    
-                    gender: '',
+                    gender: 'female',
                     verification: '',
                 },
                 ruleSignup: {
@@ -143,7 +144,23 @@
             },
             signup() {
                 if(checkForm(this, this.$refs['signinfo']) && this.$refs['veri'].validateForm()){
-
+                    let data = {
+                        username: this.getUsername,
+                        password: this.signinfo.password,
+                        gender: (this.signinfo.gender === 'male')? true : false,
+                        nickname: this.signinfo.nickname,
+                    }
+                    this.$http({
+                        url: '/signup/',
+                        method: 'POST',
+                        body: data,
+                        before: function(request){beforePost(request)},
+                    }).then(function (res) {
+                        //console.log(res.body)
+                        this.$router.push({path: '/home'})
+                    }, function (res) {
+                        alert(res.body)
+                    })
                 }     
             }
         },
@@ -177,11 +194,11 @@
 }
 .link {
     /*padding-top: 30px;*/
-    color: white;
+    color: rgba(255, 255, 255, 0.3);
     font-size: 20px;
 }
 .link:hover {
-    color: rgb(235, 235, 235);
+    color: rgb(255, 255, 255);
     font-size: 22px;
     padding-bottom: 0px;
 }

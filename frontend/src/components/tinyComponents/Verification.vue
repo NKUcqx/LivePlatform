@@ -7,7 +7,7 @@
 		    	<Input v-model="form.verification" placeholder="Input VERIFICATION"><Icon type="star" slot="prepend" v-if="this.father==='login'"></Icon></Input>
 		    </Col>
 		    <Col span="6" offset="6">
-			    <Button type="primary" v-if="this.state === 'unsent'" @click="achieveVerification()" class="buttons">Achieve</Button>
+			    <Button type="primary" v-if="this.state === 'unsent'" @click="testUsername()" class="buttons">Achieve</Button>
 			    <Button type="primary" disabled v-else class="buttons">{{time}}</Button>
 		    </Col>
 		</Row>
@@ -19,6 +19,7 @@
 <script>
 
 import { checkVerification, checkPhone, checkEmail, checkForm } from '../../utils/checks'
+import { beforePost } from '../../utils/utils'
 const countDownNum = 60
 
 export default {
@@ -31,7 +32,7 @@ export default {
 	    		verification: '',
 	    	},
 	        time: countDownNum,
-            code: '',
+            code: '4444',
             state: 'unsent',
             ruleVerification: {
 	            verification: [
@@ -79,9 +80,24 @@ export default {
             }                 
         },
         validateForm() {
-        	checkForm(this, this.$refs['verification'])
+        	return checkForm(this, this.$refs['verification'])
         },
         sendEmail() {
+        	this.code = this.randomCode
+        	let data = {
+                email: this.username,
+                code: this.code,
+            }
+            this.$http({
+                url: '/sendemail/',
+                method: 'POST',
+                body: data,
+                before: function(request){beforePost(request)},
+            }).then(function (res) {
+                console.log(res.body)
+            }, function (res) {
+                alert(res.body)
+            })
         },
         sendMessage() {
             this.code = this.randomCode
@@ -105,6 +121,22 @@ export default {
                 //console.log(res.status)
             })
         },
+        testUsername() {
+        	this.$http.get('/testusername?username='+this.username)
+        	.then(function (res) {
+	            if (res.body === 'False' && this.father === 'login'){
+	            	alert("username does not exist")
+	            }
+	            else if (res.body === 'True' && this.father === 'signup'){
+	            	alert("username does exist")
+	            }
+	            else {
+	            	this.achieveVerification()
+	            }
+	        }, function (res) {
+	            alert(res.body)
+	        })
+        }
     }
 
 }

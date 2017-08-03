@@ -78,6 +78,7 @@
 
 import verification from 'verification-code'
 import { checkPassword, checkRePassword, checkVerification, checkForm, checkPhone, checkEmail } from '../utils/checks'
+import { beforePost } from '../utils/utils'
 import { mapGetters, mapMutations } from 'vuex'
 import Verification from './tinyComponents/Verification'   //component
 
@@ -180,7 +181,22 @@ export default {
         },
         login() {
             if(checkForm(this, this.$refs['form'])){
-
+                let data = {
+                    username: this.form.user,
+                    password: this.form.password
+                }
+                console.log(data)
+                this.$http({
+                    url: '/login/',
+                    method: 'POST',
+                    body: data,
+                    before: function(request){beforePost(request)},
+                }).then(function (res) {
+                    console.log(res.body)
+                    this.$router.push({path: '/home'})
+                }, function (res) {
+                    alert(res.body)
+                })
             }
         },
         confirm() {
@@ -238,12 +254,12 @@ export default {
 
 .link {
     /*padding-top: 30px;*/
-    color: white;
+    color: rgba(255, 255, 255, 0.3);
     font-size: 20px;
 }
 
 .link:hover {
-    color: rgb(235, 235, 235);
+    color: rgb(255, 255, 255);
     font-size: 22px;
     padding-bottom: 0px;
 }
