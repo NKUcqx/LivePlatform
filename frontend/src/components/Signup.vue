@@ -162,7 +162,8 @@
                         alert(res.body)
                     })
                 }     
-            }
+            },
+            
         },
     }
 </script>
