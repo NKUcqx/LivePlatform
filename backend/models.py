@@ -28,6 +28,7 @@ class User(AbstractUser):
         choices = gender_choices,
         default = male
     )'''
+    date_joined = models.DateTimeField(auto_now_add = True, verbose_name = 'date joined')
     gender = models.BooleanField(default = True)
     avatar = models.FileField(upload_to = 'avatar/',default = 'default.jpg') # create a personal folder to hold resources later by DB or Django
     role_choices = (
