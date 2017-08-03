@@ -19,27 +19,40 @@ def createDir(room_id):#db will do this automaticlly
     os.makedirs(path)
     return room_id'''
 
+def gerRooms(request):
+    rooms = LiveRoom.objects.order_by(request.GET.get('order_by','-audience_amount'))
+    if('creater_id' in request.GET):
+        rooms = rooms.filter(creater_id = request.GET.get('creater_id'))
+    if('is_living' in request.GET):
+        rooms = rooms.filter(is_living = request.GET.get('is_living'))
+    return rooms.values()
+
 @require_POST
 def createRoom(request):
-    thumbnail = request.FILES.get('thumbnail',None)
-    slide = request.FILES.get('slide',None)
-    name = request.POST.get('name')
-    creater_id = request.POST.get('creater_id')
-    room = LiveRoom(name = name, creater_id = creater_id)
-    if(thumbnail):
-        thumbnail_type = os.path.splitext(thumbnail.name)[1]
-        if(thumbnail_type.endswith(('.jpg','.png','.jpeg','.gif'))):
-            room.thumbnail_path = thumbnail
-        else:
-            return HttpResponse(CODE['20'])
-    if(slide):
-        slide_type = os.path.splitext(slide.name)[1]
-        if(slide_type.endswith(('.ppt','.pptx','.pps'))):#any type else ?
-            room.slide_path = slide
-        else:
-            return HttpResponse(CODE['20'])
-    room.save()
-    return HttpResponse(room.id) # return the new room's id
+    #creater_id = request.session.get('_auth_user_id',None)
+    creater_id = 1# temporary
+    if(creater_id):
+        thumbnail = request.FILES.get('thumbnail',None)
+        slide = request.FILES.get('slide',None)
+        name = request.POST.get('name')
+        room = LiveRoom(name = name, creater_id = creater_id)
+        if(thumbnail):
+            thumbnail_type = os.path.splitext(thumbnail.name)[1]
+            if(thumbnail_type.endswith(('.jpg','.png','.jpeg','.gif'))):
+                room.thumbnail_path = thumbnail
+                print(type(room.thumbnail_path))
+            else:
+                return HttpResponse(CODE['20'])
+        if(slide):
+            slide_type = os.path.splitext(slide.name)[1]
+            if(slide_type.endswith(('.ppt','.pptx','.pps'))):#any type else ?
+                room.slide_path = slide
+            else:
+                return HttpResponse(CODE['20'])
+        room.save()
+        return HttpResponse(room.id) # return the new room's id
+    else:
+        return HttpResponse(CODE['12'])
 
 @require_POST
 def endRoom(request):
@@ -63,13 +76,13 @@ def endRoom(request):
                     LOG("CQX-room_view.endRoom" , "Room: " + str(room.id) +"has been closed")
                     return HttpResponse(CODE['0'])
                 else:
-                    return HttpResponse(CODE['5'])
+                    return HttpResponse(CODE['12'])
             else :
                 return HttpResponse(CODE['6'])
             
         else:
             return HttpResponse(CODE['7'])
     else :
-        return HttpResponse(CODE['5'])
+        return HttpResponse(CODE['12'])
 
 

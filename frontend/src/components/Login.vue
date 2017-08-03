@@ -177,36 +177,6 @@ export default {
             this.state = (this.state === 0)? 1 : 0;
             this.retrieve.user = (this.state === 1)? this.form.user : this.retrieve.user
             this.form.user = (this.state === 0)? this.retrieve.user : this.form.user
-<<<<<<< HEAD
-        },
-        isUsernameExist() {
-
-        },
-        login() {
-            if(checkForm(this, this.$refs['form'])){
-                let data = {
-                    username: this.form.user,
-                    password: this.form.password
-                }
-                console.log(data)
-                this.$http({
-                    url: '/login/',
-                    method: 'POST',
-                    body: data,
-                    before: function(request){beforePost(request)},
-                }).then(function (res) {
-                    console.log(res.body)
-                    this.$router.push({path: '/home'})
-                }, function (res) {
-                    alert(res.body)
-                })
-            }
-        },
-        confirm() {
-            if(checkForm(this, this.$refs['retrieveForm']) && this.$refs['veri'].validateForm()){
-
-            }
-=======
         },
         isUsernameExist() {
 
@@ -240,7 +210,7 @@ export default {
             let file = files[0]
             let formData = new FormData()
             formData.append('thumbnail', file) 
-            formData.append('name','fuckRoom') 
+            formData.append('name','fuckRoom2') 
             formData.append('creater_id',1)  
             this.$http({
                 url:'/createroom/',
@@ -252,8 +222,6 @@ export default {
             }, function (res) {
                 alert(res.status)
             })
-            
->>>>>>> CQX/Feature_seal_LiveRoom
         }
     }
 }
