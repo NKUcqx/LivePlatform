@@ -39,7 +39,6 @@
                             <Button type="primary" @click="login()" class="button">Login</Button>
                             <Button type="text" class="button" @click="changeState()">Retrieve</Button>
                         </Form-item>
-                        <!--<input type="file" name="awd" @change="sendFile($event.target.files)"/>-->
                     </Form>
                 </Card>
                 <Card shadow class="card" v-else>
