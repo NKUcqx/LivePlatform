@@ -1,5 +1,4 @@
 from django.http import HttpResponse
-from django.utils import timezone # put it into toolkits?
 from backend.models import User,LiveRoom,Punishment
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
@@ -44,10 +43,8 @@ def createFolder(file_name):
 #@login_required #will jump to settings.LOGIN_URL automatically when user hasn't log in (we need control redirect within frontend so..)
 @require_POST
 def createRoom(request):
-    #creater_id = request.session.get('_auth_user_id',None) # will be elimated by django when user log out 
-    #creater_id = request.user.id
-    creater_id = 1# temporary
-    if(creater_id):# can check log in status because of comments above
+    if(request.user.is_authenticated() and request.user.role == 'T' and 'room' not in request.session):# can check log in status because of comments above
+        creater_id = request.user.id
         thumbnail = request.FILES.get('thumbnail',None)
         slide = request.FILES.get('slide',None)
         name = request.POST.get('name')
@@ -58,7 +55,7 @@ def createRoom(request):
             thumbnail_type = os.path.splitext(thumbnail.name)[1]
             if(thumbnail_type.endswith(('.jpg','.png','.jpeg','.gif'))):
                 room.thumbnail_path = thumbnail
-                print(type(room.thumbnail_path))
+                #print(type(room.thumbnail_path))
             else:
                 return HttpResponse(CODE['20'])
         if(slide):
@@ -68,7 +65,12 @@ def createRoom(request):
             else:
                 return HttpResponse(CODE['20'])
         room.save()
+        request.session['room'] = room
         return HttpResponse(room) # return the new room's id
+    elif(request.user.role == 'S'):
+        return HttpResponse(CODE['12'])
+    elif('room' in request.session):
+        return HttpResponse(CODE['21'])
     else:
         return HttpResponse(CODE['12'])
 
@@ -76,31 +78,19 @@ def createRoom(request):
 
 @require_POST
 def endRoom(request):
-    body = bi2obj(request)
-   # user = request.session['user']# session need save a user entity & a room entity
-    #room = request.session['room']
-    request.session['user'] = session_user
-    request.session['room'] = session_room
-    if('user' in request.session):
-        user = request.session['user']
-        if('room' in request.session):
-            rooms = LiveRoom.objects.filter(id = session_room['id'])
-            if(len(rooms) > 0):
-                room = rooms[0]
-                if(room.creater_id == user['id']):#creater_id : a way to save one query.  must end it by the creater !
-                    room.end_time = timezone.now()
-                    room.is_living = False
-                    room.save()
-                    LOG("CQX-room_view.endRoom" , "Room: " + str(room.id) +"has been closed")
-                    return HttpResponse(CODE['0'])
-                else:
-                    return HttpResponse(CODE['12'])
-            else :
-                return HttpResponse(CODE['6'])
-            
-        else:
-            return HttpResponse(CODE['7'])
-    else :
-        return HttpResponse(CODE['12'])
+    user = request.user# session need save a user entity & a room entity
+    room = request.session.get('room',None)
+    if(room):
+        if(user and user.is_authenticated() and user.role == 'T' and user.id == room.creater_id):# _id is a default field to save one query from user table                
+            room.end_time = timezone.now()
+            room.is_living = False
+            room.save()
+            del request.session['room']
+                #LOG("CQX-room_view.endRoom" , "Room: " + str(room.id) +"has been closed")
+            return HttpResponse(CODE['0'])
+        else :
+            return HttpResponse(CODE['12'])
+    else:
+        return HttpResponse(CODE['24'])
 
 
