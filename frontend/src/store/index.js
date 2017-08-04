@@ -8,6 +8,7 @@ import * as actions from './actions'
 import * as states from './states'
 //import * as mutations from './mutations'
 import tests from './modules/testmodules'
+import welcome from './modules/welcome'
 
 Vue.use(Vuex)
 
@@ -48,6 +49,7 @@ export default new Vuex.Store({
   mutations,
   modules: {
     welcome,
+    tests,
   },
   strict: debug,
   plugins: [localStoragePlugin]
