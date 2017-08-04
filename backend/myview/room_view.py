@@ -44,10 +44,8 @@ def createFolder(file_name):
 #@login_required #will jump to settings.LOGIN_URL automatically when user hasn't log in (we need control redirect within frontend so..)
 @require_POST
 def createRoom(request):
-    #creater_id = request.session.get('_auth_user_id',None) # will be elimated by django when user log out 
-    #creater_id = request.user.id
-    creater_id = 1# temporary
-    if(creater_id):# can check log in status because of comments above
+    if(request.user.is_authenticated()):# can check log in status because of comments above
+        creater_id = request.user.id
         thumbnail = request.FILES.get('thumbnail',None)
         slide = request.FILES.get('slide',None)
         name = request.POST.get('name')
@@ -58,7 +56,7 @@ def createRoom(request):
             thumbnail_type = os.path.splitext(thumbnail.name)[1]
             if(thumbnail_type.endswith(('.jpg','.png','.jpeg','.gif'))):
                 room.thumbnail_path = thumbnail
-                print(type(room.thumbnail_path))
+                #print(type(room.thumbnail_path))
             else:
                 return HttpResponse(CODE['20'])
         if(slide):
