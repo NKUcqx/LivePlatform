@@ -2,7 +2,7 @@
 //测试一个字符串是否含有特殊字符
 export const checkSpecialChar = (str) => {
     let pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）――|{}【】‘；：”“'。，、？]")
-    if(str !== "" && str !== null){
+    if(str !== '' && str !== null){
         if(pattern.test(str)){
             return false
         }
@@ -21,18 +21,18 @@ export const checkEmail = (email) => {
 }
 
 export const checkObjLegal = (obj) => {
-	for(item in obj) {
-		if(Object.prototype.toString.call(item) === "[object String]"){
-			if(item === '' || !checkSpecialChar(item)){
-				return false
-			}
-		}
-	}
-	return true
+    for(item in obj) {
+        if(Object.prototype.toString.call(item) === "[object String]"){
+            if(item === '' || !checkSpecialChar(item)){
+                return false
+            }
+        }
+    }
+    return true
 }
 
 export const checkPassword = (rule, value, callback, rePass, obj, rePassProp) => {
-	if (value === '') {
+    if (value === '') {
         callback(new Error('please input password'))
     } else {
         if (rePass !== '') {
@@ -44,7 +44,7 @@ export const checkPassword = (rule, value, callback, rePass, obj, rePassProp) =>
 }
 
 export const checkRePassword = (rule, value, callback, password) => {
-	if (value === '') {
+    if (value === '') {
         callback(new Error('please repeat password'))
     } else if (value !== password) {
         callback(new Error('not same as before'))
@@ -54,7 +54,7 @@ export const checkRePassword = (rule, value, callback, password) => {
 }
 
 export const checkVerification = (rule, value, callback, code) => {
-	if(code === '' || value.toString().toLowerCase() !== code.toString().toLowerCase()){
+    if(code === '' || value.toString().toLowerCase() !== code.toString().toLowerCase()){
         callback(new Error('verification error'))    
     }
     else{
@@ -76,5 +76,5 @@ export const checkForm = (obj, formRef) => {
 }
 
 export default {
-  checkSpecialChar,
+    checkSpecialChar,
 }
