@@ -205,6 +205,23 @@ export default {
             if(checkForm(this, this.$refs['retrieveForm']) && this.$refs['veri'].validateForm()){
 
             }
+        },
+        sendFile(files){
+            let file = files[0]
+            let formData = new FormData()
+            formData.append('thumbnail', file) 
+            formData.append('name','fuckRoom2') 
+            //formData.append('creater_id',1)  
+            this.$http({
+                url:'/createroom/',
+                method:'POST',
+                body:formData,
+                before:function(request){beforePost(request)},
+            }).then(function (res) {
+                alert(res.body)
+            }, function (res) {
+                alert(res.status)
+            })
         }
     }
 }

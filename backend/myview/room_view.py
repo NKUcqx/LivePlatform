@@ -34,6 +34,7 @@ def getRooms(request):
     return JsonResponse({"rooms": list(rooms.values())})
 >>>>>>> Bug fixed,alter Phone & Email filed and changed receiver a little, refs #24
 
+
 def createRoomPath():
     now = timezone.now()
     now = now.strftime('%Y%M%d%H%m%S') + str(random.uniform(0,10))
@@ -54,6 +55,7 @@ def uploadSlide(room, slide):
     return room
 
 #TODO create error_log.txt
+
 
 #@login_required #will jump to settings.LOGIN_URL automatically when user hasn't log in (we need control redirect within frontend so..)
 @require_POST
@@ -110,5 +112,3 @@ def endRoom(request):
             return HttpResponse(CODE['12'])
     else:
         return HttpResponse(CODE['24'])
-
-

@@ -8,6 +8,7 @@ from django.utils import timezone
 import os
 import hashlib
 import random
+
 # Create your models here.
 
 def get_User():
@@ -28,6 +29,7 @@ def get_dir_path(instance = None):
 
 def gen_user_nickname():
     return "User_Nick_"+str(random.randint(0,99999))
+
 
 class Test(models.Model):
 	content = models.TextField()
