@@ -3,6 +3,8 @@ from django.utils import timezone
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.conf import settings
 import os
+import hashlib
+import random
 # Create your models here.
 
 def get_User():
@@ -12,7 +14,14 @@ def get_Room():
     return LiveRoom.objects.get(id= 1)# default value , use it instead of using "default = 1"
 
 def get_file_path(instance,filename):
-    return '/'.join((str(instance.name),filename))
+    return '/'.join((str(instance.file_name),filename))
+
+def get_dir_path(instance = None):
+    now = timezone.now()
+    now = now.strftime('%Y%M%d%H%m%S') + str(random.uniform(0,10))
+    md5 = hashlib.md5()   
+    md5.update(now.encode('utf-8'))   
+    return os.path.join('files',str(md5.hexdigest()))
 
 class Test(models.Model):
 	content = models.TextField()
@@ -20,15 +29,6 @@ class Test(models.Model):
 class User(AbstractUser):
     phone = models.CharField(unique = True, max_length=11,blank = False )
     nickname = models.CharField(max_length = 30)
-    '''gender_choices = (
-        (male, 'male'),
-        (female, 'female')
-    )
-    gender = models.CharField(
-        max_lenth = 6,
-        choices = gender_choices,
-        default = male
-    )'''
     date_joined = models.DateTimeField(auto_now_add = True, verbose_name = 'date joined')
     gender = models.BooleanField(default = True)
     avatar = models.FileField(upload_to = 'avatar/',default = 'default.jpg') # create a personal folder to hold resources later by DB or Django
@@ -69,6 +69,7 @@ class LiveRoom(models.Model):
     is_living = models.BooleanField(default = True)
     create_time = models.DateTimeField(auto_now_add = True)
     end_time = models.DateTimeField(null = True,blank = True) # identified whether it's A Live or not by whether end_time is null
+    file_name = models.CharField(max_length = 50,default = get_dir_path)
     slide_path = models.FileField(upload_to = get_file_path ,default = 'default')
     thumbnail_path = models.ImageField(upload_to = get_file_path, default = 'default_thumbnail.jpg')
     objects = LiveRoomManager()
@@ -76,8 +77,8 @@ class LiveRoom(models.Model):
         return "ID : {}, RoomName: {} , Creater: {}".format(self.ID,self.name,self.creater)
 
 class Punishment(models.Model):
-    room = models.ForeignKey(LiveRoom, default = get_Room, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, default = get_User ,on_delete=models.CASCADE)
+    room = models.ForeignKey(LiveRoom, default = get_Room, on_delete = models.CASCADE)
+    user = models.ForeignKey(User, default = get_User ,on_delete = models.CASCADE)
     punishment_choice = (
         ('K','kicked out'),
         ('S','can not speak')

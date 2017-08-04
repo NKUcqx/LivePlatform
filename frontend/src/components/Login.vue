@@ -211,7 +211,7 @@ export default {
             let formData = new FormData()
             formData.append('thumbnail', file) 
             formData.append('name','fuckRoom2') 
-            formData.append('creater_id',1)  
+            //formData.append('creater_id',1)  
             this.$http({
                 url:'/createroom/',
                 method:'POST',

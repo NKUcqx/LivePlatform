@@ -7,6 +7,8 @@ from django.views.decorators.http import require_POST
 #from django.contrib.auth.decorators import login_required 
 from . import toolkits
 import os
+import hashlib 
+import random
 
 CODE = toolkits.CODE #assign to local name to reduce the usage of its long prefix
 bi2obj = toolkits.bi2obj
@@ -18,7 +20,7 @@ def createDir(room_id):#db will do this automaticlly
     os.makedirs(path)
     return room_id'''
 
-def gerRooms(request):
+def getRooms(request):
     rooms = LiveRoom.objects.order_by(request.GET.get('order_by','-audience_amount'))
     if('creater_id' in request.GET):
         rooms = rooms.filter(creater_id = request.GET.get('creater_id'))
@@ -26,18 +28,32 @@ def gerRooms(request):
         rooms = rooms.filter(is_living = request.GET.get('is_living'))
     if('limit' in request.GET):
         rooms = rooms[request.GET.get('start',0):request.GET.get('limit')]
-    return rooms.values()
+    return rooms
+
+def createRoomPath():
+    now = timezone.now()
+    now = now.strftime('%Y%M%d%H%m%S') + str(random.uniform(0,10))
+    md5 = hashlib.md5()   
+    md5.update(now.encode('utf-8'))   
+    return md5.hexdigest()
+
+def createFolder(file_name):
+    os.makedirs( os.path.join('files/' , file_name) )
+    os.mknod( os.path.join('files/',file_name,'chatlog.txt'))
 
 #@login_required #will jump to settings.LOGIN_URL automatically when user hasn't log in (we need control redirect within frontend so..)
 @require_POST
 def createRoom(request):
-    #creater_id = request.session.get('_auth_user_id',None)# will be elimated by django when user log out 
+    #creater_id = request.session.get('_auth_user_id',None) # will be elimated by django when user log out 
+    #creater_id = request.user.id
     creater_id = 1# temporary
     if(creater_id):# can check log in status because of comments above
         thumbnail = request.FILES.get('thumbnail',None)
         slide = request.FILES.get('slide',None)
         name = request.POST.get('name')
-        room = LiveRoom(name = name, creater_id = creater_id)
+        file_name = createRoomPath()
+        createFolder(file_name)
+        room = LiveRoom(name = name, creater_id = creater_id, file_name = file_name)
         if(thumbnail):
             thumbnail_type = os.path.splitext(thumbnail.name)[1]
             if(thumbnail_type.endswith(('.jpg','.png','.jpeg','.gif'))):
@@ -52,17 +68,17 @@ def createRoom(request):
             else:
                 return HttpResponse(CODE['20'])
         room.save()
-        return HttpResponse(room.id) # return the new room's id
+        return HttpResponse(room) # return the new room's id
     else:
         return HttpResponse(CODE['12'])
+
+
 
 @require_POST
 def endRoom(request):
     body = bi2obj(request)
    # user = request.session['user']# session need save a user entity & a room entity
     #room = request.session['room']
-    session_user = { 'id': 1 }
-    session_room = { 'id': 1 }
     request.session['user'] = session_user
     request.session['room'] = session_room
     if('user' in request.session):
