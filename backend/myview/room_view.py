@@ -86,7 +86,6 @@ def createRoom(request):
         room.save()
         request.session['room'] = room
         return HttpResponse(room) # return the new room's id
-        
     elif(request.user.role == 'S'):
         return HttpResponse(CODE['12'])
     elif('room' in request.session):
