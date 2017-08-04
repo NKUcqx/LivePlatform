@@ -8,7 +8,7 @@ import Vuex from 'vuex'
 import App from './App'
 import router from './router'
 import store from './store'
-import VueResource from 'vue-resource'
+import  VueResource  from 'vue-resource'
 import iView from 'iview'
 import '../my-theme/index.less'
 
@@ -19,10 +19,10 @@ Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
-  router,
-  store,
-  template: '<App/>',
+    el: '#app',
+    router,
+    store,
+    template: '<App/>',
   components: { App },
   http: {
     root: '/root',

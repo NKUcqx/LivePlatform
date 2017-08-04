@@ -1,20 +1,23 @@
 <template>
-  	<!--div>
-  	<p>Welcome To Our Demo</p>
-	<router-link to="/hello" class="link">Go to Hello&nbsp;&nbsp;&nbsp;</router-link>
-	<router-link to="/signup" class="link">Go to Signup</router-link>
-	<div-->
-	<Carousel id="carousel" :height="auto" v-model="value" :trigger="hover">
-        <Carousel-item>
+	<Carousel id="carousel" :height="auto" v-model="page" trigger="click" arrow="never" :height="this.height">
+        <Carousel-item :height="this.height">
             <div class="demo-carousel" id="carousel1">
-            	<hello></hello>
+            	<login></login>
             </div>
         </Carousel-item>
         <Carousel-item>
             <div class="demo-carousel" id="carousel2">
-            	<h1 id="welcome">Welcome To Our Demo</h1>
-            	<Button type="text" class="link" @click="goLeft()">Go to Hello</Button>
-            	<Button type="text" class="link" @click="goRight()">Go to Test</Button>
+                <Row>
+                    <Col span="1" offset="0">
+                        <Button type="text" class="top-link" @click="goLeft()" id="top-go-left"><Icon type="reply"></Icon> Login</Button>
+                    </Col>
+                    <Col span="1" offset="22">
+                        <Button type="text" class="top-link" @click="goRight()" id="top-go-right">Signup <Icon type="forward"></Icon></Button>
+                    </Col>
+                </Row>
+                <div id="welcome"><img src="../assets/welcome.gif"></div>
+                <Button type="text" class="link" @click="goLeft()" id="go-left"><Icon type="reply"></Icon> Login</Button>
+                <Button type="text" class="link" @click="goRight()" id="go-right">Signup <Icon type="forward"></Icon></Button>
             </div>
         </Carousel-item>
         <Carousel-item>
@@ -26,53 +29,40 @@
 </template>
 
 <script>
-import Hello from './Hello'
+
+import Login from './Login'
 import Signup from './Signup'
+import { mapGetters, mapMutations } from 'vuex'
 
 export default {
 	components: {
-	    Hello,
+	    Login,
 	    Signup
   	},
 	data() {
         return {
-            value: 1,
+            height: document.documentElement.clientHeight,
         }
     },
+    computed:{
+        ...mapGetters({
+            page: 'getPage'
+        }),
+    },
     methods:{
-    	goLeft(){
-    		this.value = 0
-    	},
-    	goRight(){
-    		this.value = 2
-    	}
+    	...mapMutations({
+          goLeft: 'goLeft',
+          goRight: 'goRight'
+        }),
     }
 }
 </script>
 
 <style scoped>
-/*#welcome {
-	height: 732px;
-	background-repeat: no-repeat;
-	background-image: url("../assets/bg1.jpg");
-	border:1px solid white;
-}
-p{
-	color: white;
-	font-size: 50px;
-	padding-top: 250px;
-}
-.link {
-	display: inline-block;
-	color: white;
-	font-size: 40px;
-	text-decoration:none;
-}*/
-
 .demo-carousel {
 	background-repeat: no-repeat;
-	background-size: 100% 100%;  
-	height: 630px;
+	background-size: 100% 100%; 
+	height: 100%;
 }
 
 #carousel1 {
@@ -88,19 +78,59 @@ p{
 	background-image: url(../assets/bg1.jpg);
 }
 
+#welcome {
+	padding-top: calc(25% - 100px - 20px);
+}
+
 .link {
-	padding-top: 30px;
-	color: white;
-	font-size: 30px;
+    padding-top: 12%;
+    color: white;
+    font-size: 30px;
+    animation: 2s opacity2 0s infinite;
+    -webkit-animation: 2s opacity2 0s infinite;
+    -moz-animation: 2s opacity2 0s infinite;
 }
 
 .link:hover {
-	color: gray;
-	font-size: 30px;
+    color: rgb(235, 235, 235);
+    font-size: 32px;
+    color: gray;
 }
 
-#welcome {
-	font-size: 35px;
-	padding-top: 250px;
+@keyframes opacity2 {
+    0%{opacity:0}
+    50%{opacity:.8;}
+    100%{opacity:0;}
+}
+
+@-webkit-keyframes opacity2 {
+    0%{opacity:0}
+    50%{opacity:.8;}
+    100%{opacity:0;}
+}
+
+@-moz-keyframes opacity2 {
+    0%{opacity:0}
+    50%{opacity:.8;}
+    100%{opacity:0;}
+}
+
+.top-link {
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 20px;
+}
+
+.top-link:hover {
+    color: rgb(255, 255, 255);
+    font-size: 22px;
+    padding-bottom: 0px;
+}
+
+#top-go-left {
+    float: left;
+}
+
+#top-go-right {
+    float: right;
 }
 </style>

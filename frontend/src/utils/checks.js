@@ -10,6 +10,71 @@ export const checkSpecialChar = (str) => {
     return true
 }
 
+export const checkPhone = (phone) => {
+    let phoneRe = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/
+    return phoneRe.test(phone)
+}
+
+export const checkEmail = (email) => {
+    let emailRe = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/
+    return emailRe.test(email) 
+}
+
+export const checkObjLegal = (obj) => {
+	for(item in obj) {
+		if(Object.prototype.toString.call(item) === "[object String]"){
+			if(item === '' || !checkSpecialChar(item)){
+				return false
+			}
+		}
+	}
+	return true
+}
+
+export const checkPassword = (rule, value, callback, rePass, obj, rePassProp) => {
+	if (value === '') {
+        callback(new Error('please input password'))
+    } else {
+        if (rePass !== '') {
+            // 对第二个密码框单独验证
+            obj.validateField(rePassProp)
+        }
+        callback()
+    }
+}
+
+export const checkRePassword = (rule, value, callback, password) => {
+	if (value === '') {
+        callback(new Error('please repeat password'))
+    } else if (value !== password) {
+        callback(new Error('not same as before'))
+    } else {
+        callback()
+    }
+}
+
+export const checkVerification = (rule, value, callback, code) => {
+	if(code === '' || value.toString().toLowerCase() !== code.toString().toLowerCase()){
+        callback(new Error('verification error'))    
+    }
+    else{
+        callback()
+    }
+}
+
+export const checkForm = (obj, formRef) => {
+    let result = ''
+    formRef.validate((valid) => {
+        result = valid
+        if (valid) {
+            obj.$Message.success('Form legal')
+        } else {
+            obj.$Message.error('Form illegal')
+        }
+    })
+    return result
+}
+
 export default {
   checkSpecialChar,
 }

@@ -1,0 +1,19 @@
+配置commit-msg
+1.安装ruby,虚拟机在共享文件夹下 sudo dnf install ruby
+2.到mysite下的.git/hooks，将commit-msg.sample改为commit-msg
+3.内容全删，替换为
+#!/usr/bin/env ruby
+message_file = ARGV[0]
+message = File.read(message_file)
+
+$regex = /^refs\s#[0-9]+,\s[A-Z].*\S+.*/
+
+if !$regex.match(message)
+  puts "Error: -----------------------------------------" 
+  puts " Your commit message is not formatted correctly." 
+  puts " It must contain an issue number." 
+  puts " Example:" 
+  puts "      refs #99999, Added some new feature" 
+  puts "------------------------------------------------" 
+  exit 1
+end

@@ -47,7 +47,7 @@ export default new Vuex.Store({
   getters,
   mutations,
   modules: {
-    tests,
+    welcome,
   },
   strict: debug,
   plugins: [localStoragePlugin]

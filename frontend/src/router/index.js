@@ -2,10 +2,8 @@
 
 import Vue from 'vue'
 import Router from 'vue-router'
-import Hello from '@/components/Hello'
-import Signup from '@/components/Signup'
 import Welcome from '@/components/Welcome'
-import Login from '@/components/Login'
+import Home from '@/components/Home'
 
 Vue.use(Router)
 
@@ -17,19 +15,9 @@ export default new Router({
       component: Welcome
     },
     {
-      path: '/hello',
-      name: 'Hello',
-      component: Hello
-    },
-    {
-    	path: '/signup',
-    	name: 'signup',
-    	component: Signup,
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: Login,
+      path: '/home',
+      name: 'home',
+      component: Home
     }
   ]
 })
