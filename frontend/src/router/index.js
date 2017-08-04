@@ -4,20 +4,26 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Welcome from '@/components/Welcome'
 import Home from '@/components/Home'
+import Canvas from '@/components/tinyComponents/Canvas'
 
 Vue.use(Router)
 
 export default new Router({
-  routes: [
-    {
-      path: '',
-      name: 'Welcome',
-      component: Welcome
-    },
-    {
-      path: '/home',
-      name: 'home',
-      component: Home
-    }
-  ]
+    routes: [
+        {
+            path: '',
+            name: 'Welcome',
+            component: Welcome
+        },
+        {
+            path: '/home',
+            name: 'home',
+            component: Home
+        },
+        {
+            path: '/canvas',
+            name: 'canvas',
+            component: Canvas
+        }
+    ]
 })
