@@ -9,6 +9,8 @@ import * as states from './states'
 import * as mutations from './mutations'
 import home from './modules/home'
 import welcome from './modules/welcome'
+//import * as mutations from './mutations'
+import tests from './modules/testmodules'
 
 Vue.use(Vuex)
 

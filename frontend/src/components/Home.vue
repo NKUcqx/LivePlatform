@@ -177,7 +177,6 @@
                 }, function (res) {
                     alert(res.status)
                 })
-
                 if (this.spanLeft === 5) {
                     this.spanLeft = 2;
                     this.spanRight = 22;
@@ -213,6 +212,7 @@
     margin-top: 9px;
     background-color: gray;
 }
+
 .headersection{
     color: white;
 }
@@ -238,29 +238,5 @@
 #avatar-modal {
     text-align: center;
 }
-/*.operation{
-}
-.layout{
-    border: 1px solid #d7dde4;
-    background: #f5f7f9;
-    position: relative;
-    border-radius: 4px;
-    overflow: hidden;
-}
-.layout-hide-text .layout-text{
-    display: none;
-}
-.layout-menu-left{
-    background: #464c5b;
-}
-.layout-logo-left{
-    width: 90%;
-    height: 30px;
-    background: #5b6270;
-    border-radius: 3px;
-    margin: 15px auto;
-}
-.layout-hide-text .layout-text{
-    display: none;
-}*/
+
 </style>
