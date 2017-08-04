@@ -4,6 +4,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Welcome from '@/components/Welcome'
 import Home from '@/components/Home'
+import Codedemo from '@/components/Codedemo'
+
 
 Vue.use(Router)
 
@@ -18,6 +20,11 @@ export default new Router({
       path: '/home',
       name: 'home',
       component: Home
+    },
+    {
+      path: '/code',
+      name: 'code',
+      component: Codedemo
     }
   ]
 })
