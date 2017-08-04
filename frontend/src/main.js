@@ -4,7 +4,6 @@
 //具体请看VUE官方文档
 
 import Vue from 'vue'
-import Vuex from 'vuex'
 import App from './App'
 import router from './router'
 import store from './store'
@@ -13,7 +12,7 @@ import iView from 'iview'
 import '../my-theme/index.less'
 
 Vue.use(VueResource)
-Vue.use(iView);
+Vue.use(iView)
 
 Vue.config.productionTip = false
 
@@ -23,12 +22,12 @@ new Vue({
     router,
     store,
     template: '<App/>',
-  components: { App },
-  http: {
-    root: '/root',
-    headers: {
-      //Authorization: 'Basic YXBpOnBhc3N3b3Jk'
+    components: { App },
+    http: {
+        root: '/root',
+        headers: {
+        //Authorization: 'Basic YXBpOnBhc3N3b3Jk'
+        }
     }
-  }
 
 })
