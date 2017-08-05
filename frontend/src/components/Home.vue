@@ -163,6 +163,21 @@
                 })
             },
             toggleClick () {
+                let file = files[0]
+                let formData = new FormData()
+                formData.append('avatar', file) 
+                //formData.append('creater_id',1)  
+                this.$http({
+                    url:'/avatar/',
+                    method:'POST',
+                    body:formData,
+                    before:function(request){beforePost(request)},
+                }).then(function (res) {
+                    alert(res.body)
+                }, function (res) {
+                    alert(res.status)
+                })
+
                 if (this.spanLeft === 5) {
                     this.spanLeft = 2;
                     this.spanRight = 22;

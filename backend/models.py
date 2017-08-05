@@ -33,8 +33,9 @@ class Test(models.Model):
 	content = models.TextField()
 
 class User(AbstractUser):
-    phone = models.CharField(unique = True, max_length=11,blank = True )
-    nickname = models.CharField(max_length = 30)
+    email = models.CharField(max_length=254, null = True, blank = True)
+    phone = models.CharField(max_length=11, null = True, blank = True )
+    nickname = models.CharField(max_length = 30, default = gen_user_nickname)
     date_joined = models.DateTimeField(auto_now_add = True, verbose_name = 'date joined')
     gender = models.BooleanField(default = True)
     avatar = models.FileField(upload_to = 'avatar/',default = 'default.jpg') # create a personal folder to hold resources later by DB or Django
@@ -52,9 +53,25 @@ class User(AbstractUser):
 
 @receiver(pre_save, sender = User)
 def checkPhoneAndEmail(sender, instance, **kwargs):
-    print("in receiver")
-    if(instance.email == '' and instance.phone == ''):
+    if((instance.email is '' or instance.email is None ) and (instance.phone is '' or instance.phone is None)):
         raise TypeError('Must Fill either a email or a phone number !')
+    if(instance.phone is not '' and instance.phone is not None):
+        if(len(instance.phone) is not 11):
+            raise TypeError('Format Invalid !')
+        try:
+            User.objects.filter(phone = instance.phone)
+            raise TypeError('Phone Num has already in use .')
+        except User.DoesNotExist:
+            pass
+    if(instance.email is not '' and instance.email is not None):
+        try:
+            User.objects.filter(email = instance.email)
+            raise TypeError('Email address has already in use .')
+        except User.DoesNotExist:
+            pass
+
+
+
 
 class LiveRoomManager(models.Manager):
     def room_count(self):

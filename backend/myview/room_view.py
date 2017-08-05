@@ -1,5 +1,4 @@
 from django.http import HttpResponse,JsonResponse
-from django.utils import timezone # put it into toolkits?
 from backend.models import User,LiveRoom,Punishment
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
