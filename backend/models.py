@@ -70,9 +70,6 @@ def checkPhoneAndEmail(sender, instance, **kwargs):
         except User.DoesNotExist:
             pass
 
-
-
-
 class LiveRoomManager(models.Manager):
     def room_count(self):
         return self.count()
