@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse,JsonResponse
 from backend.models import User,LiveRoom,Punishment
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
@@ -27,7 +27,7 @@ def getRooms(request):
         rooms = rooms.filter(is_living = request.GET.get('is_living'))
     if('limit' in request.GET):
         rooms = rooms[request.GET.get('start',0):request.GET.get('limit')]
-    return rooms
+    return JsonResponse({"rooms": list(rooms.values())})
 
 def createRoomPath():
     now = timezone.now()

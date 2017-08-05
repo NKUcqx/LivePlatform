@@ -17,6 +17,7 @@ CODE = { # 0~10 Common Stuff    10~20 Login/Signup Stuff  20~30 Index Stuff
     "22": "Only teacher can start a Live Room",
     "23": "Room Never Exists",
     "24": "Room Is Not Living Anymore",
+    "25": "Empty File",
 }
 
 def bi2obj(request):# in binary form
