@@ -23,7 +23,7 @@ require('../../node_modules/codemirror/addon/hint/show-hint.js')
 require('../../node_modules/codemirror/addon/hint/show-hint.css')
 require('../../node_modules/codemirror/addon/hint/javascript-hint.js')
 const codes = {
-    javascript: 'var component = {\n\tname: "vue-codemirror-lite",\n\tauthor: "Fangxw",\n\trepo: "https://github.com/cnu4/vue-codemirror-lite"\n}\n\n//Press Ctrl-Space to trigger hint',
+    javascript: 'var component = {\n\t\tname: "write here"\n}\n\n',
     vue: '<template>\n<codemirror :value="code"></codemirror>\n</template>\n\n'
 }
 import codemirror from './codemirror'
@@ -46,7 +46,7 @@ import codemirror from './codemirror'
                 tabSize: 2,
                 lineNumbers: true,
                 lineWrapping: true,
-                extraKeys: {'Ctrl-Space': 'autocomplete'},
+                extraKeys: {'Ctrl': 'autocomplete'},
             }
         }
     },
@@ -81,7 +81,8 @@ h1, h2 {
 
 .cm-container {
   border: #ddd solid 1px;
-  margin-bottom: 10px
+  margin-bottom: 10px;
+  text-align: left;
 }
 
 footer {
