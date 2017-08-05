@@ -27,7 +27,7 @@ class Test(models.Model):
 	content = models.TextField()
 
 class User(AbstractUser):
-    phone = models.CharField(unique = True, max_length=11,blank = False )
+    phone = models.CharField(unique = True, max_length=11,blank = True )
     nickname = models.CharField(max_length = 30)
     date_joined = models.DateTimeField(auto_now_add = True, verbose_name = 'date joined')
     gender = models.BooleanField(default = True)

@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse,JsonResponse
 from django.utils import timezone # put it into toolkits?
 from backend.models import User,LiveRoom,Punishment
 from django.utils import timezone
@@ -25,10 +25,10 @@ def getRooms(request):
     if('creater_id' in request.GET):
         rooms = rooms.filter(creater_id = request.GET.get('creater_id'))
     if('is_living' in request.GET):
-        rooms = rooms.filter(is_living = request.GET.get('is_living'))
+        rooms = rooms.filter(is_living = True if request.GET.get('is_living') == 'true' else False)
     if('limit' in request.GET):
-        rooms = rooms[request.GET.get('start',0):request.GET.get('limit')]
-    return rooms
+        rooms = rooms[int(request.GET.get('start',0)):int(request.GET.get('limit'))]
+    return JsonResponse({"rooms":list(rooms.values())})
 
 def createRoomPath():
     now = timezone.now()

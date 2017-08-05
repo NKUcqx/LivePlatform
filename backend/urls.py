@@ -13,5 +13,6 @@ urlpatterns = [
    # url(r'^websocket/$', user_view.websocket, name = 'websocket'),
     url(r'^createroom/$', room_view.createRoom, name = 'create_room' ),
     url(r'^endroom/$', room_view.endRoom, name = 'end_room' ),
-    url(r'^createroom/$', room_view.createRoom , name = 'create_room' )
+    url(r'^createroom/$', room_view.createRoom , name = 'create_room' ),
+    url(r'^getroom/$', room_view.getRooms , name = 'get_room' )
 ]
