@@ -11,7 +11,6 @@ import home from './modules/home'
 import welcome from './modules/welcome'
 //import * as mutations from './mutations'
 import tests from './modules/testmodules'
-import welcome from './modules/welcome'
 
 Vue.use(Vuex)
 
