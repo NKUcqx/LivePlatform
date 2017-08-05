@@ -102,6 +102,7 @@ def login_submit(request):
     else:
         return HttpResponse(CODE['11'])
 
+
 #check the username exists
 @require_GET
 def test_username(request):
