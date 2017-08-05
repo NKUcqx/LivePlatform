@@ -1,7 +1,10 @@
-from django.db import models
-from django.utils import timezone
+#from django.conf import settings
 from django.contrib.auth.models import AbstractUser, UserManager
-from django.conf import settings
+from django.core.validators import MinLengthValidator
+from django.db import models
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
+from django.utils import timezone
 import os
 import hashlib
 import random
@@ -22,6 +25,9 @@ def get_dir_path(instance = None):
     md5 = hashlib.md5()   
     md5.update(now.encode('utf-8'))   
     return os.path.join('files',str(md5.hexdigest()))
+
+def gen_user_nickname():
+    return "User_Nick_"+str(random.randint(0,99999))
 
 class Test(models.Model):
 	content = models.TextField()
@@ -44,6 +50,12 @@ class User(AbstractUser):
     def __unicode__(self):
         return "ID : {}, UserName: {}".format(self.ID,self.username)
 
+@receiver(pre_save, sender = User)
+def checkPhoneAndEmail(sender, instance, **kwargs):
+    print("in receiver")
+    if(instance.email == '' and instance.phone == ''):
+        raise TypeError('Must Fill either a email or a phone number !')
+
 class LiveRoomManager(models.Manager):
     def room_count(self):
         return self.count()
@@ -57,7 +69,7 @@ class LiveRoomManager(models.Manager):
         return self.get(id = room_id).audience_amount
     '''def room_name_contains(self,name):
         return self.filter(name__icontains = name)
-    def room_'''
+    '''
 
 
 

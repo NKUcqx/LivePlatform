@@ -41,6 +41,16 @@ def createFolder(file_name):
     os.makedirs( os.path.join('files/' , file_name) )
     os.mknod( os.path.join('files/',file_name,'chatlog.txt'))
 
+def uploadThumbnail(room, thumbnail):
+    room.thumbnail_path = thumbnail
+    return room
+
+def uploadSlide(room, slide):
+    room.slide_path = slide
+    return room
+
+#TODO create error_log.txt
+
 #@login_required #will jump to settings.LOGIN_URL automatically when user hasn't log in (we need control redirect within frontend so..)
 @require_POST
 def createRoom(request):
@@ -55,19 +65,22 @@ def createRoom(request):
         if(thumbnail):
             thumbnail_type = os.path.splitext(thumbnail.name)[1]
             if(thumbnail_type.endswith(('.jpg','.png','.jpeg','.gif'))):
-                room.thumbnail_path = thumbnail
+                #room.thumbnail_path = thumbnail
+                room = uploadThumbnail(room , thumbnail)
                 #print(type(room.thumbnail_path))
             else:
                 return HttpResponse(CODE['20'])
         if(slide):
             slide_type = os.path.splitext(slide.name)[1]
-            if(slide_type.endswith(('.ppt','.pptx','.pps'))):#any type else ?
-                room.slide_path = slide
+            if(slide_type.endswith(('.ppt','.pptx','.pps','.swf','.pdf','.key'))):#must add dot ! otherwise user could upload file "somepdf" instead "some.pdf"  #any type else ?
+                room = uploadSlide(room, slide)
+                #room.slide_path = slide
             else:
                 return HttpResponse(CODE['20'])
         room.save()
         request.session['room'] = room
         return HttpResponse(room) # return the new room's id
+        
     elif(request.user.role == 'S'):
         return HttpResponse(CODE['12'])
     elif('room' in request.session):
