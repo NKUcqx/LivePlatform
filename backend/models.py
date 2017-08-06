@@ -30,7 +30,6 @@ def get_dir_path(instance = None):
 def gen_user_nickname():
     return "User_Nick_"+str(random.randint(0,99999))
 
-
 class Test(models.Model):
 	content = models.TextField()
 
@@ -71,6 +70,9 @@ def checkPhoneAndEmail(sender, instance, **kwargs):
             raise TypeError('Email address has already in use .')
         except User.DoesNotExist:
             pass
+
+
+
 
 class LiveRoomManager(models.Manager):
     def room_count(self):

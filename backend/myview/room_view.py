@@ -26,14 +26,8 @@ def getRooms(request):
     if('is_living' in request.GET):
         rooms = rooms.filter(is_living = True if request.GET.get('is_living') == 'true' else False)
     if('limit' in request.GET):
-<<<<<<< 4615778add927a4176b7c7130bfab45f7ad52366
         rooms = rooms[int(request.GET.get('start',0)):int(request.GET.get('limit'))]
     return JsonResponse({"rooms":list(rooms.values())})
-=======
-        rooms = rooms[request.GET.get('start',0):request.GET.get('limit')]
-    return JsonResponse({"rooms": list(rooms.values())})
->>>>>>> Bug fixed,alter Phone & Email filed and changed receiver a little, refs #24
-
 
 def createRoomPath():
     now = timezone.now()
@@ -55,8 +49,6 @@ def uploadSlide(room, slide):
     return room
 
 #TODO create error_log.txt
-
-
 #@login_required #will jump to settings.LOGIN_URL automatically when user hasn't log in (we need control redirect within frontend so..)
 @require_POST
 def createRoom(request):
@@ -111,3 +103,4 @@ def endRoom(request):
             return HttpResponse(CODE['12'])
     else:
         return HttpResponse(CODE['24'])
+
