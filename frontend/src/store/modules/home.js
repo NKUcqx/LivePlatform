@@ -38,7 +38,7 @@ const actions = {
             console.log(getListFromDB(res.body));
             (isLive)? state.liveRooms = getListFromDB(res.body) : state.videoRooms = getListFromDB(res.body)
         }, function () {
-            alert("ajax failure")
+            alert('ajax failure')
         })
     },
 }
