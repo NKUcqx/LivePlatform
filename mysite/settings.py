@@ -77,8 +77,8 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'liveplat',
-        'USER': 'root',
+        'NAME': 'group3',
+        'USER': 'jason',
         'PASSWORD': '',
     }
 }
@@ -128,7 +128,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR,'frontend/dist/static'),
 ]
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'files/')
+MEDIA_ROOT = BASE_DIR
 MEDIA_URL = '/files/' #这个是在浏览器上访问该上传文件的url的前缀
 
 AUTH_USER_MODEL = "backend.User"
