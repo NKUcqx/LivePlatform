@@ -1,25 +1,62 @@
 <template>
-	<div id="canvas">
-		<Radio-group v-model="type" type="button">
-	        <Radio label="pen"></Radio>
-	        <Radio label="line"></Radio>
-	        <Radio label="circle"></Radio>
-	        <Radio label="rect"></Radio>
-	        <Radio label="rubber"></Radio>
-	        <Radio label="text"></Radio>
-	    </Radio-group>
-	    <i-switch v-model="canvas.isFill">
-	        <span slot="open">fill</span>
-	        <span slot="close">stroke</span>
-	    </i-switch>
-	    <Button @click="clearBoard()">Clear</Button>
-	    <Slider v-model="canvas.width" :max="14" :min="2" :step="1" :tip-format="widthSliderFomat"></Slider>
-	    <Slider v-model="canvas.fontSize" :max="35" :min="15" :step="2" :tip-format="fontSliderFomat"></Slider>
-	    <color-picker v-model="canvas.color"></color-picker>
-	    <div>
-			<canvas ref="board" :width="WIDTH" :height="HEIGHT" id="board"></canvas>
-			<Input :on-keydown="testText()" ref="text" v-model="canvas.text" v-if="canvas.isInput" autofocus :style="position" type="textarea" autosize></Input>
+	<div id="canvas" style="width:600px;height:30px;margin:50px" ref="canvas">
+		<div :style="btnPosition" id="show-tool" ref="showTool"  @mouseenter="showToolBar()" @mouseleave="hideToolBar()">
+			<Button type="ghost" shape="circle" icon="wrench"></Button>
 		</div>
+		<Row >
+		<div ref="toolbar" id="tool-bar" :style="toolBarPosition" v-if="this.toolBar" @mouseenter="showToolBar()" @mouseleave="hideToolBar()">
+			<Poptip content="choose pen" placement="top"   class="buttons">
+				<Button :type="checkType('pen')" shape="circle" icon="edit" @click="changeType('pen')"></Button>
+			</Poptip>
+			<Poptip content="choose line" placement="top"   class="buttons">
+				<Button :type="checkType('line')" shape="circle" icon="minus-round" @click="changeType('line')" ></Button>
+			</Poptip>
+			<Poptip content="choose rect" placement="top"   class="buttons">
+				<Button :type="checkType('rect')" shape="circle" icon="android-checkbox-outline-blank" @click="changeType('rect')"></Button>
+			</Poptip>
+			<Poptip content="choose circle" placement="top"   class="buttons">
+				<Button :type="checkType('circle')" shape="circle" icon="android-radio-button-off" @click="changeType('circle')" ></Button>
+			</Poptip>
+			<Poptip content="choose rubber" placement="top"   class="buttons">
+				<Button :type="checkType('rubber')" shape="circle" icon="android-checkbox-blank" @click="changeType('rubber')" ></Button>
+			</Poptip>
+			<Poptip content="choose text" placement="top"   class="buttons">
+				<Button :type="checkType('text')" shape="circle" icon="compose" @click="changeType('text')"></Button>
+			</Poptip>
+			<Poptip :content="getFill" placement="top"   class="buttons">
+				<Button :type="checkFill()" shape="circle" icon="android-star-half" @click="changeFill()"></Button>
+			</Poptip>
+			<br>
+			<Poptip content="color picker" placement="bottom"   class="buttons">
+				<Button type="default" shape="circle" icon="android-color-palette" @click="colorPicker()"  class="buttons"></Button>
+			</Poptip>
+			<Poptip content="clear" placement="bottom"   class="buttons">
+				<Button type="default" shape="circle" icon="refresh" @click="clearBoard()"  class="buttons"></Button>
+		    </Poptip>
+		    <Poptip :content="getWidth" placement="bottom"   class="buttons">
+		    	<Button type="default" shape="circle" icon="plus" @click="addWidth()"></Button>
+		    </Poptip>
+		    <Poptip :content="getWidth" placement="bottom"   class="buttons">
+				<Button type="default" shape="circle" icon="minus" @click="minusWidth()"></Button>
+			</Poptip>
+			<Poptip :content="getFontSize" placement="bottom"   class="buttons">
+				<Button type="default" shape="circle" icon="plus-round" @click="addFontSize()"></Button>
+			</Poptip>
+			<Poptip :content="getFontSize" placement="bottom"   class="buttons">
+				<Button type="default" shape="circle" icon="minus-round" @click="minusFontSize()"></Button>
+			</Poptip>
+		</div>
+		<Modal v-model="showColorPicker" :width="250" :closable="false" :ok-text="1" :cancel-text="2" id="modal">
+	        <div style="text-align:center">
+	            <color-picker v-model="canvas.color"></color-picker>
+	        </div>
+	        <div slot="footer"></div>
+	    </Modal>
+	    <Col span="24" id="draw-board">
+			<canvas ref="board" id="board" :width="WIDTH" :height="HEIGHT"></canvas>
+			<Input :on-keydown="testText()" ref="text" v-model="canvas.text" v-if="canvas.isInput" autofocus :style="position" type="textarea" autosize></Input>
+		</Col>
+		</Row>
 	</div>
 </template>
 
@@ -39,8 +76,20 @@ export default {
 	components: {
         'color-picker': Sketch
     },
+    props: {
+    	WIDTH: {
+    		type: Number,
+    		default : 600,
+    	},
+    	HEIGHT: {
+    		type: Number,
+    		default : 400,
+    	}
+    },
 	data(){
 		return {
+			toolBar: false,
+			showColorPicker: false,
 			types: ['pen', 'line', 'circle', 'rect', 'rubber', 'text'],
 			type: 'pen',
 			context: null,
@@ -50,12 +99,10 @@ export default {
 				color: defaultProps,
 				penOriginPoint: null,
 				lastImageData: null,
-				isFill: true,
+				isFill: false,
 				isInput: false, 
 				text: '',
 			},
-			WIDTH: 500,
-			HEIGHT: 500,
 			position: {
 				position: 'absolute',
 				left: '30px',
@@ -63,17 +110,70 @@ export default {
 				zIndex: 999,
 				width: '100px',
 			},
+			btnPosition: {
+				position: 'absolute',
+				left: '30px',
+				top: '30px',
+				zIndex: 999,
+			},
+			toolBarPosition: {
+				position: 'absolute',
+				left: '0px',
+				top: '0px',
+				zIndex: 999,
+			}
 		}
 	},
 	computed: {
-		
+		getWidth(){
+			return "width: "+this.canvas.width.toString()
+		},
+		getFontSize(){
+			return "fontSize: "+this.canvas.fontSize.toString()
+		},
+		getFill(){
+			return (this.canvas.isFill)? 'fill' : 'stroke'
+		}
 	},
 	methods: {
+		showToolBar() {
+			this.toolBar = true
+		},
+		hideToolBar() {
+			this.toolBar = false
+		},
 		widthSliderFomat(val) {
 			return "width: "+val+"px"
 		},
 		fontSliderFomat(val) {
 			return "font: "+val+"px"
+		},
+		colorPicker() {
+			this.showColorPicker = true
+		},
+		checkType(type){
+			return (this.type === type)? 'primary' : 'ghost'
+		},
+		changeType(type){
+			this.type = type
+		},
+		checkFill(){
+			return (this.canvas.isFill)? 'primary' : 'ghost'
+		},
+		changeFill(){
+			this.canvas.isFill = (this.canvas.isFill)? false : true
+		},
+		addWidth(){
+			(this.canvas.width < 24)? this.canvas.width ++ : ''
+		},
+		minusWidth(){
+			(this.canvas.width > 1)? this.canvas.width -- : ''
+		},
+		addFontSize(){
+			(this.canvas.fontSize < 35)? this.canvas.fontSize ++ : ''
+		},
+		minusFontSize(){
+			(this.canvas.fontSize > 15)? this.canvas.fontSize -- : ''
 		},
 		testText() {
 			if(this.canvas.text.indexOf("\n") >= 0){
@@ -238,22 +338,17 @@ export default {
 
     	commandtext(action, event) {
     		this.setPenProperty()
-    		console.log(action)
 			switch (action) {
 				case 'mousedown':
 					if(this.canvas.isInput === true){
-						this.context.lineWidth = 1
-						this.context.font = '30px Georgia'
-						const [ox, oy] = this.canvas.penOriginPoint;
-						(this.canvas.isFill)? this.context.fillText(this.canvas.text, ox, oy) : this.context.strokeText(this.canvas.text, ox, oy)
-						this.canvas.isInput = false
-						//this.$refs.text.focus()
+						this.drawText()
 					}
 					else {
 						this.canvas.text = ''
 						this.canvas.isInput = true
 						this.canvas.penOriginPoint = [event.x, event.y]
 					}
+					console.log(this.$refs.board.offsetLeft)
 					this.position.left = (event.x + this.$refs.board.offsetLeft).toString() + 'px'
 					this.position.top = (event.y + this.$refs.board.offsetTop - 12).toString() + 'px'
 					break
@@ -283,13 +378,16 @@ export default {
 					this[`command${this.type}`](eventName, { x, y, buttons })
 				})
 			});
-			/*this.$refs.text.addEventListener('keydown', (event) => {
-				this[`commandtext`](eventName, event)
-			})*/
-			this.canvas.isInput = true
-			console.log(this.$refs.text)
-			this.canvas.isInput = false
+			/*this.$refs.showTool.addEventListener('mouseover', (event) => {
+				this.showToolBar()
+			});
+			this.$refs.showTool.addEventListener('mouseleave', (event) => {
+				this.hideToolBar()
+			});*/
 		}
+
+		this.btnPosition.left = (this.$refs.canvas.offsetLeft + 5).toString() + 'px'
+		this.btnPosition.top = (this.$refs.canvas.offsetTop + 5).toString() + 'px'
 		this.context = this.$refs.board.getContext('2d')
 	}
 }
@@ -297,9 +395,28 @@ export default {
 
 <style scoped>
 	#canvas {
-		border: 1px solid red;
+
+	}
+
+	#draw-board {
+
 	}
 	#board {
-		border: 1px solid blue;
+		-moz-box-shadow:4px 4px 20px #A1A1A1;
+		-webkit-box-shadow:4px 4px 20px #A1A1A1; 
+		box-shadow:4px 4px 20px #A1A1A1;
+	}
+	.buttons {
+		display: inline-block;
+	}
+	#show-tool:hover {
+		color: blue;
+
+	}
+	#tool-bar{
+		padding-left: 50px;
+		padding-top: 5px;
+		padding-bottom: 5px;
+		padding-right: 5px;
 	}
 </style>

@@ -24,6 +24,15 @@ export const beforePost = (request) => {
  }
 } 
 
+export const getListFromDB = (obj) => {
+    if(obj == null){
+        return
+    }
+    for(let key in obj){
+        return obj[key]
+    }
+}
+
 export default {
   beforePost,
 }

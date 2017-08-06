@@ -8,6 +8,7 @@ from django.utils import timezone
 import os
 import hashlib
 import random
+
 # Create your models here.
 
 def get_User():

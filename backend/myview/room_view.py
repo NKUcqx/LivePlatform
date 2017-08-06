@@ -24,10 +24,10 @@ def getRooms(request):
     if('creater_id' in request.GET):
         rooms = rooms.filter(creater_id = request.GET.get('creater_id'))
     if('is_living' in request.GET):
-        rooms = rooms.filter(is_living = request.GET.get('is_living'))
+        rooms = rooms.filter(is_living = True if request.GET.get('is_living') == 'true' else False)
     if('limit' in request.GET):
-        rooms = rooms[request.GET.get('start',0):request.GET.get('limit')]
-    return JsonResponse({"rooms": list(rooms.values())})
+        rooms = rooms[int(request.GET.get('start',0)):int(request.GET.get('limit'))]
+    return JsonResponse({"rooms":list(rooms.values())})
 
 def createRoomPath():
     now = timezone.now()
@@ -49,7 +49,6 @@ def uploadSlide(room, slide):
     return room
 
 #TODO create error_log.txt
-
 #@login_required #will jump to settings.LOGIN_URL automatically when user hasn't log in (we need control redirect within frontend so..)
 @require_POST
 def createRoom(request):
@@ -79,7 +78,6 @@ def createRoom(request):
         room.save()
         request.session['room'] = room
         return HttpResponse(room) # return the new room's id
-        
     elif(request.user.role == 'S'):
         return HttpResponse(CODE['12'])
     elif('room' in request.session):
@@ -105,5 +103,4 @@ def endRoom(request):
             return HttpResponse(CODE['12'])
     else:
         return HttpResponse(CODE['24'])
-
 

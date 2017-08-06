@@ -111,3 +111,11 @@ def test_username(request):
         return HttpResponse(True)          
     except:
         return HttpResponse(False) 
+
+def change_password(request):
+    body = bi2obj(request)
+    username=body['username']
+    new_password=body['password']
+    user=User.objects.get(username=username)
+    user.set_password(new_password)
+    user.save()

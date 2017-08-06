@@ -39,7 +39,9 @@
                             <Button type="primary" @click="login()" class="button">Login</Button>
                             <Button type="text" class="button" @click="changeState()">Retrieve</Button>
                         </Form-item>
+
                         <!--<input type="file" name="awd" @change="sendFile($event.target.files)"/>-->
+
                     </Form>
                 </Card>
                 <Card shadow class="card" v-else>
@@ -80,9 +82,9 @@
 
 import verification from 'verification-code'
 import { checkPassword, checkRePassword, checkVerification, checkForm, checkPhone, checkEmail } from '../utils/checks'
-import { beforePost } from '../utils/utils'
 import { mapGetters, mapMutations } from 'vuex'
 import Verification from './tinyComponents/Verification'   //component
+
 
 export default {
     components: {
@@ -201,6 +203,7 @@ export default {
                 })
             }
         },
+
         confirm() {
             if(checkForm(this, this.$refs['retrieveForm']) && this.$refs['veri'].validateForm()){
 
