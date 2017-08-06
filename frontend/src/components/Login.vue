@@ -83,6 +83,7 @@
 import verification from 'verification-code'
 import { checkPassword, checkRePassword, checkVerification, checkForm, checkPhone, checkEmail } from '../utils/checks'
 import { mapGetters, mapMutations } from 'vuex'
+import {beforePost} from '../utils/utils'
 import Verification from './tinyComponents/Verification'   //component
 
 

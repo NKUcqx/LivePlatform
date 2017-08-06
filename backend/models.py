@@ -12,10 +12,10 @@ import random
 # Create your models here.
 
 def get_User():
-    return User.objects.get(id=1)
+    return User.objects.all()[0]
 
 def get_Room():
-    return LiveRoom.objects.get(id= 1)# default value , use it instead of using "default = 1"
+    return LiveRoom.objects.all()[0]
 
 def get_file_path(instance,filename):
     return '/'.join((str(instance.file_name),filename))
@@ -54,25 +54,18 @@ class User(AbstractUser):
 
 @receiver(pre_save, sender = User)
 def checkPhoneAndEmail(sender, instance, **kwargs):
-    if((instance.email is '' or instance.email is None ) and (instance.phone is '' or instance.phone is None)):
+    if((instance.email == '' or instance.email is None ) and (instance.phone == '' or instance.phone is None)):
         raise TypeError('Must Fill either a email or a phone number !')
-    if(instance.phone is not '' and instance.phone is not None):
-        if(len(instance.phone) is not 11):
+    if(instance.phone != '' and instance.phone is not None):
+        if(len(instance.phone) != 11):
             raise TypeError('Format Invalid !')
-        try:
-            User.objects.filter(phone = instance.phone)
+        users = User.objects.filter(phone = instance.phone)
+        if(len(users) > 0 and users[0].username != instance.username):
             raise TypeError('Phone Num has already in use .')
-        except User.DoesNotExist:
-            pass
-    if(instance.email is not '' and instance.email is not None):
-        try:
-            User.objects.filter(email = instance.email)
+    if(instance.email != '' and instance.email is not None):
+        users = User.objects.filter(email = instance.email)
+        if(len(users) > 0 and users[0].username != instance.username):
             raise TypeError('Email address has already in use .')
-        except User.DoesNotExist:
-            pass
-
-
-
 
 class LiveRoomManager(models.Manager):
     def room_count(self):
