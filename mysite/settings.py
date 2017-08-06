@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'backend',
 ]
 
@@ -78,8 +77,8 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'test',
-        'USER': 'root',
+        'NAME': 'group3',
+        'USER': 'jason',
         'PASSWORD': '',
     }
 }
@@ -139,3 +138,5 @@ EMAIL_HOST_USER = '15302178925@163.com'
 EMAIL_HOST_PASSWORD = 'a1511490'
 EMAIL_USE_TLS = True
 EMAIL_PORT= 25
+
+#LOGIN_URL = '/#/'

@@ -37,6 +37,16 @@ def test_phone(phone):
     phonematch=model.match(phone)
     return True if phonematch else False
 
+def change_avatar(request):
+    user = User.object.get(id = request.user_id)
+    avatar = request.FILES.get('avatar',None)
+    if(avatar is not None):
+        user.avatar_path = avatar
+        user.save()
+        return HttpResponse(CODE['0'])
+    else:
+        return HttpResponse(CODE['25'])
+
 #发送邮件
 @require_POST
 def send_to(request):
@@ -102,44 +112,10 @@ def test_username(request):
     except:
         return HttpResponse(False) 
 
-
-
-'''      
-    if not user:
-        return HttpResponse("login failure")
-    auth.login(request, user)
-    return HttpResponse("login success")'''
-
-
-'''
-#查找用户名是否存在函数，接收GET请求，返回字符串
-def query_repeat_username(request):
-    get_username = request.GET.get('reusername')
-    print(get_username)
-    try:
-        has_email = User.objects.get(username=get_username)
-        if(has_email):
-            return HttpResponse("username repeat")          
-    except:
-        return HttpResponse("username is ok") 
-
-#向一个TEST表中写入数据，通过django的form形式，比较简单，注意forms.py这个文件
-def insert(request):
-    params = request.POST if request.method == 'POST' else None
-    form = PostForm(params)
-    if form.is_valid():
-        form.save()
-        return HttpResponse("insert success")
-    return HttpResponse("insert failure")
-
-#websocket的服务器端，接收消息返回消息
-@require_websocket
-def websocket(request):
-    for message in request.websocket:
-        params = {'content' :message.decode(encoding='utf-8')}
-        form = TestForm(params)
-        if form.is_valid():
-            form.save()
-            request.websocket.send("insert success: ".encode(encoding='utf-8') + message)
-        else:
-            request.websocket.send("insert failure: ".encode(encoding='utf-8') + message)'''
+def change_password(request):
+    body = bi2obj(request)
+    username=body['username']
+    new_password=body['password']
+    user=User.objects.get(username=username)
+    user.set_password(new_password)
+    user.save()

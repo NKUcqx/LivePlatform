@@ -7,7 +7,7 @@
 		    	<Input v-model="form.verification" placeholder="Input VERIFICATION"><Icon type="star" slot="prepend" v-if="this.father==='login'"></Icon></Input>
 		    </Col>
 		    <Col span="6" offset="6">
-			    <Button type="primary" v-if="this.state === 'unsent'" @click="testUsername()" class="buttons">Achieve</Button>
+			    <Button type="primary" v-if="this.state === 'unsent'" @click="achieveVerification()" class="buttons">Achieve</Button>
 			    <Button type="primary" disabled v-else class="buttons">{{time}}</Button>
 		    </Col>
 		</Row>
@@ -20,6 +20,7 @@
 
 import { checkVerification, checkPhone, checkEmail, checkForm } from '../../utils/checks'
 import { beforePost } from '../../utils/utils'
+
 const countDownNum = 60
 
 export default {

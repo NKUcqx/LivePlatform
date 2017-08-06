@@ -5,26 +5,31 @@ import Router from 'vue-router'
 import Welcome from '@/components/Welcome'
 import Home from '@/components/Home'
 import Codedemo from '@/components/Codedemo'
-
+import Canvas from '@/components/tinyComponents/Canvas'
 
 Vue.use(Router)
 
 export default new Router({
-  routes: [
-    {
-      path: '',
-      name: 'Welcome',
-      component: Welcome
-    },
-    {
-      path: '/home',
-      name: 'home',
-      component: Home
-    },
-    {
-      path: '/code',
-      name: 'code',
-      component: Codedemo
-    }
-  ]
+    routes: [
+        {
+            path: '',
+            name: 'Welcome',
+            component: Welcome
+        },
+        {
+            path: '/home',
+            name: 'home',
+            component: Home
+        },
+        {
+            path: '/canvas',
+            name: 'canvas',
+            component: Canvas
+        },
+        {
+            path: '/code',
+            name: 'code',
+            component: Codedemo
+        }
+    ]
 })
