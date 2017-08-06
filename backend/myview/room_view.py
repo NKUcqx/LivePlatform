@@ -37,15 +37,17 @@ def createRoomPath():
     return md5.hexdigest()
 
 def createFolder(file_name):
-    os.makedirs( os.path.join('files/' , file_name) )
-    os.mknod( os.path.join('files/',file_name,'chatlog.txt'))
+    os.makedirs(os.path.join('files/' , file_name))
+    os.mknod(os.path.join('files/',file_name,'chatlog.txt'))
 
 def uploadThumbnail(room, thumbnail):
     room.thumbnail_path = thumbnail
+    room.save()
     return room
 
 def uploadSlide(room, slide):
     room.slide_path = slide
+    room.save()
     return room
 
 #TODO create error_log.txt
@@ -67,7 +69,7 @@ def createRoom(request):
                 room = uploadThumbnail(room , thumbnail)
                 #print(type(room.thumbnail_path))
             else:
-                return HttpResponse(CODE['20'])
+                return HttpResponse(content = CODE['20'], status = 415)
         if(slide):
             slide_type = os.path.splitext(slide.name)[1]
             #must add dot ! otherwise user could upload file "somepdf" instead "some.pdf"  #any type else ?
@@ -75,18 +77,16 @@ def createRoom(request):
                 room = uploadSlide(room, slide)
                 #room.slide_path = slide
             else:
-                return HttpResponse(CODE['20'])
+                return HttpResponse(content = CODE['20'], status = 415)
         room.save()
         request.session['room'] = room
         return JsonResponse({'room': list(room.values('id', 'name', 'creater', 'audience_amount', 'create_time', 'slide_path', 'thumbnail_path')) }) # return the new room's id
     elif(request.user.role == 'S'):
-        return HttpResponse(CODE['12'])
-    elif('room' in request.session):
-        return HttpResponse(CODE['21'])
+        return HttpResponse(content = CODE['12'], status = 401)
+    elif('room' in request.session):#because each person can not create other rooms while living
+        return HttpResponse(content = CODE['21'], status = 400)
     else:
-        return HttpResponse(CODE['12'])
-
-
+        return HttpResponse(content = CODE['12'], status = 401)
 
 @require_POST
 def endRoom(request):
@@ -99,9 +99,9 @@ def endRoom(request):
             room.save()
             del request.session['room']
                 #LOG("CQX-room_view.endRoom" , "Room: " + str(room.id) +"has been closed")
-            return HttpResponse(CODE['0'])
+            return HttpResponse(content = CODE['0'])
         else :
-            return HttpResponse(CODE['12'])
+            return HttpResponse(content = CODE['12'], status = 401)
     else:
-        return HttpResponse(CODE['24'])
+        return HttpResponse(content = CODE['24'], status = 404)
 

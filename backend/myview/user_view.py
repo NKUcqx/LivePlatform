@@ -43,9 +43,9 @@ def change_avatar(request):
     if(avatar is not None):
         user.avatar_path = avatar
         user.save()
-        return HttpResponse(CODE['0'])
+        return HttpResponse(content = CODE['0'])
     else:
-        return HttpResponse(CODE['25'])
+        return HttpResponse(content = CODE['25'], status = 415)
 
 #发送邮件
 @require_POST
@@ -57,11 +57,11 @@ def send_to(request):
         try:
             message=u"您的注册码为"+str(code)
             send_mail(u'注册用户验证信息', message, '15302178925@163.com', [email], fail_silently=False) 
-            return HttpResponse(CODE['0'])
+            return HttpResponse(content = CODE['0'])
         except:
-            return HttpResponse(CODE['1'])
+            return HttpResponse(content = CODE['1'],status = 500)# i don't know where or what error will this receipt
     else:
-        return HttpResponse(CODE['10'])
+        return HttpResponse(content = CODE['10'], status = 400)
 
 #注册执行的函数，接收GET请求，返回字符串
 @require_POST
@@ -88,7 +88,7 @@ def signup_submit(request):
         user.save()
         return HttpResponse(model_to_dict(user))
     else:
-        return HttpResponse(CODE['4'])
+        return HttpResponse(content = CODE['4'], status = 400)
 
 
 #登录执行的函数，接收POST请求，返回字符串
@@ -98,9 +98,9 @@ def login_submit(request):
     user = auth.authenticate(request, username = body['username'], password = body['password'])
     if(user is not None):
         auth.login(request , user)
-        return HttpResponse(CODE['0'])
+        return HttpResponse(content = CODE['0'])
     else:
-        return HttpResponse(CODE['11'])
+        return HttpResponse(content = CODE['11'], status = 404)
 
 #check the username exists
 @require_GET
@@ -108,9 +108,9 @@ def test_username(request):
     get_username = request.GET.get('username')
     try:
         User.objects.get(username=get_username)
-        return HttpResponse(True)          
+        return HttpResponse(content = CODE['0'])          
     except:
-        return HttpResponse(False) 
+        return HttpResponse(status = 500) 
 
 def change_password(request):
     body = bi2obj(request)
