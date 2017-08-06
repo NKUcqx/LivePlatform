@@ -82,9 +82,6 @@ class LiveRoomManager(models.Manager):
         return self.filter(name__icontains = name)
     '''
 
-
-
-
 class LiveRoom(models.Model):
     name = models.CharField(max_length = 30)# ,db_index = True
     creater = models.ForeignKey(User, default = get_User)#no need to CASCADE when user get deleted ,right?

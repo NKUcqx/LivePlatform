@@ -27,7 +27,7 @@ def getRooms(request):
         rooms = rooms.filter(is_living = True if request.GET.get('is_living') == 'true' else False)
     if('limit' in request.GET):
         rooms = rooms[int(request.GET.get('start',0)):int(request.GET.get('limit'))]
-    return JsonResponse({"rooms":list(rooms.values())})
+    return JsonResponse({"rooms": list(rooms.values('id', 'name', 'creater', 'audience_amount', 'create_time', 'slide_path', 'thumbnail_path'))})
 
 def createRoomPath():
     now = timezone.now()
@@ -70,14 +70,15 @@ def createRoom(request):
                 return HttpResponse(CODE['20'])
         if(slide):
             slide_type = os.path.splitext(slide.name)[1]
-            if(slide_type.endswith(('.ppt','.pptx','.pps','.swf','.pdf','.key'))):#must add dot ! otherwise user could upload file "somepdf" instead "some.pdf"  #any type else ?
+            #must add dot ! otherwise user could upload file "somepdf" instead "some.pdf"  #any type else ?
+            if(slide_type.endswith(('.ppt','.pptx','.pps','.swf','.pdf','.key'))):
                 room = uploadSlide(room, slide)
                 #room.slide_path = slide
             else:
                 return HttpResponse(CODE['20'])
         room.save()
         request.session['room'] = room
-        return HttpResponse(room) # return the new room's id
+        return JsonResponse({'room': list(room.values('id', 'name', 'creater', 'audience_amount', 'create_time', 'slide_path', 'thumbnail_path')) }) # return the new room's id
     elif(request.user.role == 'S'):
         return HttpResponse(CODE['12'])
     elif('room' in request.session):
