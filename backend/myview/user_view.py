@@ -108,7 +108,7 @@ def testUsername(request):
         User.objects.get(username = get_username)
         return HttpResponse(content = CODE['0'])          
     except:
-        return HttpResponse(status = 401)
+        return HttpResponse(status = 401) 
 
 @require_POST
 def changeAvatar(request):

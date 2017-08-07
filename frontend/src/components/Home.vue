@@ -94,8 +94,6 @@
                         backgroundImage: 'url( ../../static/bg' + (index + 3) + '.jpg)',
                         border: '1px solid rgb(191, 191, 191)'
                     }
-                        border : '1px solid rgb(191, 191, 191)',
-                    } 
                 }
             }
         },
