@@ -38,16 +38,16 @@
 </template>
 
 <script>
-    import { mapGetters, mapActions, } from 'vuex'    
+    import { mapGetters, mapActions, } from 'vuex'   
     import Room from './tinyComponents/Room'
     import Topbar from './tinyComponents/Topbar'
-    import { beforePost } from '../utils/utils'
+    import { beforePost, } from '../utils/utils'
 
     export default {
         name: 'videoList',
         components: {
             Room,
-            Topbar,
+            Topbar
         },
         data () {
             return {
@@ -87,13 +87,13 @@
                 if(index === this.carousel) {
                     return {
                         backgroundImage: 'url( ../../static/bg' + (index + 3) + '.jpg)',
-                        border : '3px solid rgb(0, 180, 0)'
+                        border : '3px solid rgb(0, 180, 0)',
                     }
                 }
                 else {
                     return {
                         backgroundImage: 'url( ../../static/bg' + (index + 3) + '.jpg)',
-                        border : '1px solid rgb(191, 191, 191)'
+                        border : '1px solid rgb(191, 191, 191)',
                     } 
                 }
             },
