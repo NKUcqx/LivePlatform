@@ -56,7 +56,7 @@
 <script>
 
     import Verification from './tinyComponents/Verification'
-    import { checkPassword, checkRePassword, checkVerification, checkForm, checkPhone } from '../utils/checks'
+    import { checkPassword, checkRePassword, checkVerification, checkForm, checkPhone, checkEmail, checkUsername } from '../utils/checks'
     import { beforePost } from '../utils/utils'
     import { mapGetters, mapMutations } from 'vuex'
 
@@ -66,8 +66,16 @@
         },
         data() {
             //this is for check password
-            const validateUser = (rule, value, callback) => {
-                
+            const validateEmail = (rule, value, callback) => {
+                if(value === ''){
+                    callback(new Error('please input email'))
+                }
+                else if(!checkEmail(value)){
+                    callback(new Error('this is not email'))
+                }
+                else{
+                    checkUsername(rule, value, callback, 'signup')
+                }
             }
             const validatePass = (rule, value, callback) => {
                 checkPassword(rule, value, callback, this.signinfo.passwordCheck, this.$refs.signinfo, 'passwordCheck')
@@ -83,7 +91,7 @@
                     callback(new Error('this is not phone numbers'))
                 }
                 else{
-                    callback()
+                    checkUsername(rule, value, callback, 'signup')
                 }
             }
             return {
@@ -100,8 +108,7 @@
                 },
                 ruleSignup: {
                     email: [
-                        { required: true, message: 'please input email', trigger: 'blur' },
-                        { type: 'email', message: 'this is not an email', trigger: 'blur' }
+                        { required: true, type: 'string', validator: validateEmail, trigger: 'blur' },
                     ],
                     phone: [
                         { required: true, type: 'string', validator: validatePhone, trigger: 'blur' },

@@ -7,7 +7,7 @@
 		    	<Input v-model="form.verification" placeholder="Input VERIFICATION"><Icon type="star" slot="prepend" v-if="this.father==='login'"></Icon></Input>
 		    </Col>
 		    <Col span="6" offset="6">
-			    <Button type="primary" v-if="this.state === 'unsent'" @click="achieveVerification()" class="buttons">Achieve</Button>
+			    <Button type="primary" v-if="this.state === 'unsent'" @click="testUsername()" class="buttons">Achieve</Button>
 			    <Button type="primary" disabled v-else class="buttons">{{time}}</Button>
 		    </Col>
 		</Row>
@@ -75,6 +75,7 @@ export default {
             	this.state = 'sent'
 	            this.beginCountdown();
             	this.sendEmail()
+                this.$Message.success('Send Success')
             }
             else{
             	this.$Message.error('not phone or email')
@@ -125,17 +126,20 @@ export default {
         testUsername() {
         	this.$http.get('/testusername?username='+this.username)
         	.then(function (res) {
-	            if (res.body === 'False' && this.father === 'login'){
-	            	alert("username does not exist")
-	            }
-	            else if (res.body === 'True' && this.father === 'signup'){
+                console.log(res.status)
+                if (res.status === 200 && this.father === 'signup'){
 	            	alert("username does exist")
 	            }
 	            else {
 	            	this.achieveVerification()
 	            }
 	        }, function (res) {
-	            alert(res.body)
+                if (res.status === 401 && this.father === 'login'){
+                    alert("username does not exist")
+                }
+                else {
+                    this.achieveVerification()
+                }
 	        })
         }
     }

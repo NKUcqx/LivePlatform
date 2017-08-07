@@ -142,10 +142,10 @@
                 formData.append('name', this.createForm.title) 
                 //formData.append('creater_id',1)  
                 this.$http({
-                    url:'/createroom/',
-                    method:'POST',
+                    url: '/createroom/',
+                    method: 'POST',
                     body:formData,
-                    before:function(request){beforePost(request)},
+                    before:function(request){ beforePost(request) },
                 }).then(function (res) {
                     alert(res.body)
                 }, function (res) {
