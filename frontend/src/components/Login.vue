@@ -81,7 +81,7 @@
 <script>
 
 import verification from 'verification-code'
-import { checkPassword, checkRePassword, checkVerification, checkForm, checkPhone, checkEmail } from '../utils/checks'
+import { checkPassword, checkRePassword, checkVerification, checkForm, checkPhone, checkEmail, checkUsername } from '../utils/checks'
 import { mapGetters, mapMutations } from 'vuex'
 import {beforePost} from '../utils/utils'
 import Verification from './tinyComponents/Verification'   //component
@@ -109,7 +109,7 @@ export default {
                 callback(new Error('this is not phone or email'))
             }
             else{
-                callback()
+                checkUsername(rule, value, callback, 'login')
             }
         }
         return {
@@ -162,7 +162,13 @@ export default {
             page: 'getPage'
         }),
         typeOfUsername() {
-            return 0
+            if(checkEmail(this.retrieve.user)){
+                return 1
+            }
+            else if(checkPhone(this.retrieve.user)){
+                return 0
+            }
+            return -1
         },
     },
     methods: {
