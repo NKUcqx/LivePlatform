@@ -27,7 +27,12 @@ def getRooms(request):
         rooms = rooms.filter(is_living = True if request.GET.get('is_living') == 'true' else False)
     if('limit' in request.GET):
         rooms = rooms[int(request.GET.get('start',0)):int(request.GET.get('limit'))]
-    return JsonResponse({"rooms": list(rooms.values('id', 'name', 'creater', 'audience_amount', 'create_time', 'slide_path', 'thumbnail_path', 'is_living'))})
+    rooms_dic = rooms.values('id', 'name', 'creater', 'audience_amount', 'create_time', 'end_time', 'slide_path', 'thumbnail_path', 'is_living');
+    for item in rooms_dic:
+        item['creater_name'] = User.objects.get(id = item['creater']).nickname
+        item['create_time'] = item['create_time'].strftime('%Y-%-m-%d %H:%m:%S')
+        item['end_time'] = item['end_time'].strftime('%Y-%-m-%d %H:%m:%S') if item.get('end_time',None) is not None else ''
+    return JsonResponse({"rooms": list(rooms_dic)})
 
 def createRoomPath():
     now = timezone.now()
@@ -93,7 +98,8 @@ def endRoom(request):
     user = request.user# session need save a user entity & a room entity
     room = request.session.get('room',None)
     if(room):
-        if(user and user.is_authenticated() and user.role == 'T' and user.id == room.creater_id):# _id is a default field to save one query from user table                
+        # _id is a default field to save one query from user table
+        if(user and user.is_authenticated() and user.id == room.creater_id):
             room.end_time = timezone.now()
             room.is_living = False
             room.save()
