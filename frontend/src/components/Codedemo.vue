@@ -8,7 +8,14 @@
       <select name="mode" v-model="mode">
           <option value="javascript">javascript</option>
           <option value="vue">vue</option>
-        </select>
+          <option value="text/x-c++src">C++</option>
+          <option value="text/x-c">C</option>
+          <option value="text/x-csharp">C#</option>
+          <option value="text/x-java">Java</option>
+          <option value="sql">sql</option>
+          <option value="text/css">css</option>
+          <option value="htmlmixed">html</option>
+      </select>
     </main>
   </div>
 </template>
@@ -17,14 +24,31 @@
 // require htmlmixed mode
 require('../../node_modules/codemirror/mode/vue/vue.js')
 require('../../node_modules/codemirror/mode/javascript/javascript.js')
+require('../../node_modules/codemirror/mode/clike/clike.js')
+require('../../node_modules/codemirror/mode/css/css.js')
+require('../../node_modules/codemirror/mode/xml/xml.js')
+require('../../node_modules/codemirror/mode/htmlmixed/htmlmixed.js')
+require('../../node_modules/codemirror/mode/sql/sql.js')
 
 // require hint addon for javacript
 require('../../node_modules/codemirror/addon/hint/show-hint.js')
 require('../../node_modules/codemirror/addon/hint/show-hint.css')
 require('../../node_modules/codemirror/addon/hint/javascript-hint.js')
+require('../../node_modules/codemirror/addon/hint/anyword-hint.js')
+require('../../node_modules/codemirror/addon/hint/css-hint.js')
+require('../../node_modules/codemirror/addon/hint/html-hint.js')
+require('../../node_modules/codemirror/addon/hint/sql-hint.js')
 const codes = {
     javascript: 'var component = {\n\t\tname: "write here"\n}\n\n',
-    vue: '<template>\n<codemirror :value="code"></codemirror>\n</template>\n\n'
+    vue: '<template>\n<codemirror :value="code"></codemirror>\n</template>\n\n',
+    1:'#include<iostream>\nusing namespace std;\n',
+    2:'#include<stdlib.h>\n',
+    3:'static void main(string[] args)\n{\n}\n',
+    4:'public class HelloWorld\n{\n\t\tpublic static void main(String args[])\n\t\t{\n\t\t\t\tSystem.out.println("HelloWorld!");\n\t\t}\n}',
+    //clike:'int main(void) {\n\t\t// your code goes here\n\t\treturn 0;\n}',
+    sql:'-- your code goes here',
+    5:'#app{\n\t\theight:100px;\n\t\twidth:100px;\n}',
+    htmlmixed:'<!DOCTYPE html>\n<html>'
 }
 import codemirror from './codemirror'
   export default {
@@ -38,7 +62,14 @@ import codemirror from './codemirror'
     },
     computed: {
         code: function () {
-            return codes[this.mode]
+            if(this.mode==='text/x-c++src') {return codes[1]}
+            else if(this.mode==='text/x-c') {return codes[2]}
+            else if(this.mode==='text/x-csharp') {return codes[3]}
+            else if(this.mode==='text/x-java') {return codes[4]}
+            else if(this.mode==='text/css') {return codes[5]}
+            else{
+                return codes[this.mode]
+            } 
         },
         options: function () {
             return {
@@ -54,9 +85,6 @@ import codemirror from './codemirror'
         change: function (code) {
             console.log('change', code)
         }
-    },
-    install:function (Vue) {
-    Vue.component('codemirror', CmComponent)
     }
   }
 </script>
