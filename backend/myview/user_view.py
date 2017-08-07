@@ -145,7 +145,6 @@ def changePassword(request):
     new_password = body.get('new_password', None)
     if(username is None or new_password is None):
         return HttpResponse(content = CODE['4'], status = 401)
-
     if(forget_pw is None):#means he just wants to reset pw, which need verify his status
         user = auth.authenticate(username = username, password = password)
     else:#means this poor guy has forget his pw, reset directly
