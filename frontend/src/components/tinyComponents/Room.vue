@@ -1,36 +1,115 @@
 <template>
-  <li class="vedioitem">
-    <img class="video-preview" :src="'./files/' + item.thumbnail_path"></img>
-    <div class="property">
-        <h4>{{'./files/' + item.thumbnail_path }}</h4>
-        <span>
-            <div class="teacher-name">
-                <span>主讲教师: {{ item.creater_id }}</span>
-            </div>
-            <div class="viewers-count">
-                <div>
-                    在线人数
-                    <Icon type="person"></Icon>
-                    {{ item.audience_amount }}
-                </div>
-            </div>
+<div id="roomitem">
+    <div id="scene">
+        <div id="gray">
+        <div id="icon">
+        </div>
+        </div>
+    </div>
+    <div id="footer">
+        <span id="title">{{ item.name }}</span>
+        <span id="teacher"><Icon type="person"></Icon> {{ item.creater_id }}</span>
+        <span id="audiences" v-if="item.is_living">
+            <Icon type="eye"></Icon>
+            {{ item.audience_amount }}
+        </span>
+        <span id="endtime" v-else>
+            <Icon type="clock"></Icon>
+            {{ item.end_time }}
         </span>
     </div>
-  </li>
+</div>
 </template>
 
 <script>
 
 export default {
-  props: {
-    item: Object,
-  }
+    props: {
+        item: Object,
+    },
+    mounted(){
+        console.log(this.item.is_living)
+    }
 }
 
 </script>
 
 <style scoped>
-.vedioitem {
+#roomitem {
+    display: inline-block;
+    width: 240px;
+    margin: 10px 30px 10px 0px;
+    -moz-box-shadow:0px 0px 5px #878787;
+    -webkit-box-shadow:0px 0px 5px #878787;
+    box-shadow:0px 0px 5px #878787;
+}
+
+#scene {
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-image: url(../../assets/v1.png);
+    height: 150px;
+}
+
+#icon {
+    height: 150px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-image: url(../../assets/live.png);
+    display: none;
+}
+
+#gray {
+    height: 150px;
+    background-color: rgba(100,100,100,0.4);
+    display: none;
+}
+
+#title {
+    display: block;
+    padding: 0px 6px;
+    font-size: 15px;
+    color: black;
+    text-align: left;
+}
+
+#footer {
+    height: 45px;
+    background-color: white;
+}
+
+#teacher {
+    padding: 0px 6px;
+    float: left;
+}
+
+#endtime {
+    padding: 0px 6px;
+    float: right;
+}
+
+#audiences {
+    padding: 0px 6px;
+    float: right;
+}
+
+#roomitem:hover #icon {
+    display: block;
+}
+
+#roomitem:hover #gray {
+    display: block;
+}
+
+#roomitem:hover {
+    cursor:pointer;
+    -moz-box-shadow:2px 2px 5px #333333;
+    -webkit-box-shadow:2px 2px 5px #333333; 
+    box-shadow:2px 2px 5px #333333;
+}
+
+
+/*.vedioitem {
   height: 200px;
   width: 180px;
   border: none;
@@ -56,5 +135,5 @@ export default {
 }
 h4:hover {
   color: blue;
-}
+}*/
 </style>

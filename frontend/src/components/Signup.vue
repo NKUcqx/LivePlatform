@@ -66,6 +66,9 @@
         },
         data() {
             //this is for check password
+            const validateUser = (rule, value, callback) => {
+                
+            }
             const validatePass = (rule, value, callback) => {
                 checkPassword(rule, value, callback, this.signinfo.passwordCheck, this.$refs.signinfo, 'passwordCheck')
             }
@@ -176,7 +179,7 @@
     text-align: left;
 }
 #signup-row {
-    clear: both
+    clear: both;
 }
 #select-type{
     float: right;

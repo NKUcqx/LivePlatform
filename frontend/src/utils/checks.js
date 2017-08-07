@@ -1,3 +1,5 @@
+import Vue from 'vue'
+
 
 //测试一个字符串是否含有特殊字符
 export const checkSpecialChar = (str) => {
@@ -21,7 +23,7 @@ export const checkEmail = (email) => {
 }
 
 export const checkObjLegal = (obj) => {
-    for(item in obj) {
+    for(let item in obj) {
         if(Object.prototype.toString.call(item) === '[object String]'){
             if(item === '' || !checkSpecialChar(item)){
                 return false
@@ -60,6 +62,14 @@ export const checkVerification = (rule, value, callback, code) => {
     else{
         callback()
     }
+}
+
+export const checkUsername = (rule, value, callback, username) => {
+    Vue.http.get('/testusername?username=' + username).then(function (res) {
+        alert(res.body)
+    }, function (res) {
+        alert(res.body)
+    })
 }
 
 export const checkForm = (obj, formRef) => {

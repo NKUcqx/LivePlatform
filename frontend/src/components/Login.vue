@@ -181,9 +181,6 @@ export default {
             this.retrieve.user = (this.state === 1)? this.form.user : this.retrieve.user
             this.form.user = (this.state === 0)? this.retrieve.user : this.form.user
         },
-        isUsernameExist() {
-
-        },
         login() {
             if(checkForm(this, this.$refs['form'])){
                 let data = {
@@ -197,36 +194,33 @@ export default {
                     body: data,
                     before: function(request){beforePost(request)},
                 }).then(function (res) {
-                    console.log(res.body)
-                    this.$router.push({path: '/home'})
+                    alert(res.body)
+                    //this.$router.push({path: '/home'})
                 }, function (res) {
                     alert(res.body)
                 })
             }
         },
-
         confirm() {
             if(checkForm(this, this.$refs['retrieveForm']) && this.$refs['veri'].validateForm()){
-
+                let data = {
+                    username: this.retrieve.user,
+                    password: this.retrieve.newPassword
+                }
+                console.log(data)
+                this.$http({
+                    url: '/changepass/',
+                    method: 'POST',
+                    body: data,
+                    before: function(request){beforePost(request)},
+                }).then(function (res) {
+                    alert(res.body)
+                    //this.$router.push({path: '/home'})
+                }, function (res) {
+                    alert(res.body)
+                })
             }
         },
-        /*sendFile(files){
-            let file = files[0]
-            let formData = new FormData()
-            formData.append('thumbnail', file) 
-            formData.append('name','fuckRoom2') 
-            //formData.append('creater_id',1)  
-            this.$http({
-                url:'/createroom/',
-                method:'POST',
-                body:formData,
-                before:function(request){beforePost(request)},
-            }).then(function (res) {
-                alert(res.body)
-            }, function (res) {
-                alert(res.status)
-            })
-        }*/
     }
 }
 </script>

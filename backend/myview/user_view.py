@@ -114,8 +114,10 @@ def test_username(request):
 
 def change_password(request):
     body = bi2obj(request)
+    print(body)
     username=body['username']
     new_password=body['password']
     user=User.objects.get(username=username)
     user.set_password(new_password)
     user.save()
+    return HttpResponse(CODE['0']) 
