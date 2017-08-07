@@ -15,24 +15,24 @@
             </div>
         </div>
         <div id="container">
-            <div class="headersection">
-                <h1>
+            <Card shadow class="card">
+                <h3 slot="title" class="headersection">
                     <Icon type="social-twitch-outline"></Icon>
                     正在直播
-                </h1>
-            </div>
-            <section class="flexcontainer">
-                <room v-for="livesItem in livesList" :item="livesItem"></room>
-            </section>
-            <div class="headersection">
-                <h1>
+                </h3>
+                <section class="flexcontainer">
+                    <room v-for="livesItem in livesList" :item="livesItem"></room>
+                </section>
+            </Card>
+            <Card shadow  class="card">
+                <h3 slot="title" class="headersection">
                     <Icon type="ios-videocam"></Icon>
                     录播视频
-                </h1>
-            </div>
-            <section class="flexcontainer">
-                <room v-for="videoItem in videosList" :item="videoItem"></room>
-            </section>
+                </h3>
+                <section class="flexcontainer">
+                    <room v-for="videoItem in videosList" :item="videoItem"></room>
+                </section>
+            </Card>
         </div>
     </div>
 </template>
@@ -85,7 +85,6 @@
             },
             asideStyle(index) {
                 if(index === this.carousel) {
-                    console.log(this.background[index])
                     return {
                         backgroundImage: 'url( ../../static/bg' + (index + 3) + '.jpg)',
                         border : '3px solid rgb(0, 180, 0)'
@@ -139,12 +138,20 @@
     float: left;
 }
 
+#carousel-containter:hover {
+    cursor: pointer;
+}
+
 #carousel-aside {
     display: inline-block;
     width: calc(25% - 5px);
     height: 500px;
     background-color: rgb(120, 120, 120);
     float: right;
+}
+
+#carousel-aside:hover {
+    cursor: pointer;
 }
 
 .aside-item {
@@ -163,23 +170,28 @@
     box-shadow:0px 0px 5px #878787;
 }
 
+
 #home {
-    background-color: rgb(249, 249, 249);
+    min-width: calc(240*4px + 30*4px + 35px);
 }
 
 #containter {
+    text-align: center;
+}
 
+.card {
+    display: inline-block;
+    width: calc(240*4px + 30*4px + 35px);
+    margin: 30px 0px;
 }
 
 .headersection {
     /*border: 1px red solid;*/
-    padding: 30px 120px 30px 120px;
+    
     text-align: left;
 }
 
 .flexcontainer {
     text-align: left;
-    margin: 0px 0px 0px 120px;
-    /*border: 1px red solid;*/
 }
 </style>

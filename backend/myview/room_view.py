@@ -27,7 +27,7 @@ def getRooms(request):
         rooms = rooms.filter(is_living = True if request.GET.get('is_living') == 'true' else False)
     if('limit' in request.GET):
         rooms = rooms[int(request.GET.get('start',0)):int(request.GET.get('limit'))]
-    return JsonResponse({"rooms": list(rooms.values('id', 'name', 'creater', 'audience_amount', 'create_time', 'slide_path', 'thumbnail_path'))})
+    return JsonResponse({"rooms": list(rooms.values('id', 'name', 'creater', 'audience_amount', 'create_time', 'slide_path', 'thumbnail_path', 'is_living'))})
 
 def createRoomPath():
     now = timezone.now()

@@ -1,6 +1,6 @@
 <template>
 <div class="topbar">
-    <Menu mode="horizontal" active-name="3" class="menu" ref="topmenu" theme="dark" id="topmenu">
+    <Menu mode="horizontal" active-name="3" class="menu" ref="topmenu" theme="light" id="topmenu">
         <Menu-item class="longer">
             <img src="../../assets/logo1.png" class="logo-image" alt="head-image" :width="img.size" :height="img.size"> 
         </Menu-item>
@@ -46,10 +46,20 @@
                             <Input v-model="person.username" size="large" placeholder="Teacher" disabled></Input>
                         </Form-item>
                         <Form-item label="img:">
-                            <input type="file" name="img" v-model="createForm.img"/>
+                            <div>
+                            <Upload
+                                action="">
+                                <Button type="ghost" icon="ios-cloud-upload-outline">选择要上传文件的文件</Button>
+                            </Upload>
+                            <div v-if="file !== null">待上传文件：{{ file.name }} <Button type="text" @click="upload" :loading="loadingStatus">{{ loadingStatus ? '上传中' : '点击上传' }}</Button></div>
                         </Form-item>
                         <Form-item label="slide:">
-                            <input type="file" name="slide" v-model="createForm.slide"/>
+                            <div>
+                            <Upload
+                                action="">
+                                <Button type="ghost" icon="ios-cloud-upload-outline">选择要上传文件的文件</Button>
+                            </Upload>
+                            <div v-if="file !== null">待上传文件：{{ file.name }} <Button type="text" @click="upload" :loading="loadingStatus">{{ loadingStatus ? '上传中' : '点击上传' }}</Button></div>
                         </Form-item>
                     </Form>
                 </Modal>
@@ -78,6 +88,8 @@
                 checkRePassword(rule, value, callback, this.form.newPassword)
             }
             return {
+                file: null,
+                loadingStatus: false,
                 person:{
                     username : '13513616830',
                     nickname: 'name',

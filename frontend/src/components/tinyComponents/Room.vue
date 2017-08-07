@@ -8,14 +8,14 @@
     </div>
     <div id="footer">
         <span id="title">{{ item.name }}</span>
-        <span id="teacher"><Icon type="person"></Icon> {{ item.creater_id }}</span>
+        <span id="teacher"><Icon type="person"></Icon> {{ item.creater }}</span>
         <span id="audiences" v-if="item.is_living">
             <Icon type="eye"></Icon>
             {{ item.audience_amount }}
         </span>
         <span id="endtime" v-else>
             <Icon type="clock"></Icon>
-            {{ item.end_time }}
+            {{ item.create_time }}
         </span>
     </div>
 </div>
@@ -28,7 +28,7 @@ export default {
         item: Object,
     },
     mounted(){
-        console.log(this.item.is_living)
+        console.log(this.item)
     }
 }
 
@@ -38,7 +38,7 @@ export default {
 #roomitem {
     display: inline-block;
     width: 240px;
-    margin: 10px 30px 10px 0px;
+    margin: 10px 15px 10px 15px;
     -moz-box-shadow:0px 0px 5px #878787;
     -webkit-box-shadow:0px 0px 5px #878787;
     box-shadow:0px 0px 5px #878787;
@@ -47,7 +47,7 @@ export default {
 #scene {
     background-repeat: no-repeat;
     background-size: 100% 100%;
-    background-image: url(../../assets/v1.png);
+    background-image: url(../../assets/v1.jpg);
     height: 150px;
 }
 
