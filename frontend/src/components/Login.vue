@@ -195,7 +195,7 @@ export default {
                     before: function(request){beforePost(request)},
                 }).then(function (res) {
                     alert(res.body)
-                    //this.$router.push({path: '/home'})
+                    this.$router.push({path: '/home'})
                 }, function (res) {
                     alert(res.body)
                 })
@@ -215,7 +215,7 @@ export default {
                     before: function(request){beforePost(request)},
                 }).then(function (res) {
                     alert(res.body)
-                    //this.$router.push({path: '/home'})
+                    this.$router.push({path: '/home'})
                 }, function (res) {
                     alert(res.body)
                 })
