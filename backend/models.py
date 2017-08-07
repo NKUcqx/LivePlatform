@@ -2,7 +2,7 @@
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.core.validators import MinLengthValidator
 from django.db import models
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save,post_save
 from django.dispatch import receiver
 from django.utils import timezone
 import os
@@ -95,6 +95,15 @@ class LiveRoom(models.Model):
     objects = LiveRoomManager()
     def __unicode__(self):
         return "ID : {}, RoomName: {} , Creater: {}".format(self.ID,self.name,self.creater)
+
+@receiver(pre_save, sender = LiveRoom)
+def checkEndAndLiving(sender, instance, **kwargs):
+    print(instance.end_time)
+    if(instance.is_living == True and instance.end_time is not  None):
+        raise TypeError("Living Room can't have property end_time")
+    if(instance.is_living == False):
+        instance.end_time = timezone.now()
+
 
 class Punishment(models.Model):
     room = models.ForeignKey(LiveRoom, default = get_Room, on_delete = models.CASCADE)
