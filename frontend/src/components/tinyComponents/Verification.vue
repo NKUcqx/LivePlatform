@@ -7,7 +7,7 @@
 		    	<Input v-model="form.verification" placeholder="Input VERIFICATION"><Icon type="star" slot="prepend" v-if="this.father==='login'"></Icon></Input>
 		    </Col>
 		    <Col span="6" offset="6">
-			    <Button type="primary" v-if="this.state === 'unsent'" @click="achieveVerification()" class="buttons">Achieve</Button>
+			    <Button type="primary" v-if="this.state === 'unsent'" @click="testUsername()" class="buttons">Achieve</Button>
 			    <Button type="primary" disabled v-else class="buttons">{{time}}</Button>
 		    </Col>
 		</Row>
@@ -63,16 +63,15 @@ export default {
             let interval = setInterval(function () { countDown() }, 1000)
         },
         achieveVerification () {
-            if (this.sendType === 0 && checkPhone(this.username)) {
+            if(this.sendType === 0 && checkPhone(this.username)) {
                 this.state = 'sent'
-                this.beginCountdown()
+                this.beginCountdown();
                 this.sendMessage()
-            } else if (this.sendType === 1 && checkEmail(this.username)) {
+            } else if(this.sendType === 1 && checkEmail(this.username)) {
                 this.state = 'sent'
-                this.beginCountdown()
+                this.beginCountdown();
                 this.sendEmail()
-            } else {
-                this.$Message.error('not phone or email')
+                this.$Message.success('Send Success')
             }
         },
         validateForm () {
@@ -118,18 +117,21 @@ export default {
                 })
         },
         testUsername () {
-            this.$http.get('/testusername?username=' + this.username)
-                .then(function (res) {
-                    if (res.body === 'False' && this.father === 'login') {
-                        alert('username does not exist')
-                    } else if (res.body === 'True' && this.father === 'signup') {
-                        alert('username does exist')
-                    } else {
-                        this.achieveVerification()
-                    }
-                }, function (res) {
-                    alert(res.body)
-                })
+            this.$http.get('/testusername?username='+this.username)
+            .then(function (res) {
+                console.log(res.status)
+                if (res.status === 200 && this.father === 'signup') {
+                    alert("username does exist")
+                } else {
+                    this.achieveVerification()
+                }
+            }, function (res) {
+                if (res.status === 401 && this.father === 'login'){
+                    alert("username does not exist")
+                } else {
+                    this.achieveVerification()
+                }
+            })
         }
     }
 }

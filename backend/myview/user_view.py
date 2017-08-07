@@ -110,7 +110,7 @@ def test_username(request):
         User.objects.get(username=get_username)
         return HttpResponse(content = CODE['0'])          
     except:
-        return HttpResponse(status = 500) 
+        return HttpResponse(status = 401) 
 
 def change_password(request):
     body = bi2obj(request)

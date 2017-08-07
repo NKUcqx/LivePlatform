@@ -106,31 +106,4 @@ export default {
     box-shadow:2px 2px 5px #333333;
 }
 
-/*.vedioitem {
-    height: 200px;
-    width: 180px;
-    border: none;
-}
-.vedioitem:hover{
-    cursor: pointer;
-    border: 3px;
-    border-color: #A9A9A9;
-    transform: scale(1.1,1.1);
-}
-.video-preview {
-    height:128px;
-    width: 180px;
-}
-.teacher-name{
-    color:#A9A9A9;
-}
-.viewers-count{
-    color:#A9A9A9;
-}
-.property{
-    background-color: rgba(255,255,255);
-}
-h4:hover {
-    color: blue;
-}*/
 </style>

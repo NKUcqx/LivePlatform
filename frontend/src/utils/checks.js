@@ -62,11 +62,21 @@ export const checkVerification = (rule, value, callback, code) => {
     }
 }
 
-export const checkUsername = (rule, value, callback, username) => {
-    Vue.http.get('/testusername?username=' + username).then(function (res) {
-        alert(res.body)
+export const checkUsername = (rule, value, callback, status) => {
+    Vue.http.get('/testusername?username=' + value).then(function (res) {
+       if (res.status === 200 && status === 'signup'){
+            callback(new Error('username does exist!'))
+        }
+        else {
+            callback()
+        }
     }, function (res) {
-        alert(res.body)
+        if (res.status === 401 && status === 'login'){
+            callback(new Error('username never exists!'))
+        }
+        else {
+            callback()
+        }
     })
 }
 

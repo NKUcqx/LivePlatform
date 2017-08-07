@@ -41,7 +41,7 @@
     import { mapGetters, mapActions } from 'vuex'
     import Room from './tinyComponents/Room'
     import Topbar from './tinyComponents/Topbar'
-    import { beforePost } from '../utils/utils'
+    import { beforePost, } from '../utils/utils'
 
     export default {
         name: 'videoList',
