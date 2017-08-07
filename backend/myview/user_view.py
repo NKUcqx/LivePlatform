@@ -37,16 +37,6 @@ def test_phone(phone):
     phonematch=model.match(phone)
     return True if phonematch else False
 
-def change_avatar(request):
-    user = User.object.get(id = request.user_id)
-    avatar = request.FILES.get('avatar',None)
-    if(avatar is not None):
-        user.avatar_path = avatar
-        user.save()
-        return HttpResponse(content = CODE['0'])
-    else:
-        return HttpResponse(content = CODE['25'], status = 415)
-
 #发送邮件
 @require_POST
 def send_to(request):
@@ -100,24 +90,59 @@ def login_submit(request):
         auth.login(request , user)
         return HttpResponse(content = CODE['0'])
     else:
-        return HttpResponse(content = CODE['11'], status = 404)
+        return HttpResponse(content = CODE['13'], status = 401)
 
 #check the username exists
 @require_GET
 def test_username(request):
     get_username = request.GET.get('username')
     try:
-        User.objects.get(username=get_username)
+        User.objects.get(username = get_username)
         return HttpResponse(content = CODE['0'])          
     except:
-        return HttpResponse(status = 500) 
+        return HttpResponse(status = 401)
 
+@require_POST
+def change_avator(request):
+    user = User.object.get(id = request.user_id)
+    avatar = request.FILES.get('avatar', None)
+    if(avatar is not None):
+        user.avatar_path = avatar
+        user.save()
+        return HttpResponse(content = CODE['0'])
+    else:
+        return HttpResponse(content = CODE['25'], status = 415)
+
+@require_POST
+def change_nickname(request):
+    body = bi2obj(request)
+    user = User.object.get(id = request.user_id)
+    nickname = body.get('nickname', None)
+    if(user.nickname != nickname and nickname != None and nickname != ''):
+        user.nickname = nickname
+        uesr.save()
+        return HttpResponse(CODE['0'])
+    else:
+        return HttpResponse(CODE['5'], status = 401)
+
+
+@require_POST
 def change_password(request):
     body = bi2obj(request)
-    print(body)
-    username=body['username']
-    new_password=body['password']
-    user=User.objects.get(username=username)
-    user.set_password(new_password)
-    user.save()
-    return HttpResponse(CODE['0']) 
+    forget_pw = body.get('forget_pw', None)
+    username = body.get('username', None)
+    password = body.get('password', None)
+    new_password = body.get('new_password', None)
+    if(username is None or password is None):
+        return HttpResponse(CODE['4'], status = 401)
+
+    if(forget_pw is not None):#means he just wants to reset pw, which need verify his status
+        user = auth.authenticate(username = username, password = password)
+    else:#means this poor guy has forget his pw, reset directly
+        user = User.objects.get(username = username)
+    if(user is not None):
+        user.set_password(new_password)
+        user.save()
+        return HttpResponse(CODE['0'])
+    else:
+        return HttpResponse(content = CODE['13'], status = 401)
