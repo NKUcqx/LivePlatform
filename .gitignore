@@ -119,3 +119,4 @@ yarn.lock
 .DS_Store
 /.vagrant/
 
+*.pyc
