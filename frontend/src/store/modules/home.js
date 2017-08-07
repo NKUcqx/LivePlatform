@@ -11,7 +11,7 @@ const getters = {
     getLiveRooms: (state) => {
         return state.liveRooms
     },
-    getVideoRoom: (state) => {
+    getVideoRooms: (state) => {
         return state.videoRooms
     }
 }
@@ -36,7 +36,10 @@ const actions = {
             }
         }).then(function (res) {
             console.log(getListFromDB(res.body));
+            console.log('islive:' + isLive);
             (isLive)? state.liveRooms = getListFromDB(res.body) : state.videoRooms = getListFromDB(res.body)
+            console.log(state.liveRooms);
+            console.log(state.videoRooms);
         }, function () {
             alert('ajax failure')
         })
