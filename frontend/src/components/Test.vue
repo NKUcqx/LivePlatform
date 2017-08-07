@@ -1,7 +1,7 @@
 <!--这个文件是我写的demo文件的页面部分，下面有注释具体都做了什么-->
 
 <template>
-  <div id="all">
+    <div id="all">
     <h1 id="title">This page Is For Test</h1>
     <Form :label-width="80">
         <Form-item label="username" class="white">
@@ -31,18 +31,18 @@
         </Form-item>
     </Form>
     <!--form @submit.prevent="submit">
-    	<label>username: </label>
+        <label>username: </label>
     	<input type="text" name="username" v-model.number="username">
     	<label>password: </label>
     	<input type="text" name="password" v-model.number="password">
       <Button type="submit" name="submit">signup</button>
     </form>
     <div>
-      <input type="button" name="login" value="login" @click="login">
+        <input type="button" name="login" value="login" @click="login">
     </div>
     <div>
-      <input type="text" name="reusername" v-model.number="reusername">
-      <input type="button" value="this username repeat?" @click="findrepeat()">
+        <input type="text" name="reusername" v-model.number="reusername">
+        <input type="button" value="this username repeat?" @click="findrepeat()">
     </div>
     <div>
         <input type="button" value="build websocket" @click="buildwebsocket()">
@@ -77,13 +77,13 @@ export default {
     //这两个map是vuex的部分
     computed: {
         ...mapGetters({
-          count: 'getCount'
+            count: 'getCount'
         }),
     },
     methods: {
-      //for vuex
+        //for vuex
         ...mapMutations({
-          increace: 'increment'
+            increace: 'increment'
         }),
       //for link backend
       //提交表单，用于注册，GET请求，返回字符串
@@ -143,7 +143,7 @@ export default {
         },
       /*buildwebsocket(){
         if(this.socket === '' || this.socket.readyState == WebSocket.CLOSED){
-          this.socket = new WebSocket("ws://" + window.location.host + "/websocket/")
+            this.socket = new WebSocket("ws://" + window.location.host + "/websocket/")
         }
         this.socket.onopen = function () {
             console.log('WebSocket open')//成功连接上Websocket
@@ -154,8 +154,8 @@ export default {
       },*/
       //通过websocket协议进行发送消息，接收消息
       sendmessage(){
-          alert('sent message to server')
-           wsSend(this.socket, "666")
+            alert('sent message to server')
+            wsSend(this.socket, "666")
       },
       //关闭websocket链接
       closewebsocket(){
@@ -169,19 +169,19 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 #all {
-  width: 500px;
-  margin-left:400px;
+    width: 500px;
+    margin-left:400px;
 }
 #title {
-  font-size: 40px;
-  color: white;
-  padding-top: 80px;
-  padding-bottom: 80px;
+    font-size: 40px;
+    color: white;
+    padding-top: 80px;
+    padding-bottom: 80px;
 }
-.white{
-  color: white !important;
+.white {
+    color: white !important;
 }
 #count {
-  font-size: 20px;
+    font-size: 20px;
 }
 </style>

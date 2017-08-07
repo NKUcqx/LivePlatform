@@ -31,7 +31,7 @@ def gen_user_nickname():
     return "User_Nick_"+str(random.randint(0,99999))
 
 class Test(models.Model):
-	content = models.TextField()
+    content = models.TextField()
 
 class User(AbstractUser):
     email = models.CharField(max_length=254, null = True, blank = True)

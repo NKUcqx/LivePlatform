@@ -44,7 +44,7 @@
     import { beforePost } from '../utils/utils'
 
     export default {
-        name: 'vedioList',
+        name: 'videoList',
         components: {
             Room,
             Topbar,
@@ -126,7 +126,7 @@
     background-color: rgb(1, 1, 1);
 }
 
-.carousl-background{
+.carousl-background {
     height: 500px;
     width: 100%;
     background-size: 100% 100%;
@@ -177,11 +177,9 @@
     text-align: left;
 }
 
-.flexcontainer{
+.flexcontainer {
     text-align: left;
     margin: 0px 0px 0px 120px;
     /*border: 1px red solid;*/
 }
-
-
 </style>
