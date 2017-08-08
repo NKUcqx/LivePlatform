@@ -35,22 +35,16 @@ def encode_json(obj):
     try:
         return json.dumps(obj)
     except:
-        if(isinstance(obj, datetime.date)):
-            try:
+        try:
+            if(isinstance(obj, datetime.date)):
                 return obj.strftime('%Y-%-m-%d %H:%m:%S')
-            except (ValueError, e):
-                return ''
-        if(isinstance(obj, ImageFieldFile)):
-            try:
+            if(isinstance(obj, ImageFieldFile)):
                 return obj.path
-            except (ValueError, e):
-                return ''
-        if(isinstance(obj, FieldFile)):
-            try:
+            if(isinstance(obj, FieldFile)):
                 return obj.path
-            except (ValueError, e):
-                return ''
-        raise TypeError(repr(obj) + " ???")
+        except:
+            return ''
+        return ''
 
 
 def bi2obj(request):# in binary form

@@ -63,7 +63,6 @@ def cleanUserRoom(sender, instance, **kwargs):
         room.is_living = False
         room.save()
 
-
 @receiver(pre_save, sender = User)
 def checkPhoneAndEmail(sender, instance, **kwargs):
     if((instance.email == '' or instance.email is None ) and (instance.phone == '' or instance.phone is None)):
