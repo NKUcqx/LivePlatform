@@ -52,7 +52,7 @@ class User(AbstractUser):
         max_length = 7,
         choices = role_choices,
         default = 'S'
-    ) 
+    )
     def __unicode__(self):
         return "ID : {}, UserName: {}".format(self.ID, self.username)
 
