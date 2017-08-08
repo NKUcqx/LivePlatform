@@ -1,5 +1,6 @@
 #from django.conf import settings
 from django.contrib.auth.models import AbstractUser, UserManager
+from django.contrib.auth.signals import user_logged_out
 from django.core.validators import MinLengthValidator
 from django.db import models
 from django.db.models.signals import pre_save,post_save
@@ -54,6 +55,14 @@ class User(AbstractUser):
     ) 
     def __unicode__(self):
         return "ID : {}, UserName: {}".format(self.ID, self.username)
+
+#clean the liveroom hold by the leaving user
+@receiver(user_logged_out, sender = User)
+def cleanUserRoom(sender, instance, **kwargs):
+    for room in LiveRoom.objects.filter(creater_id = instance.id, is_living = True):
+        room.is_living = False
+        room.save()
+
 
 @receiver(pre_save, sender = User)
 def checkPhoneAndEmail(sender, instance, **kwargs):
