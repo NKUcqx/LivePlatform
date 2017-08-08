@@ -62,6 +62,7 @@
 
 <script>
 import { Sketch } from 'vue-color'
+import { wsConnect, wsSend, wsClose } from '../../utils/websockets'
 const defaultProps = {
     hex: '#194d33',
     hsl: { h: 150, s: 0.5, l: 0.2, a: 1 },
@@ -86,6 +87,7 @@ export default {
     },
     data () {
         return {
+            socket: null,
             toolBar: false,
             showColorPicker: false,
             types: ['pen', 'line', 'circle', 'rect', 'rubber', 'text'],
@@ -200,6 +202,7 @@ export default {
             this.setPenProperty()
             switch (action) {
                 case 'mousedown':
+                    wsSend(this.socket, 'sendmessage')
                     this.canvas.penOriginPoint = [x, y]
                     break
                 case 'mousemove':
@@ -379,10 +382,14 @@ export default {
                 this.hideToolBar()
             }); */
         }
-
         this.btnPosition.left = (this.$refs.canvas.offsetLeft + 5).toString() + 'px'
         this.btnPosition.top = (this.$refs.canvas.offsetTop + 5).toString() + 'px'
         this.context = this.$refs.board.getContext('2d')
+        // the next steps is for build websocket
+        console.log('websocket start')
+        this.socket = wsConnect('/canvaschannel/', (e) => {
+            console.log(e.data)
+        })
     }
 }
 </script>

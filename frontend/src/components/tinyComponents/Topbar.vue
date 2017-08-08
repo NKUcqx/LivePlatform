@@ -4,13 +4,9 @@
         <Menu-item class="longer">
             <img src="../../assets/logo1.png" class="logo-image" alt="head-image" :width="img.size" :height="img.size"> 
         </Menu-item>
-        <Submenu name="1">
-            <template slot="title" id="header">
-                教育直播平台
-            </template>
-            <Menu-item name="3-1" class="menu-item"><span class="item">Lives</span></Menu-item>
-            <Menu-item name="3-2" class="menu-item"><span class="item">Videos</span></Menu-item>
-        </Submenu>
+        <Menu-item name="1">
+            教育直播平台
+        </Menu-item>
         <Submenu name="3" class="top-right">
             <template slot="title">
                 <Icon type="ios-paper"></Icon>
@@ -61,18 +57,22 @@
                         <Form-item label="teacher:">
                             <Input v-model="person.username" size="large" placeholder="Teacher" disabled></Input>
                         </Form-item>
-                        <Form-item label="img:">
-                            <Upload action="">
-                                <Button type="ghost" icon="ios-cloud-upload-outline">选择要上传文件的文件</Button>
-                            </Upload>
-                            <div v-if="file !== null">待上传文件：{{ file.name }} <Button type="text" @click="upload" :loading="loadingStatus">{{ loadingStatus ? '上传中' : '点击上传' }}</Button></div>
-                        </Form-item>
-                        <Form-item label="slide:">
-                            <Upload action="">
-                                <Button type="ghost" icon="ios-cloud-upload-outline">选择要上传文件的文件</Button>
-                            </Upload>
-                            <div v-if="file !== null">待上传文件：{{ file.name }} <Button type="text" @click="upload" :loading="loadingStatus">{{ loadingStatus ? '上传中' : '点击上传' }}</Button></div>
-                        </Form-item>
+                        <Upload
+                            type="drag"
+                            action="/img/">
+                            <div>
+                                <Icon type="ios-cloud-upload" size="60" style="color: #3399ff"></Icon>
+                                <p>Upload Your Avatar</p>
+                            </div>
+                        </Upload>
+                        <Upload
+                            type="drag"
+                            action="/slide/">
+                            <div>
+                                <Icon type="ios-cloud-upload" size="60" style="color: #777777"></Icon>
+                                <p>Upload Your Silde</p>
+                            </div>
+                        </Upload>
                     </Form>
                 </Modal>
             </Menu-item>
