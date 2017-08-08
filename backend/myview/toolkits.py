@@ -45,10 +45,6 @@ def encode_json(obj):
         except:
             return ''
         return ''
-<<<<<<< 089b854ae185c802d03438a3cdf28ba00052a090
-=======
-
->>>>>>> Forget to alter some of the jsonresponse content, refs #49
 
 def bi2obj(request):# in binary form
     #if(request.method == "POST"):
