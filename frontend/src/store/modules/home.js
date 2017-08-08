@@ -49,32 +49,3 @@ export default {
     actions,
     mutations
 }
-
-/* import VueLocalStorage from 'vue-localstorage'
-Vue.use(VueLocalStorage)
-
-const debug = process.env.NODE_ENV !== 'production'
-const STORAGE_KEY = 'vedios-vuejs'
-const state = {
-    vedios: JSON.parse(window.localStorage.getItem(STORAGE_KEY) || '[]')
-}
-const getters = {
-    vedios: state => state.vedios
-}
-const mutations = {
-    addVedio (state, room , teacher, viewers) {
-        state.vedios.push({
-            room,
-            teacher,
-            viewers
-        })
-    },
-    deleteVedio (state, index) {
-        state.vedios.splice(index, 1)
-    }
-}
-const localStoragePlugin = store => {
-    store.subscribe((mutation, { vedios }) => {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(vedios))
-  })
-} */

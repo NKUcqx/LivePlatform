@@ -9,10 +9,12 @@ import router from './router'
 import store from './store'
 import VueResource from 'vue-resource'
 import iView from 'iview'
+import VueLocalStorage from 'vue-localstorage'
 import '../my-theme/index.less'
 
 Vue.use(VueResource)
 Vue.use(iView)
+Vue.use(VueLocalStorage)
 
 Vue.config.productionTip = false
 
@@ -28,6 +30,11 @@ new Vue({
         headers: {
         // Authorization: 'Basic YXBpOnBhc3N3b3Jk'
         }
+    },
+    localStorage: {
+        session_id: {
+            type: String,
+            default: null              
+        }
     }
-
 })
