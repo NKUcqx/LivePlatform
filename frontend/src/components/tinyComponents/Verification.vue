@@ -116,6 +116,7 @@ export default {
                     // console.log(res.status)
                 })
         },
+<<<<<<< HEAD
         testUsername () {
             this.$http.get('/testusername?username=' + this.username)
                 .then(function (res) {
@@ -132,6 +133,26 @@ export default {
                         this.achieveVerification()
                     }
                 })
+=======
+        testUsername() {
+        	this.$http.get('/testusername?username='+this.username)
+        	.then(function (res) {
+                console.log(res.status)
+                if (res.status === 200 && this.father === 'signup'){
+	            	alert("username does exist")
+	            }
+	            else {
+	            	this.achieveVerification()
+	            }
+	        }, function (res) {
+                if (res.status === 401 && this.father === 'login'){
+                    alert("username does not exist")
+                }
+                else {
+                    this.achieveVerification()
+                }
+	        })
+>>>>>>> cqx/fix_bug_in_room_return_format
         }
     }
 }
