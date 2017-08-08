@@ -17,13 +17,13 @@ bi2obj = toolkits.bi2obj
 model_to_json = toolkits.model_to_json
 #生成随机字段
 def random_str(randomlength=4):  
-    str=''  
+    string=''  
     chars='1234567890'  
     length=len(chars)-1  
     random=Random()  
     for i in range(randomlength):  
-        str+=chars[random.randint(0,length)]  
-    return str
+        string+=chars[random.randint(0,length)]  
+    return string
 
 #检测邮箱是否有效
 def test_email(email):
@@ -38,7 +38,7 @@ def test_phone(phone):
     return True if phonematch else False
 
 @require_GET
-def get_user(request):
+def getUser(request):
     user_id = request.GET.get('user_id', None)
     if(user_id):
         try:
@@ -52,7 +52,7 @@ def get_user(request):
 
 #发送邮件
 @require_POST
-def send_to(request):
+def sendTo(request):
     body = bi2obj(request)
     email = body['email']
     code = body['code']
@@ -68,14 +68,8 @@ def send_to(request):
 
 #注册执行的函数，接收GET请求，返回字符串
 @require_POST
-def signup_submit(request):
+def signupSubmit(request):
     body = bi2obj(request)
-    '''if(test_email(body['username'])):
-        body['email'] = body['username']
-    elif(test_phone(body['username'])):
-        body['phone'] = body['username']
-    else:
-        return HttpResponse(CODE['4'])'''
     form = UserForm(body)
     if(form.is_valid()):
         instance = form.save(commit = False)
@@ -89,24 +83,25 @@ def signup_submit(request):
         )
         form.save(commit = False)
         user.save()
-        return HttpResponse(model_to_dict(user))
+        auth.login(request, user)
+        return JasonResponse(model_to_json(user))
     else:
         return HttpResponse(content = CODE['4'], status = 400)
 
 #登录执行的函数，接收POST请求，返回字符串
 @require_POST
-def login_submit(request):
+def loginSubmit(request):
     body = bi2obj(request)
     user = auth.authenticate(request, username = body['username'], password = body['password'])
     if(user is not None):
-        auth.login(request , user)
+        auth.login(request, user)
         return HttpResponse(content = CODE['0'])
     else:
         return HttpResponse(content = CODE['13'], status = 401)
 
 #check the username exists
 @require_GET
-def test_username(request):
+def testUsername(request):
     get_username = request.GET.get('username')
     try:
         User.objects.get(username = get_username)
@@ -116,7 +111,7 @@ def test_username(request):
 
 
 @require_POST
-def change_avatar(request):
+def changeAvatar(request):
     user = User.object.get(id = request.user_id)
     avatar = request.FILES.get('avatar', None)
     if(avatar is not None):
@@ -132,7 +127,7 @@ def change_gender(request):
     user = User.'''
 
 @require_POST
-def change_personal_info(request):
+def changeNickname(request):
     body = bi2obj(request)
     user = User.object.get(id = request.user_id)
     nickname = body.get('nickname', None)
@@ -144,7 +139,7 @@ def change_personal_info(request):
         return HttpResponse(CODE['5'], status = 401)
 
 @require_POST
-def change_password(request):
+def changePassword(request):
     body = bi2obj(request)
     forget_pw = body.get('forget_pw', None)
     username = body.get('username', None)
