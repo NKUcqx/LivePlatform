@@ -385,7 +385,6 @@ export default {
 				this.hideToolBar()
 			});*/
 		}
-
 		this.btnPosition.left = (this.$refs.canvas.offsetLeft + 5).toString() + 'px'
 		this.btnPosition.top = (this.$refs.canvas.offsetTop + 5).toString() + 'px'
 		this.context = this.$refs.board.getContext('2d')

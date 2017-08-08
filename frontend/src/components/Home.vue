@@ -80,19 +80,19 @@
             },
             carouselStyle(index) {
                 return {
-                    backgroundImage: 'url( ../../static/bg' + (index + 3) + '.jpg)'
+                    backgroundImage: 'url( ../../static/bg' + (index + 4) + '.jpg)'
                 }
             },
             asideStyle(index) {
                 if(index === this.carousel) {
                     return {
-                        backgroundImage: 'url( ../../static/bg' + (index + 3) + '.jpg)',
+                        backgroundImage: 'url( ../../static/bg' + (index + 4) + '.jpg)',
                         border : '3px solid rgb(0, 180, 0)',
                     }
                 }
                 else {
                     return {
-                        backgroundImage: 'url( ../../static/bg' + (index + 3) + '.jpg)',
+                        backgroundImage: 'url( ../../static/bg' + (index + 4) + '.jpg)',
                         border : '1px solid rgb(191, 191, 191)',
                     } 
                 }

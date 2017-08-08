@@ -83,7 +83,7 @@ export const checkUsername = (rule, value, callback, status) => {
 }
 
 export const checkForm = (obj, formRef) => {
-    let result = ''
+    let result = true
     formRef.validate((valid) => {
         result = valid
         if (valid) {

@@ -4,7 +4,7 @@ import { getListFromDB } from '../../utils/utils'
 const state = {
     liveRooms: [],
     videoRooms: [],
-    showNum: 10,
+    showNum: 10
 }
 
 const getters = {
@@ -36,11 +36,11 @@ const actions = {
             }
         }).then(function (res) {
             console.log('islive:' + isLive);
-            (isLive)? state.liveRooms = getListFromDB(res.body) : state.videoRooms = getListFromDB(res.body)
+            (isLive) ? state.liveRooms = getListFromDB(res.body) : state.videoRooms = getListFromDB(res.body)
         }, function () {
             alert('ajax failure')
         })
-    },
+    }
 }
 
 export default {
@@ -49,28 +49,6 @@ export default {
     actions,
     mutations
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /*import VueLocalStorage from 'vue-localstorage'
 Vue.use(VueLocalStorage)

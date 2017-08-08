@@ -210,8 +210,9 @@ export default {
         confirm() {
             if(checkForm(this, this.$refs['retrieveForm']) && this.$refs['veri'].validateForm()){
                 let data = {
+                    forget_pw: true,
                     username: this.retrieve.user,
-                    password: this.retrieve.newPassword
+                    new_password: this.retrieve.newPassword
                 }
                 console.log(data)
                 this.$http({
