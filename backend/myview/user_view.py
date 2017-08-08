@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse,JsonResponse
 from django.forms.models import model_to_dict
 from django.views.decorators.http import require_POST,require_GET
 from django.contrib import auth
@@ -14,7 +14,7 @@ import re
 
 CODE = toolkits.CODE
 bi2obj = toolkits.bi2obj
-
+model_to_json = toolkits.model_to_json
 #生成随机字段
 def random_str(randomlength=4):  
     str=''  
@@ -36,6 +36,19 @@ def test_phone(phone):
     model=re.compile('^0\d{2,3}\d{7,8}$|^1[358]\d{9}$|^147\d{8}')
     phonematch=model.match(phone)
     return True if phonematch else False
+
+@require_GET
+def get_user(request):
+    user_id = request.GET.get('user_id', None)
+    if(user_id):
+        try:
+            user = User.objects.only('id', 'username', 'gender', 'avatar', 'nickname', 'email', 'phone', 'role').get(id = user_id)
+            return JsonResponse({'user': model_to_json(user)})
+        except:
+            return HttpResponse(content = CODE['12'], status = 401)
+    else:
+        #must have a user_id
+        return HttpResponse(content = CODE['4'], status = 400)
 
 #发送邮件
 @require_POST
@@ -80,7 +93,6 @@ def signup_submit(request):
     else:
         return HttpResponse(content = CODE['4'], status = 400)
 
-
 #登录执行的函数，接收POST请求，返回字符串
 @require_POST
 def login_submit(request):
@@ -112,6 +124,11 @@ def change_avatar(request):
         return HttpResponse(content = CODE['0'])
     else:
         return HttpResponse(content = CODE['25'], status = 415)
+'''
+@require_POST
+def change_gender(request):
+    body = 
+    user = User.'''
 
 @require_POST
 def change_nickname(request):
