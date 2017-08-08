@@ -101,6 +101,8 @@ def test_username(request):
         return HttpResponse(content = CODE['0'])          
     except:
         return HttpResponse(status = 401)
+<<<<<<< HEAD
+
 
 @require_POST
 def change_avatar(request):
@@ -114,7 +116,7 @@ def change_avatar(request):
         return HttpResponse(content = CODE['25'], status = 415)
 
 @require_POST
-def change_nickname(request):
+def change_personal_info(request):
     body = bi2obj(request)
     user = User.object.get(id = request.user_id)
     nickname = body.get('nickname', None)
@@ -132,10 +134,10 @@ def change_password(request):
     username = body.get('username', None)
     password = body.get('password', None)
     new_password = body.get('new_password', None)
-    if(username is None or password is None):
+    if(username is None or new_password is None):
         return HttpResponse(CODE['4'], status = 401)
 
-    if(forget_pw is not None):#means he just wants to reset pw, which need verify his status
+    if(forget_pw is None):#means he just wants to reset pw, which need verify his status
         user = auth.authenticate(username = username, password = password)
     else:#means this poor guy has forget his pw, reset directly
         user = User.objects.get(username = username)

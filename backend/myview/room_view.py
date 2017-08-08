@@ -1,5 +1,6 @@
 from django.http import HttpResponse,JsonResponse
 from backend.models import User,LiveRoom,Punishment
+from django.forms.models import model_to_dict
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
@@ -85,7 +86,7 @@ def createRoom(request):
                 return HttpResponse(content = CODE['20'], status = 415)
         room.save()
         request.session['room'] = room
-        return JsonResponse({'room': list(room.values('id', 'name', 'creater', 'audience_amount', 'create_time', 'slide_path', 'thumbnail_path')) }) # return the new room's id
+        return JsonResponse({'room': model_to_dict(room) }) # return the new room's id
     elif(request.user.role == 'S'):
         return HttpResponse(content = CODE['12'], status = 401)
     elif('room' in request.session):#because each person can not create other rooms while living
