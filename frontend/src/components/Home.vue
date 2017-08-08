@@ -15,7 +15,7 @@
             </div>
         </div>
         <div id="container">
-            <Card shadow class="card">
+            <Card shadow class="card" id="live">
                 <h3 slot="title" class="headersection">
                     <Icon type="social-twitch-outline"></Icon>
                     正在直播
@@ -24,7 +24,7 @@
                     <room v-for="livesItem in livesList" :item="livesItem"></room>
                 </section>
             </Card>
-            <Card shadow  class="card">
+            <Card shadow  class="card" id="video">
                 <h3 slot="title" class="headersection">
                     <Icon type="ios-videocam"></Icon>
                     录播视频

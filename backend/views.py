@@ -7,6 +7,11 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib import auth
 import json
 # Create your views here.
+from collections import defaultdict  
+
+# 保存所有接入的用户地址  
+allconn = defaultdict(list)
+num = 0 
 
 #注册执行的函数，接收GET请求，返回字符串
 def signup_submit(request):
@@ -55,11 +60,15 @@ def insert(request):
 #websocket的服务器端，接收消息返回消息
 @require_websocket
 def websocket(request):
-    for message in request.websocket:
-        params = {'content' :message.decode(encoding='utf-8')}
-        form = TestForm(params)
-        if form.is_valid():
-            form.save()
-            request.websocket.send("insert success: ".encode(encoding='utf-8') + message)
-        else:
-            request.websocket.send("insert failure: ".encode(encoding='utf-8') + message)
+    global num
+    global allconn
+    num += 1
+    # 将链接(请求？)存入全局字典中  
+    allconn[str(num)] = request.websocket  
+   # 遍历请求地址中的消息  
+    for message in request.websocket:  
+        # 将信息发至自己的聊天框  
+        request.websocket.send("receive success: ".encode(encoding='utf-8') + message)  
+        # 将信息发至其他所有用户的聊天框  
+        for i in allconn:   
+            allconn[i].send("receive success: ".encode(encoding='utf-8') + message)

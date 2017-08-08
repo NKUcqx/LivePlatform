@@ -101,7 +101,6 @@ def test_username(request):
         return HttpResponse(content = CODE['0'])          
     except:
         return HttpResponse(status = 401)
-<<<<<<< HEAD
 
 
 @require_POST
