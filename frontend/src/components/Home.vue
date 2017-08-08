@@ -38,7 +38,7 @@
 </template>
 
 <script>
-    import { mapGetters, mapActions, } from 'vuex'    
+    import { mapGetters, mapActions } from 'vuex'
     import Room from './tinyComponents/Room'
     import Topbar from './tinyComponents/Topbar'
     import { beforePost } from '../utils/utils'
@@ -47,7 +47,7 @@
         name: 'videoList',
         components: {
             Room,
-            Topbar,
+            Topbar
         },
         data () {
             return {
@@ -55,50 +55,49 @@
                 HEIGHT: document.documentElement.clientHeight,
                 carousel: 0,
 
-                //delete later
+                // delete later
                 background: new Array(4)
             }
         },
         computed: {
             ...mapGetters({
                 getLiveRooms: 'getLiveRooms',
-                getVideoRooms: 'getVideoRooms',
+                getVideoRooms: 'getVideoRooms'
             }),
             livesList () {
                 return this.getLiveRooms
             },
             videosList () {
                 return this.getVideoRooms
-            },
+            }
         },
         methods: {
             ...mapActions({
-                getRoomsFromDB: 'getRoomsFromDB',
+                getRoomsFromDB: 'getRoomsFromDB'
             }),
-            flipOver(index) {
+            flipOver (index) {
                 this.carousel = index
             },
-            carouselStyle(index) {
+            carouselStyle (index) {
                 return {
                     backgroundImage: 'url( ../../static/bg' + (index + 3) + '.jpg)'
                 }
             },
-            asideStyle(index) {
-                if(index === this.carousel) {
+            asideStyle (index) {
+                if (index === this.carousel) {
                     return {
                         backgroundImage: 'url( ../../static/bg' + (index + 3) + '.jpg)',
-                        border : '3px solid rgb(0, 180, 0)'
+                        border: '3px solid rgb(0, 180, 0)'
+                    }
+                } else {
+                    return {
+                        backgroundImage: 'url( ../../static/bg' + (index + 3) + '.jpg)',
+                        border: '1px solid rgb(191, 191, 191)'
                     }
                 }
-                else {
-                    return {
-                        backgroundImage: 'url( ../../static/bg' + (index + 3) + '.jpg)',
-                        border : '1px solid rgb(191, 191, 191)'
-                    } 
-                }
-            },
+            }
         },
-        mounted: function() {
+        mounted: function () {
             this.getRoomsFromDB(true)
             this.getRoomsFromDB(false)
         }

@@ -77,7 +77,7 @@
 
 <script>
     import { beforePost } from '../../utils/utils'
-    import { checkPassword, checkRePassword} from '../../utils/checks'
+    import { checkPassword, checkRePassword } from '../../utils/checks'
 
     export default {
         data () {
@@ -90,13 +90,13 @@
             return {
                 file: null,
                 loadingStatus: false,
-                person:{
-                    username : '13513616830',
+                person: {
+                    username: '13513616830',
                     nickname: 'name',
-                    gender: 'gender',
+                    gender: 'gender'
                 },
                 img: {
-                    size: 40,
+                    size: 40
                 },
                 theme1: 'light',
                 modal: false,
@@ -106,16 +106,16 @@
                     username: '',
                     password: '',
                     newPassword: '',
-                    reNewPassword: '',
+                    reNewPassword: ''
                 },
                 createForm: {
                     title: '',
                     slide: '',
-                    img: '',
+                    img: ''
                 },
                 ruleNewpass: {
                     password: [
-                        { required: true, type: 'string', min: 6, max: 40, message: 'password is not legal', trigger: 'blur'},
+                        { required: true, type: 'string', min: 6, max: 40, message: 'password is not legal', trigger: 'blur' }
                     ],
                     newPassword: [
                         { required: true, validator: validatePass, trigger: 'blur' },
@@ -123,40 +123,40 @@
                     ],
                     reNewPassword: [
                         { required: true, validator: validatePassCheck, trigger: 'blur' }
-                    ],
+                    ]
                 },
                 ruleRoomname: {
                     roomname: [
                         { required: true, type: 'string', min: 6, max: 40, message: 'roomname must be more than 6 chars less than 25', trigger: 'blur' }
-                    ],
+                    ]
                 }
             }
         },
         computed: {
         },
         methods: {
-            createRoom() {
+            createRoom () {
                 let formData = new FormData()
-                formData.append('thumbnail', this.createForm.img) 
-                formData.append('slide', this.createForm.slide) 
-                formData.append('name', this.createForm.title) 
-                //formData.append('creater_id',1)  
+                formData.append('thumbnail', this.createForm.img)
+                formData.append('slide', this.createForm.slide)
+                formData.append('name', this.createForm.title)
+                // formData.append('creater_id',1)
                 this.$http({
-                    url:'/createroom/',
-                    method:'POST',
-                    body:formData,
-                    before:function(request){beforePost(request)},
+                    url: '/createroom/',
+                    method: 'POST',
+                    body: formData,
+                    before: function (request) { beforePost(request) }
                 }).then(function (res) {
                     alert(res.body)
                 }, function (res) {
                     alert(res.status)
                 })
-            },
-            /*toggleClick () {
+            }
+            /* toggleClick () {
                 let file = files[0]
                 let formData = new FormData()
-                formData.append('avatar', file) 
-                //formData.append('creater_id',1)  
+                formData.append('avatar', file)
+                //formData.append('creater_id',1)
                 this.$http({
                     url:'/avatar/',
                     method:'POST',
@@ -174,8 +174,8 @@
                     this.spanLeft = 5;
                     this.spanRight = 19;
                 }
-            },*/
-        },
+            }, */
+        }
     }
 </script>
 

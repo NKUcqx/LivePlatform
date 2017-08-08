@@ -1,6 +1,5 @@
-//about vuex
-//you can find greater example in https://vuex.vuejs.org/zh-cn/
-
+// about vuex
+// you can find greater example in https://vuex.vuejs.org/zh-cn/
 const state = {
     count: 0
 }
@@ -17,7 +16,7 @@ const mutations = {
     }
 }
 
-const actions= {
+const actions = {
     increment_a (context) {
         context.commit('increment')
     }

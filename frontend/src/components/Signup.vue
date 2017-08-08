@@ -54,7 +54,6 @@
 </template>
 
 <script>
-
     import Verification from './tinyComponents/Verification'
     import { checkPassword, checkRePassword, checkVerification, checkForm, checkPhone } from '../utils/checks'
     import { beforePost } from '../utils/utils'
@@ -64,10 +63,10 @@
         components: {
             Verification
         },
-        data() {
-            //this is for check password
+        data () {
+            // this is for check password
             const validateUser = (rule, value, callback) => {
-                
+    
             }
             const validatePass = (rule, value, callback) => {
                 checkPassword(rule, value, callback, this.signinfo.passwordCheck, this.$refs.signinfo, 'passwordCheck')
@@ -76,13 +75,11 @@
                 checkRePassword(rule, value, callback, this.signinfo.password)
             }
             const validatePhone = (rule, value, callback) => {
-                if(value === ''){
+                if (value === '') {
                     callback(new Error('please input phone'))
-                }
-                else if(!checkPhone(value)){
+                } else if (!checkPhone(value)) {
                     callback(new Error('this is not phone numbers'))
-                }
-                else{
+                } else {
                     callback()
                 }
             }
@@ -94,9 +91,9 @@
                     phone: '',
                     password: '',
                     passwordCheck: '',
-                    nickname: '',    
+                    nickname: '',
                     gender: 'female',
-                    verification: '',
+                    verification: ''
                 },
                 ruleSignup: {
                     email: [
@@ -104,7 +101,7 @@
                         { type: 'email', message: 'this is not an email', trigger: 'blur' }
                     ],
                     phone: [
-                        { required: true, type: 'string', validator: validatePhone, trigger: 'blur' },
+                        { required: true, type: 'string', validator: validatePhone, trigger: 'blur' }
                     ],
                     password: [
                         { required: true, validator: validatePass, trigger: 'blur' },
@@ -115,66 +112,66 @@
                     ],
                     nickname: [
                         { type: 'string', min: 6, max: 20, message: 'nickname must be more than 6 chars less than 20', trigger: 'blur' }
-                    ],
-                },
+                    ]
+                }
             }
         },
         computed: {
             ...mapGetters({
                 page: 'getPage'
             }),
-            phoneButton() {
-                return (this.type === 0)? "primary" : "ghost"
+            phoneButton () {
+                return (this.type === 0) ? 'primary' : 'ghost'
             },
-            emailButton() {
-                return (this.type === 1)? "primary" : "ghost"
+            emailButton () {
+                return (this.type === 1) ? 'primary' : 'ghost'
             },
-            randomCode(){
-                this.code = Math.random()*8999+1000
+            randomCode () {
+                this.code = Math.random() * 8999 + 1000
                 return Math.floor(this.code)
             },
-            getUsername(){
-                return (this.type === 0)? this.signinfo.phone : this.signinfo.email
+            getUsername () {
+                return (this.type === 0) ? this.signinfo.phone : this.signinfo.email
             }
         },
         methods: {
             ...mapMutations({
-              goLeft: 'goLeft',
-              goRight: 'goRight'
+                goLeft: 'goLeft',
+                goRight: 'goRight'
             }),
-            changeType() {
-                this.type = (this.type === 0)? 1 : 0 
+            changeType () {
+                this.type = (this.type === 0) ? 1 : 0
             },
-            signup() {
-                if(checkForm(this, this.$refs['signinfo']) && this.$refs['veri'].validateForm()){
+            signup () {
+                if (checkForm(this, this.$refs['signinfo']) && this.$refs['veri'].validateForm()) {
                     let data = {
                         username: this.getUsername,
                         password: this.signinfo.password,
-                        gender: (this.signinfo.gender === 'male')? true : false,
-                        nickname: this.signinfo.nickname,
+                        gender: (this.signinfo.gender === 'male'),
+                        nickname: this.signinfo.nickname
                     }
                     this.$http({
                         url: '/signup/',
                         method: 'POST',
                         body: data,
-                        before: function(request){beforePost(request)},
+                        before: function (request) { beforePost(request) }
                     }).then(function (res) {
-                        //console.log(res.body)
+                        // console.log(res.body)
                         this.$router.push({path: '/home'})
                     }, function (res) {
                         alert(res.body)
                     })
-                }     
-            },
-            
-        },
+                }
+            }
+    
+        }
     }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 #signup{
-    background-color: rgba(255,255,255,0.95) ;
+    background-color: rgba(255,255,255,0.95);
     margin-top: 3%;
     text-align: left;
 }

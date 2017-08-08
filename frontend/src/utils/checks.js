@@ -1,11 +1,10 @@
 import Vue from 'vue'
 
-
-//测试一个字符串是否含有特殊字符
+// 测试一个字符串是否含有特殊字符
 export const checkSpecialChar = (str) => {
     let pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）――|{}【】‘；：”“'。，、？]")
-    if(str !== '' && str !== null){
-        if(pattern.test(str)){
+    if (str !== '' && str !== null) {
+        if (pattern.test(str)) {
             return false
         }
     }
@@ -19,13 +18,13 @@ export const checkPhone = (phone) => {
 
 export const checkEmail = (email) => {
     let emailRe = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/
-    return emailRe.test(email) 
+    return emailRe.test(email)
 }
 
 export const checkObjLegal = (obj) => {
-    for(let item in obj) {
-        if(Object.prototype.toString.call(item) === '[object String]'){
-            if(item === '' || !checkSpecialChar(item)){
+    for (let item in obj) {
+        if (Object.prototype.toString.call(item) === '[object String]') {
+            if (item === '' || !checkSpecialChar(item)) {
                 return false
             }
         }
@@ -56,10 +55,9 @@ export const checkRePassword = (rule, value, callback, password) => {
 }
 
 export const checkVerification = (rule, value, callback, code) => {
-    if(code === '' || value.toString().toLowerCase() !== code.toString().toLowerCase()){
-        callback(new Error('verification error'))    
-    }
-    else{
+    if (code === '' || value.toString().toLowerCase() !== code.toString().toLowerCase()) {
+        callback(new Error('verification error'))
+    } else {
         callback()
     }
 }
@@ -86,5 +84,5 @@ export const checkForm = (obj, formRef) => {
 }
 
 export default {
-    checkSpecialChar,
+    checkSpecialChar
 }

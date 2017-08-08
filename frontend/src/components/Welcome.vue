@@ -29,7 +29,6 @@
 </template>
 
 <script>
-
 import Login from './Login'
 import Signup from './Signup'
 import { mapGetters, mapMutations } from 'vuex'
@@ -39,21 +38,21 @@ export default {
         Login,
         Signup
     },
-    data() {
+    data () {
         return {
-            height: document.documentElement.clientHeight,
+            height: document.documentElement.clientHeight
         }
     },
-    computed:{
+    computed: {
         ...mapGetters({
             page: 'getPage'
-        }),
+        })
     },
-    methods:{
+    methods: {
         ...mapMutations({
             goLeft: 'goLeft',
             goRight: 'goRight'
-        }),
+        })
     }
 }
 </script>

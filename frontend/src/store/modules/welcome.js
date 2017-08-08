@@ -10,16 +10,15 @@ const getters = {
 
 const mutations = {
     goLeft: (state) => {
-        state.page = (state.page-1 < 0)? 2 : state.page-1
+        state.page = (state.page - 1 < 0) ? 2 : state.page - 1
     },
     goRight: (state) => {
-        state.page = (state.page+1 > 2)? 0 : state.page+1
+        state.page = (state.page + 1 > 2) ? 0 : state.page + 1
     }
 }
-
 
 export default {
     state,
     getters,
-    mutations,
+    mutations
 }

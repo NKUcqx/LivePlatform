@@ -79,13 +79,11 @@
 </template>
 
 <script>
-
 import verification from 'verification-code'
 import { checkPassword, checkRePassword, checkVerification, checkForm, checkPhone, checkEmail } from '../utils/checks'
 import { mapGetters, mapMutations } from 'vuex'
 import {beforePost} from '../utils/utils'
-import Verification from './tinyComponents/Verification'   //component
-
+import Verification from './tinyComponents/Verification' // component
 
 export default {
     components: {
@@ -102,13 +100,11 @@ export default {
             checkRePassword(rule, value, callback, this.retrieve.newPassword)
         }
         const validateUsername = (rule, value, callback) => {
-            if(value === ''){
+            if (value === '') {
                 callback(new Error('please input username'))
-            }
-            else if(!(checkPhone(value) || checkEmail(value))){
+            } else if (!(checkPhone(value) || checkEmail(value))) {
                 callback(new Error('this is not phone or email'))
-            }
-            else{
+            } else {
                 callback()
             }
         }
@@ -118,12 +114,12 @@ export default {
             form: {
                 user: '',
                 password: '',
-                pin: '',
+                pin: ''
             },
             retrieve: {
                 user: '',
                 newPassword: '',
-                reNewPassword: '',
+                reNewPassword: ''
             },
             rule: {
                 user: [
@@ -131,12 +127,12 @@ export default {
                 ],
                 password: [
                     { required: true, message: 'Please input password', trigger: 'blur' },
-                    { type: 'string', min: 6, max:25, message: 'Password should be 6 to 25 chars', trigger: 'blur' }
+                    { type: 'string', min: 6, max: 25, message: 'Password should be 6 to 25 chars', trigger: 'blur' }
                 ],
                 pin: [
                     { required: true, validator: validatePin, trigger: 'blur' },
                     { type: 'string', min: 4, max: 4, message: 'pin code must be 4 numbers', trigger: 'blur' }
-                ],
+                ]
             },
             rule2: {
                 user: [
@@ -148,41 +144,41 @@ export default {
                 ],
                 reNewPassword: [
                     { required: true, validator: validatePassCheck, trigger: 'blur' }
-                ],
+                ]
             },
             pinurl: '',
-            pincode: '',
+            pincode: ''
         }
     },
-    mounted: function() {
+    mounted: function () {
         this.showPinImg()
     },
     computed: {
-         ...mapGetters({
+        ...mapGetters({
             page: 'getPage'
         }),
-        typeOfUsername() {
+        typeOfUsername () {
             return 0
-        },
+        }
     },
     methods: {
         ...mapMutations({
-          goLeft: 'goLeft',
-          goRight: 'goRight'
+            goLeft: 'goLeft',
+            goRight: 'goRight'
         }),
-        showPinImg() {
+        showPinImg () {
             let result = verification.create()
             this.pincode = result.code
             this.pinurl = result.dataURL
-            //console.log(this.pinurl)
+            // console.log(this.pinurl)
         },
-        changeState() {
-            this.state = (this.state === 0)? 1 : 0;
-            this.retrieve.user = (this.state === 1)? this.form.user : this.retrieve.user
-            this.form.user = (this.state === 0)? this.retrieve.user : this.form.user
+        changeState () {
+            this.state = (this.state === 0) ? 1 : 0
+            this.retrieve.user = (this.state === 1) ? this.form.user : this.retrieve.user
+            this.form.user = (this.state === 0) ? this.retrieve.user : this.form.user
         },
-        login() {
-            if(checkForm(this, this.$refs['form'])){
+        login () {
+            if (checkForm(this, this.$refs['form'])) {
                 let data = {
                     username: this.form.user,
                     password: this.form.password
@@ -192,7 +188,7 @@ export default {
                     url: '/login/',
                     method: 'POST',
                     body: data,
-                    before: function(request){beforePost(request)},
+                    before: function (request) { beforePost(request) }
                 }).then(function (res) {
                     alert(res.body)
                     this.$router.push({path: '/home'})
@@ -201,8 +197,8 @@ export default {
                 })
             }
         },
-        confirm() {
-            if(checkForm(this, this.$refs['retrieveForm']) && this.$refs['veri'].validateForm()){
+        confirm () {
+            if (checkForm(this, this.$refs['retrieveForm']) && this.$refs['veri'].validateForm()) {
                 let data = {
                     username: this.retrieve.user,
                     password: this.retrieve.newPassword
@@ -212,7 +208,7 @@ export default {
                     url: '/changepass/',
                     method: 'POST',
                     body: data,
-                    before: function(request){beforePost(request)},
+                    before: function (request) { beforePost(request) }
                 }).then(function (res) {
                     alert(res.body)
                     this.$router.push({path: '/home'})
@@ -220,7 +216,7 @@ export default {
                     alert(res.body)
                 })
             }
-        },
+        }
     }
 }
 </script>

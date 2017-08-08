@@ -1,5 +1,4 @@
 <!--这个文件是我写的demo文件的页面部分，下面有注释具体都做了什么-->
-
 <template>
     <div id="all">
     <h1 id="title">This page Is For Test</h1>
@@ -35,7 +34,7 @@
     	<input type="text" name="username" v-model.number="username">
     	<label>password: </label>
     	<input type="text" name="password" v-model.number="password">
-      <Button type="submit" name="submit">signup</button>
+        <Button type="submit" name="submit">signup</button>
     </form>
     <div>
         <input type="button" name="login" value="login" @click="login">
@@ -49,7 +48,6 @@
         <input type="button" value="send websocket" @click="sendmessage()">
         <input type="button" value="close websocket" @click="closewebsocket()">
     </div-->
-
     <div>
         <div class="white" id="count">{{ count }}</div>
         <Button type="dashed" @click="increace()" class="white">increace</Button>
@@ -58,14 +56,13 @@
 </template>
 
 <script>
-
 import { mapGetters, mapMutations } from 'vuex'
-import { beforePost, } from '../utils/utils'
-import { wsConnect, wsSend, wsClose} from '../utils/websockets'
+import { beforePost } from '../utils/utils'
+import { wsConnect, wsSend, wsClose } from '../utils/websockets'
 
 export default {
-    //双向绑定的数据部分
-    data() {
+    // 双向绑定的数据部分
+    data () {
         return {
             username: '',
             password: '',
@@ -74,74 +71,74 @@ export default {
             socket: ''
         }
     },
-    //这两个map是vuex的部分
+    // 这两个map是vuex的部分
     computed: {
         ...mapGetters({
             count: 'getCount'
-        }),
+        })
     },
     methods: {
-        //for vuex
+        // for vuex
         ...mapMutations({
             increace: 'increment'
         }),
-      //for link backend
-      //提交表单，用于注册，GET请求，返回字符串
-      signup(){
-        alert('username: '+this.username)
-        alert('password: '+this.password)
-		    this.$http({
-            url: '/signup/',
-            method: 'GET',
-            params: {
-                username: this.username,
-                password: this.password
-            }
-        }).then(function (res) {
-            alert(res.body)
-            //this.$router.push({path: '/hello', query:{data: res.body}})
-        }, function () {
-            alert("ajax failure")
-        })
-    	},
-        //用于登录，POST请求，返回字符串，透过前端路由跳转页面
-      login(){
-        alert('username: '+this.username)
-        alert('password: '+this.password)
-        this.$http({
-            url: '/login/',
-            method: 'POST',
-            body: {
-                username: this.username,
-                password: this.password,
-            },
-            before: function(request){beforePost(request)},
-        }).then(function (res) {
-            alert(res.body)
-            this.$router.push({path: '/hello', query:{data: res.body}})
-        }, function () {
-            alert("ajax failure")
-        })
-      },
-      //查找这个用户名是否数据库中有重复
-      findrepeat(){
-        alert('reusername: '+this.reusername)
-        this.$http.get(
-            '/findre?reusername='+this.reusername
-        ).then(function (res) {
-            alert(res.body)
-        }, function () {
-            alert("ajax failure")
-        })
-      },
-      //建立websocket链接
-      buildwebsocket(){
-        alert('websocket connect')
-        this.socket = wsConnect('/websocket/', function(e){
-            alert('receive message from server: ' + e.data)
-        })
+        // for link backend
+        // 提交表单，用于注册，GET请求，返回字符串
+        signup () {
+            alert('username: ' + this.username)
+            alert('password: ' + this.password)
+            this.$http({
+                url: '/signup/',
+                method: 'GET',
+                params: {
+                    username: this.username,
+                    password: this.password
+                }
+            }).then(function (res) {
+                alert(res.body)
+            // this.$router.push({path: '/hello', query:{data: res.body}})
+            }, function () {
+                alert('ajax failure')
+            })
         },
-      /*buildwebsocket(){
+        // 用于登录，POST请求，返回字符串，透过前端路由跳转页面
+        login () {
+            alert('username: ' + this.username)
+            alert('password: ' + this.password)
+            this.$http({
+                url: '/login/',
+                method: 'POST',
+                body: {
+                    username: this.username,
+                    password: this.password
+                },
+                before: function (request) { beforePost(request) }
+            }).then(function (res) {
+                alert(res.body)
+                this.$router.push({path: '/hello', query: {data: res.body}})
+            }, function () {
+                alert('ajax failure')
+            })
+        },
+        // 查找这个用户名是否数据库中有重复
+        findrepeat () {
+            alert('reusername: ' + this.reusername)
+            this.$http.get(
+                '/findre?reusername=' + this.reusername
+            ).then(function (res) {
+                alert(res.body)
+            }, function () {
+                alert('ajax failure')
+            })
+        },
+        // 建立websocket链接
+        buildwebsocket () {
+            alert('websocket connect')
+            this.socket = wsConnect('/websocket/', function (e) {
+                alert('receive message from server: ' + e.data)
+            })
+        },
+        /* buildwebsocket(){
         if(this.socket === '' || this.socket.readyState == WebSocket.CLOSED){
             this.socket = new WebSocket("ws://" + window.location.host + "/websocket/")
         }
@@ -151,18 +148,18 @@ export default {
         this.socket.onmessage = function (e) {
             console.log('message: ' + e.data)//打印出服务端返回过来的数据
         }
-      },*/
-      //通过websocket协议进行发送消息，接收消息
-      sendmessage(){
+        }, */
+        // 通过websocket协议进行发送消息，接收消息
+        sendmessage () {
             alert('sent message to server')
-            wsSend(this.socket, "666")
-      },
-      //关闭websocket链接
-      closewebsocket(){
+            wsSend(this.socket, '666')
+        },
+        // 关闭websocket链接
+        closewebsocket () {
             alert('websocket close')
             wsClose(this.socket)
-      }
-    },
+        }
+    }
 }
 </script>
 

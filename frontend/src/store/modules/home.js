@@ -4,7 +4,7 @@ import { getListFromDB } from '../../utils/utils'
 const state = {
     liveRooms: [],
     videoRooms: [],
-    showNum: 10,
+    showNum: 10
 }
 
 const getters = {
@@ -36,11 +36,11 @@ const actions = {
             }
         }).then(function (res) {
             console.log('islive:' + isLive);
-            (isLive)? state.liveRooms = getListFromDB(res.body) : state.videoRooms = getListFromDB(res.body)
+            (isLive) ? state.liveRooms = getListFromDB(res.body) : state.videoRooms = getListFromDB(res.body)
         }, function () {
             alert('ajax failure')
         })
-    },
+    }
 }
 
 export default {
@@ -50,29 +50,7 @@ export default {
     mutations
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*import VueLocalStorage from 'vue-localstorage'
+/* import VueLocalStorage from 'vue-localstorage'
 Vue.use(VueLocalStorage)
 
 const debug = process.env.NODE_ENV !== 'production'
@@ -81,8 +59,8 @@ const state = {
     vedios: JSON.parse(window.localStorage.getItem(STORAGE_KEY) || '[]')
 }
 const getters = {
-    vedios:  state => state.vedios
-} 
+    vedios: state => state.vedios
+}
 const mutations = {
     addVedio (state, room , teacher, viewers) {
         state.vedios.push({
@@ -96,7 +74,7 @@ const mutations = {
     }
 }
 const localStoragePlugin = store => {
-  store.subscribe((mutation, { vedios }) => {
+    store.subscribe((mutation, { vedios }) => {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(vedios))
   })
-}*/
+} */
