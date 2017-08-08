@@ -196,10 +196,10 @@
             createRoom() {
                 if(createForm(this, this.$refs.createForm)){
                     let formData = new FormData()
-                    formData.append('thumbnail', this.createForm.img) 
-                    formData.append('slide', this.createForm.slide) 
-                    formData.append('name', this.createForm.title) 
-                    //formData.append('creater_id',1)  
+                    formData.append('thumbnail', this.createForm.img)
+                    formData.append('slide', this.createForm.slide)
+                    formData.append('name', this.createForm.title)
+                    // formData.append('creater_id',1)
                     this.$http({
                         url: '/createroom/',
                         method: 'POST',
