@@ -106,7 +106,7 @@ def testUsername(request):
     get_username = request.GET.get('username')
     try:
         User.objects.get(username = get_username)
-        return HttpResponse(content = CODE['0'])          
+        return HttpResponse(content = CODE['0'])
     except:
         return HttpResponse(status = 401) 
 
