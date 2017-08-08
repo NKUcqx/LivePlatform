@@ -157,14 +157,14 @@ export default {
         ...mapGetters({
             page: 'getPage'
         }),
-        typeOfUsername() {
-            if(checkEmail(this.retrieve.user)) {
+        typeOfUsername () {
+            if (checkEmail(this.retrieve.user)) {
                 return 1
-            } else if(checkPhone(this.retrieve.user)) {
+            } else if (checkPhone(this.retrieve.user)) {
                 return 0
             }
             return -1
-        },
+        }
     },
     methods: {
         ...mapMutations({

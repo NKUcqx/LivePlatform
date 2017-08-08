@@ -63,13 +63,13 @@ export default {
             let interval = setInterval(function () { countDown() }, 1000)
         },
         achieveVerification () {
-            if(this.sendType === 0 && checkPhone(this.username)) {
+            if (this.sendType === 0 && checkPhone(this.username)) {
                 this.state = 'sent'
-                this.beginCountdown();
+                this.beginCountdown()
                 this.sendMessage()
-            } else if(this.sendType === 1 && checkEmail(this.username)) {
+            } else if (this.sendType === 1 && checkEmail(this.username)) {
                 this.state = 'sent'
-                this.beginCountdown();
+                this.beginCountdown()
                 this.sendEmail()
                 this.$Message.success('Send Success')
             }
@@ -117,21 +117,21 @@ export default {
                 })
         },
         testUsername () {
-            this.$http.get('/testusername?username='+this.username)
-            .then(function (res) {
-                console.log(res.status)
-                if (res.status === 200 && this.father === 'signup') {
-                    alert("username does exist")
-                } else {
-                    this.achieveVerification()
-                }
-            }, function (res) {
-                if (res.status === 401 && this.father === 'login'){
-                    alert("username does not exist")
-                } else {
-                    this.achieveVerification()
-                }
-            })
+            this.$http.get('/testusername?username=' + this.username)
+                .then(function (res) {
+                    console.log(res.status)
+                    if (res.status === 200 && this.father === 'signup') {
+                        alert('username does exist')
+                    } else {
+                        this.achieveVerification()
+                    }
+                }, function (res) {
+                    if (res.status === 401 && this.father === 'login') {
+                        alert('username does not exist')
+                    } else {
+                        this.achieveVerification()
+                    }
+                })
         }
     }
 }

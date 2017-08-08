@@ -63,16 +63,14 @@
         components: {
             Verification
         },
-        data() {
-            //this is for check password
+        data () {
+            // this is for check password
             const validateEmail = (rule, value, callback) => {
-                if(value === ''){
+                if (value === '') {
                     callback(new Error('please input email'))
-                }
-                else if(!checkEmail(value)){
+                } else if (!checkEmail(value)) {
                     callback(new Error('this is not email'))
-                }
-                else{
+                } else {
                     checkUsername(rule, value, callback, 'signup')
                 }
             }
@@ -87,8 +85,7 @@
                     callback(new Error('please input phone'))
                 } else if (!checkPhone(value)) {
                     callback(new Error('this is not phone numbers'))
-                }
-                else{
+                } else {
                     checkUsername(rule, value, callback, 'signup')
                 }
             }
@@ -106,7 +103,7 @@
                 },
                 ruleSignup: {
                     email: [
-                        { required: true, type: 'string', validator: validateEmail, trigger: 'blur' },
+                        { required: true, type: 'string', validator: validateEmail, trigger: 'blur' }
                     ],
                     phone: [
                         { required: true, type: 'string', validator: validatePhone, trigger: 'blur' }
