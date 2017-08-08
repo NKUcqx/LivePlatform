@@ -155,7 +155,8 @@ export default {
     },
     computed: {
         ...mapGetters({
-            page: 'getPage'
+            page: 'getPage',
+            setUser: 'setUser'
         }),
         typeOfUsername () {
             if (checkEmail(this.retrieve.user)) {
@@ -195,7 +196,8 @@ export default {
                     body: data,
                     before: function (request) { beforePost(request) }
                 }).then(function (res) {
-                    alert(res.body)
+                    alert('Success')
+                    // setUser(res.body.user, res.body.session_id)
                     this.$router.push({path: '/home'})
                 }, function (res) {
                     alert(res.body)

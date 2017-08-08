@@ -68,7 +68,7 @@ def websocket(request):
    # 遍历请求地址中的消息  
     for message in request.websocket:  
         # 将信息发至自己的聊天框  
-        request.websocket.send("receive success: ".encode(encoding='utf-8') + message)  
+        request.websocket.send(message)  
         # 将信息发至其他所有用户的聊天框  
         for i in allconn:   
-            allconn[i].send("receive success: ".encode(encoding='utf-8') + message)
+            allconn[i].send(message)

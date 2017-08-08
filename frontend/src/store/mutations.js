@@ -1,3 +1,5 @@
+import Vue from 'vue'
+
 export const setUser = (state, {
     userId, username, gender, avatar, nickname
 }, sessionId) => {
@@ -8,4 +10,5 @@ export const setUser = (state, {
     state.user.nickname = nickname
     state.session.sessionId = sessionId
     state.session.isSession = true
+    Vue.localStorage.set('session_id', sessionId)
 }

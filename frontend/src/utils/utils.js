@@ -31,6 +31,20 @@ export const getListFromDB = (obj) => {
     }
 }
 
+export const isJSON = (str) => {
+    console.log('thisis test:    ' + str)
+    let result = false
+    if (Object.prototype.toString.call(str) === '[object String]') {
+        try {
+            result = JSON.parse(str)
+        } catch (e) {
+            console.log(e)
+            result = false
+        }
+    }
+    return result
+}
+
 export default {
     beforePost
 }
