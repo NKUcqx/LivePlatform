@@ -1,9 +1,14 @@
+import { isJSON } from './utils'
 // 建立websocket链接
 export const wsConnect = (url, responceFun) => {
     let socket = new WebSocket('ws://' + window.location.host + url)
     if (typeof responceFun === 'function') {
         socket.onmessage = function (e) {
             console.log('WebSocket receive' + e.data)
+            let data = isJSON(e.data)
+            if (data) {
+                e.obj = data
+            }
             responceFun(e)
         }
     }
@@ -21,7 +26,11 @@ export const wsConnectDetail = (url, openFun, receiveFun, errorFun, closeFun) =>
     }
     if (typeof receiveFun === 'function') {
         socket.onmessage = function (e) {
-            console.log('WebSocket receive ' + e.data)
+            console.log('WebSocket receive' + e.data)
+            let data = isJSON(e.data)
+            if (data) {
+                e.obj = data
+            }
             receiveFun(e)
         }
     }
@@ -47,6 +56,9 @@ export const wsSend = (socket, data) => {
         console.log('websocket未连接.')
     } else {
         // 通过websocket发送数据
+        if (Object.prototype.toString.call(data) !== '[object String]') {
+            data = JSON.stringify(data)
+        }
         console.log('websocket send ' + data)
         socket.send(data)
     }
