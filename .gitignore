@@ -120,3 +120,5 @@ yarn.lock
 /.vagrant/
 
 *.pyc
+*.cpython-35.pyc
+*.cpython-36.pyc
