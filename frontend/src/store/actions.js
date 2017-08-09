@@ -2,7 +2,7 @@
 // I only make example in moudules because it is more complex
 import Vue from 'vue'
 import { getSessionKey } from './getters'
-import { setUserState } from './mutations'
+import { setSessionState, setUserState } from './mutations'
 
 export const initState = ({ state }) => {
     return new Promise((resolve, reject) => {
@@ -10,7 +10,7 @@ export const initState = ({ state }) => {
         if (sessionKey !== null) {
             Vue.http.get('/getsession/?session_key=' + sessionKey).then(function (res) {
                 console.log(res.body.user)
-                setUserState(state, res.body.user, sessionKey)
+                setSessionState(state, res.body.user, sessionKey)
                 resolve()
             }, function (res) {
                 reject()
@@ -20,6 +20,6 @@ export const initState = ({ state }) => {
 }
 
 export const initUser = ({ state }, data) => {
-    console.log(data)
-    setUserState(state, data.user, data.session_key)
+    console.log(data);
+    (data.session_key) ? setSessionState(state, data.user, data.session_key) : setUserState(state, data.user)
 }

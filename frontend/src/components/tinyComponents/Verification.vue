@@ -74,8 +74,8 @@ export default {
                 this.$Message.success('Send Success')
             }
         },
-        validateForm () {
-            return checkForm(this, this.$refs['verification'])
+        validateForm (todo) {
+            return checkForm(this, this.$refs['verification'], todo)
         },
         sendEmail () {
             this.code = this.randomCode

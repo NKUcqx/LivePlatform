@@ -115,6 +115,7 @@ def testUsername(request):
 def changeAvatar(request):
     user = User.objects.get(pk = request.user.id)
     avatar = request.FILES.get('avatar', None)
+    print(avatar)
     if(avatar is not None):
         user.avatar_path = avatar
         user.save()

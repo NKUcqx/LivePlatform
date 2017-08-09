@@ -148,25 +148,27 @@
                 this.type = (this.type === 0) ? 1 : 0
             },
             signup () {
-                if (checkForm(this, this.$refs['signinfo']) && this.$refs['veri'].validateForm()) {
-                    let data = {
-                        username: this.getUsername,
-                        password: this.signinfo.password,
-                        gender: (this.signinfo.gender === 'male'),
-                        nickname: this.signinfo.nickname
-                    }
-                    this.$http({
-                        url: '/signup/',
-                        method: 'POST',
-                        body: data,
-                        before: function (request) { beforePost(request) }
-                    }).then(function (res) {
-                        // console.log(res.body)
-                        this.$router.push({path: '/home'})
-                    }, function (res) {
-                        alert(res.body)
+                checkForm(this, this.$refs['signinfo'], () => {
+                    this.$refs['veri'].validateForm(() => {
+                        let data = {
+                            username: this.getUsername,
+                            password: this.signinfo.password,
+                            gender: (this.signinfo.gender === 'male'),
+                            nickname: this.signinfo.nickname
+                        }
+                        this.$http({
+                            url: '/signup/',
+                            method: 'POST',
+                            body: data,
+                            before: function (request) { beforePost(request) }
+                        }).then(function (res) {
+                            // console.log(res.body)
+                            this.$router.push({path: '/home'})
+                        }, function (res) {
+                            alert(res.body)
+                        })
                     })
-                }
+                })
             }
     
         }
