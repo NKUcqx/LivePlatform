@@ -113,7 +113,7 @@ def testUsername(request):
 
 @require_POST
 def changeAvatar(request):
-    user = User.objects.get(pk = request.user_id)
+    user = User.objects.get(pk = request.user.id)
     avatar = request.FILES.get('avatar', None)
     if(avatar is not None):
         user.avatar_path = avatar
@@ -125,7 +125,7 @@ def changeAvatar(request):
 @require_POST
 def changeGenderAndNickname(request):
     body = bi2obj(request)
-    user = User.objects.get(pk = request.user_id)
+    user = User.objects.get(pk = request.user.id)
     gender = body.get('gender', None)
     nickname = body.get('nickname', None)
     if(user.gender != gender and gender is not None):
@@ -134,7 +134,6 @@ def changeGenderAndNickname(request):
     if(user.nickname != nickname and nickname != None and nickname != ''):
         user.nickname = nickname
         user.save()
-        return HttpResponse(content = CODE['5'], status = 401)
     return JsonResponse({'user': model_to_json(user)})
 
 @require_POST

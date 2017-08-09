@@ -109,12 +109,12 @@ export default {
                     params: data,
                     jsonp: 'cb'
                 }).then(function (res) {
-                    this.$Message.success('Send Success')
-                    // console.log(res.body)
-                }, function (res) {
-                    this.$Message.success('Send Success')
-                    // console.log(res.status)
-                })
+                this.$Message.success('Send Success')
+                // console.log(res.body)
+            }, function (res) {
+                this.$Message.success('Send Success')
+                // console.log(res.status)
+            })
         },
         testUsername () {
             this.$http.get('/testusername?username=' + this.username)

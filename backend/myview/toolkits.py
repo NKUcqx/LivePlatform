@@ -10,6 +10,8 @@ CODE = { # 0~10 Common Stuff    10~20 Login/Signup Stuff  20~30 Index Stuff  40~
     "3" : "HTTP Method Type Error , Change to Post",
     "4" : "Post Format Invalid, Not Consist With Form Format",
     "5" : "No Changes Detect",
+    "6" : "Folder has already been created",
+    "7" : "Index out of range",
 
     "10": "Email Is Invalid",
     "11": "User Never Exists",
@@ -33,7 +35,7 @@ def model_to_json(model):
 
 def encode_json(obj):
     try:
-        return json.dumps(obj)
+        return obj if isinstance(obj, str) or isinstance(obj, bool) else json.dumps(obj)
     except:
         try:
             if(isinstance(obj, datetime.date)):
