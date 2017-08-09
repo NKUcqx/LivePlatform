@@ -179,7 +179,7 @@ export default {
         testText () {
             if (this.canvas.text.indexOf('\n') >= 0) {
                 try {
-                    this.drawText()
+                    this.putText()
                 } catch (e) {
                     console.log(e)
                 }
@@ -210,6 +210,13 @@ export default {
             context.rect(ox, oy, dx, dy);
             (isFill) ? context.fill() : context.stroke()
             context.closePath()
+        },
+        drawText (ox, oy, fontSize, text, isFill = false) {
+            this.context.font = fontSize.toString() + 'px Georgia';
+            (isFill) ? this.context.fillText(text, ox, oy) : this.context.strokeText(text, ox, oy)
+        },
+        drawClear () {
+            this.context.clearRect(0, 0, this.WIDTH, this.HEIGHT)
         },
         setProperty (width, color, alpha) {
             const context = this.context
@@ -279,12 +286,12 @@ export default {
                 case 'mouseup':
                     wsSend(this.socket, makeCanvasInfo({
                         type: this.type,
-                        ox: this.canvas.penOriginPoint[0],
-                        oy: this.canvas.penOriginPoint[1],
+                        ox: canvas.penOriginPoint[0],
+                        oy: canvas.penOriginPoint[1],
                         ex: x,
                         ey: y,
-                        width: this.canvas.width,
-                        color: this.canvas.color
+                        width: canvas.width,
+                        color: canvas.color
                     }))
                     canvas.penOriginPoint = null
                     canvas.lastImageData = null
@@ -310,6 +317,16 @@ export default {
                     this.drawCircle(ox, oy, x, y, canvas.isFill)
                     break
                 case 'mouseup':
+                    wsSend(this.socket, makeCanvasInfo({
+                        type: this.type,
+                        ox: canvas.penOriginPoint[0],
+                        oy: canvas.penOriginPoint[1],
+                        ex: x,
+                        ey: y,
+                        width: canvas.width,
+                        color: canvas.color,
+                        isFill: canvas.isFill
+                    }))
                     canvas.penOriginPoint = null
                     canvas.lastImageData = null
                     break
@@ -334,6 +351,16 @@ export default {
                     this.drawRect(ox, oy, x, y, canvas.isFill)
                     break
                 case 'mouseup':
+                    wsSend(this.socket, makeCanvasInfo({
+                        type: this.type,
+                        ox: canvas.penOriginPoint[0],
+                        oy: canvas.penOriginPoint[1],
+                        ex: x,
+                        ey: y,
+                        width: canvas.width,
+                        color: canvas.color,
+                        isFill: canvas.isFill
+                    }))
                     canvas.penOriginPoint = null
                     canvas.lastImageData = null
                     break
@@ -354,6 +381,14 @@ export default {
                     this.setProperty(canvas.width + 7, 'white', 1)
                     const [ox, oy] = canvas.penOriginPoint
                     this.drawLine(ox, oy, x, y)
+                    wsSend(this.socket, makeCanvasInfo({
+                        type: this.type,
+                        ox: ox,
+                        oy: oy,
+                        ex: x,
+                        ey: y,
+                        width: canvas.width
+                    }))
                     canvas.penOriginPoint = [x, y]
                     break
                 case 'mouseup':
@@ -369,7 +404,7 @@ export default {
             switch (action) {
                 case 'mousedown':
                     if (this.canvas.isInput === true) {
-                        this.drawText()
+                        this.putText()
                     } else {
                         this.canvas.text = ''
                         this.canvas.isInput = true
@@ -382,27 +417,59 @@ export default {
             }
         },
 
-        drawText () {
-            if (this.canvas.isInput) {
+        putText () {
+            const canvas = this.canvas
+            if (canvas.isInput) {
                 this.context.lineWidth = 1
-                this.context.font = this.canvas.fontSize.toString() + 'px Georgia'
-                const [ox, oy] = this.canvas.penOriginPoint;
-                (this.canvas.isFill) ? this.context.fillText(this.canvas.text, ox, oy) : this.context.strokeText(this.canvas.text, ox, oy)
+                const [ox, oy] = canvas.penOriginPoint
+                this.drawText(ox, oy, canvas.fontSize, canvas.text, canvas.isFill)
+                wsSend(this.socket, makeCanvasInfo({
+                    type: this.type,
+                    ox: ox,
+                    oy: oy,
+                    fontSize: canvas.fontSize,
+                    color: canvas.color,
+                    isFill: canvas.isFill,
+                    text: canvas.text
+                }))
                 this.canvas.isInput = false
                 // this.$refs.text.focus()
             }
         },
 
         clearBoard () {
-            this.context.clearRect(0, 0, this.WIDTH, this.HEIGHT)
+            this.drawClear()
+            wsSend(this.socket, makeCanvasInfo({
+                type: 'clear'
+            }))
         },
 
         draw (canvasInfo) {
             switch (canvasInfo.type) {
                 case 'pen':
+                    this.context.lineCap = (canvasInfo.color.a < 1) ? 'butt' : 'round'
                 case 'line' :
+                    this.setProperty(canvasInfo.width, canvasInfo.color.hex, canvasInfo.color.a)
                     this.drawLine(canvasInfo.start[0], canvasInfo.start[1], canvasInfo.end[0], canvasInfo.end[1])
                     break
+                case 'circle':
+                    this.setProperty(canvasInfo.width, canvasInfo.color.hex, canvasInfo.color.a)
+                    this.drawCircle(canvasInfo.start[0], canvasInfo.start[1], canvasInfo.end[0], canvasInfo.end[1], canvasInfo.isFill)
+                    break
+                case 'rect':
+                    this.setProperty(canvasInfo.width, canvasInfo.color.hex, canvasInfo.color.a)
+                    this.drawRect(canvasInfo.start[0], canvasInfo.start[1], canvasInfo.end[0], canvasInfo.end[1], canvasInfo.isFill)
+                    break
+                case 'rubber':
+                    this.setProperty(canvasInfo.width + 7, 'white', 1)
+                    this.drawLine(canvasInfo.start[0], canvasInfo.start[1], canvasInfo.end[0], canvasInfo.end[1])
+                    break
+                case 'text':
+                    this.setProperty(1, canvasInfo.color.hex, canvasInfo.color.a)
+                    this.drawText(canvasInfo.start[0], canvasInfo.start[1], canvasInfo.fontSize, canvasInfo.text, canvasInfo.isFill)
+                    break
+                case 'clear':
+                    this.drawClear()
             }
         }
     },

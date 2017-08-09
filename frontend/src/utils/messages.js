@@ -4,7 +4,7 @@ const canvasInfo = {
     start: [0, 0],
     end: [0, 0],
     width: 0,
-    fontsize: 0,
+    fontSize: 0,
     text: '',
     color: '#FFFFFF',
     isFill: false
@@ -12,24 +12,29 @@ const canvasInfo = {
 
 export const makeCanvasInfo = ({
     type,
-    ox = 0,
-    oy = 0,
-    ex = 0,
-    ey = 0,
-    width = 0,
-    fontsize = 0,
-    text = '',
-    color = '#FFFFFF',
-    isFill = false
+    ox,
+    oy,
+    ex,
+    ey,
+    width,
+    fontSize,
+    text,
+    color,
+    isFill
 }) => {
-    canvasInfo.type = type
-    canvasInfo.start = [ox, oy]
-    canvasInfo.end = [ex, ey]
-    canvasInfo.width = width
-    canvasInfo.fontsize = width
-    canvasInfo.text = text
-    canvasInfo.color = color
-    canvasInfo.isFill = isFill
-    console.log(canvasInfo)
+    let canvasInfo = {
+        color: {}
+    }
+    canvasInfo.type = type;
+    (isFill) ? canvasInfo.isFill = isFill : '';
+    (ox && oy) ? canvasInfo.start = [ox, oy] : '';
+    (ex && ey) ? canvasInfo.end = [ex, ey] : '';
+    (width) ? canvasInfo.width = width : '';
+    (fontSize) ? canvasInfo.fontSize = fontSize : '';
+    (text) ? canvasInfo.text = text : ''
+    if (color) {
+        canvasInfo.color.hex = color.hex
+        canvasInfo.color.a = color.a
+    }
     return canvasInfo
 }
