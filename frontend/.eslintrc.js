@@ -30,6 +30,9 @@ module.exports = {
     "indent": [2, 4, { "SwitchCase": 1 }],
     'no-unused-vars': 0,
     'eol-last': 0,
+    'no-fallthrough': 0,
+    'no-unneeded-fernary': 0,
+    'no-undef': 0,
     'no-new-wrappers': 0
   }
 }
