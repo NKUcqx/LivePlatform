@@ -34,7 +34,7 @@ new Vue({
     localStorage: {
         session_id: {
             type: String,
-            default: null              
+            default: null
         }
     }
 })

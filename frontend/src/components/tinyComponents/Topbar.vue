@@ -102,8 +102,8 @@
             return {
                 file: null,
                 loadingStatus: false,
-                person:{
-                    username : '13513616850',
+                person: {
+                    username: '13513616850',
                     nickname: 'name',
                     gender: 0
                 },
@@ -128,8 +128,8 @@
                 },
                 ruleInfo: {
                     nickname: [
-                        { require:true, type: 'string', min: 6, max: 20, message: 'nickname must be more than 6 chars less than 20', trigger: 'blur' }
-                    ],
+                        { require: true, type: 'string', min: 6, max: 20, message: 'nickname must be more than 6 chars less than 20', trigger: 'blur' }
+                    ]
                 },
                 ruleNewpass: {
                     password: [
@@ -153,7 +153,7 @@
         computed: {
         },
         methods: {
-            modifyInfo() {
+            modifyInfo () {
                 if (checkForm(this, this.$refs.infoForm)) {
                     let data = {
                         username: this.person.username,
@@ -165,7 +165,7 @@
                         url: '//',
                         method: 'POST',
                         body: data,
-                        before: function(request){beforePost(request)},
+                        before: function (request) { beforePost(request) }
                     }).then(function (res) {
                         alert(res.body)
                     }, function (res) {
@@ -173,7 +173,7 @@
                     })
                 }
             },
-            modifyPass() {
+            modifyPass () {
                 if (checkForm(this, this.$refs.modifyForm)) {
                     let data = {
                         username: this.person.username,
@@ -185,7 +185,7 @@
                         url: '/changepass/',
                         method: 'POST',
                         body: data,
-                        before: function(request){beforePost(request)},
+                        before: function (request) { beforePost(request) }
                     }).then(function (res) {
                         alert(res.body)
                     }, function (res) {
@@ -193,8 +193,8 @@
                     })
                 }
             },
-            createRoom() {
-                if(createForm(this, this.$refs.createForm)){
+            createRoom () {
+                if (checkForm(this, this.$refs.createForm)) {
                     let formData = new FormData()
                     formData.append('thumbnail', this.createForm.img)
                     formData.append('slide', this.createForm.slide)
@@ -203,16 +203,16 @@
                     this.$http({
                         url: '/createroom/',
                         method: 'POST',
-                        body:formData,
-                        before:function(request){ beforePost(request) },
+                        body: formData,
+                        before: function (request) { beforePost(request) }
                     }).then(function (res) {
                         alert(res.body)
                     }, function (res) {
                         alert(res.status)
                     })
                 }
-            },
-            /*toggleClick () {
+            }
+            /* toggleClick () {
                 let file = files[0]
                 let formData = new FormData()
                 formData.append('avatar', file)
@@ -236,8 +236,7 @@
                 }
             }, */
         },
-        mounted() {
-            
+        mounted () {
         }
     }
 </script>
