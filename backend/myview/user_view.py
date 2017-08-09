@@ -11,6 +11,7 @@ from backend.forms import UserForm
 
 import json
 import re
+import os
 # Create your views here.
 
 CODE = toolkits.CODE
@@ -37,6 +38,12 @@ def test_phone(phone):
     model=re.compile('^0\d{2,3}\d{7,8}$|^1[358]\d{9}$|^147\d{8}')
     phonematch=model.match(phone)
     return True if phonematch else False
+
+def create_user_folder(username):
+    if(os.path.exists(os.path.join('frontend/static/users/' , username))):
+        return False
+    os.makedirs(os.path.join('frontend/static/users/' , username))
+    return True
 
 @require_GET
 def getUser(request):
@@ -74,17 +81,20 @@ def signupSubmit(request):
     form = UserForm(body)
     if(form.is_valid()):
         instance = form.save(commit = False)
-        user = User.objects.create_user(
-            username = instance.username,
-            password = instance.password, 
-            gender = instance.gender,
-            nickname = instance.nickname,
-            email = instance.username if test_email(instance.username) else None, 
-            phone = instance.username if test_phone(instance.username) else None
-        )
-        form.save(commit = False)
-        user.save()
-        return JsonResponse({'user': model_to_json(user)})
+        if(create_user_folder(instance.username)):
+            user = User.objects.create_user(
+                username = instance.username,
+                password = instance.password, 
+                gender = instance.gender,
+                nickname = instance.nickname,
+                email = instance.username if test_email(instance.username) else None, 
+                phone = instance.username if test_phone(instance.username) else None
+            )
+            form.save(commit = False)
+            user.save()
+            return JsonResponse({'user': model_to_json(user)})
+        else:
+            return HttpResponse(content = CODE['1'], status = 500)
     else:
         return HttpResponse(content = CODE['4'], status = 400)
 
@@ -110,13 +120,12 @@ def testUsername(request):
     except:
         return HttpResponse(status = 401) 
 
-
 @require_POST
 def changeAvatar(request):
     user = User.objects.get(pk = request.user.id)
     avatar = request.FILES.get('avatar', None)
     if(avatar is not None):
-        user.avatar_path = avatar
+        user.avatar = avatar
         user.save()
         return JsonResponse({'user': model_to_json(user)})
     else:
