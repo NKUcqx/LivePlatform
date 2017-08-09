@@ -1,10 +1,10 @@
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse,JsonResponse
 from backend.models import User,LiveRoom,Punishment
 from django.forms.models import model_to_dict
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
-#from django.contrib.auth.decorators import login_required 
 from . import toolkits
 import os
 import hashlib 
@@ -23,19 +23,26 @@ def generate_room_path():
     return md5.hexdigest()
 
 def create_folder(file_name):
-    os.makedirs(os.path.join('frontend/static/rooms/' , file_name))
-    os.mknod(os.path.join('frontend/static/rooms/',file_name,'chatlog.txt'))
+    if(os.path.exists(os.path.join('frontend/static/rooms/' , file_name))):
+        return False
+    else:
+        os.makedirs(os.path.join('frontend/static/rooms/' , file_name))
+        os.mknod(os.path.join('frontend/static/rooms/',file_name,'chatlog.txt'))
+        return True
 
-def upload_thumbnail(room, thumbnail):
+def upload_thumbnail(room_id, thumbnail):
+    room = LiveRoom.objects.get(id = room_id)
     room.thumbnail_path = thumbnail
     room.save()
     return room
 
-def upload_slide(room, slide):
+def upload_slide(room_id, slide):
+    room = LiveRoom.objects.get(id = room_id)
     room.slide_path = slide
     room.save()
     return room
 
+@login_required
 @require_GET
 def getRooms(request):
     rooms = LiveRoom.objects.order_by(request.GET.get('order_by','-audience_amount'))
@@ -46,7 +53,9 @@ def getRooms(request):
     if('is_living' in request.GET):
         rooms = rooms.filter(is_living = True if request.GET.get('is_living') == 'true' else False)
     if('limit' in request.GET):
-        rooms = rooms[int(request.GET.get('start',0)):int(request.GET.get('limit'))]
+        start = int(request.GET.get('start',0))
+        limit = start + int(request.GET.get('limit'))
+        rooms = rooms[start:limit]
     rooms_dict = rooms.values('id', 'name', 'creater', 'audience_amount', 'create_time', 'end_time', 'slide_path', 'thumbnail_path', 'is_living', 'is_silence');
     for item in rooms_dict:
         item['creater_name'] = User.objects.get(id = item['creater']).nickname
@@ -54,21 +63,23 @@ def getRooms(request):
         item['end_time'] = item['end_time'].strftime('%Y-%-m-%d %H:%m:%S') if item.get('end_time',None) is not None else ''
     return JsonResponse({"rooms": list(rooms_dict)})
 
+@login_required
 @require_POST
 def uploadThumbnail(request):
     #must satisfy: login and is a teacher and has created a live room
-    if(request.user.is_authenticated() and request.user.role == 'T' and 'room' in request.session):
-        room = upload_thumbnail(request.session.get('room'), request.FILES.get('thumbnail'))
+    if(request.user.role == 'T' and 'room' in request.session):
+        room = upload_thumbnail(request.session.get('room').id, request.FILES.get('thumbnail'))
         return JsonResponse({'room':model_to_json(room)})
     elif('room' not in request.session):#because each person can not create other rooms while living
         return HttpResponse(content = CODE['24'], status = 400)
     else:
         return HttpResponse(content = CODE['12'], status = 401)
 
+@login_required
 @require_POST
 def uploadSlide(request):
-    if(request.user.is_authenticated() and request.user.role == 'T' and 'room' in request.session):
-        room = upload_slide(request.session.get('room'), request.FILES.get('slide'))
+    if(request.user.role == 'T' and 'room' in request.session):
+        room = upload_slide(request.session.get('room').id, request.FILES.get('slide'))
         return JsonResponse({'room':model_to_json(room)})
     elif('room' not in request.session):#because each person can not create other rooms while living
         return HttpResponse(content = CODE['24'], status = 400)
@@ -76,51 +87,78 @@ def uploadSlide(request):
         return HttpResponse(content = CODE['12'], status = 401)
 
 #TODO create error_log.txt
-#@login_required #will jump to settings.LOGIN_URL automatically when user hasn't log in (we need control redirect within frontend so..)
+@login_required
 @require_POST
 def createRoom(request):
-    if(request.user.is_authenticated() and request.user.role == 'T' and 'room' not in request.session):# can check log in status because of comments above
+    if(request.user.role == 'T' and 'room' not in request.session):# can check log in status because of comments above
         creater_id = request.user.id
-        thumbnail = request.FILES.get('thumbnail',None)
-        slide = request.FILES.get('slide',None)
+        thumbnail = request.FILES.get('thumbnail', None)
+        slide = request.FILES.get('slide', None)
         name = request.POST.get('name')
+        is_silence = True if request.POST.get('is_silence', None) is not None else False
+        is_living = False if request.POST.get('is_living', None) is not None else True
         file_name = generate_room_path()
-        create_folder(file_name)
-        room = LiveRoom(name = name, creater_id = creater_id, file_name = file_name)
-        if(thumbnail):
-            thumbnail_type = os.path.splitext(thumbnail.name)[1]
-            if(thumbnail_type.endswith(('.jpg','.png','.jpeg','.gif'))):
-                room = upload_thumbnail(room , thumbnail)
-            else:
-                return HttpResponse(content = CODE['20'], status = 415)
-        if(slide):
-            slide_type = os.path.splitext(slide.name)[1]
-            #must add dot ! otherwise user could upload file like "somepdf" instead of "some.pdf"  #any type else ?
-            if(slide_type.endswith(('.ppt','.pptx','.pps','.swf','.pdf','.key'))):
-                room = upload_slide(room, slide)
-            else:
-                return HttpResponse(content = CODE['20'], status = 415)
-        room.save()
-        request.session['room'] = model_to_json(room)
-        return JsonResponse({'room': model_to_json(room)}) # return the new room's id
+        if(create_folder(file_name)):
+            room = LiveRoom(
+                name = name,
+                creater_id = creater_id,
+                file_name = file_name,
+                is_silence = is_silence,
+                is_living = is_living
+            )
+            if(thumbnail):
+                thumbnail_type = os.path.splitext(thumbnail.name)[1]
+                if(thumbnail_type.endswith(('.jpg','.png','.jpeg','.gif'))):
+                    room = upload_thumbnail(room , thumbnail)
+                else:
+                    return HttpResponse(content = CODE['20'], status = 415)
+            if(slide):
+                slide_type = os.path.splitext(slide.name)[1]
+                #must add dot ! otherwise user could upload file like "somepdf" instead of "some.pdf"  #any type else ?
+                if(slide_type.endswith(('.ppt','.pptx','.pps','.swf','.pdf','.key'))):
+                    room = upload_slide(room, slide)
+                else:
+                    return HttpResponse(content = CODE['20'], status = 415)
+            room.save()
+            request.session['room'] = model_to_json(room)
+            return JsonResponse({'room': model_to_json(room)}) # return the new room's id
+        else:
+            return HttpResponse(content = CODE['6'], status = 500)
     elif('room' in request.session):#because each person can not create other rooms while living
         return HttpResponse(content = CODE['21'], status = 400)
     else:
         return HttpResponse(content = CODE['12'], status = 401)
 
+@login_required
 @require_POST
 def endRoom(request):
-    user = request.user# session need save a user entity & a room entity
+    user = request.user
     room = request.session.get('room',None)
     if(room):
         # _id is a default field add by Django (can save one query from user table)
-        if(user and user.is_authenticated() and user.id == room.creater_id):
-            room.is_living = False #will set end_time automatically by db
-            room.save()
+        if(user and str(user.id) == room['creater']):
+            room_db = LiveRoom.objects.get(pk = room['id'])
+            room_db.is_living = False #will set end_time automatically by db
+            room_db.save()
             del request.session['room']
+            #print(request.session.exists('room'))
                 #LOG("CQX-room_view.endRoom" , "Room: " + str(room.id) +"has been closed")
-            return HttpResponse(content = CODE['0'])
+            return HttpResponse(CODE['0'])
         else :
             return HttpResponse(content = CODE['12'], status = 401)
     else:
         return HttpResponse(content = CODE['24'], status = 404)
+
+@login_required
+@require_POST
+def silenceRoom(request):
+    body = bi2obj(request)
+    user = request.user
+    if(user.role == 'T' and 'room' in request.session and user.id == request.session.get('room').get('creater')):
+        room = request.session.get('room')
+        room_db = LiveRoom.objects.get(id = int(room['id']))
+        room_db.is_silence = body['is_silence']
+        room_db.save()
+        return JsonResponse(content = model_to_json(room_db))
+    else:
+        return HttpResponse(content = CODE['12'], status = 401)

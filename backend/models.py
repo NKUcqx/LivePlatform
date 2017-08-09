@@ -68,6 +68,7 @@ def checkPhoneAndEmail(sender, instance, **kwargs):
     if((instance.email == '' or instance.email is None ) and (instance.phone == '' or instance.phone is None)):
         raise TypeError('Must Fill either a email or a phone number !')
     if(instance.phone != '' and instance.phone is not None):
+        instance.phone = str(instance.phone)
         if(len(instance.phone) != 11):
             raise TypeError('Format Invalid !')
         users = User.objects.filter(phone = instance.phone)
@@ -101,7 +102,7 @@ class LiveRoom(models.Model):
     is_silence = models.BooleanField(default = False)
     create_time = models.DateTimeField(auto_now_add = True)
     end_time = models.DateTimeField(null = True, blank = True) # identified whether it's A Live or not by whether end_time is null
-    file_name = models.CharField(max_length = 50, default = get_dir_path)
+    file_name = models.CharField(max_length = 500, default = get_dir_path)
     slide_path = models.FileField(upload_to = get_file_path, default = 'default')
     thumbnail_path = models.ImageField(upload_to = get_file_path, default = 'default_thumbnail.jpg')
     objects = LiveRoomManager()
@@ -116,13 +117,11 @@ def checkEndAndLiving(sender, instance, **kwargs):
         instance.is_silence = True
         instance.end_time = timezone.now()
 
-@receiver(pre_save, sender = LiveRoom)
-def checkEndAndLiving(sender, instance, **kwargs):
-    if(instance.is_living == True and instance.end_time is not  None):
-        raise TypeError("Living Room can't have property end_time")
-    if(instance.is_living == False):
-        instance.is_silence = True
-        instance.end_time = timezone.now()
+@receiver(post_save, sender = LiveRoom)
+def checkDirExistence(sender, instance, **kwargs):
+    if(os.path.exists(os.path.join('frontend', 'static', 'rooms', instance.file_name)) is False):
+        os.makedirs(instance.file_name)
+        os.mknod(os.path.join(instance.file_name,'chatlog.txt'))
 
 class Punishment(models.Model):
     room = models.ForeignKey(LiveRoom, default = get_Room, on_delete = models.CASCADE)
