@@ -5,6 +5,8 @@ import Welcome from '@/components/Welcome'
 import Home from '@/components/Home'
 import Codedemo from '@/components/Codedemo'
 import Canvas from '@/components/tinyComponents/Canvas'
+import TeacherRTC from '@/components/tinyComponents/TeacherRTC'
+import StudentRTC from '@/components/tinyComponents/StudentRTC'
 
 Vue.use(Router)
 
@@ -29,6 +31,16 @@ export default new Router({
             path: '/code',
             name: 'code',
             component: Codedemo
+        },
+        {
+            path: '/teacher',
+            name: 'teacher',
+            component: TeacherRTC
+        },
+        {
+            path: '/student',
+            name: 'student',
+            component: StudentRTC
         }
     ]
 })
