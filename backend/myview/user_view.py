@@ -78,9 +78,9 @@ def signupSubmit(request):
             username = instance.username,
             password = instance.password, 
             gender = instance.gender,
-            nickname = instance.nickname, 
-            email = instance.username if test_email(instance.username) else '', 
-            phone = instance.username if test_phone(instance.username) else ''
+            nickname = instance.nickname,
+            email = instance.username if test_email(instance.username) else None, 
+            phone = instance.username if test_phone(instance.username) else None
         )
         form.save(commit = False)
         user.save()

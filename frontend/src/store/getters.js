@@ -28,18 +28,18 @@ export const isLogin = (state) => {
     return state.user.isLogin
 }
 
-export const getSessionId = (state) => {
-    let sessionId = Vue.localStorage.get('session_id')
-    if (sessionId !== null && sessionId !== '') {
-        state.session.sessionId = sessionId
-        state.session.isSession = true
+export const getSessionKey = (state) => {
+    let sessionKey = Vue.localStorage.get('session_key')
+    if (sessionKey !== null && sessionKey !== '') {
+        state.session.sessionKey = sessionKey
+        state.session.hasSession = true
     } else {
-        state.session.isSession = false
-        state.session.sessionId = null
+        state.session.hasSession = false
+        state.session.sessionKey = null
     }
-    return state.session.sessionId
+    return state.session.sessionKey
 }
 
-export const isSession = (state) => {
-    return state.session.isSession
+export const hasSession = (state) => {
+    return state.session.hasSession
 }

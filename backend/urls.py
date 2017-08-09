@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^sendemail/$', user_view.sendTo, name = 'sendemail'),
     url(r'^testusername/$', user_view.testUsername, name = 'test_username'),
     url(r'^changepass/$', user_view.changePassword, name = 'change_password'),
+    url(r'^getsession/$', user_view.getUserFromSession, name = 'get_session'),
    # url(r'^findre/$', user_view.query_repeat_username, name = 'findre'),
    # url(r'^websocket/$', user_view.websocket, name = 'websocket'),
     url(r'^endroom/$', room_view.endRoom, name = 'end_room' ),

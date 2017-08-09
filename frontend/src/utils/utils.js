@@ -18,7 +18,7 @@ export const beforePost = (request) => {
     }
     if (!(/^http:.*/.test(request.url) || /^https:.*/.test(request.url))) {
     // Only send the token to relative URLs i.e. locally.
-        console.log(request.headers.set('X-CSRFToken', getCookie('csrftoken')))
+        request.headers.set('X-CSRFToken', getCookie('csrftoken'))
     }
 }
 

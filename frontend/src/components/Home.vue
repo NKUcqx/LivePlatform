@@ -1,6 +1,7 @@
 <template>
     <div id="home">
-        <topbar></topbar>
+        <topbar id="topbar"></topbar>
+        <div id="fortop"></div>
         <div id="showbar">
             <div id="carousel-containter">
                 <Carousel v-model="carousel" id="carousel" trigger="hover" arrow="always">
@@ -107,9 +108,16 @@
 * {
     font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
 }
-
+#topbar {
+    width: 100%;
+    position: fixed;
+    z-index: 999;
+}
+#fortop{
+    width: 100%;
+    height: 60px;
+}
 #showbar {
-    margin-top:;
     text-align: left;
     padding: 0% 10%;
     clear: both;
