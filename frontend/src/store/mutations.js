@@ -1,9 +1,9 @@
 import Vue from 'vue'
 
 export const setUser = (state, {
-    user_id, username, gender, avatar, nickname
+    userId, username, gender, avatar, nickname
 }, sessionId) => {
-    state.user.userid = user_id
+    state.user.userid = userId
     state.user.username = username
     state.user.gender = gender
     state.user.avatar = avatar

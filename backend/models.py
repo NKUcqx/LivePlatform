@@ -118,12 +118,11 @@ def checkEndAndLiving(sender, instance, **kwargs):
 
 @receiver(pre_save, sender = LiveRoom)
 def checkEndAndLiving(sender, instance, **kwargs):
-    print(instance.end_time)
     if(instance.is_living == True and instance.end_time is not  None):
         raise TypeError("Living Room can't have property end_time")
     if(instance.is_living == False):
+        instance.is_silence = True
         instance.end_time = timezone.now()
-
 
 class Punishment(models.Model):
     room = models.ForeignKey(LiveRoom, default = get_Room, on_delete = models.CASCADE)
