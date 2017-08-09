@@ -78,17 +78,15 @@ export const checkUsername = (rule, value, callback, status) => {
     })
 }
 
-export const checkForm = (obj, formRef) => {
-    let result = true
+export const checkForm = (obj, formRef, todo) => {
     formRef.validate((valid) => {
-        result = valid
         if (valid) {
             obj.$Message.success('Form legal')
+            todo()
         } else {
             obj.$Message.error('Form illegal')
         }
     })
-    return result
 }
 
 export default {

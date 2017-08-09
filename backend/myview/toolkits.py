@@ -33,7 +33,7 @@ def model_to_json(model):
 
 def encode_json(obj):
     try:
-        return json.dumps(obj)
+        return obj if isinstance(obj, str) or isinstance(obj, bool) else json.dumps(obj)
     except:
         try:
             if(isinstance(obj, datetime.date)):

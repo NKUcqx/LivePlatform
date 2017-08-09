@@ -188,7 +188,7 @@ export default {
             this.form.user = (this.state === 0) ? this.retrieve.user : this.form.user
         },
         login () {
-            if (checkForm(this, this.$refs['form'])) {
+            checkForm(this, this.$refs['form'], () => {
                 let data = {
                     username: this.form.user,
                     password: this.form.password
@@ -206,27 +206,30 @@ export default {
                 }, function (res) {
                     alert(res.body)
                 })
-            }
+            })
         },
         confirm () {
-            if (checkForm(this, this.$refs['retrieveForm']) && this.$refs['veri'].validateForm()) {
-                let data = {
-                    forget_pw: true,
-                    username: this.retrieve.user,
-                    new_password: this.retrieve.newPassword
-                }
-                this.$http({
-                    url: '/changepass/',
-                    method: 'POST',
-                    body: data,
-                    before: function (request) { beforePost(request) }
-                }).then(function (res) {
-                    alert(res.body)
-                    this.$router.push({path: '/home'})
-                }, function (res) {
-                    alert(res.body)
+            checkForm(this, this.$refs['retrieveForm'], () => {
+                this.$refs['veri'].validateForm(() => {
+                    let data = {
+                        forget_pw: true,
+                        username: this.retrieve.user,
+                        new_password: this.retrieve.newPassword
+                    }
+                    this.$http({
+                        url: '/changepass/',
+                        method: 'POST',
+                        body: data,
+                        before: function (request) { beforePost(request) }
+                    }).then(function (res) {
+                        alert('Success')
+                        this.initUser(res.body)
+                        this.$router.push({path: '/home'})
+                    }, function (res) {
+                        alert(res.body)
+                    })
                 })
-            }
+            })
         }
     }
 }
