@@ -27,7 +27,6 @@ export default {
         item: Object
     },
     mounted () {
-        console.log(this.item)
     }
 }
 </script>

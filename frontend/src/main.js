@@ -32,7 +32,7 @@ new Vue({
         }
     },
     localStorage: {
-        session_id: {
+        session_key: {
             type: String,
             default: null
         }

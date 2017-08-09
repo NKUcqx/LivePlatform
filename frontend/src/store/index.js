@@ -4,7 +4,6 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import * as actions from './actions'
 import * as getters from './getters'
-import * as states from './states'
 import * as mutations from './mutations'
 import home from './modules/home'
 import welcome from './modules/welcome'
@@ -13,8 +12,23 @@ import welcome from './modules/welcome'
 
 Vue.use(Vuex)
 
+const state = {
+    session: {
+        hasSession: false,
+        sessionKey: null
+    },
+    user: {
+        userid: null,
+        username: null,
+        nickname: '',
+        avatar: null,
+        gender: '',
+        isLogin: false
+    }
+}
+
 export default new Vuex.Store({
-    states,
+    state,
     actions,
     getters,
     mutations,

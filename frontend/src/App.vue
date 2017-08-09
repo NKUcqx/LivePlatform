@@ -7,8 +7,22 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
-    name: 'app'
+    name: 'app',
+    methods: {
+        ...mapActions({
+            initState: 'initState'
+        })
+    },
+    mounted () {
+        let that = this
+        this.initState().then(function () {
+            that.$router.push({path: '/home'})
+        }, function () {
+            that.$router.push({path: ''})
+        })
+    }
 }
 </script>
 

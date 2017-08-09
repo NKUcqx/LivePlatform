@@ -1,11 +1,14 @@
 <template>
-<div class="topbar">
+<div id="topbar">
     <Menu  ref="topmenu" mode="horizontal" active-name="3" class="menu" theme="light" id="topmenu">
         <Menu-item class="longer">
             <img src="../../assets/logo1.png" class="logo-image" alt="head-image" :width="img.size" :height="img.size"> 
         </Menu-item>
         <Menu-item name="1">
             教育直播平台
+        </Menu-item>
+        <Menu-item name="2" class="top-right">
+            <span @click="logout()" id="logout"><Icon type="power" size="20" color="rgb(210,100,100)"></Icon></span>
         </Menu-item>
         <Submenu name="3" class="top-right">
             <template slot="title">
@@ -90,6 +93,7 @@
 <script>
     import { beforePost } from '../../utils/utils'
     import { checkPassword, checkRePassword, checkForm } from '../../utils/checks'
+    import { mapGetters } from 'vuex'
 
     export default {
         data () {
@@ -151,8 +155,14 @@
             }
         },
         computed: {
+            ...mapGetters({
+                user: 'getUser'
+            })
         },
         methods: {
+            logout () {
+                alert('logout')
+            },
             modifyInfo () {
                 if (checkForm(this, this.$refs.infoForm)) {
                     let data = {
@@ -244,6 +254,11 @@
 <style scoped>
 * {
     font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+}
+
+#logout {
+    display: inline-block;
+    padding-top: 2px;
 }
 
 .menu-item {

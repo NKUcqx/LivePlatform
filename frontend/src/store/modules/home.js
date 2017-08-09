@@ -35,7 +35,6 @@ const actions = {
                 limit: state.showNum
             }
         }).then(function (res) {
-            console.log('islive:' + isLive);
             (isLive) ? state.liveRooms = getListFromDB(res.body) : state.videoRooms = getListFromDB(res.body)
         }, function () {
             alert('ajax failure')

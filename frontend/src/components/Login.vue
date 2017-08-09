@@ -81,7 +81,7 @@
 <script>
 import verification from 'verification-code'
 import { checkPassword, checkRePassword, checkVerification, checkForm, checkPhone, checkEmail, checkUsername } from '../utils/checks'
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters, mapMutations, mapActions } from 'vuex'
 import {beforePost} from '../utils/utils'
 import Verification from './tinyComponents/Verification' // component
 
@@ -156,7 +156,7 @@ export default {
     computed: {
         ...mapGetters({
             page: 'getPage',
-            setUser: 'setUser'
+            getUser: 'getUser'
         }),
         typeOfUsername () {
             if (checkEmail(this.retrieve.user)) {
@@ -171,6 +171,10 @@ export default {
         ...mapMutations({
             goLeft: 'goLeft',
             goRight: 'goRight'
+        }),
+        ...mapActions({
+            initState: 'initState',
+            initUser: 'initUser'
         }),
         showPinImg () {
             let result = verification.create()
@@ -189,7 +193,6 @@ export default {
                     username: this.form.user,
                     password: this.form.password
                 }
-                console.log(data)
                 this.$http({
                     url: '/login/',
                     method: 'POST',
@@ -198,6 +201,7 @@ export default {
                 }).then(function (res) {
                     alert('Success')
                     // setUser(res.body.user, res.body.session_id)
+                    this.initUser(res.body)
                     this.$router.push({path: '/home'})
                 }, function (res) {
                     alert(res.body)
@@ -211,7 +215,6 @@ export default {
                     username: this.retrieve.user,
                     new_password: this.retrieve.newPassword
                 }
-                console.log(data)
                 this.$http({
                     url: '/changepass/',
                     method: 'POST',

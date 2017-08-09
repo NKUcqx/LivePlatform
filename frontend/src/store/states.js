@@ -1,7 +1,7 @@
 const state = {
     session: {
         hasSession: false,
-        sessionId: null
+        sessionKey: null
     },
     user: {
         userid: null,
