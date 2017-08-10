@@ -1,5 +1,5 @@
 <template>
-	<div id="canvas" style="width:600px;height:30px;margin:50px" ref="canvas">
+	<div id="canvas" ref="canvas">
 		<div :style="btnPosition" id="show-tool" ref="showTool"  @mouseenter="showToolBar()" @mouseleave="hideToolBar()">
 			<Button type="ghost" shape="circle" icon="wrench"></Button>
 		</div>
@@ -251,11 +251,11 @@ export default {
                     this.drawLine(ox, oy, x, y)
                     wsSend(this.socket, makeCanvasInfo({
                         type: this.type,
-                        ox: ox,
-                        oy: oy,
-                        ex: x,
-                        ey: y,
-                        width: canvas.width,
+                        ox: ox / this.WIDTH,
+                        oy: oy / this.HEIGHT,
+                        ex: x / this.WIDTH,
+                        ey: y / this.HEIGHT,
+                        width: canvas.width / this.WIDTH,
                         color: canvas.color
                     }))
                     canvas.penOriginPoint = [x, y]
@@ -286,11 +286,11 @@ export default {
                 case 'mouseup':
                     wsSend(this.socket, makeCanvasInfo({
                         type: this.type,
-                        ox: canvas.penOriginPoint[0],
-                        oy: canvas.penOriginPoint[1],
-                        ex: x,
-                        ey: y,
-                        width: canvas.width,
+                        ox: canvas.penOriginPoint[0] / this.WIDTH,
+                        oy: canvas.penOriginPoint[1] / this.HEIGHT,
+                        ex: x / this.WIDTH,
+                        ey: y / this.HEIGHT,
+                        width: canvas.width / this.WIDTH,
                         color: canvas.color
                     }))
                     canvas.penOriginPoint = null
@@ -319,11 +319,11 @@ export default {
                 case 'mouseup':
                     wsSend(this.socket, makeCanvasInfo({
                         type: this.type,
-                        ox: canvas.penOriginPoint[0],
-                        oy: canvas.penOriginPoint[1],
-                        ex: x,
-                        ey: y,
-                        width: canvas.width,
+                        ox: canvas.penOriginPoint[0] / this.WIDTH,
+                        oy: canvas.penOriginPoint[1] / this.HEIGHT,
+                        ex: x / this.WIDTH,
+                        ey: y / this.HEIGHT,
+                        width: canvas.width / this.WIDTH,
                         color: canvas.color,
                         isFill: canvas.isFill
                     }))
@@ -353,11 +353,11 @@ export default {
                 case 'mouseup':
                     wsSend(this.socket, makeCanvasInfo({
                         type: this.type,
-                        ox: canvas.penOriginPoint[0],
-                        oy: canvas.penOriginPoint[1],
-                        ex: x,
-                        ey: y,
-                        width: canvas.width,
+                        ox: canvas.penOriginPoint[0] / this.WIDTH,
+                        oy: canvas.penOriginPoint[1] / this.HEIGHT,
+                        ex: x / this.WIDTH,
+                        ey: y / this.HEIGHT,
+                        width: canvas.width / this.WIDTH,
                         color: canvas.color,
                         isFill: canvas.isFill
                     }))
@@ -378,16 +378,16 @@ export default {
                     if (buttons !== 1) {
                         return
                     }
-                    this.setProperty(canvas.width + 7, 'white', 1)
+                    this.setProperty(Math.floor(canvas.width * 2), 'white', 1)
                     const [ox, oy] = canvas.penOriginPoint
                     this.drawLine(ox, oy, x, y)
                     wsSend(this.socket, makeCanvasInfo({
                         type: this.type,
-                        ox: ox,
-                        oy: oy,
-                        ex: x,
-                        ey: y,
-                        width: canvas.width
+                        ox: ox / this.WIDTH,
+                        oy: oy / this.HEIGHT,
+                        ex: x / this.WIDTH,
+                        ey: y / this.HEIGHT,
+                        width: canvas.width / this.WIDTH
                     }))
                     canvas.penOriginPoint = [x, y]
                     break
@@ -410,7 +410,6 @@ export default {
                         this.canvas.isInput = true
                         this.canvas.penOriginPoint = [event.x, event.y]
                     }
-                    console.log(this.$refs.board.offsetLeft)
                     this.position.left = (event.x + this.$refs.board.offsetLeft).toString() + 'px'
                     this.position.top = (event.y + this.$refs.board.offsetTop - 12).toString() + 'px'
                     break
@@ -425,9 +424,9 @@ export default {
                 this.drawText(ox, oy, canvas.fontSize, canvas.text, canvas.isFill)
                 wsSend(this.socket, makeCanvasInfo({
                     type: this.type,
-                    ox: ox,
-                    oy: oy,
-                    fontSize: canvas.fontSize,
+                    ox: ox / this.WIDTH,
+                    oy: oy / this.HEIGHT,
+                    fontSize: canvas.fontSize / this.WIDTH,
                     color: canvas.color,
                     isFill: canvas.isFill,
                     text: canvas.text
@@ -449,24 +448,24 @@ export default {
                 case 'pen':
                     this.context.lineCap = (canvasInfo.color.a < 1) ? 'butt' : 'round'
                 case 'line' :
-                    this.setProperty(canvasInfo.width, canvasInfo.color.hex, canvasInfo.color.a)
-                    this.drawLine(canvasInfo.start[0], canvasInfo.start[1], canvasInfo.end[0], canvasInfo.end[1])
+                    this.setProperty(canvasInfo.width * this.WIDTH, canvasInfo.color.hex, canvasInfo.color.a)
+                    this.drawLine(canvasInfo.start[0] * this.WIDTH, canvasInfo.start[1] * this.HEIGHT, canvasInfo.end[0] * this.WIDTH, canvasInfo.end[1] * this.HEIGHT)
                     break
                 case 'circle':
-                    this.setProperty(canvasInfo.width, canvasInfo.color.hex, canvasInfo.color.a)
-                    this.drawCircle(canvasInfo.start[0], canvasInfo.start[1], canvasInfo.end[0], canvasInfo.end[1], canvasInfo.isFill)
+                    this.setProperty(canvasInfo.width * this.WIDTH, canvasInfo.color.hex, canvasInfo.color.a)
+                    this.drawCircle(canvasInfo.start[0] * this.WIDTH, canvasInfo.start[1] * this.HEIGHT, canvasInfo.end[0] * this.WIDTH, canvasInfo.end[1] * this.HEIGHT, canvasInfo.isFill)
                     break
                 case 'rect':
-                    this.setProperty(canvasInfo.width, canvasInfo.color.hex, canvasInfo.color.a)
-                    this.drawRect(canvasInfo.start[0], canvasInfo.start[1], canvasInfo.end[0], canvasInfo.end[1], canvasInfo.isFill)
+                    this.setProperty(canvasInfo.width * this.WIDTH, canvasInfo.color.hex, canvasInfo.color.a)
+                    this.drawRect(canvasInfo.start[0] * this.WIDTH, canvasInfo.start[1] * this.HEIGHT, canvasInfo.end[0] * this.WIDTH, canvasInfo.end[1] * this.HEIGHT, canvasInfo.isFill)
                     break
                 case 'rubber':
-                    this.setProperty(canvasInfo.width + 7, 'white', 1)
-                    this.drawLine(canvasInfo.start[0], canvasInfo.start[1], canvasInfo.end[0], canvasInfo.end[1])
+                    this.setProperty(canvasInfo.width * 2 * this.WIDTH, 'white', 1)
+                    this.drawLine(canvasInfo.start[0] * this.WIDTH, canvasInfo.start[1] * this.HEIGHT, canvasInfo.end[0] * this.WIDTH, canvasInfo.end[1] * this.HEIGHT)
                     break
                 case 'text':
                     this.setProperty(1, canvasInfo.color.hex, canvasInfo.color.a)
-                    this.drawText(canvasInfo.start[0], canvasInfo.start[1], canvasInfo.fontSize, canvasInfo.text, canvasInfo.isFill)
+                    this.drawText(canvasInfo.start[0] * this.WIDTH, canvasInfo.start[1] * this.HEIGHT, canvasInfo.fontSize * this.WIDTH, canvasInfo.text, canvasInfo.isFill)
                     break
                 case 'clear':
                     this.drawClear()
@@ -481,6 +480,10 @@ export default {
                 })
             })
         }
+        window.addEventListener('resize', () => {
+            this.btnPosition.left = (this.$refs.canvas.offsetLeft + 5).toString() + 'px'
+            this.btnPosition.top = (this.$refs.canvas.offsetTop + 5).toString() + 'px'
+        })
         this.btnPosition.left = (this.$refs.canvas.offsetLeft + 5).toString() + 'px'
         this.btnPosition.top = (this.$refs.canvas.offsetTop + 5).toString() + 'px'
         this.context = this.$refs.board.getContext('2d')
@@ -489,7 +492,6 @@ export default {
         this.socket = wsConnect('/canvaschannel/', (e) => {
             let canvasInfo = e.obj
             this.draw(canvasInfo)
-            console.log(e.obj)
         })
     }
 }
@@ -497,16 +499,13 @@ export default {
 
 <style scoped>
     #canvas {
-
     }
 
     #draw-board {
 
     }
     #board {
-        -moz-box-shadow:4px 4px 20px #A1A1A1;
-        -webkit-box-shadow:4px 4px 20px #A1A1A1; 
-        box-shadow:4px 4px 20px #A1A1A1;
+        
     }
     .buttons {
         display: inline-block;

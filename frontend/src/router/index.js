@@ -3,6 +3,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Welcome from '@/components/Welcome'
 import Home from '@/components/Home'
+import Studio from '@/components/Studio'
 import Codedemo from '@/components/Codedemo'
 import Canvas from '@/components/tinyComponents/Canvas'
 import TeacherRTC from '@/components/tinyComponents/TeacherRTC'
@@ -21,6 +22,11 @@ export default new Router({
             path: '/home',
             name: 'home',
             component: Home
+        },
+        {
+            path: '/studio',
+            name: 'studio',
+            component: Studio
         },
         {
             path: '/canvas',
