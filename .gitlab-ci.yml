@@ -1,0 +1,13 @@
+stages: 
+  - build
+  - test
+cache:
+  paths:
+    - node_modules/
+
+buildjob:
+  stage: build
+  script:
+    - pip3 install -r requirements.txt
+    - npm install
+    - npm run build
