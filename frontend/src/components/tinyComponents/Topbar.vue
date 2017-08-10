@@ -260,6 +260,9 @@
                     this.spanRight = 19;
                 }
             }, */
+        },
+        mounted () {
+            console.log(this.user.avatar)
         }
     }
 </script>
