@@ -63,7 +63,7 @@
         computed: {
             ...mapGetters({
                 getLiveRooms: 'getLiveRooms',
-                getVideoRooms: 'getVideoRooms',
+                getVideoRooms: 'getVideoRooms'
             }),
             livesList () {
                 return this.getLiveRooms

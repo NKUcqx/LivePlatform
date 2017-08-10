@@ -18,7 +18,7 @@ export default {
     mounted () {
         let that = this
         this.initState().then(function () {
-            //that.$router.push({path: '/home'})
+            // that.$router.push({path: '/home'})
         }, function () {
             that.$router.push({path: ''})
         })

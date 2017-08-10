@@ -43,13 +43,13 @@ export default {
         myCanvas
     },
     watch: {
-        /*WIDTH: function (val, oldVal) {
+        /* WIDTH: function (val, oldVal) {
             let infoBarWidth = val/2
             let titleWidth = infoBarWidth * 0.8
             let charNum = Math.floor(titleWidth/26) - 4
             this.roomInfo.title = this.roomInfo.title.substr(0, charNum) + '...'
             console.log(singleCharWidth)
-        }*/
+        } */
     },
     data () {
         return {
@@ -71,7 +71,7 @@ export default {
     },
     methods: {
     },
-    mounted() {
+    mounted () {
         this.mainWIDTH = this.$refs.leftPart.getBoundingClientRect().width
         this.minorWIDTH = this.$refs.rightPart.getBoundingClientRect().width
         this.chatHeight = this.$refs.leftPart.getBoundingClientRect().width * 0.195 + 90
