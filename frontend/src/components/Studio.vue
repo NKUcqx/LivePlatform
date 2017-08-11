@@ -20,13 +20,13 @@
             </div>
             <div id="main-section" @mouseenter="isMouseOnMain = true" @mouseleave = "isMouseOnMain = false">
                 <close-button class="close-button" @close="closeMain" :isWork="(isWorkOnMain)?true:false" v-if="isMouseOnMain"></close-button>
-                <my-canvas :WIDTH="mainWIDTH" :HEIGHT="mainWIDTH * 0.65" SIZE="large"></my-canvas>
+                <my-canvas :WIDTH="mainWIDTH" :HEIGHT="mainWIDTH * 0.65" SIZE="large" @send="sentMessage"></my-canvas>
             </div>
         </div>
         <div id="right-part" ref="rightPart">
             <div id="minor-section" ref="minor" v-if="isShow"  @mouseenter="isMouseOnMinor = true" @mouseleave = "isMouseOnMinor = false">
                 <close-button class="close-button" @close="closeMinor" :isWork="(isWorkOnMain)?false:true" v-if="isMouseOnMinor"></close-button>
-                <my-canvas :WIDTH="mainWIDTH * 0.7" :HEIGHT="minorWIDTH * 0.65" SIZE=""></my-canvas>
+                <my-canvas ref="canvas" :WIDTH="mainWIDTH * 0.7" :HEIGHT="minorWIDTH * 0.65" SIZE=""></my-canvas>
             </div>
             <div id="chat-section">
                 <img src="../../static/white.png" :width="minorWIDTH" :height="chatHeight">
@@ -39,20 +39,42 @@
 import Topbar from './tinyComponents/Topbar'
 import MyCanvas from './tinyComponents/Canvas'
 import CloseButton from './tinyComponents/CloseButton'
+import mapGetters from 'vuex'
 export default {
     components: {
         Topbar,
         MyCanvas,
         CloseButton
     },
-    watch: {
-        /* WIDTH: function (val, oldVal) {
-            let infoBarWidth = val/2
-            let titleWidth = infoBarWidth * 0.8
-            let charNum = Math.floor(titleWidth/26) - 4
-            this.roomInfo.title = this.roomInfo.title.substr(0, charNum) + '...'
-            console.log(singleCharWidth)
-        } */
+    sockets: {
+        connect: function () {
+            this.$socket.emit('join', { room_name: '4acf53c3a68c554e51c38178d1b9b268' })
+            console.log('connect to remote server')
+        },
+        disconnect: function () {
+            console.log('disconnect with remote server')
+        },
+        loadHistory: function (data) {
+            console.log(typeof data.messages)
+        },
+        updateMessage: function (data) {
+            let component = ''
+            switch (data.content.sendType) {
+                case 0:
+                    component = 'canvas'
+                    break
+                case 1:
+                    component = 'canvas'
+                    break
+                case 2:
+                    component = 'code'
+                    break
+            }
+            this.$refs[component].reseive(data.content)
+        },
+        formatError: function (data) {
+            console.log(data.message)
+        }
     },
     data () {
         return {
@@ -77,7 +99,8 @@ export default {
                 id: 500,
                 title: 'Welcome To Our World',
                 teacher: 'gongyansongisgood',
-                audience: 3000
+                audience: 3000,
+                room_id: ''
             }
         }
     },
@@ -97,14 +120,25 @@ export default {
             this.chatHeight = this.$refs.leftPart.getBoundingClientRect().height - 20
         },
         changeSection () {
-            this.$socket.emit('sendMessage', {
-                name: 'Jason',
-                content: 'content',
-                room_name: '4acf53c3a68c554e51c38178d1b9b268',
-                type: 0
-            })
             this.isWorkOnMain = (this.isWorkOnMain) ? false : true
+        },
+        sentMessage (content) {
+            let data = {
+                name: '111',
+                content: content,
+                room_name: '4acf53c3a68c554e51c38178d1b9b268',
+                type: content.sendType
+            }
+            this.$socket.emit('sendMessage', data)
         }
+    },
+    created () {
+        console.log(this.$route.params)
+        this.roomInfo.id = this.$route.params.id
+        this.roomInfo.teacher = this.$route.params.creator
+        this.roomInfo.audience = this.$route.params.audience_amount
+        this.roomInfo.title = this.$route.params.name
+        //
     },
     mounted () {
         this.mainWIDTH = this.$refs.leftPart.getBoundingClientRect().width
@@ -120,26 +154,7 @@ export default {
             } else {
                 this.chatHeight = this.$refs.leftPart.getBoundingClientRect().height - 20
             }
-            console.log(this.closePosition.left)
         })
-    },
-    sockets: {
-        connect: function () {
-            this.$socket.emit('join', {room_name: '4acf53c3a68c554e51c38178d1b9b268'})
-            console.log('connect to remote server')
-        },
-        disconnect: function () {
-            console.log('disconnect with remote server')
-        },
-        loadHistory: function (data) {
-            console.log(typeof data.messages)
-        },
-        updateMessage: function (data) {
-            console.log('received')
-        },
-        formatError: function (data) {
-            console.log(data.message)
-        }
     }
 }
 </script>
