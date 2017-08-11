@@ -101,7 +101,7 @@ export default {
                 name: 'Jason',
                 content: 'content',
                 room_name: '4acf53c3a68c554e51c38178d1b9b268',
-                type: 0,
+                type: 0
             })
             this.isWorkOnMain = (this.isWorkOnMain) ? false : true
         }
@@ -125,7 +125,7 @@ export default {
     },
     sockets: {
         connect: function () {
-            this.$socket.emit('join', {room_name : '4acf53c3a68c554e51c38178d1b9b268'})
+            this.$socket.emit('join', {room_name: '4acf53c3a68c554e51c38178d1b9b268'})
             console.log('connect to remote server')
         },
         disconnect: function () {
