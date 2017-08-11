@@ -156,8 +156,7 @@ export default {
     },
     computed: {
         ...mapGetters({
-            page: 'getPage',
-            getUser: 'getUser'
+            page: 'getPage'
         }),
         typeOfUsername () {
             if (checkEmail(this.retrieve.user)) {

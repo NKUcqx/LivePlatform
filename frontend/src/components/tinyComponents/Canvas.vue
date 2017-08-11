@@ -180,6 +180,13 @@ export default {
         minusFontSize () {
             (this.canvas.fontSize > 15) ? (this.canvas.fontSize--) : ''
         },
+        send (data) {
+            data.sendType = 0
+            this.$emit('send', data)
+        },
+        reseive (data) {
+            this.draw(data)
+        },
         testText () {
             if (this.canvas.text.indexOf('\n') >= 0) {
                 try {
@@ -253,7 +260,7 @@ export default {
                     }
                     const [ox, oy] = canvas.penOriginPoint
                     this.drawLine(ox, oy, x, y)
-                    wsSend(this.socket, makeCanvasInfo({
+                    this.send(makeCanvasInfo({
                         type: this.type,
                         ox: ox / this.WIDTH,
                         oy: oy / this.HEIGHT,
@@ -288,7 +295,7 @@ export default {
                     this.drawLine(ox, oy, x, y)
                     break
                 case 'mouseup':
-                    wsSend(this.socket, makeCanvasInfo({
+                    this.send(makeCanvasInfo({
                         type: this.type,
                         ox: canvas.penOriginPoint[0] / this.WIDTH,
                         oy: canvas.penOriginPoint[1] / this.HEIGHT,
@@ -321,7 +328,7 @@ export default {
                     this.drawCircle(ox, oy, x, y, canvas.isFill)
                     break
                 case 'mouseup':
-                    wsSend(this.socket, makeCanvasInfo({
+                    this.send(makeCanvasInfo({
                         type: this.type,
                         ox: canvas.penOriginPoint[0] / this.WIDTH,
                         oy: canvas.penOriginPoint[1] / this.HEIGHT,
@@ -355,7 +362,7 @@ export default {
                     this.drawRect(ox, oy, x, y, canvas.isFill)
                     break
                 case 'mouseup':
-                    wsSend(this.socket, makeCanvasInfo({
+                    this.send(makeCanvasInfo({
                         type: this.type,
                         ox: canvas.penOriginPoint[0] / this.WIDTH,
                         oy: canvas.penOriginPoint[1] / this.HEIGHT,
@@ -385,7 +392,7 @@ export default {
                     this.setProperty(Math.floor(canvas.width * 2), 'white', 1)
                     const [ox, oy] = canvas.penOriginPoint
                     this.drawLine(ox, oy, x, y)
-                    wsSend(this.socket, makeCanvasInfo({
+                    this.send(makeCanvasInfo({
                         type: this.type,
                         ox: ox / this.WIDTH,
                         oy: oy / this.HEIGHT,
@@ -426,7 +433,7 @@ export default {
                 this.context.lineWidth = 1
                 const [ox, oy] = canvas.penOriginPoint
                 this.drawText(ox, oy, canvas.fontSize, canvas.text, canvas.isFill)
-                wsSend(this.socket, makeCanvasInfo({
+                this.send(makeCanvasInfo({
                     type: this.type,
                     ox: ox / this.WIDTH,
                     oy: oy / this.HEIGHT,
@@ -442,7 +449,7 @@ export default {
 
         clearBoard () {
             this.drawClear()
-            wsSend(this.socket, makeCanvasInfo({
+            this.send(makeCanvasInfo({
                 type: 'clear'
             }))
         },
@@ -491,12 +498,6 @@ export default {
         this.btnPosition.left = (this.$refs.canvas.offsetLeft + 5).toString() + 'px'
         this.btnPosition.top = (this.$refs.canvas.offsetTop + 5).toString() + 'px'
         this.context = this.$refs.board.getContext('2d')
-        // the next steps is for build websocket
-        console.log('websocket start')
-        /* this.socket = wsConnect('/canvaschannel/', (e) => {
-            let canvasInfo = e.obj
-            this.draw(canvasInfo)
-        }) */
     }
 }
 </script>
