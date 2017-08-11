@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial; }
+      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages li { padding: 5px 10px; }
+      #messages li:nth-child(odd) { background: #eee; }
+    </style>
+  </head>
+    
+  <body>  
+    <ul id="messages"></ul>
+    <input id="m" autocomplete="off" /><button onclick="change()">change</button> <button onclick="send()">Send</button>
+
+      
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+      let socket = io.connect('http://localhost:8002')
+      let room = '4acf53c3a68c554e51c38178d1b9b268'
+      let name = 'Jason'
+      const type = [0, 1] // 0: chat 1 : canvas
+      socket.on('connect', () => {
+        socket.emit('join', {room_id : room})
+        socket.on('loadhistory',(data)=>{
+          let messages = data.messages
+          for(let i = 0 ; i < messages.length ; i++){
+            $('#messages').append($('<li>').text(messages[i].name + " : " + messages[i].content))
+          }
+          socket.on('update', (data) => {
+            $('#messages').append($('<li>').text(data.name + " : " + data.content))
+          })
+        })
+      })
+      function change(){
+        if(name === "Jason")
+          name = "User"
+        else
+          name = "Jason"
+      }
+      function send(){
+        let msg = $("#m").val()
+        let pack = {
+          'name': name,
+          'content': msg,
+          'room_id':room,
+          'type': type[1]
+        }
+        socket.emit('send_message', pack)
+      }
+      function leave(){
+        socket.emit('leave')
+      }
+    </script>
+  </body>
+</html>

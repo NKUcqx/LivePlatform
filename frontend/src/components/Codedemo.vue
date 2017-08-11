@@ -57,10 +57,30 @@ export default {
     components: {
         codemirror
     },
+    props: {
+        WIDTH: {
+            type: Number,
+            default: 600
+        },
+        HEIGHT: {
+            type: Number,
+            default: 400
+        }
+    },
     data () {
         return {
             mode: 'javascript',
-            socket: null
+            socket: null,
+            position1: {
+                width: '650px',
+                height: '450px',
+                margin: '0 auto'
+            },
+            position2: {
+                width: '600px',
+                height: '400px',
+                margin: '0 auto'
+            }
         }
     },
     computed: {
@@ -135,6 +155,7 @@ h1, h2 {
 .container {
   margin: 0 auto;
   max-width: 720px;
+  max-height: 450px;
 }
 
 .cm-container {

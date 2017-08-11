@@ -90,6 +90,7 @@
 
 <script>
     import { beforePost, getListFromDB, getCookie } from '../../utils/utils'
+    import { CONST } from '../../utils/const'
     import { checkPassword, checkRePassword, checkForm } from '../../utils/checks'
     import { mapGetters, mapActions, mapMutations } from 'vuex'
 
@@ -163,7 +164,8 @@
                 addLiveRoom: 'addLiveRoom'
             }),
             ...mapActions({
-                initUser: 'initUser'
+                changePass: 'changePass',
+                changeInfo: 'changeInfo'
             }),
             getCookie () {
                 return getCookie('csrftoken')
@@ -183,18 +185,10 @@
                         nickname: this.person.nickname,
                         gender: gender
                     }
-                    console.log(data)
-                    this.$http({
-                        url: '/changeinfo/',
-                        method: 'POST',
-                        body: data,
-                        before: function (request) { beforePost(request) }
-                    }).then(function (res) {
-                        alert('Success!')
-                        this.initUser(res.body)
-                        console.log(this.user)
+                    this.changeInfo(data).then(function () {
+                        alert(CONST.success('Modify Infomation'))
                     }, function (res) {
-                        alert(res.body)
+                        alert(res)
                     })
                 })
             },
@@ -205,17 +199,10 @@
                         password: this.form.password,
                         new_password: this.form.newPassword
                     }
-                    console.log(data)
-                    this.$http({
-                        url: '/changepass/',
-                        method: 'POST',
-                        body: data,
-                        before: function (request) { beforePost(request) }
-                    }).then(function (res) {
-                        alert('Success!')
-                        this.initUser(res.body)
+                    this.changePass(data).then(function () {
+                        alert(CONST.success('Modify Password'))
                     }, function (res) {
-                        alert(res.body)
+                        alert(res)
                     })
                 })
             },

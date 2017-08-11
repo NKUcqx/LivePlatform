@@ -20,6 +20,4 @@ urlpatterns = [
     url(r'^endroom/$', room_view.endRoom, name = 'end_room' ),
     url(r'^createroom/$', room_view.createRoom , name = 'create_room' ),
     url(r'^getroom/$', room_view.getRooms , name = 'get_room' ),
-    url(r'^avatar/$', user_view.change_avatar, name = 'change_avatar'),
-
 ]

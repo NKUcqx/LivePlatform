@@ -1,5 +1,5 @@
 <template>
-<div id="roomitem">
+<div id="roomitem" @click="enterRoom()">
     <div id="scene">
         <div id="gray">
         <div id="icon">
@@ -25,6 +25,11 @@
 export default {
     props: {
         item: Object
+    },
+    methods: {
+        enterRoom () {
+            this.$router.push({ name: 'studio', params: {room: this.item} })
+        }
     },
     mounted () {
     }

@@ -57,7 +57,8 @@
     import Verification from './tinyComponents/Verification'
     import { checkPassword, checkRePassword, checkVerification, checkForm, checkPhone, checkEmail, checkUsername } from '../utils/checks'
     import { beforePost } from '../utils/utils'
-    import { mapGetters, mapMutations } from 'vuex'
+    import { CONST } from '../utils/const'
+    import { mapGetters, mapMutations, mapActions } from 'vuex'
 
     export default {
         components: {
@@ -144,10 +145,14 @@
                 goLeft: 'goLeft',
                 goRight: 'goRight'
             }),
+            ...mapActions({
+                signupSummit: 'signup'
+            }),
             changeType () {
                 this.type = (this.type === 0) ? 1 : 0
             },
             signup () {
+                const that = this
                 checkForm(this, this.$refs['signinfo'], () => {
                     this.$refs['veri'].validateForm(() => {
                         let data = {
@@ -156,16 +161,11 @@
                             gender: (this.signinfo.gender === 'male'),
                             nickname: this.signinfo.nickname
                         }
-                        this.$http({
-                            url: '/signup/',
-                            method: 'POST',
-                            body: data,
-                            before: function (request) { beforePost(request) }
-                        }).then(function (res) {
-                            // console.log(res.body)
-                            this.$router.push({path: '/home'})
+                        this.signupSummit(data).then(function () {
+                            alert(CONST.success('Signup'))
+                            that.$router.push({path: '/home'})
                         }, function (res) {
-                            alert(res.body)
+                            alert(res)
                         })
                     })
                 })

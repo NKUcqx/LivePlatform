@@ -82,7 +82,8 @@
 import verification from 'verification-code'
 import { checkPassword, checkRePassword, checkVerification, checkForm, checkPhone, checkEmail, checkUsername } from '../utils/checks'
 import { mapGetters, mapMutations, mapActions } from 'vuex'
-import {beforePost} from '../utils/utils'
+import { beforePost } from '../utils/utils'
+import { CONST } from '../utils/const'
 import Verification from './tinyComponents/Verification' // component
 
 export default {
@@ -173,8 +174,8 @@ export default {
             goRight: 'goRight'
         }),
         ...mapActions({
-            initState: 'initState',
-            initUser: 'initUser'
+            loginSubmit: 'login',
+            findBackSubmit: 'findBackPass'
         }),
         showPinImg () {
             let result = verification.create()
@@ -188,27 +189,22 @@ export default {
             this.form.user = (this.state === 0) ? this.retrieve.user : this.form.user
         },
         login () {
+            const that = this
             checkForm(this, this.$refs['form'], () => {
                 let data = {
                     username: this.form.user,
                     password: this.form.password
                 }
-                this.$http({
-                    url: '/login/',
-                    method: 'POST',
-                    body: data,
-                    before: function (request) { beforePost(request) }
-                }).then(function (res) {
-                    alert('Success')
-                    // setUser(res.body.user, res.body.session_id)
-                    this.initUser(res.body)
-                    this.$router.push({path: '/home'})
+                this.loginSubmit(data).then(function () {
+                    alert(CONST.success('Login'))
+                    that.$router.push({path: '/home'})
                 }, function (res) {
-                    alert(res.body)
+                    alert(res)
                 })
             })
         },
         confirm () {
+            const that = this
             checkForm(this, this.$refs['retrieveForm'], () => {
                 this.$refs['veri'].validateForm(() => {
                     let data = {
@@ -216,17 +212,11 @@ export default {
                         username: this.retrieve.user,
                         new_password: this.retrieve.newPassword
                     }
-                    this.$http({
-                        url: '/changepass/',
-                        method: 'POST',
-                        body: data,
-                        before: function (request) { beforePost(request) }
-                    }).then(function (res) {
-                        alert('Success')
-                        this.initUser(res.body)
-                        this.$router.push({path: '/home'})
+                    this.findBackSubmit(data).then(function () {
+                        alert(CONST.success('Find Back'))
+                        that.$router.push({path: '/home'})
                     }, function (res) {
-                        alert(res.body)
+                        alert(res)
                     })
                 })
             })

@@ -45,7 +45,7 @@
 </template>
 <script>
     export default {
-        data() {
+        data () {
             return {
                 message: '',
                 history: [],
@@ -60,45 +60,45 @@
             }
         },
         methods: {
-            send() {
+            send () {
                 this.history.push({
                     username: this.username,
                     message: this.message
-                });
-                this.message = '';
-                document.getElementById('history').scrollTop = document.getElementById('history').scrollHeight;
+                })
+                this.message = ''
+                document.getElementById('history').scrollTop = document.getElementById('history').scrollHeight
             },
-            up() {
-                document.getElementById('history').scrollTop = 0;
+            up () {
+                document.getElementById('history').scrollTop = 0
             },
-            down() {
-                document.getElementById('history').scrollTop = document.getElementById('history').scrollHeight;
+            down () {
+                document.getElementById('history').scrollTop = document.getElementById('history').scrollHeight
             },
-            dialog1change() {
-                this.dialog1 = true;
-                console.log('HIHA');
+            dialog1change () {
+                this.dialog1 = true
+                console.log('HIHA')
             },
-            click(name) {
-                console.log("123")
-                if (name == "禁言") {
-                    this.dialog1 = true;
-                    console.log("234");
-                } else this.dialog2 = true;
+            click (name) {
+                console.log('123')
+                if (name === '禁言') {
+                    this.dialog1 = true
+                    console.log('234')
+                } else this.dialog2 = true
             },
-            banspeakall(name) {
-                if (name == "全体禁言") {
-                    this.silence = true;
-                    this.speak = false;
+            banspeakall (name) {
+                if (name === '全体禁言') {
+                    this.silence = true
+                    this.speak = false
                 } else {
-                    this.silence = false;
-                    this.speak = true;
+                    this.silence = false
+                    this.speak = true
                 }
             },
-            banspeakone() {
+            banspeakone () {
             },
-            outone() {
+            outone () {
             },
-            cancel() {
+            cancel () {
             }
         }
     }
