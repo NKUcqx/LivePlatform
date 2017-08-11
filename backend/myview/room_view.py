@@ -3,7 +3,6 @@ from django.http import HttpResponse,JsonResponse
 from backend.models import User,LiveRoom,Punishment
 from django.forms.models import model_to_dict
 from django.utils import timezone
-from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
 from . import toolkits
 import os

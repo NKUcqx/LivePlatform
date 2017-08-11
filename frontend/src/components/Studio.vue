@@ -39,6 +39,8 @@
 import Topbar from './tinyComponents/Topbar'
 import MyCanvas from './tinyComponents/Canvas'
 import CloseButton from './tinyComponents/CloseButton'
+import io from 'socket.io-client'
+
 export default {
     components: {
         Topbar,
@@ -46,13 +48,6 @@ export default {
         CloseButton
     },
     watch: {
-        /* WIDTH: function (val, oldVal) {
-            let infoBarWidth = val/2
-            let titleWidth = infoBarWidth * 0.8
-            let charNum = Math.floor(titleWidth/26) - 4
-            this.roomInfo.title = this.roomInfo.title.substr(0, charNum) + '...'
-            console.log(singleCharWidth)
-        } */
     },
     data () {
         return {
@@ -78,10 +73,12 @@ export default {
                 title: 'Welcome To Our World',
                 teacher: 'gongyansongisgood',
                 audience: 3000
-            }
+            },
+            socket: null
         }
     },
     computed: {
+        
     },
     methods: {
         openMinor () {
@@ -97,13 +94,48 @@ export default {
             this.chatHeight = this.$refs.leftPart.getBoundingClientRect().height - 20
         },
         changeSection () {
-            this.$socket.emit('sendMessage', {
-                name: 'Jason',
-                content: 'content',
-                room_name: '4acf53c3a68c554e51c38178d1b9b268',
-                type: 0
-            })
             this.isWorkOnMain = (this.isWorkOnMain) ? false : true
+        },
+        buildConnect () {
+            this.socket = io('http://localhost:8002')
+            this.listen('connect', () => {
+                this.emit('', 'join')
+                this.listen('loadHistory', (data) => {
+                    console.log('loadHistory: ' + data)
+                })
+                this.listen('Error', (data) => { // this receiver will get error msg directly
+                    console.log('Error: ' + data)
+                })
+                this.listen('updateMessage', (data) => {
+                    console.log('updateMessage: ' + data)
+                })
+                this.emit('sending message 1', 2, 'sendMessage')
+                this.emit('sending message 2', 2, 'sendMessage')
+                this.emit('sending message 3', 2, 'sendMessage')
+                this.socket.emit('sendMessage', 'content')
+            })
+        },
+        isValid (content, type = 'string') {
+            return content !== undefined && content !== null && typeof content === type && content !== ''
+        },
+        emit (content = '', type = 2, signal = 'sendMessage') {
+            const pack = {
+                'room_name': 'this.room_name',
+                'nickname': 'this.user.nickname',
+                'content': content,
+                'type': type,
+                'signal': signal
+            }
+            this.socket.emit(signal, pack)
+        },
+        listen (signal, func) { // func is a callback
+            if (this.isValid(signal) && this.isValid(func, 'function')) {
+                this.socket.on(signal, (data) => {
+                    func(data)
+                })
+            } else {
+                throw Error('param format error')
+            }
         }
     },
     mounted () {
@@ -122,24 +154,7 @@ export default {
             }
             console.log(this.closePosition.left)
         })
-    },
-    sockets: {
-        connect: function () {
-            this.$socket.emit('join', {room_name: '4acf53c3a68c554e51c38178d1b9b268'})
-            console.log('connect to remote server')
-        },
-        disconnect: function () {
-            console.log('disconnect with remote server')
-        },
-        loadHistory: function (data) {
-            console.log(typeof data.messages)
-        },
-        updateMessage: function (data) {
-            console.log('received')
-        },
-        formatError: function (data) {
-            console.log(data.message)
-        }
+        this.buildConnect()
     }
 }
 </script>
