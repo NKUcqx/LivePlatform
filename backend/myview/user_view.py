@@ -45,6 +45,11 @@ def create_user_folder(username):
     os.makedirs(os.path.join('frontend/static/users/' , username))
     return True
 
+def get_session_key(request):
+    if(not request.session.session_key):
+        request.session.save()
+    return request.session.session_key
+
 @require_GET
 def getUser(request):
     user_id = request.GET.get('user_id', None)
@@ -92,9 +97,7 @@ def signupSubmit(request):
             )
             form.save(commit = False)
             user.save()
-            if(not request.session.session_key):
-                request.session.save()
-            session_key = request.session.session_key
+            session_key = get_session_key(request)
             return JsonResponse({'user': model_to_json(user), 'session_key': session_key})
         else:
             return HttpResponse(content = CODE['1'], status = 500)
@@ -108,7 +111,7 @@ def loginSubmit(request):
     user = auth.authenticate(request, username = body['username'], password = body['password'])
     if(user is not None):
         auth.login(request, user)
-        session_key = request.session.session_key
+        session_key = get_session_key(request)
         return JsonResponse({'user': model_to_json(user), 'session_key':session_key})
     else:
         return HttpResponse(content = CODE['13'], status = 401)
@@ -156,16 +159,19 @@ def changePassword(request):
     username = body.get('username', None)
     password = body.get('password', None)
     new_password = body.get('new_password', None)
+    res_pack = {}
     if(username is None or new_password is None):
         return HttpResponse(content = CODE['4'], status = 401)
     if(forget_pw is None):#means he just wants to reset pw, which need verify his status
         user = auth.authenticate(username = username, password = password)
     else:#means this poor guy has forget his pw, reset directly
         user = User.objects.get(username = username)
+        res_pack['session_key'] = get_session_key(request)
     if(user is not None):
         user.set_password(new_password)
         user.save()
-        return JsonResponse({'user': model_to_json(user)})
+        res_pack['user'] = model_to_json(user)
+        return JsonResponse(res_pack)
     else:
         return HttpResponse(content = CODE['13'], status = 401)
 
