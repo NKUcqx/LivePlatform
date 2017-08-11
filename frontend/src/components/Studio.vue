@@ -1,5 +1,5 @@
 <template>
-    <div id="studio">
+    <div id="studio" :style="wholeHEIGHT">
         <topbar id="topbar"></topbar>
         <div id="left-part" ref="leftPart">
             <div id="infobar">
@@ -7,7 +7,8 @@
                 <div id="studio-info">
                     <div id="title">
                         <h2 id="title-content">{{roomInfo.title}}</h2>
-                        <Button id="switch-section" type="ghost" @click="switchSection()"><Icon type="arrow-swap"></Icon></Button>
+                        <Button id="switch-section" type="ghost" @click="changeSection()" v-if="isShow"><Icon type="arrow-swap"></Icon></Button>
+                        <Button id="switch-section" type="ghost" @click="openMinor()" v-else><Icon type="android-open"></Icon></Button>
                     </div>
                     <div id="footer">
                         <Tag type="border" color="yellow" id="roomid"><Icon type="home"></Icon> {{roomInfo.id}}</Tag>
@@ -17,18 +18,18 @@
                     </div>
                 </div>
             </div>
-            <div id="main-section">
-                <my-canvas :WIDTH="mainWIDTH" :HEIGHT="mainWIDTH * 0.65"></my-canvas>
+            <div id="main-section" @mouseenter="isMouseOnMain = true" @mouseleave = "isMouseOnMain = false">
+                <close-button class="close-button" @close="closeMain" :isWork="(isWorkOnMain)?true:false" v-if="isMouseOnMain"></close-button>
+                <my-canvas :WIDTH="mainWIDTH" :HEIGHT="mainWIDTH * 0.65" SIZE="large"></my-canvas>
             </div>
         </div>
         <div id="right-part" ref="rightPart">
-            <div id="minor-section">
-                <my-canvas :WIDTH="minorWIDTH" :HEIGHT="minorWIDTH * 0.65"></my-canvas>
-
+            <div id="minor-section" ref="minor" v-if="isShow"  @mouseenter="isMouseOnMinor = true" @mouseleave = "isMouseOnMinor = false">
+                <close-button class="close-button" @close="closeMinor" :isWork="(isWorkOnMain)?false:true" v-if="isMouseOnMinor"></close-button>
+                <my-canvas :WIDTH="mainWIDTH * 0.7" :HEIGHT="minorWIDTH * 0.65" SIZE=""></my-canvas>
             </div>
             <div id="chat-section">
                 <img src="../../static/white.png" :width="minorWIDTH" :height="chatHeight">
-
             </div>      
         </div>
     </div>
@@ -36,11 +37,13 @@
 
 <script>
 import Topbar from './tinyComponents/Topbar'
-import myCanvas from './tinyComponents/Canvas'
+import MyCanvas from './tinyComponents/Canvas'
+import CloseButton from './tinyComponents/CloseButton'
 export default {
     components: {
         Topbar,
-        myCanvas
+        MyCanvas,
+        CloseButton
     },
     watch: {
         /* WIDTH: function (val, oldVal) {
@@ -53,6 +56,17 @@ export default {
     },
     data () {
         return {
+            isShow: true,
+            isMouseOnMain: false,
+            isMouseOnMinor: false,
+            isWorkOnMain: true,
+            closePosition: {
+                right: '',
+                top: ''
+            },
+            wholeHEIGHT: {
+                height: ''
+            },
             mainWIDTH: 0,
             minorWIDTH: 0,
             chatHeight: 0,
@@ -70,15 +84,37 @@ export default {
     computed: {
     },
     methods: {
+        openMinor () {
+            this.isShow = true
+            this.chatHeight = this.$refs.leftPart.getBoundingClientRect().width * 0.195 + 90
+        },
+        closeMain () {
+            this.isShow = false
+            this.chatHeight = this.$refs.leftPart.getBoundingClientRect().height - 20
+        },
+        closeMinor () {
+            this.isShow = false
+            this.chatHeight = this.$refs.leftPart.getBoundingClientRect().height - 20
+        },
+        changeSection () {
+            this.isWorkOnMain = (this.isWorkOnMain) ? false : true
+        }
     },
     mounted () {
         this.mainWIDTH = this.$refs.leftPart.getBoundingClientRect().width
-        this.minorWIDTH = this.$refs.rightPart.getBoundingClientRect().width
+        this.minorWIDTH = this.$refs.leftPart.getBoundingClientRect().width * 0.7
         this.chatHeight = this.$refs.leftPart.getBoundingClientRect().width * 0.195 + 90
+        this.wholeHEIGHT.height = document.documentElement.clientHeight.toString() + 'px'
         window.addEventListener('resize', () => {
             this.mainWIDTH = this.$refs.leftPart.getBoundingClientRect().width
-            this.minorWIDTH = this.$refs.rightPart.getBoundingClientRect().width
-            this.chatHeight = this.$refs.leftPart.getBoundingClientRect().width * 0.195 + 90
+            this.minorWIDTH = this.$refs.leftPart.getBoundingClientRect().width * 0.7
+            this.wholeHEIGHT.height = document.documentElement.clientHeight.toString() + 'px'
+            if (this.isShow) {
+                this.chatHeight = this.$refs.leftPart.getBoundingClientRect().width * 0.195 + 90
+            } else {
+                this.chatHeight = this.$refs.leftPart.getBoundingClientRect().height - 20
+            }
+            console.log(this.closePosition.left)
         })
     }
 }
@@ -177,7 +213,16 @@ export default {
         box-shadow: 2px 2px 10px #A1A1A1;
         background-color: white;
     }
+    #minor-section {
+        display: block;
+    }
     #chat-section {
+        width: 100%;
+        display: block;
         margin: 10px 0px 0px 0px;
+    }
+    #chat-close {
+        position: absolute;
+        color: red;
     }
 </style>
