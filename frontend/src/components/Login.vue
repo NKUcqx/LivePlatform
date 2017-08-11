@@ -174,8 +174,6 @@ export default {
             goRight: 'goRight'
         }),
         ...mapActions({
-            initState: 'initState',
-            initUser: 'initUser',
             loginSubmit: 'login',
             findBackSubmit: 'findBackPass'
         }),

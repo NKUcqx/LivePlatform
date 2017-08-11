@@ -493,10 +493,10 @@ export default {
         this.context = this.$refs.board.getContext('2d')
         // the next steps is for build websocket
         console.log('websocket start')
-        this.socket = wsConnect('/canvaschannel/', (e) => {
+        /* this.socket = wsConnect('/canvaschannel/', (e) => {
             let canvasInfo = e.obj
             this.draw(canvasInfo)
-        })
+        }) */
     }
 }
 </script>
