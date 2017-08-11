@@ -121,7 +121,7 @@ def checkEndAndLiving(sender, instance, **kwargs):
 def checkDirExistence(sender, instance, **kwargs):
     if(os.path.exists(os.path.join('frontend', 'static', 'rooms', instance.file_name)) is False):
         os.makedirs(instance.file_name)
-        os.mknod(os.path.join(instance.file_name,'chatlog.txt'))
+        os.mknod(os.path.join(instance.file_name,'log.txt'))
 
 class Punishment(models.Model):
     room = models.ForeignKey(LiveRoom, default = get_Room, on_delete = models.CASCADE)

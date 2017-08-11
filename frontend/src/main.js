@@ -10,11 +10,15 @@ import store from './store'
 import VueResource from 'vue-resource'
 import iView from 'iview'
 import VueLocalStorage from 'vue-localstorage'
+import socketio from 'socket.io'
+import VueSocketio from 'vue-socket.io'
 import '../my-theme/index.less'
 
 Vue.use(VueResource)
 Vue.use(iView)
 Vue.use(VueLocalStorage)
+// Vue.use(VueSocketio, socketio('http://localhost:8002/liveroom'), store)
+Vue.use(VueSocketio, 'http://localhost:8002')
 
 Vue.config.productionTip = false
 

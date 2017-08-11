@@ -101,7 +101,19 @@
         mounted: function () {
             this.getRoomsFromDB(true)
             this.getRoomsFromDB(false)
-        }
+        }/*,
+        sockets: {
+            connect: function () {
+                this.$socket.emit('join', {room_id : '4acf53c3a68c554e51c38178d1b9b268'})
+                console.log('connect to remote server')
+            },
+            disconnect: function () {
+                console.log('disconnect with remote server')
+            },
+            loadHistory: function (data) {
+                console.log(typeof data.messages)
+            }
+        }*/
     }
 </script>
 <style scoped>
