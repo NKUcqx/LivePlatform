@@ -110,10 +110,10 @@ export default {
                     jsonp: 'cb'
                 }).then(function (res) {
                     this.$Message.success('Send Success')
-                // console.log(res.body)
+                    // console.log(res.body)
                 }, function (res) {
                     this.$Message.success('Send Success')
-                // console.log(res.status)
+                    // console.log(res.status)
                 })
         },
         testUsername () {
