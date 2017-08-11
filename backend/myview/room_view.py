@@ -31,13 +31,13 @@ def create_folder(file_name):
         return True
 
 def upload_thumbnail(room_id, thumbnail):
-    room = LiveRoom.objects.get(id = room_id)
+    room = LiveRoom.objects.get(pk = room_id)
     room.thumbnail_path = thumbnail
     room.save()
     return room
 
 def upload_slide(room_id, slide):
-    room = LiveRoom.objects.get(id = room_id)
+    room = LiveRoom.objects.get(pk = room_id)
     room.slide_path = slide
     room.save()
     return room
@@ -56,9 +56,9 @@ def getRooms(request):
         start = int(request.GET.get('start',0))
         limit = start + int(request.GET.get('limit'))
         rooms = rooms[start:limit]
-    rooms_dict = rooms.values('id', 'name', 'creater', 'audience_amount', 'create_time', 'end_time', 'slide_path', 'thumbnail_path', 'is_living', 'is_silence');
+    rooms_dict = rooms.values('id', 'name', 'file_name', 'creater', 'audience_amount', 'create_time', 'end_time', 'slide_path', 'thumbnail_path', 'is_living', 'is_silence');
     for item in rooms_dict:
-        item['creater_name'] = User.objects.get(id = item['creater']).nickname
+        item['creater_name'] = User.objects.get(pk = int(item['creater'])).nickname
         item['create_time'] = item['create_time'].strftime('%Y-%-m-%d %H:%m:%S')
         item['end_time'] = item['end_time'].strftime('%Y-%-m-%d %H:%m:%S') if item.get('end_time',None) is not None else ''
     return JsonResponse({"rooms": list(rooms_dict)})
@@ -120,12 +120,35 @@ def createRoom(request):
                 else:
                     return HttpResponse(content = CODE['20'], status = 415)
             room.save()
-            request.session['room'] = model_to_json(room)
-            return JsonResponse({'room': model_to_json(room)}) # return the new room's id
+            room = model_to_json(room)
+            room['creater_nickname'] = User.objects.get(pk = room['creater']).nickname
+            request.session['room'] = room
+            return JsonResponse({'room': room}) # return the new room's id
         else:
             return HttpResponse(content = CODE['6'], status = 500)
     elif('room' in request.session):#because each person can not create other rooms while living
         return HttpResponse(content = CODE['21'], status = 400)
+    else:
+        return HttpResponse(content = CODE['12'], status = 401)
+
+@login_required
+@require_POST
+def updateRoom(request):
+    user = request.user
+    room = request.session.get('room', None)
+    body = bi2obj(request)
+    if(room and user and str(user.id) == room['creater']):
+        room_db = LiveRoom.objects.get(pk = int(room['id']))
+        new_amount = body.get('audience_amount', None)
+        new_name = body.get('name', None)
+        if(new_amount is not None and new_amount != ''):
+            room_db.audience_amount = new_amount
+        if(new_name is not None and new_name != ''):
+            room_db.name = new_name
+        room_db.save()
+        room = model_to_json(room_db)
+        request.session['room'] = room #update session's room
+        return JsonResponse({'room': room})
     else:
         return HttpResponse(content = CODE['12'], status = 401)
 
@@ -137,12 +160,10 @@ def endRoom(request):
     if(room):
         # _id is a default field add by Django (can save one query from user table)
         if(user and str(user.id) == room['creater']):
-            room_db = LiveRoom.objects.get(pk = room['id'])
+            room_db = LiveRoom.objects.get(pk = int(room['id']))
             room_db.is_living = False #will set end_time automatically by db
             room_db.save()
             del request.session['room']
-            #print(request.session.exists('room'))
-                #LOG("CQX-room_view.endRoom" , "Room: " + str(room.id) +"has been closed")
             return HttpResponse(CODE['0'])
         else :
             return HttpResponse(content = CODE['12'], status = 401)
@@ -156,7 +177,7 @@ def silenceRoom(request):
     user = request.user
     if(user.role == 'T' and 'room' in request.session and user.id == request.session.get('room').get('creater')):
         room = request.session.get('room')
-        room_db = LiveRoom.objects.get(id = int(room['id']))
+        room_db = LiveRoom.objects.get(pk = int(room['id']))
         room_db.is_silence = body['is_silence']
         room_db.save()
         return JsonResponse(content = model_to_json(room_db))
