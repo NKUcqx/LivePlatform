@@ -97,6 +97,12 @@ export default {
             this.chatHeight = this.$refs.leftPart.getBoundingClientRect().height - 20
         },
         changeSection () {
+            this.$socket.emit('sendMessage', {
+                name: 'Jason',
+                content: 'content',
+                room_name: '4acf53c3a68c554e51c38178d1b9b268',
+                type: 0,
+            })
             this.isWorkOnMain = (this.isWorkOnMain) ? false : true
         }
     },
@@ -116,6 +122,24 @@ export default {
             }
             console.log(this.closePosition.left)
         })
+    },
+    sockets: {
+        connect: function () {
+            this.$socket.emit('join', {room_name : '4acf53c3a68c554e51c38178d1b9b268'})
+            console.log('connect to remote server')
+        },
+        disconnect: function () {
+            console.log('disconnect with remote server')
+        },
+        loadHistory: function (data) {
+            console.log(typeof data.messages)
+        },
+        updateMessage: function (data) {
+            console.log('received')
+        },
+        formatError: function (data) {
+            console.log(data.message)
+        }
     }
 }
 </script>
