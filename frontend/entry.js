@@ -42,51 +42,61 @@ function writeFile (roomname) {
 
 io.on('connection', (socket) => {
     socket.on('join', (data) => {
-        if (!room_audience_list[data.room_id]) {
-            room_audience_list[data.room_id] = 0
-        }
-        if (!room_msg_list[data.room_id]) {
-            room_msg_list[data.room_id] = []
-        }
-        room_audience_list[data.room_id]++
-        socket.join(data.room_id, () => {
-            console.log(socket.id + ' has joined : ' + data.room_id)
-            // load history messages
-            let messages = []
-            for (let item of room_msg_list[data.room_id]) {
-                if (item.type === 'chat') {
-                    messages.push(item)
+        if (data.room_name !== undefined) {
+            if (!room_audience_list[data.room_name]) {
+                room_audience_list[data.room_name] = 0
+            }
+            if (!room_msg_list[data.room_name]) {
+                room_msg_list[data.room_name] = []
+            }
+            room_audience_list[data.room_name]++
+            socket.join(data.room_name, () => {
+                console.log(socket.id + ' has joined : ' + data.room_name)
+                // load history messages
+                socket.emit('loadHistory', {'messages': room_msg_list[data.room_name]})
+                // io.to(data.room_name, {name: data.name})
+            })
+            socket.on('sendMessage', (data) => {
+                if (data.room_name !== undefined && data.type !== undefined && data.content !== undefined && data.name !== undefined) {
+                    if (room_msg_list[data.room_name]) {
+                        if (room_msg_list[data.room_name].length > MAX_LOAD) {
+                            writeFile(data.room_name, room_msg_list[data.room_name])
+                            console.log('out of write, length : ' + room_msg_list[data.room_name].length)
+                        }
+                        const DATE = new Date()
+                        data.time = DATE.getTime() // get mileseconds from 1970.1.1 to now
+                        let json_data = JSON.stringify(data)
+                        room_msg_list[data.room_name].push(json_data)
+                        if (data.type === 0) {// chat type, need send to himself too
+                            io.sockets.in(data.room_name).emit('updateMessage', data)
+                        } else if (data.type === 1) {// canvas type not need to send to himself
+                            socket.broadcast.emit('updateMessage', data) // everyone gets it but the sender
+                        }
+                    } else {
+                        io.sockets.in(data.room_name).emit('formatError', {message: 'must join room :' + data.room_name + ' first'})
+                    }
+                } else {
+                    io.sockets.emit('formatError', {message: 'miss essential field'})
                 }
-            }
-            socket.emit('loadHistory', {'messages': messages})
-            // io.to(data.room_id, {name: data.name})
-        })
-        socket.on('sendMessage', (data) => {
-            if (room_msg_list[data.room_id].length > MAX_LOAD) {
-                writeFile(data.room_id, room_msg_list[data.room_id])
-                console.log('out of write, length : ' + room_msg_list[data.room_id].length)
-            }
-            const DATE = new Date()
-            data.time = DATE.getTime() // get mileseconds from 1970.1.1 to now
-            let json_data = JSON.stringify(data)
-            room_msg_list[data.room_id].push(json_data)
-            if (data.type === 0) {
-                io.sockets.in(data.room_id).emit('update', data)
-            } else if (data.type === 1) {
-                socket.broadcast.emit('update', data) // everyone gets it but the sender
-            }
-        })
-        socket.on('getAudience', (date) => {
-            // update audience amount( or list)
-            const amount = room_audience_list[data.room_id]
-            io.sockets.in(data.room_id).emit('sendAudience', {'amount': amount})
-        })
-        socket.on('allSilence', (data) => {
-            // clients = io.sockets.clients(data.room_id)
-        })
-        socket.on('leave', (data) => {
-            socket.disconnect(true)
-        })
+            })
+            socket.on('getAudience', (data) => {
+                // update audience amount( or list)
+                if (data.room_name) {
+                    const amount = room_audience_list[data.room_name]
+                    io.sockets.in(data.room_name).emit('sendAudience', {'amount': amount})
+                } else {
+                    io.sockets.emit('formatError', {message: 'miss room_name'})   
+                }
+            })
+            socket.on('allSilence', (data) => {
+                // clients = io.sockets.clients(data.room_name)
+            })
+            socket.on('leave', (data) => {
+                socket.disconnect(true)
+            })
+        } else {
+            io.sockets.emit('formatError', {message: 'miss room_name'})
+        }
     })
     socket.on('disconnect', () => {
         console.log('user: ' + socket.id + ' disconnect')
