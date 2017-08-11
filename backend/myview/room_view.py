@@ -27,7 +27,7 @@ def create_folder(file_name):
         return False
     else:
         os.makedirs(os.path.join('frontend/static/rooms/' , file_name))
-        os.mknod(os.path.join('frontend/static/rooms/',file_name,'chatlog.txt'))
+        os.mknod(os.path.join('frontend/static/rooms/', file_name, 'log.txt'))
         return True
 
 def upload_thumbnail(room_id, thumbnail):

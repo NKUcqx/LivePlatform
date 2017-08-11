@@ -92,7 +92,10 @@ def signupSubmit(request):
             )
             form.save(commit = False)
             user.save()
-            return JsonResponse({'user': model_to_json(user)})
+            if(not request.session.session_key):
+                request.session.save()
+            session_key = request.session.session_key
+            return JsonResponse({'user': model_to_json(user), 'session_key': session_key})
         else:
             return HttpResponse(content = CODE['1'], status = 500)
     else:
@@ -106,7 +109,7 @@ def loginSubmit(request):
     if(user is not None):
         auth.login(request, user)
         session_key = request.session.session_key
-        return JsonResponse({'user': model_to_json(user),'session_key':session_key})
+        return JsonResponse({'user': model_to_json(user), 'session_key':session_key})
     else:
         return HttpResponse(content = CODE['13'], status = 401)
 
