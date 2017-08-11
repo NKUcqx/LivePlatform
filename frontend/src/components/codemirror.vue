@@ -48,7 +48,7 @@ export default {
 
         this.editor.on('change', function (cm) {
             var nowvalue = cm.getValue()
-            wsSend(_this.socket, nowvalue)
+            // wsSend(_this.socket, nowvalue)
             if (_this.skipNextChangeEvent) {
                 _this.skipNextChangeEvent = false
                 return
@@ -58,14 +58,14 @@ export default {
                 _this.$emit('input', cm.getValue())
             }
         })
-        this.socket = wsConnect('/canvaschannel/', (e) => {
+        /* this.socket = wsConnect('/canvaschannel/', (e) => {
             console.log('websocket start')
             if (_this.editor.getValue() !== e.data) {
                 _this.editor.setValue(e.data)
                 console.log('e.data是' + e.data)
                 console.log('cm.getValue是' + _this.editor.getValue())
             }
-        })
+        }) */
     },
     watch: {
         'value': function (newVal, oldVal) {
@@ -98,5 +98,8 @@ export default {
 <style>
     .CodeMirror-code {
         font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+    }
+    textarea{
+        height: 600px;
     }
 </style>
