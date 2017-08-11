@@ -6,6 +6,7 @@ import Home from '@/components/Home'
 import Studio from '@/components/Studio'
 import Codedemo from '@/components/Codedemo'
 import Canvas from '@/components/tinyComponents/Canvas'
+import CloseButton from '@/components/tinyComponents/CloseButton'
 import TeacherRTC from '@/components/tinyComponents/TeacherRTC'
 import StudentRTC from '@/components/tinyComponents/StudentRTC'
 
@@ -27,6 +28,11 @@ export default new Router({
             path: '/studio',
             name: 'studio',
             component: Studio
+        },
+        {
+            path: '/close',
+            name: 'close',
+            component: CloseButton
         },
         {
             path: '/canvas',

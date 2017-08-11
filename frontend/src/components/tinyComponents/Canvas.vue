@@ -1,49 +1,49 @@
 <template>
 	<div id="canvas" ref="canvas">
 		<div :style="btnPosition" id="show-tool" ref="showTool"  @mouseenter="showToolBar()" @mouseleave="hideToolBar()">
-			<Button type="ghost" shape="circle" icon="wrench"></Button>
+			<Button type="ghost" :size="SIZE" shape="circle" icon="wrench" id="tool-button"></Button>
 		</div>
 		<Row >
 		<div ref="toolbar" id="tool-bar" :style="toolBarPosition" v-if="this.toolBar" @mouseenter="showToolBar()" @mouseleave="hideToolBar()">
-			<Poptip content="choose pen" placement="top"   class="buttons">
-				<Button :type="checkType('pen')" shape="circle" icon="edit" @click="changeType('pen')"></Button>
+			<Poptip trigger="hover" content="choose pen" placement="top"   class="buttons">
+				<Button :size="SIZE" :type="checkType('pen')" shape="circle" icon="edit" @click="changeType('pen')"></Button>
 			</Poptip>
-			<Poptip content="choose line" placement="top"   class="buttons">
-				<Button :type="checkType('line')" shape="circle" icon="minus-round" @click="changeType('line')" ></Button>
+			<Poptip trigger="hover" content="choose line" placement="top"   class="buttons">
+				<Button :size="SIZE" :type="checkType('line')" shape="circle" icon="minus-round" @click="changeType('line')" ></Button>
 			</Poptip>
-			<Poptip content="choose rect" placement="top"   class="buttons">
-				<Button :type="checkType('rect')" shape="circle" icon="android-checkbox-outline-blank" @click="changeType('rect')"></Button>
+			<Poptip trigger="hover" content="choose rect" placement="top"   class="buttons">
+				<Button :size="SIZE" :type="checkType('rect')" shape="circle" icon="android-checkbox-outline-blank" @click="changeType('rect')"></Button>
 			</Poptip>
-			<Poptip content="choose circle" placement="top"   class="buttons">
-				<Button :type="checkType('circle')" shape="circle" icon="android-radio-button-off" @click="changeType('circle')" ></Button>
+			<Poptip trigger="hover" content="choose circle" placement="top"   class="buttons">
+				<Button :size="SIZE" :type="checkType('circle')" shape="circle" icon="android-radio-button-off" @click="changeType('circle')" ></Button>
 			</Poptip>
-			<Poptip content="choose rubber" placement="top"   class="buttons">
-				<Button :type="checkType('rubber')" shape="circle" icon="android-checkbox-blank" @click="changeType('rubber')" ></Button>
+			<Poptip trigger="hover" content="choose rubber" placement="top"   class="buttons">
+				<Button :size="SIZE" :type="checkType('rubber')" shape="circle" icon="android-checkbox-blank" @click="changeType('rubber')" ></Button>
 			</Poptip>
-			<Poptip content="choose text" placement="top"   class="buttons">
-				<Button :type="checkType('text')" shape="circle" icon="compose" @click="changeType('text')"></Button>
+			<Poptip trigger="hover" content="choose text" placement="top"   class="buttons">
+				<Button :size="SIZE" :type="checkType('text')" shape="circle" icon="compose" @click="changeType('text')"></Button>
 			</Poptip>
-			<Poptip :content="getFill" placement="top"   class="buttons">
-				<Button :type="checkFill()" shape="circle" icon="android-star-half" @click="changeFill()"></Button>
+			<Poptip trigger="hover" :content="getFill" placement="top"   class="buttons">
+				<Button :size="SIZE" :type="checkFill()" shape="circle" icon="android-star-half" @click="changeFill()"></Button>
 			</Poptip>
 			<br>
-			<Poptip content="color picker" placement="bottom"   class="buttons">
-				<Button type="default" shape="circle" icon="android-color-palette" @click="colorPicker()"  class="buttons"></Button>
+			<Poptip trigger="hover" content="color picker" placement="bottom"   class="buttons">
+				<Button :size="SIZE" type="default" shape="circle" icon="android-color-palette" @click="colorPicker()"  class="buttons"></Button>
 			</Poptip>
-			<Poptip content="clear" placement="bottom"   class="buttons">
-				<Button type="default" shape="circle" icon="refresh" @click="clearBoard()"  class="buttons"></Button>
+			<Poptip trigger="hover" content="clear" placement="bottom"   class="buttons">
+				<Button :size="SIZE" type="default" shape="circle" icon="refresh" @click="clearBoard()"  class="buttons"></Button>
 		    </Poptip>
-		    <Poptip :content="getWidth" placement="bottom"   class="buttons">
-		    	<Button type="default" shape="circle" icon="plus" @click="addWidth()"></Button>
+		    <Poptip trigger="hover" :content="getWidth" placement="bottom"   class="buttons">
+		    	<Button :size="SIZE" type="default" shape="circle" icon="plus" @click="addWidth()"></Button>
 		    </Poptip>
-		    <Poptip :content="getWidth" placement="bottom"   class="buttons">
-				<Button type="default" shape="circle" icon="minus" @click="minusWidth()"></Button>
+		    <Poptip trigger="hover" :content="getWidth" placement="bottom"   class="buttons">
+				<Button :size="SIZE" type="default" shape="circle" icon="minus" @click="minusWidth()"></Button>
 			</Poptip>
-			<Poptip :content="getFontSize" placement="bottom"   class="buttons">
-				<Button type="default" shape="circle" icon="plus-round" @click="addFontSize()"></Button>
+			<Poptip trigger="hover" :content="getFontSize" placement="bottom"   class="buttons">
+				<Button :size="SIZE" type="default" shape="circle" icon="plus-round" @click="addFontSize()"></Button>
 			</Poptip>
-			<Poptip :content="getFontSize" placement="bottom"   class="buttons">
-				<Button type="default" shape="circle" icon="minus-round" @click="minusFontSize()"></Button>
+			<Poptip trigger="hover" :content="getFontSize" placement="bottom"   class="buttons">
+				<Button :size="SIZE" type="default" shape="circle" icon="minus-round" @click="minusFontSize()"></Button>
 			</Poptip>
 		</div>
 		<Modal v-model="showColorPicker" :width="250" :closable="false" :ok-text="1" :cancel-text="2" id="modal">
@@ -84,6 +84,10 @@ export default {
         HEIGHT: {
             type: Number,
             default: 400
+        },
+        SIZE: {
+            type: Number,
+            default: ''
         }
     },
     data () {
@@ -498,7 +502,7 @@ export default {
 </script>
 
 <style scoped>
-    #canvas {
+    #canvas{
     }
 
     #draw-board {
@@ -510,8 +514,11 @@ export default {
     .buttons {
         display: inline-block;
     }
-    #show-tool:hover {
-        color: blue;
+    #tool-button {
+        cursor: pointer;
+    }
+    #tool-button:hover {
+        color: green;
     }
     #tool-bar{
         padding-left: 50px;

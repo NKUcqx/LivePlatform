@@ -53,6 +53,12 @@ export default {
             goLeft: 'goLeft',
             goRight: 'goRight'
         })
+    },
+    mounted () {
+        this.height = document.documentElement.clientHeight
+        window.addEventListener('resize', () => {
+            this.height = document.documentElement.clientHeight
+        })
     }
 }
 </script>
