@@ -14,9 +14,12 @@ urlpatterns = [
     url(r'^changeavatar/$', user_view.changeAvatar, name = 'change_avatar'),
     url(r'^changeinfo/$', user_view.changeGenderAndNickname, name = 'change_info'),
    # url(r'^findre/$', user_view.query_repeat_username, name = 'findre'),
-   # url(r'^websocket/$', user_view.websocket, name = 'websocket'),
+    url(r'^websocket/$', views.websocket, name = 'websocket'),
+    url(r'^codechannel/$', views.websocket, name = 'websocket'),
+    url(r'^canvaschannel/$', views.websocket, name = 'websocket'),
     url(r'^endroom/$', room_view.endRoom, name = 'end_room' ),
     url(r'^createroom/$', room_view.createRoom , name = 'create_room' ),
     url(r'^getroom/$', room_view.getRooms , name = 'get_room' ),
-    url(r'^canvaschannel/$', views.websocket, name = 'websocket'),
+    url(r'^avatar/$', user_view.change_avatar, name = 'change_avatar'),
+
 ]
