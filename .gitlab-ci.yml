@@ -1,14 +1,21 @@
 stages: 
-  - build
-  - test
+    - build
+    - test
 cache:
-  paths:
-    - node_modules/
+    paths:
+        - node_modules/
 
-buildjob:
-  stage: build
-  script:
-    - pip3 install -r requirements.txt
-    - cd frontend/ 
-    - cnpm install
-    - cnpm run build
+buildJob:
+    stage: build
+    script:
+        - pip3 install -r requirements.txt
+        - cd frontend/ 
+        - cnpm install
+        - cnpm run build
+
+testJob:
+    stage: test
+    script:
+        - cnpm run unit
+        - cd ..
+        - ./manage.py test
