@@ -17,6 +17,7 @@ testJob:
     stage: test
     script:
         - cd frontend/
+        - cnpm install
         - cnpm run unit
         - cd ..
         - ./manage.py test
