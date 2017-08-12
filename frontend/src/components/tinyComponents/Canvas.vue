@@ -54,7 +54,7 @@
 	    </Modal>
 	    <Col span="24" id="draw-board">
 			<canvas ref="board" id="board" :width="WIDTH" :height="HEIGHT"></canvas>
-			<Input :on-keydown="testText()" ref="text" v-model="canvas.text" v-if="canvas.isInput" autofocus :style="position" type="textarea" autosize></Input>
+			<Input :on-keydown="testText()" ref="text" id="text" v-model="canvas.text" v-if="canvas.isInput" autofocus :style="position" type="textarea" autosize></Input>
 		</Col>
 		</Row>
 	</div>
