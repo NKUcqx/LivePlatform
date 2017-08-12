@@ -5,6 +5,7 @@ import Welcome from '@/components/Welcome'
 import Home from '@/components/Home'
 import Studio from '@/components/Studio'
 import Codedemo from '@/components/Codedemo'
+import Chat from '@/components/Chat'
 import Canvas from '@/components/tinyComponents/Canvas'
 import CloseButton from '@/components/tinyComponents/CloseButton'
 import TeacherRTC from '@/components/tinyComponents/TeacherRTC'
@@ -73,6 +74,11 @@ export default new Router({
             path: '/student',
             name: 'student',
             component: StudentRTC
+        },
+        {
+            path: '/chat',
+            name: 'chat',
+            component: Chat
         }
     ]
 })

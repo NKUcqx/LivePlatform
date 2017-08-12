@@ -68,8 +68,8 @@
                 </Modal>
             </Menu-item>
         </Submenu>
-        <Menu-item name="2" class="head top-right longer">
-            <img :src="user.avatar" class="head-image" alt="head-image" :width="img.size" :height="img.size" @click="avatarModal = true">
+        <Menu-item name="2" class="top-right longer">
+            <img src="../../assets/head.jpg" class="head-image" alt="head-image" :width="img.size" :height="img.size" @click="avatarModal = true"  id="avatar">
             <Modal v-model="avatarModal" title="Upload Avatar" :width="300" id="avatar-modal">
                     <Upload
                         :headers = "{
@@ -266,6 +266,10 @@
     font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
 }
 
+#topmenu {
+    overflow: hidden;
+}
+
 #logout {
     display: inline-block;
     padding-top: 2px;
@@ -294,6 +298,7 @@
 .head-image {
     border-radius: 50%;
     margin-top: 9px;
+    border: 1px solid rgba(180,230,180,0.7);
     /*background-color: gray;*/
 }
 
