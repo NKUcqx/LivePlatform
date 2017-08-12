@@ -1,9 +1,6 @@
 stages: 
     - build
     - test
-cache:
-    paths:
-        - node_modules/
 
 buildJob:
     stage: build
@@ -18,8 +15,6 @@ testJob:
     script:
         - cd frontend/
         - cnpm install
-        - cnpm uninstall phantomjs-prebuilt
-        - cnpm install phantomjs-prebuilt==2.1.7
         - cnpm run unit
         - cd ..
         - ./manage.py test
