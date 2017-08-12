@@ -97,6 +97,23 @@ class PunishmentTestCase(TestCase):
         outOne(self.room2,self.user2)
         self.assertEqual(len(Punishment.objects.filter(room=self.room2,user=self.user1,punishment='K')),1)
         self.assertEqual(len(Punishment.objects.filter(room=self.room2,user=self.user2,punishment='K')),1)
+    def test_clean_table(self):
+        banSpeakOne(self.room1,self.user1)
+        banSpeakOne(self.room2,self.user1)
+        outOne(self.room2,self.user1)
+        outOne(self.room2,self.user2)
+        clean_table(self.room1)
+        self.assertEqual(len(Punishment.objects.filter(room=self.room1)),0)
+    def test_is_ban_speak(self):
+        banSpeakOne(self.room1,self.user1)
+        banSpeakOne(self.room1,self.user2)
+        self.assertTrue(is_ban_speak(self.room1,self.user1))
+        self.assertEqual(is_ban_speak(self.room1,self.user3),False)
+    def test_is_out(self):
+        outOne(self.room1,self.user1)
+        outOne(self.room1,self.user2)
+        self.assertTrue(is_out(self.room1,self.user1))
+        self.assertEqual(is_out(self.room1,self.user3),False) 
 class RoomViewTestCase(TestCase):
     def setUp(self):
         self.c = Client()
