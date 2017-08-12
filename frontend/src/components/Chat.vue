@@ -20,7 +20,7 @@
         <div class="historymessage">
             <ul id="history">
                 <li v-for="hist of history" id="message">
-                    <Dropdown @on-click="click(name)">
+                    <Dropdown trigger="click" style="margin-left: 20px" @on-click="click(name)">
                         <a href="javascript:void(0)" id="name">{{ hist.username }}</a>
                         <Dropdown-menu slot="list" v-if="role">
                             <Dropdown-item>禁言</Dropdown-item>
