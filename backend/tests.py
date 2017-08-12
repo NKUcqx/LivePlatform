@@ -2,7 +2,30 @@ from django.test import TestCase,Client
 from backend.myview import room_view,user_view,toolkits
 from backend.models import LiveRoom,User
 from django.utils import timezone
+from django.forms.models import model_to_dict
+from backend.models import User,Punishment,LiveRoom
+from backend.myview.user_view import random_str
+from backend.myview.user_view import test_phone
+from backend.myview.user_view import test_email
+from backend.myview.user_view import create_user_folder
+from backend.myview.user_view import getUser
+from backend.myview.user_view import sendTo
+from backend.myview.user_view import signupSubmit
+from backend.myview.user_view import loginSubmit
+from backend.myview.user_view import testUsername
+from backend.myview.user_view import changeAvatar
+from backend.myview.user_view import changeGenderAndNickname
+from backend.myview.user_view import changePassword
+from backend.myview.user_view import getUserFromSession
+from backend.myview.punishment_base import banSpeakOne
+from backend.myview.punishment_base import banSpeakPublic
+from backend.myview.punishment_base import outOne
+from backend.myview.punishment_base import clean_table
+from backend.myview.punishment_base import is_out
+from backend.myview.punishment_base import is_ban_speak
+from django.contrib import auth
 import os
+import re
 import json
 
 # Create your tests here.
@@ -20,6 +43,24 @@ class UserTestCase(TestCase):
         self.assertEqual(self.user1.gender,True)
         self.assertEqual(self.user4.phone,None)
         self.assertEqual(self.user1.email,'')
+    def test_random_str(self):
+        self.assertEqual(len(random_str()),4)
+        self.assertEqual(len(random_str(5)),5)
+        self.assertTrue(random_str().isdigit())
+    def test_test_email(self):
+        self.assertTrue(test_email('15302178925@163.com'))
+        self.assertTrue(test_email('2020263746@qq.com'))
+        self.assertTrue(test_email('dongbaobao94@gmail.com'))
+    def test_test_phone(self):
+        self.assertTrue(test_phone('15302178925'))
+        self.assertTrue(test_phone('15222856278'))
+        self.assertTrue(test_phone('13752652469'))
+        self.assertTrue(test_phone('13662197063'))
+    def test_create_user_folder(self):
+        self.assertTrue(create_user_folder('23'))
+        self.assertTrue(create_user_folder('22'))
+        self.assertEqual(create_user_folder('892670995@qq.com'),False)
+        self.assertEqual(create_user_folder('13513616853'),False)
 class RoomViewTestCase(TestCase):
     def setUp(self):
         self.c = Client()
