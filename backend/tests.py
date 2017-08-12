@@ -61,6 +61,16 @@ class UserTestCase(TestCase):
         self.assertTrue(create_user_folder('22'))
         self.assertEqual(create_user_folder('892670995@qq.com'),False)
         self.assertEqual(create_user_folder('13513616853'),False)
+    def test_sendTo(self):
+        user_dic = {"email":"15302178925@163.com","code":"4345"}
+        user_json = json.dumps(user_dic)
+        response=self.c.post('/sendemail/',user_json, content_type = "application/json")
+        self.assertEqual(response.status_code,200)
+    def test_signupSubmit(self):
+        user_dic = {"username":"15032002730","phone":"15032002730", "password":"cqx1997215"}
+        user_json = json.dumps(user_dic)
+        response=self.c.post('/signup/',user_json, content_type = "application/json")
+        self.assertEqual(response.status_code, 400)
 class RoomViewTestCase(TestCase):
     def setUp(self):
         self.c = Client()
