@@ -17,4 +17,4 @@ testJob:
         - cnpm install
         - cnpm run unit
         - cd ..
-        - ./manage.py test
+        - python3 ./manage.py test
