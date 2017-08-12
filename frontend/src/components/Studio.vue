@@ -40,7 +40,7 @@ import Topbar from './tinyComponents/Topbar'
 import MyCanvas from './tinyComponents/Canvas'
 import CloseButton from './tinyComponents/CloseButton'
 import io from 'socket.io-client'
-import mapGetters from 'vuex'
+import { mapGetters } from 'vuex'
 export default {
     components: {
         Topbar,
@@ -106,7 +106,7 @@ export default {
         }
     },
     computed: {
-        
+        ...mapGetters({user: 'getUser'})
     },
     methods: {
         openMinor () {
@@ -127,20 +127,34 @@ export default {
         buildConnect () {
             this.socket = io('http://localhost:8002')
             this.listen('connect', () => {
-                this.emit('', 'join')
-                this.listen('loadHistory', (data) => {
-                    console.log('loadHistory: ' + data)
-                })
+                this.emit('', 0, 'join')
                 this.listen('Error', (data) => { // this receiver will get error msg directly
                     console.log('Error: ' + data)
                 })
                 this.listen('updateMessage', (data) => {
                     console.log('updateMessage: ' + data)
                 })
-                this.emit('sending message 1', 2, 'sendMessage')
-                this.emit('sending message 2', 2, 'sendMessage')
-                this.emit('sending message 3', 2, 'sendMessage')
-                this.socket.emit('sendMessage', 'content')
+                this.listen('loadHistory', (data) => {
+                    console.log('loadHistory: ' + data)
+                })
+                this.listen('getAudience', (data) => {
+                    console.log(data)
+                })
+                this.emit('123', 0, 'sendMessage')
+                this.emit('123', 1, 'sendMessage')
+                this.emit('123', 2, 'sendMessage')
+                this.emit('123', 3, 'sendMessage')
+
+                this.emit('123', 0, 'getAudience')
+                this.emit('123', 0, 'leave')
+                this.emit('123', 1, 'getAudience')
+                this.emit('123', 1, 'leave')
+                this.emit('123', 2, 'getAudience')
+                this.emit('123', 2, 'leave')
+                this.emit('123', 3, 'getAudience')
+                this.emit('123', 3, 'leave')
+
+                this.emit('123', 0, 'endRoom')
             })
         },
         isValid (content, type = 'string') {
@@ -148,9 +162,9 @@ export default {
         },
         emit (content = '', type = 2, signal = 'sendMessage') {
             const pack = {
-                'room_name': 'this.room_name',
+                'room_name': 'testroom',
                 'nickname': 'this.user.nickname',
-                'content': content,
+                'content': {'content': content},
                 'type': type,
                 'signal': signal
             }
