@@ -3,7 +3,7 @@ import Vue from 'vue'
 // 测试一个字符串是否含有特殊字符
 export const checkSpecialChar = (str) => {
     let pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）――|{}【】‘；：”“'。，、？]")
-    if(str===''||str===null||str===undefined) {
+    if (str === '' || str === null || str === undefined) {
         return false
     } else if (pattern.test(str)) {
         return false
