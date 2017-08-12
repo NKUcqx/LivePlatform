@@ -20,13 +20,13 @@ class RoomViewTestCase(TestCase):
             )
         user.save()
         user_json = json.dumps({"username":"15032002730","password":"cqx1997215"})
-        self.c.post('/login/',user_json,content_type = "application/json")
+        self.c.post('/login/', user_json, content_type = "application/json")
         pass
     def test_create_folder(self):
         room_view.create_folder("unittest")
         self.assertTrue(os.path.exists("frontend/static/rooms/unittest"))
         self.assertTrue(os.path.isdir("frontend/static/rooms/unittest"))
-        self.assertTrue(os.path.isfile("frontend/static/rooms/unittest/chatlog.txt"))
+        self.assertTrue(os.path.isfile("frontend/static/rooms/unittest/log.txt"))
     def test_create_get_end_room(self):
         room = {"name" : "test_room1"}
         res = self.c.post('/createroom/',room)
@@ -46,6 +46,20 @@ class RoomViewTestCase(TestCase):
         room = LiveRoom.objects.get(name = "test_room3")
         self.assertFalse(room.is_silence)
         self.assertTrue(room.end_time is None)
+
+        req = {'audience_amount' : '999'}
+        req = json.dumps(req)
+        res = self.c.post('/updateroom/', req, content_type = "application/json")
+        room = LiveRoom.objects.get(name = 'test_room3')
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(room.audience_amount, 999)
+
+        req = {'name' : 'new_room_name'}
+        req = json.dumps(req)
+        res = self.c.post('/updateroom/', req, content_type = "application/json")
+        rooms = LiveRoom.objects.filter(name = 'new_room_name')
+        self.assertTrue(len(rooms) > 0)
+        self.assertEqual(rooms[0].name, 'new_room_name')
 
         req = {}
         res = self.c.get('/getroom/', req)
@@ -95,7 +109,7 @@ class ToolkitsTestCase(TestCase):
         self.assertEqual(result, "123")
         self.assertEqual(type(result), type("10"))
         result = toolkits.encode_json(True)
-        self.assertEqual(result, "true")
+        self.assertTrue(result)
 
     def tearDown(self):
         pass
