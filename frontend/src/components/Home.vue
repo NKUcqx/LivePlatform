@@ -164,7 +164,7 @@
 .aside-item {
     width: 100%;
     height: calc(500px / 4 + 1px);
-    background-color: rgba(255, 255, 255);
+    background-color: rgb(255, 255, 255);
     background-repeat: no-repeat;
     background-size: 100% 100%;
     border: 1px solid rgb(191, 191, 191);
