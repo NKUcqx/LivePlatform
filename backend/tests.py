@@ -6,6 +6,20 @@ import os
 import json
 
 # Create your tests here.
+class UserTestCase(TestCase):
+    def setUp(self):
+        self.c = Client()
+        self.user1=User.objects.create_user(username='HIHA',password='1234',phone='15302178925')
+        self.user2=User.objects.create_user(username='baobao',password='1234',phone='15222856278')
+        self.user3=User.objects.create_user(username='xiaolaotou',password='1234',phone='13752652469')
+        self.user4=User.objects.create_user(username='chenqixiang',password='1234',email='892670992@qq.com')
+    def test_create_user(self):
+        self.assertEqual(self.user1.avatar,'frontend/static/users/avatar.jpg')
+        self.assertEqual(self.user1.role,'S')
+        self.assertEqual(self.user1.phone,'15302178925')
+        self.assertEqual(self.user1.gender,True)
+        self.assertEqual(self.user4.phone,None)
+        self.assertEqual(self.user1.email,'')
 class RoomViewTestCase(TestCase):
     def setUp(self):
         self.c = Client()
