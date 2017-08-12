@@ -1,5 +1,5 @@
 <template>
-    <div class="dialog">
+    <div class="dialog" :style="position">
         <div class="head">
             <h1>
                 <Icon type="chevron-up" id="lefticon" @click.native="up()"></Icon>
@@ -24,11 +24,11 @@
                         <a href="javascript:void(0)" id="name">{{ hist.username }}</a>
                         <Dropdown-menu slot="list" v-if="role">
                             <Dropdown-item>禁言</Dropdown-item>
-                            <Modal v-model="dialog1" title="提示" @on-ok="banspeakone()" @on-cancel="cancel()">
+                            <Modal v-model="dialog1" title="提示" @on-ok="banspeakone(hist.username)" @on-cancel="cancel()">
                                 <p>您确定要禁言{{hist.username}}这位同学吗？</p>
                             </Modal>
                             <Dropdown-item>踢出房间</Dropdown-item>
-                            <Modal v-model="dialog2" title="提示" @on-ok="outone()" @on-cancel="cancel()">
+                            <Modal v-model="dialog2" title="提示" @on-ok="outone(hist.username)" @on-cancel="cancel()">
                                 <p>您确定要踢出{{hist.username}}这位同学吗？</p>
                             </Modal>
                         </Dropdown-menu>
@@ -43,74 +43,151 @@
         </div>
     </div>
 </template>
+<script src="/socket.io/socket.io.js">
+
+</script>
 <script>
     export default {
-        data () {
+        props: {
+            ROLE: {
+                type: Boolean,
+                default: false
+            },
+            USERNAME: {
+                type: String,
+                default: 'lili'
+            },
+            ROOM: {
+                tyle: Number,
+                default: 0
+            },
+            WIDTH: {
+                type: Number,
+                default: '500px'
+            },
+            HEIGHT: {
+                type: Number,
+                default: '400px'
+            },
+            BORDER: {
+                type: Number,
+                default: '1px'
+            }
+        },
+        data() {
             return {
                 message: '',
                 history: [],
-                username: 'li',
-                silenc: [],
                 out: [],
                 role: true,
                 dialog1: false,
                 dialog2: false,
                 silence: false,
-                speak: true
+                speak: true,
+                socket: '',
+                position: {
+                    width: '500px',
+                    height: '400px',
+                    border: '1px'
+                }
             }
         },
+        mounted() {
+            this.position.width = this.WIDTH
+            this.position.height = this.HEIGHT
+            this.position.border = this.BORDER
+            this.socket = io.connect('http://localhost:8002');
+            this.socket.on("updateMessage", function(data) {
+                if (data.room = this.ROOM) {
+                    this.history.push({
+                        usernmae: data.username,
+                        message: data.message
+                    })
+                }
+            })
+            this.socket.on("silence", function(data) {
+                if (data.username === this.username && data.room === this.ROOM) {
+                    this.silence = true
+                    this.speak = true
+                }
+            })
+            this.socket.on("out", function(data) {
+                if (data['username'] === this.username && data.room === this.ROOM) {
+                    this.$router.go(-1)
+                }
+            })
+            this.socket.on('allsilence', function(data) {
+                if (data.room === this.ROOM) {
+                    this.silence = true
+                    this.speak = true
+                }
+            })
+            this.silence.on('allspeak', function(data) {
+                if (data.room === this.ROOM) {
+                    this.speak = true
+                    this.silence = false
+                }
+            })
+        },
         methods: {
-            send () {
-                this.history.push({
-                    username: this.username,
-                    message: this.message
-                })
-                this.message = ''
-                document.getElementById('history').scrollTop = document.getElementById('history').scrollHeight
+            send() {
+                if (silence === false) {
+                    this.socket.emit("sendMessage", {
+                        username: this.username,
+                        message: this.message,
+                        room:this.ROOM
+                    })
+                    message = ''
+                    document.getElementById('history').scrollTop = document.getElementById('history').scrollHeight
+                }
             },
-            up () {
+            up() {
                 document.getElementById('history').scrollTop = 0
             },
-            down () {
+            down() {
                 document.getElementById('history').scrollTop = document.getElementById('history').scrollHeight
             },
-            dialog1change () {
+            dialog1change() {
                 this.dialog1 = true
                 console.log('HIHA')
             },
-            click (name) {
+            click(name) {
                 console.log('123')
                 if (name === '禁言') {
                     this.dialog1 = true
                     console.log('234')
                 } else this.dialog2 = true
             },
-            banspeakall (name) {
-                if (name === '全体禁言') {
-                    this.silence = true
-                    this.speak = false
-                } else {
-                    this.silence = false
-                    this.speak = true
+            banspeakall() {
+                if (role == true) {
+                    if (name === '全体禁言') {
+                        this.socket.emit('allSilence',{room:this.ROOM})
+                    } else {
+                        this.socket.emit('allspeak',{room:this.ROOM})
+                    }
                 }
             },
-            banspeakone () {
+            banspeakone(name) {
+                if (role === true) {
+                    this.socket.emit('silence', {
+                        username: name,
+                        room:this.ROOM
+                    })
+                }
             },
-            outone () {
+            outone(name) {
+                if (role === true) {
+                    this.socket.emit('out', {
+                        username: name,
+                        room:this.ROOM
+                    })
+                }
             },
-            cancel () {
-            }
+            cancel() {}
         }
     }
 </script>
 <style>
-    .dialog {
-        width: 500px;
-        height: 400px;
-        padding: 5px;
-        margin: 0 auto;
-        border: 1px;
-    }
     .head {
         height: 10%;
         width: 100%;
