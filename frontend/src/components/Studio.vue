@@ -7,7 +7,7 @@
                 <div id="studio-info">
                     <div id="title">
                         <h2 id="title-content">{{roomInfo.title}}</h2>
-                        <Button id="switch-section" type="ghost" @click="changeSection()" v-if="isShow"><Icon type="arrow-swap"></Icon></Button>
+                        <Button id="switch-section" type="ghost" @click="emit()" v-if="isShow"><Icon type="arrow-swap"></Icon></Button>
                         <Button id="switch-section" type="ghost" @click="openMinor()" v-else><Icon type="android-open"></Icon></Button>
                     </div>
                     <div id="footer">
@@ -20,7 +20,7 @@
             </div>
             <div id="main-section" @mouseenter="isMouseOnMain = true" @mouseleave = "isMouseOnMain = false">
                 <close-button class="close-button" @close="closeMain" :isWork="(isWorkOnMain)?true:false" v-if="isMouseOnMain"></close-button>
-                <my-canvas :WIDTH="mainWIDTH" :HEIGHT="mainWIDTH * 0.65" SIZE="large" @send="sentMessage"></my-canvas>
+                <my-canvas :WIDTH="mainWIDTH" :HEIGHT="mainWIDTH * 0.65" SIZE="large" @send="emitCanvas"></my-canvas>
             </div>
         </div>
         <div id="right-part" ref="rightPart">
@@ -41,41 +41,12 @@ import MyCanvas from './tinyComponents/Canvas'
 import CloseButton from './tinyComponents/CloseButton'
 import io from 'socket.io-client'
 import { mapGetters } from 'vuex'
+import { isValid } from '../utils/checks'
 export default {
     components: {
         Topbar,
         MyCanvas,
         CloseButton
-    },
-    sockets: {
-        connect: function () {
-            this.$socket.emit('join', { room_name: '4acf53c3a68c554e51c38178d1b9b268' })
-            console.log('connect to remote server')
-        },
-        disconnect: function () {
-            console.log('disconnect with remote server')
-        },
-        loadHistory: function (data) {
-            console.log(typeof data.messages)
-        },
-        updateMessage: function (data) {
-            let component = ''
-            switch (data.content.sendType) {
-                case 0:
-                    component = 'canvas'
-                    break
-                case 1:
-                    component = 'canvas'
-                    break
-                case 2:
-                    component = 'code'
-                    break
-            }
-            this.$refs[component].reseive(data.content)
-        },
-        formatError: function (data) {
-            console.log(data.message)
-        }
     },
     data () {
         return {
@@ -106,7 +77,9 @@ export default {
         }
     },
     computed: {
-        ...mapGetters({user: 'getUser'})
+        ...mapGetters({
+            user: 'getUser'
+        })
     },
     methods: {
         openMinor () {
@@ -127,51 +100,46 @@ export default {
         buildConnect () {
             this.socket = io('http://localhost:8002')
             this.listen('connect', () => {
-                this.emit('', 0, 'join')
+                this.emit('', null, 0, 'join')
+                this.listen('loadHistory', (data) => {
+                    console.log('loadHistory: ', data)
+                })
                 this.listen('Error', (data) => { // this receiver will get error msg directly
-                    console.log('Error: ' + data)
+                    console.log('Error: ', data)
                 })
                 this.listen('updateMessage', (data) => {
-                    console.log('updateMessage: ' + data)
+                    this.$refs[data.dataType].receive(data)
                 })
-                this.listen('loadHistory', (data) => {
-                    console.log('loadHistory: ' + data)
-                })
-                this.listen('getAudience', (data) => {
-                    console.log(data)
-                })
-                this.emit('123', 0, 'sendMessage')
-                this.emit('123', 1, 'sendMessage')
-                this.emit('123', 2, 'sendMessage')
-                this.emit('123', 3, 'sendMessage')
-
-                this.emit('123', 0, 'getAudience')
-                this.emit('123', 0, 'leave')
-                this.emit('123', 1, 'getAudience')
-                this.emit('123', 1, 'leave')
-                this.emit('123', 2, 'getAudience')
-                this.emit('123', 2, 'leave')
-                this.emit('123', 3, 'getAudience')
-                this.emit('123', 3, 'leave')
-
-                this.emit('123', 0, 'endRoom')
             })
         },
-        isValid (content, type = 'string') {
-            return content !== undefined && content !== null && typeof content === type && content !== ''
+        emitCanvas (data) {
+            this.emit(data, 'canvas', 2)
         },
-        emit (content = '', type = 2, signal = 'sendMessage') {
+        emitChat (data) {
+            this.emit(data, 'chat', 2)
+        },
+        emitCode (data) {
+            this.emit(data, 'code', 1)
+        },
+        emitSlide (data) {
+            this.emit(data, 'slide', 1)
+        },
+        emit (data, dataType, type = 1, signal = 'sendMessage') {
             const pack = {
-                'room_name': 'testroom',
-                'nickname': 'this.user.nickname',
-                'content': {'content': content},
-                'type': type,
-                'signal': signal
+                room_name: 'this.room_name',
+                nickname: 'this.nickname',
+                content: {
+                    nickname: this.user.nickname,
+                    data: data,
+                    dataType: dataType
+                },
+                type: type,
+                signal: signal
             }
             this.socket.emit(signal, pack)
         },
         listen (signal, func) { // func is a callback
-            if (this.isValid(signal) && this.isValid(func, 'function')) {
+            if (isValid(signal) && isValid(func, 'function')) {
                 this.socket.on(signal, (data) => {
                     func(data)
                 })

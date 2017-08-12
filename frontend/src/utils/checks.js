@@ -23,7 +23,7 @@ export const checkEmail = (email) => {
 
 export const checkObjLegal = (obj) => {
     for (let item in obj) {
-        if (Object.prototype.toString.call(obj[item]) === '[object String]') {
+       if (Object.prototype.toString.call(obj[item]) === '[object String]') {
             if (!checkSpecialChar(obj[item])) {
                 return false
             }
@@ -89,6 +89,9 @@ export const checkForm = (obj, formRef, todo) => {
     })
 }
 
-export default {
-    checkSpecialChar
+export const isValid = (content, type = 'string') => {
+    return content !== undefined &&
+    content !== null &&
+    typeof content === type &&
+    content !== ''
 }

@@ -181,11 +181,10 @@ export default {
             (this.canvas.fontSize > 15) ? (this.canvas.fontSize--) : ''
         },
         send (data) {
-            data.sendType = 0
             this.$emit('send', data)
         },
-        reseive (data) {
-            this.draw(data)
+        receive (data) {
+            this.draw(data.data)
         },
         testText () {
             if (this.canvas.text.indexOf('\n') >= 0) {
