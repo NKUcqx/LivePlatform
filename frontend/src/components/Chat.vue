@@ -5,7 +5,7 @@
                 <Icon class="icon" type="chevron-up" id="lefticon" @click.native="up()"></Icon>
             </h1>
             <h1>
-                <Dropdown @on-click="banspeakall()">
+                <Dropdown trigger="click" @on-click="banspeakall()">
                     <Icon class="icon" type="chatboxes" id="midicon"></Icon>
                     <Dropdown-menu slot="list" v-if="role">
                         <Dropdown-item v-if="speak">全体禁言</Dropdown-item>
