@@ -116,6 +116,11 @@ def loginSubmit(request):
     else:
         return HttpResponse(content = CODE['13'], status = 401)
 
+@require_POST
+def logoutSubmit(request):
+    auth.logout(request)
+    return HttpResponse(content = CODE['0'], status = 200)
+
 #check the username exists
 @require_GET
 def testUsername(request):

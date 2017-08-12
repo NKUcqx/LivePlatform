@@ -20,13 +20,13 @@
             </div>
             <div id="main-section" @mouseenter="isMouseOnMain = true" @mouseleave = "isMouseOnMain = false">
                 <close-button class="close-button" @close="closeMain" :isWork="(isWorkOnMain)?true:false" v-if="isMouseOnMain"></close-button>
-                <my-canvas :WIDTH="mainWIDTH" :HEIGHT="mainWIDTH * 0.65" SIZE="large"></my-canvas>
+                <my-canvas :WIDTH="mainWIDTH" :HEIGHT="mainWIDTH * 0.65" SIZE="large" @send="sentMessage"></my-canvas>
             </div>
         </div>
         <div id="right-part" ref="rightPart">
             <div id="minor-section" ref="minor" v-if="isShow"  @mouseenter="isMouseOnMinor = true" @mouseleave = "isMouseOnMinor = false">
                 <close-button class="close-button" @close="closeMinor" :isWork="(isWorkOnMain)?false:true" v-if="isMouseOnMinor"></close-button>
-                <my-canvas :WIDTH="mainWIDTH * 0.7" :HEIGHT="minorWIDTH * 0.65" SIZE=""></my-canvas>
+                <my-canvas ref="canvas" :WIDTH="mainWIDTH * 0.7" :HEIGHT="minorWIDTH * 0.65" SIZE=""></my-canvas>
             </div>
             <div id="chat-section">
                 <img src="../../static/white.png" :width="minorWIDTH" :height="chatHeight">
@@ -40,14 +40,42 @@ import Topbar from './tinyComponents/Topbar'
 import MyCanvas from './tinyComponents/Canvas'
 import CloseButton from './tinyComponents/CloseButton'
 import io from 'socket.io-client'
-
+import mapGetters from 'vuex'
 export default {
     components: {
         Topbar,
         MyCanvas,
         CloseButton
     },
-    watch: {
+    sockets: {
+        connect: function () {
+            this.$socket.emit('join', { room_name: '4acf53c3a68c554e51c38178d1b9b268' })
+            console.log('connect to remote server')
+        },
+        disconnect: function () {
+            console.log('disconnect with remote server')
+        },
+        loadHistory: function (data) {
+            console.log(typeof data.messages)
+        },
+        updateMessage: function (data) {
+            let component = ''
+            switch (data.content.sendType) {
+                case 0:
+                    component = 'canvas'
+                    break
+                case 1:
+                    component = 'canvas'
+                    break
+                case 2:
+                    component = 'code'
+                    break
+            }
+            this.$refs[component].reseive(data.content)
+        },
+        formatError: function (data) {
+            console.log(data.message)
+        }
     },
     data () {
         return {
@@ -72,9 +100,9 @@ export default {
                 id: 500,
                 title: 'Welcome To Our World',
                 teacher: 'gongyansongisgood',
-                audience: 3000
-            },
-            socket: null
+                audience: 3000,
+                room_id: ''
+            }
         }
     },
     computed: {
@@ -138,6 +166,14 @@ export default {
             }
         }
     },
+    created () {
+        console.log(this.$route.params)
+        this.roomInfo.id = this.$route.params.id
+        this.roomInfo.teacher = this.$route.params.creator
+        this.roomInfo.audience = this.$route.params.audience_amount
+        this.roomInfo.title = this.$route.params.name
+        //
+    },
     mounted () {
         this.mainWIDTH = this.$refs.leftPart.getBoundingClientRect().width
         this.minorWIDTH = this.$refs.leftPart.getBoundingClientRect().width * 0.7
@@ -152,7 +188,6 @@ export default {
             } else {
                 this.chatHeight = this.$refs.leftPart.getBoundingClientRect().height - 20
             }
-            console.log(this.closePosition.left)
         })
         this.buildConnect()
     }

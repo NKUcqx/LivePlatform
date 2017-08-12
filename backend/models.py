@@ -58,8 +58,9 @@ class User(AbstractUser):
 
 #clean the liveroom hold by the leaving user
 @receiver(user_logged_out, sender = User)
-def cleanUserRoom(sender, instance, **kwargs):
-    for room in LiveRoom.objects.filter(creater_id = instance.id, is_living = True):
+def cleanUserRoom(sender, **kwargs):
+    #print (kwargs['request'].user.id)
+    for room in LiveRoom.objects.filter(creater_id = kwargs['request'].user.id, is_living = True):
         room.is_living = False
         room.save()
 

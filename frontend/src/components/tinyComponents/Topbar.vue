@@ -164,6 +164,7 @@
                 addLiveRoom: 'addLiveRoom'
             }),
             ...mapActions({
+                logoutSubmit: 'logout',
                 changePass: 'changePass',
                 changeInfo: 'changeInfo'
             }),
@@ -176,7 +177,13 @@
                 this.infoModal = true
             },
             logout () {
-                alert('logout')
+                const that = this
+                this.logoutSubmit().then(function () {
+                    alert(CONST.success('Logout'))
+                    that.$router.push({path: '/'})
+                }, function (res) {
+                    alert(res)
+                })
             },
             modifyInfo () {
                 checkForm(this, this.$refs.infoForm, () => {

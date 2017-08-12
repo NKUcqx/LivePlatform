@@ -28,7 +28,7 @@ export default {
     },
     methods: {
         enterRoom () {
-            this.$router.push({ name: 'studio', params: {room: this.item} })
+            this.$router.push({ name: 'studio', params: this.item })
         }
     },
     mounted () {

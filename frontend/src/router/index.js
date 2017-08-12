@@ -9,6 +9,8 @@ import Canvas from '@/components/tinyComponents/Canvas'
 import CloseButton from '@/components/tinyComponents/CloseButton'
 import TeacherRTC from '@/components/tinyComponents/TeacherRTC'
 import StudentRTC from '@/components/tinyComponents/StudentRTC'
+import store from '../store'
+import { CONST } from '../utils/const'
 
 Vue.use(Router)
 
@@ -16,23 +18,55 @@ export default new Router({
     routes: [
         {
             path: '',
-            name: 'Welcome',
-            component: Welcome
+            name: 'welcome',
+            component: Welcome,
+            beforeEnter: (to, from, next) => {
+                store.dispatch('initState').then(function () {
+                    if (store.getters.isLogin) {
+                        next('/home')
+                    } else {
+                        next()
+                    }
+                }, function () {
+                    next()
+                })
+            }
         },
         {
             path: '/home',
             name: 'home',
-            component: Home
+            component: Home,
+            beforeEnter: (to, from, next) => {
+                store.dispatch('initState').then(function () {
+                    if (!store.getters.isLogin) {
+                        alert(CONST.login)
+                        next('/')
+                    } else {
+                        next()
+                    }
+                }, function () {
+                    alert(CONST.login)
+                    next('/')
+                })
+            }
         },
         {
             path: '/studio',
             name: 'studio',
-            component: Studio
-        },
-        {
-            path: '/close',
-            name: 'close',
-            component: CloseButton
+            component: Studio,
+            beforeEnter: (to, from, next) => {
+                store.dispatch('initState').then(function () {
+                    if (!store.getters.isLogin) {
+                        alert(CONST.login)
+                        next('/')
+                    } else {
+                        next()
+                    }
+                }, function () {
+                    alert(CONST.login)
+                    next('/')
+                })
+            }
         },
         {
             path: '/canvas',
