@@ -7,6 +7,7 @@ urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name = "index.html")),
     url(r'^signup/$', user_view.signupSubmit, name = 'signup'),
     url(r'^login/$', user_view.loginSubmit, name = 'login'),
+    url(r'^logout/$', user_view.logoutSubmit, name = 'logout'),
     url(r'^sendemail/$', user_view.sendTo, name = 'sendemail'),
     url(r'^testusername/$', user_view.testUsername, name = 'test_username'),
     url(r'^changepass/$', user_view.changePassword, name = 'change_password'),

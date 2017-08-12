@@ -153,7 +153,7 @@
     display: inline-block;
     width: calc(25% - 5px);
     height: 500px;
-    background-color: rgb(120, 120, 120);
+    background-color: rgba(0, 0, 0, 0);
     float: right;
 }
 
@@ -164,7 +164,7 @@
 .aside-item {
     width: 100%;
     height: calc(500px / 4 + 1px);
-    background-color: rgb(255, 255, 255);
+    background-color: rgba(255, 255, 255);
     background-repeat: no-repeat;
     background-size: 100% 100%;
     border: 1px solid rgb(191, 191, 191);
