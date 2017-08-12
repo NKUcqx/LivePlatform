@@ -3,10 +3,10 @@ import Vue from 'vue'
 // 测试一个字符串是否含有特殊字符
 export const checkSpecialChar = (str) => {
     let pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）――|{}【】‘；：”“'。，、？]")
-    if (str !== '' && str !== null) {
-        if (pattern.test(str)) {
-            return false
-        }
+    if (str === '' || str === null || str === undefined) {
+        return false
+    } else if (pattern.test(str)) {
+        return false
     }
     return true
 }
@@ -17,7 +17,7 @@ export const checkPhone = (phone) => {
 }
 
 export const checkEmail = (email) => {
-    let emailRe = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/
+    let emailRe = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/
     return emailRe.test(email)
 }
 
