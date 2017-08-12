@@ -19,22 +19,30 @@ Vue.use(VueLocalStorage)
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
-new Vue({
-    el: '#app',
-    router,
-    store,
-    template: '<App/>',
-    components: { App },
-    http: {
-        root: '/root',
-        headers: {
-        // Authorization: 'Basic YXBpOnBhc3N3b3Jk'
-        }
-    },
-    localStorage: {
-        session_key: {
-            type: String,
-            default: null
-        }
-    }
+store.dispatch('initState').then(function () {
+    initVue()
+}, function () {
+    initVue()
 })
+
+const initVue = () => {
+    new Vue({
+        el: '#app',
+        router,
+        store,
+        template: '<App/>',
+        components: { App },
+        http: {
+            root: '/root',
+            headers: {
+            // Authorization: 'Basic YXBpOnBhc3N3b3Jk'
+            }
+        },
+        localStorage: {
+            session_key: {
+                type: String,
+                default: null
+            }
+        }
+    })
+}

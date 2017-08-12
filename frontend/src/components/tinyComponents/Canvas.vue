@@ -54,7 +54,7 @@
 	    </Modal>
 	    <Col span="24" id="draw-board">
 			<canvas ref="board" id="board" :width="WIDTH" :height="HEIGHT"></canvas>
-			<Input :on-keydown="testText()" ref="text" id="text" v-model="canvas.text" v-if="canvas.isInput" autofocus :style="position" type="textarea" autosize></Input>
+			<Input :on-keydown="testText()" ref="text" v-model="canvas.text" v-if="canvas.isInput" autofocus :style="position" type="textarea" autosize></Input>
 		</Col>
 		</Row>
 	</div>
@@ -181,11 +181,10 @@ export default {
             (this.canvas.fontSize > 15) ? (this.canvas.fontSize--) : ''
         },
         send (data) {
-            data.sendType = 0
             this.$emit('send', data)
         },
-        reseive (data) {
-            this.draw(data)
+        receive (data) {
+            this.draw(data.data)
         },
         testText () {
             if (this.canvas.text.indexOf('\n') >= 0) {

@@ -21,15 +21,11 @@ export default new Router({
             name: 'welcome',
             component: Welcome,
             beforeEnter: (to, from, next) => {
-                store.dispatch('initState').then(function () {
-                    if (store.getters.isLogin) {
-                        next('/home')
-                    } else {
-                        next()
-                    }
-                }, function () {
+                if (store.getters.isLogin) {
+                    next('/home')
+                } else {
                     next()
-                })
+                }
             }
         },
         {
@@ -37,17 +33,12 @@ export default new Router({
             name: 'home',
             component: Home,
             beforeEnter: (to, from, next) => {
-                store.dispatch('initState').then(function () {
-                    if (!store.getters.isLogin) {
-                        alert(CONST.login)
-                        next('/')
-                    } else {
-                        next()
-                    }
-                }, function () {
+                if (!store.getters.isLogin) {
                     alert(CONST.login)
                     next('/')
-                })
+                } else {
+                    next()
+                }
             }
         },
         {
@@ -55,17 +46,12 @@ export default new Router({
             name: 'studio',
             component: Studio,
             beforeEnter: (to, from, next) => {
-                store.dispatch('initState').then(function () {
-                    if (!store.getters.isLogin) {
-                        alert(CONST.login)
-                        next('/')
-                    } else {
-                        next()
-                    }
-                }, function () {
+                if (!store.getters.isLogin) {
                     alert(CONST.login)
                     next('/')
-                })
+                } else {
+                    next()
+                }
             }
         },
         {
