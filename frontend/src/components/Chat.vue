@@ -74,7 +74,7 @@
                 default: '1px'
             }
         },
-        data() {
+        data () {
             return {
                 message: '',
                 history: [],
@@ -92,37 +92,37 @@
                 }
             }
         },
-        mounted() {
+        mounted () {
             this.position.width = this.WIDTH
             this.position.height = this.HEIGHT
             this.position.border = this.BORDER
-            this.socket = io.connect('http://localhost:8002');
-            this.socket.on("updateMessage", function(data) {
-                if (data.room = this.ROOM) {
+            this.socket = io.connect('http://localhost:8002')
+            this.socket.on('updateMessage', function (data) {
+                if (data.room === this.ROOM) {
                     this.history.push({
                         usernmae: data.username,
                         message: data.message
                     })
                 }
             })
-            this.socket.on("silence", function(data) {
+            this.socket.on('silence', function (data) {
                 if (data.username === this.username && data.room === this.ROOM) {
                     this.silence = true
                     this.speak = true
                 }
             })
-            this.socket.on("out", function(data) {
+            this.socket.on('out', function (data) {
                 if (data['username'] === this.username && data.room === this.ROOM) {
                     this.$router.go(-1)
                 }
             })
-            this.socket.on('allsilence', function(data) {
+            this.socket.on('allsilence', function (data) {
                 if (data.room === this.ROOM) {
                     this.silence = true
                     this.speak = true
                 }
             })
-            this.silence.on('allspeak', function(data) {
+            this.silence.on('allspeak', function (data) {
                 if (data.room === this.ROOM) {
                     this.speak = true
                     this.silence = false
@@ -130,60 +130,60 @@
             })
         },
         methods: {
-            send() {
+            send () {
                 if (silence === false) {
-                    this.socket.emit("sendMessage", {
+                    this.socket.emit('sendMessage', {
                         username: this.username,
                         message: this.message,
-                        room:this.ROOM
+                        room: this.ROOM
                     })
                     message = ''
                     document.getElementById('history').scrollTop = document.getElementById('history').scrollHeight
                 }
             },
-            up() {
+            up () {
                 document.getElementById('history').scrollTop = 0
             },
-            down() {
+            down () {
                 document.getElementById('history').scrollTop = document.getElementById('history').scrollHeight
             },
-            dialog1change() {
+            dialog1change () {
                 this.dialog1 = true
                 console.log('HIHA')
             },
-            click(name) {
+            click (name) {
                 console.log('123')
                 if (name === '禁言') {
                     this.dialog1 = true
                     console.log('234')
                 } else this.dialog2 = true
             },
-            banspeakall() {
-                if (role == true) {
+            banspeakall () {
+                if (role === true) {
                     if (name === '全体禁言') {
-                        this.socket.emit('allSilence',{room:this.ROOM})
+                        this.socket.emit('allSilence', {room: this.ROOM})
                     } else {
-                        this.socket.emit('allspeak',{room:this.ROOM})
+                        this.socket.emit('allspeak', {room: this.ROOM})
                     }
                 }
             },
-            banspeakone(name) {
+            banspeakone (name) {
                 if (role === true) {
                     this.socket.emit('silence', {
                         username: name,
-                        room:this.ROOM
+                        room: this.ROOM
                     })
                 }
             },
-            outone(name) {
+            outone (name) {
                 if (role === true) {
                     this.socket.emit('out', {
                         username: name,
-                        room:this.ROOM
+                        room: this.ROOM
                     })
                 }
             },
-            cancel() {}
+            cancel () {}
         }
     }
 </script>

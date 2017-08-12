@@ -20,15 +20,16 @@
             </div>
             <div id="main-section" @mouseenter="isMouseOnMain = true" @mouseleave = "isMouseOnMain = false">
                 <close-button class="close-button" @close="closeMain" :isWork="(isWorkOnMain)?true:false" v-if="isMouseOnMain"></close-button>
-                <my-canvas :WIDTH="mainWIDTH" :HEIGHT="mainWIDTH * 0.65" SIZE="large" @send="emitCanvas"></my-canvas>
+                <my-canvas ref="canvas" :WIDTH="mainWIDTH" :HEIGHT="mainWIDTH * 0.65" SIZE="large" @send="emitCanvas"></my-canvas>
             </div>
         </div>
         <div id="right-part" ref="rightPart">
             <div id="minor-section" ref="minor" v-if="isShow"  @mouseenter="isMouseOnMinor = true" @mouseleave = "isMouseOnMinor = false">
                 <close-button class="close-button" @close="closeMinor" :isWork="(isWorkOnMain)?false:true" v-if="isMouseOnMinor"></close-button>
-                <my-canvas ref="canvas" :WIDTH="mainWIDTH * 0.7" :HEIGHT="minorWIDTH * 0.65" SIZE=""></my-canvas>
+                <codedemo ref="code" :WIDTH="mainWIDTH * 0.7" :HEIGHT="minorWIDTH * 0.65" @send="emitCode"></codedemo>
             </div>
             <div id="chat-section">
+            <!--chat :WIDTH="minorWIDTH" :HEIGHT="chatHeight" :USERNAME="user.nickname" :ROLE="user.role" @send="emitCode"></chat-->
                 <img src="../../static/white.png" :width="minorWIDTH" :height="chatHeight">
             </div>      
         </div>
@@ -39,6 +40,8 @@
 import Topbar from './tinyComponents/Topbar'
 import MyCanvas from './tinyComponents/Canvas'
 import CloseButton from './tinyComponents/CloseButton'
+import Codedemo from './Codedemo'
+import Chat from './Chat'
 import io from 'socket.io-client'
 import { mapGetters } from 'vuex'
 import { isValid } from '../utils/checks'
@@ -46,7 +49,9 @@ export default {
     components: {
         Topbar,
         MyCanvas,
-        CloseButton
+        CloseButton,
+        Codedemo,
+        Chat
     },
     data () {
         return {
