@@ -3,9 +3,10 @@
 </template>
 
 <script>
-import { wsConnect, wsSend, wsClose } from '../utils/websockets'
+// import { wsConnect, wsSend, wsClose } from '../utils/websockets'
 var CodeMirror = require('../../node_modules/codemirror/lib/codemirror.js')
 require('../../node_modules/codemirror/lib/codemirror.css')
+// require('../../entry.js')
 
 export default {
     props: {
@@ -49,6 +50,7 @@ export default {
         this.editor.on('change', function (cm) {
             var nowvalue = cm.getValue()
             // wsSend(_this.socket, nowvalue)
+            // _this.socket.emit('updateMessage',)
             if (_this.skipNextChangeEvent) {
                 _this.skipNextChangeEvent = false
                 return
@@ -58,6 +60,7 @@ export default {
                 _this.$emit('input', cm.getValue())
             }
         })
+        // this.socket=io.connect('http://localhost:8002')
         /* this.socket = wsConnect('/canvaschannel/', (e) => {
             console.log('websocket start')
             if (_this.editor.getValue() !== e.data) {
@@ -98,8 +101,5 @@ export default {
 <style>
     .CodeMirror-code {
         font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
-    }
-    textarea{
-        height: 600px;
     }
 </style>
