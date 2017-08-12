@@ -17,6 +17,10 @@ testJob:
         - cnpm install
         - cnpm run unit
         - cd ..
+        - mysql -uroot -p
+        - ''
+        - create database liveplat default character set utf8 collate utf8_unicode_ci;
+        - exit;
         - python3 ./manage.py makemigrations
         - python3 ./manage.py migrate
         - python3 ./manage.py test
