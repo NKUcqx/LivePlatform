@@ -5,7 +5,7 @@
                 <Icon type="chevron-up" id="lefticon" @click.native="up()"></Icon>
             </h1>
             <h1>
-                <Dropdown @on-click="banspeakall()">
+                <Dropdown trigger="click" style="margin-left: 20px" @on-click="banspeakall()">
                     <Icon type="chatboxes" id="midicon"></Icon>
                     <Dropdown-menu slot="list" v-if="role">
                         <Dropdown-item v-if="speak">全体禁言</Dropdown-item>
@@ -20,7 +20,7 @@
         <div class="historymessage">
             <ul id="history">
                 <li v-for="hist of history" id="message">
-                    <Dropdown @on-click="click(name)">
+                    <Dropdown trigger="click" style="margin-left: 20px" @on-click="click(name)">
                         <a href="javascript:void(0)" id="name">{{ hist.username }}</a>
                         <Dropdown-menu slot="list" v-if="role">
                             <Dropdown-item>禁言</Dropdown-item>
