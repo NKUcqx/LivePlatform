@@ -4,5 +4,7 @@ export const CONST = {
     },
     failure: (str) => {
         return str + ' Failure'
-    }
+    },
+    login: 'Please Login First',
+    permission: 'Permission Denied'
 }

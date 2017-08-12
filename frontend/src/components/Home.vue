@@ -153,7 +153,7 @@
     display: inline-block;
     width: calc(25% - 5px);
     height: 500px;
-    background-color: rgb(120, 120, 120);
+    background-color: rgba(0, 0, 0, 0);
     float: right;
 }
 
