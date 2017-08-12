@@ -2,7 +2,7 @@
 // I only make example in moudules because it is more complex
 import Vue from 'vue'
 import { getSessionKey } from './getters'
-import { setSessionState, setUserState } from './mutations'
+import { setSessionState, setUserState, emptyUser } from './mutations'
 import { beforePost } from '../utils/utils'
 import { CONST } from '../utils/const'
 
@@ -24,8 +24,12 @@ export const initState = ({ state }) => {
 }
 
 const initUser = ({ state }, data) => {
-    console.log(data);
-    (data.session_key) ? setSessionState(state, data.user, data.session_key) : setUserState(state, data.user)
+    console.log(data)
+    if (!data.user) {
+        emptyUser(state)
+    } else {
+        ((data.session_key) ? setSessionState(state, data.user, data.session_key) : setUserState(state, data.user))
+    }
 }
 
 const commitPostRequest = (state, url, data) => {
@@ -62,4 +66,8 @@ export const changePass = async ({ state }, data) => {
 
 export const changeInfo = async ({ state }, data) => {
     return commitPostRequest(state, '/changeinfo/', data)
+}
+
+export const logout = async ({ state }) => {
+    return commitPostRequest(state, '/logout/', {})
 }

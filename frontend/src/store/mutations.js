@@ -24,3 +24,15 @@ export const setUserState = (state, {
     state.user.nickname = nickname
     state.user.isLogin = true
 }
+
+export const emptyUser = (state) => {
+    state.user.userid = ''
+    state.user.username = ''
+    state.user.gender = 0
+    state.user.avatar = ''
+    state.user.nickname = ''
+    state.user.isLogin = false
+    state.session.sessionKey = ''
+    state.session.hasSession = false
+    Vue.localStorage.set('session_key', null)
+}
