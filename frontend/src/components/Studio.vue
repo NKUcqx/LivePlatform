@@ -39,6 +39,7 @@
 import Topbar from './tinyComponents/Topbar'
 import MyCanvas from './tinyComponents/Canvas'
 import CloseButton from './tinyComponents/CloseButton'
+import io from 'socket.io-client'
 import mapGetters from 'vuex'
 export default {
     components: {
@@ -105,6 +106,7 @@ export default {
         }
     },
     computed: {
+        
     },
     methods: {
         openMinor () {
@@ -122,14 +124,46 @@ export default {
         changeSection () {
             this.isWorkOnMain = (this.isWorkOnMain) ? false : true
         },
-        sentMessage (content) {
-            let data = {
-                name: '111',
-                content: content,
-                room_name: '4acf53c3a68c554e51c38178d1b9b268',
-                type: content.sendType
+        buildConnect () {
+            this.socket = io('http://localhost:8002')
+            this.listen('connect', () => {
+                this.emit('', 'join')
+                this.listen('loadHistory', (data) => {
+                    console.log('loadHistory: ' + data)
+                })
+                this.listen('Error', (data) => { // this receiver will get error msg directly
+                    console.log('Error: ' + data)
+                })
+                this.listen('updateMessage', (data) => {
+                    console.log('updateMessage: ' + data)
+                })
+                this.emit('sending message 1', 2, 'sendMessage')
+                this.emit('sending message 2', 2, 'sendMessage')
+                this.emit('sending message 3', 2, 'sendMessage')
+                this.socket.emit('sendMessage', 'content')
+            })
+        },
+        isValid (content, type = 'string') {
+            return content !== undefined && content !== null && typeof content === type && content !== ''
+        },
+        emit (content = '', type = 2, signal = 'sendMessage') {
+            const pack = {
+                'room_name': 'this.room_name',
+                'nickname': 'this.user.nickname',
+                'content': content,
+                'type': type,
+                'signal': signal
             }
-            this.$socket.emit('sendMessage', data)
+            this.socket.emit(signal, pack)
+        },
+        listen (signal, func) { // func is a callback
+            if (this.isValid(signal) && this.isValid(func, 'function')) {
+                this.socket.on(signal, (data) => {
+                    func(data)
+                })
+            } else {
+                throw Error('param format error')
+            }
         }
     },
     created () {
@@ -155,6 +189,7 @@ export default {
                 this.chatHeight = this.$refs.leftPart.getBoundingClientRect().height - 20
             }
         })
+        this.buildConnect()
     }
 }
 </script>
