@@ -4,12 +4,14 @@
 
 <script>
 // import { wsConnect, wsSend, wsClose } from '../utils/websockets'
-var CodeMirror = require('../../node_modules/codemirror/lib/codemirror.js')
+import CodeMirror from 'codemirror'
 require('../../node_modules/codemirror/lib/codemirror.css')
 // require('../../entry.js')
 
 export default {
     props: {
+        WIDTH: Number,
+        HEIGHT: Number,
         value: String,
         options: {
             type: Object,
@@ -24,29 +26,15 @@ export default {
     },
     data: function () {
         return {
+            editor: null,
             skipNextChangeEvent: false,
             socket: ''
         }
     },
-    ready: function () {
-        var _this = this
-        this.editor = CodeMirror.fromTextArea(this.$el, this.options)
-        this.editor.setValue(this.value)
-        this.editor.on('change', function (cm) {
-            if (_this.skipNextChangeEvent) {
-                _this.skipNextChangeEvent = false
-                return
-            }
-            _this.value = cm.getValue()
-            if (_this.$emit) {
-                _this.$emit('change', cm.getValue())
-            }
-        })
-    },
     mounted: function () {
         var _this = this
+        console.log(this.options)
         this.editor = CodeMirror.fromTextArea(this.$el, this.options)
-
         this.editor.on('change', function (cm) {
             var nowvalue = cm.getValue()
             // wsSend(_this.socket, nowvalue)
@@ -88,6 +76,9 @@ export default {
                     }
                 }
             }
+        },
+        'HEIGHT': function (newVal, oldVal) {
+            this.editor.setSize(this.WIDTH.toString() + 'px', this.HEIGHT.toString() + 'px')
         }
     },
     beforeDestroy: function () {
@@ -101,5 +92,6 @@ export default {
 <style>
     .CodeMirror-code {
         font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+        font-size: 15px;
     }
 </style>

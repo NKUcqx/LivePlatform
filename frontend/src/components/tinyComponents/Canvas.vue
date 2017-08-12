@@ -5,26 +5,26 @@
 		</div>
 		<Row >
 		<div ref="toolbar" id="tool-bar" :style="toolBarPosition" v-if="this.toolBar" @mouseenter="showToolBar()" @mouseleave="hideToolBar()">
-			<Poptip trigger="hover" content="choose pen" placement="top"   class="buttons">
-				<Button :size="SIZE" :type="checkType('pen')" shape="circle" icon="edit" @click="changeType('pen')"></Button>
+			<Poptip trigger="hover" content="choose pen" placement="top"  class="buttons">
+				<Button :size="SIZE" :type="checkType('pen')" shape="circle" icon="edit" @click="changeType('pen')" class="buttons"></Button>
 			</Poptip>
 			<Poptip trigger="hover" content="choose line" placement="top"   class="buttons">
-				<Button :size="SIZE" :type="checkType('line')" shape="circle" icon="minus-round" @click="changeType('line')" ></Button>
+				<Button :size="SIZE" :type="checkType('line')" shape="circle" icon="minus-round" @click="changeType('line')"  class="buttons"></Button>
 			</Poptip>
 			<Poptip trigger="hover" content="choose rect" placement="top"   class="buttons">
-				<Button :size="SIZE" :type="checkType('rect')" shape="circle" icon="android-checkbox-outline-blank" @click="changeType('rect')"></Button>
+				<Button :size="SIZE" :type="checkType('rect')" shape="circle" icon="android-checkbox-outline-blank" @click="changeType('rect')" class="buttons"></Button>
 			</Poptip>
 			<Poptip trigger="hover" content="choose circle" placement="top"   class="buttons">
-				<Button :size="SIZE" :type="checkType('circle')" shape="circle" icon="android-radio-button-off" @click="changeType('circle')" ></Button>
+				<Button :size="SIZE" :type="checkType('circle')" shape="circle" icon="android-radio-button-off" @click="changeType('circle')" class="buttons" ></Button>
 			</Poptip>
 			<Poptip trigger="hover" content="choose rubber" placement="top"   class="buttons">
-				<Button :size="SIZE" :type="checkType('rubber')" shape="circle" icon="android-checkbox-blank" @click="changeType('rubber')" ></Button>
+				<Button :size="SIZE" :type="checkType('rubber')" shape="circle" icon="android-checkbox-blank" @click="changeType('rubber')" class="buttons" ></Button>
 			</Poptip>
 			<Poptip trigger="hover" content="choose text" placement="top"   class="buttons">
-				<Button :size="SIZE" :type="checkType('text')" shape="circle" icon="compose" @click="changeType('text')"></Button>
+				<Button :size="SIZE" :type="checkType('text')" shape="circle" icon="compose" @click="changeType('text')" class="buttons"></Button>
 			</Poptip>
 			<Poptip trigger="hover" :content="getFill" placement="top"   class="buttons">
-				<Button :size="SIZE" :type="checkFill()" shape="circle" icon="android-star-half" @click="changeFill()"></Button>
+				<Button :size="SIZE" :type="checkFill()" shape="circle" icon="android-star-half" @click="changeFill()" class="buttons"></Button>
 			</Poptip>
 			<br>
 			<Poptip trigger="hover" content="color picker" placement="bottom"   class="buttons">
@@ -34,16 +34,16 @@
 				<Button :size="SIZE" type="default" shape="circle" icon="refresh" @click="clearBoard()"  class="buttons"></Button>
 		    </Poptip>
 		    <Poptip trigger="hover" :content="getWidth" placement="bottom"   class="buttons">
-		    	<Button :size="SIZE" type="default" shape="circle" icon="plus" @click="addWidth()"></Button>
+		    	<Button :size="SIZE" type="default" shape="circle" icon="plus" @click="addWidth()"  class="buttons"></Button>
 		    </Poptip>
 		    <Poptip trigger="hover" :content="getWidth" placement="bottom"   class="buttons">
-				<Button :size="SIZE" type="default" shape="circle" icon="minus" @click="minusWidth()"></Button>
+				<Button :size="SIZE" type="default" shape="circle" icon="minus" @click="minusWidth()"  class="buttons"></Button>
 			</Poptip>
 			<Poptip trigger="hover" :content="getFontSize" placement="bottom"   class="buttons">
-				<Button :size="SIZE" type="default" shape="circle" icon="plus-round" @click="addFontSize()"></Button>
+				<Button :size="SIZE" type="default" shape="circle" icon="plus-round" @click="addFontSize()"  class="buttons"></Button>
 			</Poptip>
 			<Poptip trigger="hover" :content="getFontSize" placement="bottom"   class="buttons">
-				<Button :size="SIZE" type="default" shape="circle" icon="minus-round" @click="minusFontSize()"></Button>
+				<Button :size="SIZE" type="default" shape="circle" icon="minus-round" @click="minusFontSize()" class="buttons"></Button>
 			</Poptip>
 		</div>
 		<Modal v-model="showColorPicker" :width="250" :closable="false" :ok-text="1" :cancel-text="2" id="modal">
@@ -79,11 +79,11 @@ export default {
     props: {
         WIDTH: {
             type: Number,
-            default: 600
+            default: 800
         },
         HEIGHT: {
             type: Number,
-            default: 400
+            default: 600
         },
         SIZE: {
             type: Number,
@@ -483,6 +483,7 @@ export default {
         }
     },
     mounted () {
+        console.log(this.WIDTH)
         if (true) {
             ['mousemove', 'mousedown', 'mouseup'].map((eventName) => {
                 this.$refs.board.addEventListener(eventName, ({ offsetX: x, offsetY: y, buttons }) => {
@@ -515,10 +516,11 @@ export default {
         display: inline-block;
     }
     #tool-button {
+        color: #5cadff;
         cursor: pointer;
     }
     #tool-button:hover {
-        color: green;
+        color: blue;
     }
     #tool-bar{
         padding-left: 50px;
