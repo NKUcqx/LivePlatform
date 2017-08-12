@@ -135,7 +135,6 @@ def testUsername(request):
 def changeAvatar(request):
     user = User.objects.get(pk = request.user.id)
     avatar = request.FILES.get('avatar', None)
-    print(avatar)
     if(avatar is not None):
         user.avatar = avatar
         user.save()
@@ -188,7 +187,10 @@ def getUserFromSession(request):
             session = Session.objects.get(session_key = session_key)
             uid = session.get_decoded().get('_auth_user_id')
             user = User.objects.get(pk = uid)
-            return JsonResponse({'user': model_to_json(user)})
+            user_json = model_to_json(user)
+            user_avatar = user_json['avatar'].split('/')
+            user_json['avatar'] = '/' +  '/'.join(user_avatar[user_avatar.index('frontend') + 1:])
+            return JsonResponse({'user': user_json})
         except:
             return HttpResponse(content = CODE['12'], status = 401)
     else:

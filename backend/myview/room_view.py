@@ -60,6 +60,12 @@ def getRooms(request):
         item['creater_name'] = User.objects.get(pk = int(item['creater'])).nickname
         item['create_time'] = item['create_time'].strftime('%Y-%-m-%d %H:%m:%S')
         item['end_time'] = item['end_time'].strftime('%Y-%-m-%d %H:%m:%S') if item.get('end_time',None) is not None else ''
+        file = item['file_name'].split('/')
+        item['file_name'] = '/' + '/'.join(file[file.index('frontend') + 1 : ])
+        file = item['thumbnail_path'].split('/')
+        item['thumbnail_path'] = '/' + '/'.join(file[file.index('frontend') + 1 : ])
+        file = item['slide_path'].split('/')
+        item['slide_path'] = '/' + '/'.join(file[file.index('frontend') + 1 : ])
     return JsonResponse({"rooms": list(rooms_dict)})
 
 @login_required
