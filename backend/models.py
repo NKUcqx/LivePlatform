@@ -122,6 +122,7 @@ def checkEndAndLiving(sender, instance, **kwargs):
 def checkDirExistence(sender, instance, **kwargs):
     if(os.path.exists(os.path.join('frontend', 'static', 'rooms', instance.file_name)) is False):
         os.makedirs(instance.file_name)
+    if(not os.path.exists(os.path.join(instance.file_name, 'log.txt'))):
         os.mknod(os.path.join(instance.file_name,'log.txt'))
 
 class Punishment(models.Model):

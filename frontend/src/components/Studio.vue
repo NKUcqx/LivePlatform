@@ -105,8 +105,9 @@ export default {
         buildConnect () {
             this.socket = io('http://localhost:8002')
             this.listen('connect', () => {
-                this.emit('', null, 0, 'join')
+                this.emit(this.user.id, null, 0, '', 'join')
                 this.listen('loadHistory', (data) => {
+                    this.user.socketid = data.socketid
                     console.log('loadHistory: ', data)
                 })
                 this.listen('Error', (data) => { // this receiver will get error msg directly
@@ -118,28 +119,30 @@ export default {
             })
         },
         emitCanvas (data) {
-            this.emit(data, 'canvas', 2)
+            this.emit(data, 'canvas', 1)
         },
-        emitChat (data) {
-            this.emit(data, 'chat', 2)
+        emitChat (data, to = null) {
+            this.emit(data, 'chat', 2, to)
         },
         emitCode (data) {
-            this.emit(data, 'code', 1)
+            this.emit(data, 'code') // default is 1
         },
         emitSlide (data) {
-            this.emit(data, 'slide', 1)
+            this.emit(data, 'slide')
         },
-        emit (data, dataType, type = 1, signal = 'sendMessage') {
+        emit (data, dataType, type = 1, to = null, signal = 'sendMessage') { // to which user he wanna send to
             const pack = {
-                room_name: 'this.room_name',
-                nickname: 'this.nickname',
+                id: this.user.userid,
+                room_name: '26157be4ed7675ae7e8dfb82f169ba34',
                 content: {
+                    id: this.user.userid,
                     nickname: this.user.nickname,
                     data: data,
                     dataType: dataType
                 },
                 type: type,
-                signal: signal
+                signal: signal,
+                to: to // that user's id, once it is a valid id, server will use type 0 directly whatever the 'type' is !!!
             }
             this.socket.emit(signal, pack)
         },

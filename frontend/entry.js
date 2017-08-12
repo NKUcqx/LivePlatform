@@ -68,7 +68,8 @@ function writeFile (roomname) {
 function isPackValid (data) {
     return isValid(data.room_name) &&
             isValid(data.content, 'object') &&
-            isValid(data.type, 'number')
+            isValid(data.type, 'number') &&
+            isValid(data.id)
 }
 
 function isValid (content, type = 'string') {
@@ -102,7 +103,7 @@ function sendMessage (socket, signal, content, type = 0, room_name = 'all', log 
                 socket.broadcast.in(room_name).emit(signal, content)
             } else {
                 error = true
-                socket.emit(fire_signals[0], ERROR_MESSAGE[1] + 'room_name 86')
+                socket.emit(fire_signals[0], ERROR_MESSAGE[1])
             }
             break
         case 2: // send to everyone in the room_name
@@ -110,7 +111,7 @@ function sendMessage (socket, signal, content, type = 0, room_name = 'all', log 
                 io.sockets.in(room_name).emit(signal, content)
             } else {
                 error = true
-                socket.emit(fire_signals[0], ERROR_MESSAGE[1] + 'roo_name 90')
+                socket.emit(fire_signals[0], ERROR_MESSAGE[1])
             }
             break
         case 3: // send to everyone connected to server
@@ -134,7 +135,7 @@ function sendMessage (socket, signal, content, type = 0, room_name = 'all', log 
 io.on(listening_signals[0], (socket) => {
     // on join
     socket.on(listening_signals[2], (data) => {
-        if (isValid(data.room_name)) {
+        if (isValid(data.room_name) && isValid(data.id)) {
             if (!room_audience_list[data.room_name]) {
                 room_audience_list[data.room_name] = []
             }
@@ -142,12 +143,11 @@ io.on(listening_signals[0], (socket) => {
                 room_msg_list[data.room_name] = []
             }
             socket.join(data.room_name, () => {
-                console.log(socket.id + ' has joined : ' + data.room_name)
-                // push him into audience list
-                // TODO: (using socket.id temporaly, change to user_id later?)
-                room_audience_list[data.room_name].push(socket.id)
+                console.log(data.id + ' has joined : ' + data.room_name)
+                // push this socket into audience list via its id
+                room_audience_list[data.room_name][data.id] = socket
                 // load history messages
-                sendMessage(socket, fire_signals[2], room_msg_list[data.room_name], 0, '', false)
+                sendMessage(socket, fire_signals[2], {history: room_msg_list[data.room_name]}, 0, '', false)
             })
             // on sendMessage
             socket.on(listening_signals[3], (data) => {
@@ -155,12 +155,17 @@ io.on(listening_signals[0], (socket) => {
                 // TODO: is it necessary to check all of them ?
                 if (isPackValid(data)) {
                     if (room_msg_list[data.room_name]) { // if this room's msg queue has been created
-                        sendMessage(socket, fire_signals[1], data.content, data.type, data.room_name, true)
+                        if (isValid(data.to)) {
+                            const sock = room_audience_list[data.room_name][data.to]
+                            sendMessage(sock, fire_signals[1], data.content, 0, data.room_name, false)
+                        } else {
+                            sendMessage(socket, fire_signals[1], data.content, data.type, data.room_name, true)
+                        }
                     } else {
                         sendMessage(socket, fire_signals[0], ERROR_MESSAGE[2], 0, '', false)
                     }
                 } else {
-                    sendMessage(socket, fire_signals[0], ERROR_MESSAGE[0] + '144', 0, '', false)
+                    sendMessage(socket, fire_signals[0], ERROR_MESSAGE[0], 0, '', false)
                 }
             })
             // on getAudience
@@ -174,7 +179,7 @@ io.on(listening_signals[0], (socket) => {
                     console.log(amount)
                     sendMessage(socket, fire_signals[3], amount, 2, data.room_name)
                 } else {
-                    sendMessage(socket, fire_signals[0], ERROR_MESSAGE[1] + 'room_name 146', 0, '', false)
+                    sendMessage(socket, fire_signals[0], ERROR_MESSAGE[1], 0, '', false)
                 }
             })
             socket.on(listening_signals[5], (data) => {
@@ -193,7 +198,7 @@ io.on(listening_signals[0], (socket) => {
                 console.log('LiveRoom : ' + data.room_name + ' ended')
             })
         } else {
-            sendMessage(socket, fire_signals[0], ERROR_MESSAGE[1] + 'room_name 184', 0, '', false)
+            sendMessage(socket, fire_signals[0], ERROR_MESSAGE[1], 0, '', false)
         }
     })
     socket.on(listening_signals[1], () => {
