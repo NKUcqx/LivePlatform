@@ -1,21 +1,22 @@
 <template>
   <div class="container">
-    <h1>CodeMirror Component</h1>
     <main v-cloak id="app">
       <div class="cm-container">
-        <codemirror :value="code" @change="change" :options="options"></codemirror>
-      </div>
-      <select name="mode" id="select" @change="changelan" v-model="mode">
-          <option value="javascript">javascript</option>
-          <option value="vue">vue</option>
-          <option value="text/x-c++src">C++</option>
-          <option value="text/x-c">C</option>
-          <option value="text/x-csharp">C#</option>
-          <option value="text/x-java">Java</option>
-          <option value="sql">sql</option>
-          <option value="text/css">css</option>
-          <option value="htmlmixed">html</option>
-      </select>
+        <codemirror id="textarea" :value="code" @change="change" :options="options" :WIDTH="this.WIDTH" :HEIGHT="this.HEIGHT"></codemirror>
+        <div id="relative" ref="relative">
+             <Select name="mode" id="select" @change="changelan" v-model="mode" placement="top">
+                <Option value="javascript">JS</Option>
+                <Option value="vue">vue</Option>
+                <Option value="text/x-c++src">C++</Option>
+                <Option value="text/x-c">C</Option>
+                <Option value="text/x-csharp">C#</Option>
+                <Option value="text/x-java">Java</Option>
+                <Option value="sql">sql</Option>
+                <Option value="text/css">css</Option>
+                <Option value="htmlmixed">html</Option>
+            </Select>
+        </div>
+    </div>
     </main>
   </div>
 </template>
@@ -67,20 +68,19 @@ export default {
             default: 600
         }
     },
+    watch: {
+        'this.$refs.relative.offsetLeft': function (newVal, oldVal) {
+            console.log(newVal)
+            this.position.left = (newVal).toString() + 'px'
+        },
+        'this.$refs.relative.offsetTop': function (newVal, oldVal) {
+            this.position.top = (newVal).toString() + 'px'
+        }
+    },
     data () {
         return {
             mode: 'javascript',
-            socket: '',
-            position1: {
-                width: '400px',
-                height: '600px',
-                margin: '0 auto'
-            },
-            position2: {
-                width: '400px',
-                height: '300px',
-                margin: '0 auto'
-            }
+            socket: ''
         }
     },
     computed: {
@@ -143,30 +143,31 @@ export default {
   display: none;
 }
 
-body {
-  padding: 30px;
-  font-family: Helvetica, Arial, sans-serif;
+#relative {
+    display: block;
+    width: 0;
+    height: 0;
+    border: 1px solid red;
+    float: right;
 }
 
-h1, h2 {
-  font-weight: 300;
+#select {
+    position: relative;
+    width: 70px;
+    height: 36px;
+    top: -36px;
+    left: -80px;
+    z-index: 999;
+    clear: both;
+    float: left;
 }
 
 .container {
-  margin: 0 auto;
-  max-width: 720px;
-  max-height: 450px;
+    margin: 0 auto;
+    width: 100%;
 }
 
 .cm-container {
-  border: #ddd solid 1px;
-  margin-bottom: 10px;
-  text-align: left;
-}
-
-footer {
-  margin-top: 20px;
-  padding-top: 10px;
-  border-top: #dedede solid 1px;
+    text-align: left;
 }
 </style>
