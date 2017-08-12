@@ -60,25 +60,25 @@ export default {
     props: {
         WIDTH: {
             type: Number,
-            default: 600
+            default: 400
         },
         HEIGHT: {
             type: Number,
-            default: 400
+            default: 600
         }
     },
     data () {
         return {
             mode: 'javascript',
-            socket: null,
+            socket: '',
             position1: {
-                width: '650px',
-                height: '450px',
+                width: '400px',
+                height: '600px',
                 margin: '0 auto'
             },
             position2: {
-                width: '600px',
-                height: '400px',
+                width: '400px',
+                height: '300px',
                 margin: '0 auto'
             }
         }
