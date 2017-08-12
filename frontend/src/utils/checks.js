@@ -23,8 +23,8 @@ export const checkEmail = (email) => {
 
 export const checkObjLegal = (obj) => {
     for (let item in obj) {
-        if (Object.prototype.toString.call(item) === '[object String]') {
-            if (item === '' || !checkSpecialChar(item)) {
+       if (Object.prototype.toString.call(obj[item]) === '[object String]') {
+            if (!checkSpecialChar(obj[item])) {
                 return false
             }
         }
