@@ -5,11 +5,11 @@
                 <Icon class="icon" type="chevron-up" id="lefticon" @click.native="up()"></Icon>
             </h1>
             <h1>
-                <Dropdown trigger="click" style="margin-left: 20px" @on-click="speakall(name)">
-                    <Icon type="chatboxes" id="midicon"></Icon>
-                    <Dropdown-menu slot="list" v-if="role">
-                        <Dropdown-item v-if="speak">全体禁言</Dropdown-item>
-                        <Dropdown-item v-if="silence">取消全体禁言</Dropdown-item>
+                <Dropdown trigger="click" @on-click="speakall">
+                    <Icon class="icon" type="chatboxes" id="midicon"></Icon>
+                    <Dropdown-menu slot="list" v-if="ROLE">
+                        <Dropdown-item v-if="speak" name="allsilence">全体禁言</Dropdown-item>
+                        <Dropdown-item v-if="silence" name='allspeak'>取消全体禁言</Dropdown-item>
                     </Dropdown-menu>
                 </Dropdown>
             </h1>
@@ -22,12 +22,12 @@
                 <li v-for="hist of history" id="message">
                     <Dropdown trigger="click" style="margin-left: 20px" @on-click="click(name)">
                         <a href="javascript:void(0)" id="name">{{ hist.username }}</a>
-                        <Dropdown-menu slot="list" v-if="role">
-                            <Dropdown-item>禁言</Dropdown-item>
+                        <Dropdown-menu slot="list" v-if="ROLE">
+                            <Dropdown-item name='banspeak'>禁言</Dropdown-item>
                             <Modal v-model="dialog1" title="提示" @on-ok="banspeakone(hist.username)" @on-cancel="cancel()">
                                 <p>您确定要禁言{{hist.username}}这位同学吗？</p>
                             </Modal>
-                            <Dropdown-item>踢出房间</Dropdown-item>
+                            <Dropdown-item name='out'>踢出房间</Dropdown-item>
                             <Modal v-model="dialog2" title="提示" @on-ok="outone(hist.username)" @on-cancel="cancel()">
                                 <p>您确定要踢出{{hist.username}}这位同学吗？</p>
                             </Modal>
@@ -38,13 +38,13 @@
             </ul>
         </div>
         <div class="input">
-            <textarea id="messageInput" v-model="message" placeHolder="enter to send":disable='speak'></textarea>
-            <Button id="sendBtn" type="primary" size="small" @click='send()'>send</Button>
+            <Input id="messageInput" v-model="message" placeHolder="Enter To Send" :disabled='silence'>
+                <Button id="sendBtn" type="primary" slot="append" @click='sendmsg()'>Send</Button>
+            </Input>
         </div>
     </div>
 </template>
 <script src="/socket.io/socket.io.js">
-
 </script>
 <script>
     export default {
@@ -79,7 +79,6 @@
                 message: '',
                 history: [],
                 out: [],
-                role: true,
                 dialog1: false,
                 dialog2: false,
                 silence: false,
@@ -103,48 +102,16 @@
             this.position.height = (this.HEIGHT).toString() + 'px'
             this.position.border = this.BORDER + 'px'
             console.log(this.position)
-            this.socket = io.connect('http://localhost:8002')
-            this.socket.on('updateMessage', function (data) {
-                if (data.room === this.ROOM) {
-                    this.history.push({
-                        usernmae: data.username,
-                        message: data.message
-                    })
-                }
-            })
-            this.socket.on('silence', function (data) {
-                if (data.username === this.username && data.room === this.ROOM) {
-                    this.silence = true
-                    this.speak = true
-                }
-            })
-            this.socket.on('out', function (data) {
-                if (data['username'] === this.username && data.room === this.ROOM) {
-                    this.$router.go(-1)
-                }
-            })
-            this.socket.on('allsilence', function (data) {
-                if (data.room === this.ROOM) {
-                    this.silence = true
-                    this.speak = true
-                }
-            })
-            this.silence.on('allspeak', function (data) {
-                if (data.room === this.ROOM) {
-                    this.speak = true
-                    this.silence = false
-                }
-            })
         },
         methods: {
-            send () {
-                if (silence === false) {
-                    this.socket.emit('sendMessage', {
-                        username: this.username,
-                        message: this.message,
-                        room: this.ROOM
-                    })
-                    message = ''
+            send (data) {
+            this.$emit('send', data)
+            },
+            sendmsg () {
+                console.log(this.ROLE)
+                if (this.silence === false) {
+                    this.send({chattype:'message',message:this.message,username:this.USERNAME})
+                    this.message = ''
                     document.getElementById('history').scrollTop = document.getElementById('history').scrollHeight
                 }
             },
@@ -158,31 +125,68 @@
                 this.dialog1 = true
                 console.log('HIHA')
             },
-            click (name) {
-                console.log('123')
-                if (name === '禁言') {
+            click(name){
+                if (name === 'banspeak') {
                     this.dialog1 = true
                     console.log('234')
                 } else this.dialog2 = true
             },
-            speakall (name) {
-                if (role === true) {
-                    if (name === '全体禁言') {
-                        emitChat({type: 'allSilence'})
+            speakall:function (name) {
+                console.log(name)
+                if (this.ROLE === true) {
+                    if (name === 'allsilence') {
+                        this.send({chattype:'allsilence'})
                     } else {
-                        emitChat({type: 'allspeak'})
+                        this.send({chattype:'allspeak'})
                     }
                 }
             },
             banspeakone (name) {
-                if (role === true) {
-                    emitChat({type: 'silence', username: name})
+                if (this.ROLE === true) {
+                    this.send({chattype:'banspeakone',username:name})
                 }
             },
             outone (name) {
-                if (role === true) {
-                    emitChat({type: 'out', username: name})
+                if (this.ROLE === true) {
+                    this.send({chattype:'outone',username:name})
                 }
+            },
+            receive (data) {
+                console.log(data.data.chattype)
+                if (data.data.chattype==='message'){
+                    console.log('message');
+                    this.history.push({username:data.data.username,message:data.data.message})
+                }
+                if(data.data.chattype==='outone'){
+                    if(data.data.username===this.USERNAME){
+                        console.log('outone');
+                        this.$route.go(-1)
+                        }
+
+                }
+                if(data.data.chattype==='banspeakone'){
+                    if(data.data.username===this.USERNAME){
+                        console.log('banspeakone');
+                        this.silence=true
+                        this.speak=false
+                        }
+
+
+                }
+                if(data.data.chattype==='allsilence'){
+                    console.log('allsilence');
+                    this.silence=true
+                    this.speak=false
+
+                }
+                if(data.data.chattype==='allspeak'){
+                    console.log('allspeak');
+                    this.silence=false
+                    this.speak=true
+
+
+                }
+
             },
             cancel () {}
         }
