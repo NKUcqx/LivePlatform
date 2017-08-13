@@ -2,10 +2,118 @@ from django.test import TestCase,Client
 from backend.myview import room_view,user_view,toolkits
 from backend.models import LiveRoom,User
 from django.utils import timezone
+from django.forms.models import model_to_dict
+from backend.models import User,Punishment,LiveRoom
+from backend.myview.user_view import random_str
+from backend.myview.user_view import test_phone
+from backend.myview.user_view import test_email
+from backend.myview.user_view import create_user_folder
+from backend.myview.user_view import getUser
+from backend.myview.user_view import sendTo
+from backend.myview.user_view import signupSubmit
+from backend.myview.user_view import loginSubmit
+from backend.myview.user_view import testUsername
+from backend.myview.user_view import changeAvatar
+from backend.myview.user_view import changeGenderAndNickname
+from backend.myview.user_view import changePassword
+from backend.myview.user_view import getUserFromSession
+'''from backend.myview.punishment_base import banSpeakOne
+from backend.myview.punishment_base import banSpeakPublic
+from backend.myview.punishment_base import outOne
+from backend.myview.punishment_base import clean_table
+from backend.myview.punishment_base import is_out
+from backend.myview.punishment_base import is_ban_speak'''
+from django.contrib import auth
 import os
+import re
 import json
 
 # Create your tests here.
+class UserTestCase(TestCase):
+    def setUp(self):
+        self.c = Client()
+        self.user1=User.objects.create_user(username='HIHA',password='1234',phone='15302178925')
+        self.user2=User.objects.create_user(username='baobao',password='1234',phone='15222856278')
+        self.user3=User.objects.create_user(username='xiaolaotou',password='1234',phone='13752652469')
+        self.user4=User.objects.create_user(username='chenqixiang',password='1234',email='892670992@qq.com')
+    def test_create_user(self):
+        self.assertEqual(self.user1.avatar,'frontend/static/users/avatar.jpg')
+        self.assertEqual(self.user1.role,'S')
+        self.assertEqual(self.user1.phone,'15302178925')
+        self.assertEqual(self.user1.gender,True)
+        self.assertEqual(self.user4.phone,None)
+        self.assertEqual(self.user1.email,'')
+    def test_random_str(self):
+        self.assertEqual(len(random_str()),4)
+        self.assertEqual(len(random_str(5)),5)
+        self.assertTrue(random_str().isdigit())
+    def test_test_email(self):
+        self.assertTrue(test_email('15302178925@163.com'))
+        self.assertTrue(test_email('2020263746@qq.com'))
+        self.assertTrue(test_email('dongbaobao94@gmail.com'))
+    def test_test_phone(self):
+        self.assertTrue(test_phone('15302178925'))
+        self.assertTrue(test_phone('15222856278'))
+        self.assertTrue(test_phone('13752652469'))
+        self.assertTrue(test_phone('13662197063'))
+    def test_create_user_folder(self):
+        self.assertTrue(create_user_folder('23'))
+        self.assertTrue(create_user_folder('22'))
+        self.assertEqual(create_user_folder('892670995@qq.com'),False)
+        self.assertEqual(create_user_folder('13513616853'),False)
+    def test_sendTo(self):
+        user_dic = {"email":"15302178925@163.com","code":"4345"}
+        user_json = json.dumps(user_dic)
+        response=self.c.post('/sendemail/',user_json, content_type = "application/json")
+        self.assertEqual(response.status_code,200)
+    def test_signupSubmit(self):
+        user_dic = {"username":"15032002730","phone":"15032002730", "password":"cqx1997215"}
+        user_json = json.dumps(user_dic)
+        response=self.c.post('/signup/',user_json, content_type = "application/json")
+        self.assertEqual(response.status_code, 400)
+'''class PunishmentTestCase(TestCase):
+    def setUp(self):
+        self.user1=User.objects.create_user(username='HIHA',password='1234',phone='15302178925')
+        self.user2=User.objects.create_user(username='baobao',password='1234',phone='15222856278')
+        self.user3=User.objects.create_user(username='xiaolaotou',password='1234',phone='13752652469')
+        self.user4=User.objects.create_user(username='chenqixiang',password='1234',email='892670992@qq.com')
+        self.room1=LiveRoom(name='toutouroom',creater=self.user3)
+        self.room1.save()
+        self.room2=LiveRoom(name='baobaoroom',creater=self.user2)
+        self.room2.save()
+    def test_banSpeakOne(self): 
+        banSpeakOne(self.room1,self.user1)
+        banSpeakOne(self.room1,self.user2)
+        punishment1=Punishment.objects.filter(room=self.room1,user=self.user1,punishment='S')
+        punishment2=Punishment.objects.filter(room=self.room1,user=self.user2,punishment='S')
+        self.assertEqual(len(punishment1),1)
+        self.assertEqual(len(punishment2),1)
+    def test_banSpeakPublic(self):
+        banSpeakPublic(self.room1,[self.user1,self.user2])
+        punishment1=Punishment.objects.filter(room=self.room1,punishment='S')
+        self.assertEqual(len(punishment1),2)
+    def test_outOne(self):
+        outOne(self.room2,self.user1)
+        outOne(self.room2,self.user2)
+        self.assertEqual(len(Punishment.objects.filter(room=self.room2,user=self.user1,punishment='K')),1)
+        self.assertEqual(len(Punishment.objects.filter(room=self.room2,user=self.user2,punishment='K')),1)
+    def test_clean_table(self):
+        banSpeakOne(self.room1,self.user1)
+        banSpeakOne(self.room2,self.user1)
+        outOne(self.room2,self.user1)
+        outOne(self.room2,self.user2)
+        clean_table(self.room1)
+        self.assertEqual(len(Punishment.objects.filter(room=self.room1)),0)
+    def test_is_ban_speak(self):
+        banSpeakOne(self.room1,self.user1)
+        banSpeakOne(self.room1,self.user2)
+        self.assertTrue(is_ban_speak(self.room1,self.user1))
+        self.assertEqual(is_ban_speak(self.room1,self.user3),False)
+    def test_is_out(self):
+        outOne(self.room1,self.user1)
+        outOne(self.room1,self.user2)
+        self.assertTrue(is_out(self.room1,self.user1))
+        self.assertEqual(is_out(self.room1,self.user3),False)''' 
 class RoomViewTestCase(TestCase):
     def setUp(self):
         self.c = Client()

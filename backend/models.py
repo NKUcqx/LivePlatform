@@ -103,8 +103,8 @@ class LiveRoom(models.Model):
     create_time = models.DateTimeField(auto_now_add = True)
     end_time = models.DateTimeField(null = True, blank = True) # identified whether it's A Live or not by whether end_time is null
     file_name = models.CharField(max_length = 500, default = get_dir_path)
-    slide_path = models.FileField(upload_to = get_file_path, default = 'default')
-    thumbnail_path = models.ImageField(upload_to = get_file_path, default = 'default_thumbnail.jpg')
+    slide_path = models.FileField(upload_to = get_file_path, default = 'frontend/static/rooms/default.jpg')
+    thumbnail_path = models.ImageField(upload_to = get_file_path, default = 'frontend/static/rooms/default_thumbnail.jpg')
     objects = LiveRoomManager()
     def __unicode__(self):
         return "ID : {}, RoomName: {} , Creater: {}".format(self.ID, self.name, self.creater)
