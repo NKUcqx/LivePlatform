@@ -5,8 +5,8 @@
                 <Icon class="icon" type="chevron-up" id="lefticon" @click.native="up()"></Icon>
             </h1>
             <h1>
-                <Dropdown trigger="click" @on-click="banspeakall()">
-                    <Icon class="icon" type="chatboxes" id="midicon"></Icon>
+                <Dropdown trigger="click" style="margin-left: 20px" @on-click="speakall(name)">
+                    <Icon type="chatboxes" id="midicon"></Icon>
                     <Dropdown-menu slot="list" v-if="role">
                         <Dropdown-item v-if="speak">全体禁言</Dropdown-item>
                         <Dropdown-item v-if="silence">取消全体禁言</Dropdown-item>
@@ -38,9 +38,8 @@
             </ul>
         </div>
         <div class="input">
-            <Input id="messageInput" v-model="message" placeHolder="Enter To Send">
-                <Button id="sendBtn" type="primary" slot="append" @click='send()'>Send</Button>
-            </Input>
+            <textarea id="messageInput" v-model="message" placeHolder="enter to send":disable='speak'></textarea>
+            <Button id="sendBtn" type="primary" size="small" @click='send()'>send</Button>
         </div>
     </div>
 </template>
@@ -166,29 +165,23 @@
                     console.log('234')
                 } else this.dialog2 = true
             },
-            banspeakall () {
+            speakall (name) {
                 if (role === true) {
                     if (name === '全体禁言') {
-                        this.socket.emit('allSilence', {room: this.ROOM})
+                        emitChat({type: 'allSilence'})
                     } else {
-                        this.socket.emit('allspeak', {room: this.ROOM})
+                        emitChat({type: 'allspeak'})
                     }
                 }
             },
             banspeakone (name) {
                 if (role === true) {
-                    this.socket.emit('silence', {
-                        username: name,
-                        room: this.ROOM
-                    })
+                    emitChat({type: 'silence', username: name})
                 }
             },
             outone (name) {
                 if (role === true) {
-                    this.socket.emit('out', {
-                        username: name,
-                        room: this.ROOM
-                    })
+                    emitChat({type: 'out', username: name})
                 }
             },
             cancel () {}
