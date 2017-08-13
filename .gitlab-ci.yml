@@ -16,3 +16,7 @@ testJob:
         - cd frontend/
         - cnpm install
         - cnpm run unit
+        - cd ..
+        - python3 ./manage.py makemigrations
+        - python3 ./manage.py migrate
+        - python3 ./manage.py test
