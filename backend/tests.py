@@ -17,12 +17,12 @@ from backend.myview.user_view import changeAvatar
 from backend.myview.user_view import changeGenderAndNickname
 from backend.myview.user_view import changePassword
 from backend.myview.user_view import getUserFromSession
-from backend.myview.punishment_base import banSpeakOne
+'''from backend.myview.punishment_base import banSpeakOne
 from backend.myview.punishment_base import banSpeakPublic
 from backend.myview.punishment_base import outOne
 from backend.myview.punishment_base import clean_table
 from backend.myview.punishment_base import is_out
-from backend.myview.punishment_base import is_ban_speak
+from backend.myview.punishment_base import is_ban_speak'''
 from django.contrib import auth
 import os
 import re
@@ -57,8 +57,8 @@ class UserTestCase(TestCase):
         self.assertTrue(test_phone('13752652469'))
         self.assertTrue(test_phone('13662197063'))
     def test_create_user_folder(self):
-        self.assertTrue(create_user_folder('23'))
-        self.assertTrue(create_user_folder('22'))
+        self.assertFalse(create_user_folder('23'))
+        self.assertFalse(create_user_folder('22'))
         self.assertEqual(create_user_folder('892670995@qq.com'),False)
         self.assertEqual(create_user_folder('13513616853'),False)
     def test_sendTo(self):
@@ -71,7 +71,7 @@ class UserTestCase(TestCase):
         user_json = json.dumps(user_dic)
         response=self.c.post('/signup/',user_json, content_type = "application/json")
         self.assertEqual(response.status_code, 400)
-class PunishmentTestCase(TestCase):
+'''class PunishmentTestCase(TestCase):
     def setUp(self):
         self.user1=User.objects.create_user(username='HIHA',password='1234',phone='15302178925')
         self.user2=User.objects.create_user(username='baobao',password='1234',phone='15222856278')
@@ -113,7 +113,7 @@ class PunishmentTestCase(TestCase):
         outOne(self.room1,self.user1)
         outOne(self.room1,self.user2)
         self.assertTrue(is_out(self.room1,self.user1))
-        self.assertEqual(is_out(self.room1,self.user3),False) 
+        self.assertEqual(is_out(self.room1,self.user3),False)'''
 class RoomViewTestCase(TestCase):
     def setUp(self):
         self.c = Client()
@@ -135,7 +135,7 @@ class RoomViewTestCase(TestCase):
         self.assertTrue(os.path.exists("frontend/static/rooms/unittest"))
         self.assertTrue(os.path.isdir("frontend/static/rooms/unittest"))
         self.assertTrue(os.path.isfile("frontend/static/rooms/unittest/log.txt"))
-    def test_create_get_end_room(self):
+    def test_create_get_end_room_amount(self):
         room = {"name" : "test_room1"}
         res = self.c.post('/createroom/',room)
         self.assertEqual(res.status_code, 200)
@@ -202,6 +202,14 @@ class RoomViewTestCase(TestCase):
         res = self.c.get('/getroom/', req)
         content = json.loads(res.content.decode('utf8'))
         self.assertEqual(len(content['rooms']), 1)
+
+        req = json.dumps({})
+        res = self.c.get('/getroomamount/', json.loads(req))
+        content = json.loads(res.content.decode('utf8'))
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(content['living_amount'], 1)
+        self.assertEqual(content['end_amount'], 2)
+
     def tearDown(self):
         pass
 
@@ -219,5 +227,9 @@ class ToolkitsTestCase(TestCase):
         result = toolkits.encode_json(True)
         self.assertTrue(result)
 
+    '''def test_bi2obj(self):
+        json_data = json.dumps({'bool': True, 'integer': 1, 'NoneType': None, 'Null': 'null', 'undefiend': 'undefiend'})
+        request = json.dumps({body:json_data})
+        pass'''
     def tearDown(self):
         pass
