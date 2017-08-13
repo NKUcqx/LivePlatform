@@ -47,9 +47,9 @@ def upload_slide(room_id, slide):
 def getRooms(request):
     rooms = LiveRoom.objects.order_by(request.GET.get('order_by','-audience_amount'))
     if('id' in request.GET):
-        rooms = rooms.filter(id = request.GET.get('id'))
+        rooms = rooms.filter(id = int(request.GET.get('id')))
     if('creater_id' in request.GET):
-        rooms = rooms.filter(creater_id = request.GET.get('creater_id'))
+        rooms = rooms.filter(creater_id = int(request.GET.get('creater_id')))
     if('is_living' in request.GET):
         rooms = rooms.filter(is_living = True if request.GET.get('is_living') == 'true' else False)
     if('limit' in request.GET):
@@ -68,6 +68,13 @@ def getRooms(request):
         file = item['slide_path'].split('/')
         item['slide_path'] = '/' + '/'.join(file[file.index('frontend') + 1 : ])
     return JsonResponse({'rooms': list(rooms_dict)})
+
+#@login_required
+@require_GET
+def getRoomAmount(request):
+    living_amount = LiveRoom.objects.room_living_count(is_living = True)
+    end_amount = LiveRoom.objects.room_living_count(is_living = False)
+    return JsonResponse({'living_amount': living_amount, 'end_amount': end_amount})
 
 @login_required
 @require_POST
