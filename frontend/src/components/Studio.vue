@@ -1,13 +1,14 @@
 <template>
     <div id="studio" :style="wholeHEIGHT">
-        <topbar id="topbar"></topbar>
+        <topbar TYPE="unstart" id="topbar"></topbar>
+        <div id="fortop"></div>
         <div id="left-part" ref="leftPart">
             <div id="infobar">
                 <img src="../assets/logo.png" id="teacher-avatar" alt="head-image" :width="img.size" :height="img.size" @click="avatarModal = true">
                 <div id="studio-info">
                     <div id="title">
                         <h2 id="title-content">{{roomInfo.title}}</h2>
-                        <Button id="switch-section" type="ghost" @click="emit()" v-if="isShow"><Icon type="arrow-swap"></Icon></Button>
+                        <Button id="switch-section" type="ghost" @click="changeSection()" v-if="isShow"><Icon type="arrow-swap"></Icon></Button>
                         <Button id="switch-section" type="ghost" @click="openMinor()" v-else><Icon type="android-open"></Icon></Button>
                     </div>
                     <div id="footer">
@@ -19,14 +20,38 @@
                 </div>
             </div>
             <div id="main-section" @mouseenter="isMouseOnMain = true" @mouseleave = "isMouseOnMain = false">
-                <close-button class="close-button" @close="closeMain" :isWork="(isWorkOnMain)?true:false" v-if="isMouseOnMain"></close-button>
-                <codedemo ref="code" :WIDTH="mainWIDTH" :HEIGHT="mainWIDTH * 0.65" @send="emitCode"></codedemo>
+                <close-button class="close-button" @close="closeMain" @change="changePanel" :isWork="(style<3)?true:false" v-if="isMouseOnMain"></close-button>
+
+                <keep-alive>
+                    <ppt :WIDTH="mainWIDTH" :HEIGHT="mainWIDTH * 0.65"  @send="emitCode" v-if="style===0"></ppt>
+                </keep-alive>
+                <keep-alive>
+                    <codedemo ref="code" :WIDTH="mainWIDTH" :HEIGHT="mainWIDTH * 0.65" @send="emitCode" v-if="style===1"></codedemo>
+                </keep-alive>
+                <keep-alive>
+                    <my-canvas ref="canvas" :WIDTH="mainWIDTH" :HEIGHT="mainWIDTH * 0.65" SIZE="" @send="emitCanvas" v-if="style===2"></my-canvas>
+                </keep-alive>
+                <keep-alive>
+                    <teacher-rtc  :WIDTH="mainWIDTH * 0.7" :HEIGHT="minorWIDTH * 0.65" v-if="style>2">
+                </teacher-rtc>
             </div>
         </div>
         <div id="right-part" ref="rightPart">
-            <div id="minor-section" ref="minor" v-if="isShow"  @mouseenter="isMouseOnMinor = true" @mouseleave = "isMouseOnMinor = false">
-                <close-button class="close-button" @close="closeMinor" :isWork="(isWorkOnMain)?false:true" v-if="isMouseOnMinor"></close-button>
-                <my-canvas ref="canvas" :WIDTH="mainWIDTH * 0.7" :HEIGHT="minorWIDTH * 0.65" SIZE="" @send="emitCanvas"></my-canvas>
+            <div id="minor-section" ref="minor" v-show="isShow"  @mouseenter="isMouseOnMinor = true" @mouseleave = "isMouseOnMinor = false">
+                <close-button class="close-button" @close="closeMinor"  @change="changePanel" :isWork="(style>2)?true:false" v-if="isMouseOnMinor"></close-button>
+
+                <keep-alive>
+                    <ppt :WIDTH="minorWIDTH" :HEIGHT="minorWIDTH * 0.65"  @send="emitCode" v-if="style===3"></ppt>
+                </keep-alive>
+                <keep-alive>
+                    <codedemo ref="code" :WIDTH="minorWIDTH" :HEIGHT="minorWIDTH * 0.65" @send="emitCode" v-if="style===4"></codedemo>
+                </keep-alive>
+                <keep-alive>
+                    <my-canvas ref="canvas" :WIDTH="minorWIDTH" :HEIGHT="minorWIDTH * 0.65" SIZE="" @send="emitCanvas" v-if="style===5"></my-canvas>
+                </keep-alive>
+                <keep-alive>
+                    <teacher-rtc  :WIDTH="minorWIDTH" :HEIGHT="minorWIDTH * 0.65" v-if="style<3"></teacher-rtc>
+                </keep-alive>
             </div>
             <div id="chat-section">
                 <chatdemo ref="chat" :ROLE="true" :USERNAME="user.nickname" :ROOM="100" :WIDTH="minorWIDTH" :HEIGHT="chatHeight" @send="emitChat"></chatdemo>
@@ -40,25 +65,40 @@
 import Topbar from './tinyComponents/Topbar'
 import MyCanvas from './tinyComponents/Canvas'
 import CloseButton from './tinyComponents/CloseButton'
+import TeacherRtc from './tinyComponents/TeacherRTC'
+import StudentRtc from './tinyComponents/StudentRTC'
 import Codedemo from './Codedemo'
 import Chatdemo from './Chat'
 import io from 'socket.io-client'
 import { mapGetters } from 'vuex'
 import { isValid } from '../utils/checks'
+import { beforePost } from '../utils/utils'
+
+const STYLESTATES = {
+    0: 'ppt and video',
+    1: 'code and video',
+    2: 'canvas and video',
+    3: 'video and ppt',
+    4: 'video and code',
+    5: 'video and canvas'
+}
+
 export default {
     components: {
         Topbar,
         MyCanvas,
         CloseButton,
         Codedemo,
-        Chatdemo
+        Chatdemo,
+        TeacherRtc,
+        StudentRtc
     },
     data () {
         return {
+            style: 1,
             isShow: true,
             isMouseOnMain: false,
             isMouseOnMinor: false,
-            isWorkOnMain: true,
             closePosition: {
                 right: '',
                 top: ''
@@ -77,7 +117,8 @@ export default {
                 title: 'Welcome To Our World',
                 teacher: 'gongyansongisgood',
                 audience: 3000,
-                room_id: ''
+                room_id: '',
+                creator_id: 0
             }
         }
     },
@@ -100,7 +141,23 @@ export default {
             this.chatHeight = this.$refs.leftPart.getBoundingClientRect().height - 20
         },
         changeSection () {
-            this.isWorkOnMain = (this.isWorkOnMain) ? false : true
+            this.style = (this.style < 3) ? this.style + 3 : this.style - 3
+        },
+        changePanel (index) {
+            this.style = (this.style < 3) ? index : index + 3
+        },
+        endRoom () {
+            console.log('endroom')
+            this.$http({
+                url: '/endroom/',
+                method: 'POST',
+                before: function (request) { beforePost(request) }
+            }).then(function (res) {
+                console.log('endroom')
+                this.$router.push({path: '/home'})
+            }, function (res) {
+                alert(res.status)
+            })
         },
         buildConnect () {
             this.socket = io('http://localhost:8002')
@@ -163,9 +220,10 @@ export default {
     created () {
         console.log(this.$route.params)
         this.roomInfo.id = this.$route.params.id
-        this.roomInfo.teacher = this.$route.params.creator
+        this.roomInfo.teacher = this.$route.params.creater_name
         this.roomInfo.audience = this.$route.params.audience_amount
         this.roomInfo.title = this.$route.params.name
+        this.roomInfo.creator_id = this.$route.params.creater
         //
     },
     mounted () {
@@ -184,20 +242,35 @@ export default {
             }
         })
         this.buildConnect()
+    },
+    beforeDestroy () {
+        console.log(this.roomInfo.creator_id, this.user.userid)
+        if (this.roomInfo.creator_id.toString() === this.user.userid.toString()) {
+            this.endRoom()
+        }
     }
 }
 </script>
 
 <style scoped>
+    #topbar {
+        min-width: 800px;
+        width: 100%;
+        position: fixed;
+        z-index: 60;
+        overflow: hidden;
+    }
+    #fortop{
+        min-width: 800px;
+        width: 100%;
+        height: 60px;
+    }
     #studio {
         width: 100%;
         min-width: 800px;
         min-height: 600px;
         text-align: left;
         background-color: rgb(239,239,239);
-    }
-    #topbar {
-        min-width: 800px;
     }
     #left-part {
         margin: 20px 5% 20px 5%; 
@@ -284,6 +357,9 @@ export default {
     }
     #minor-section {
         display: block;
+        width: 100%;
+        height: 0;
+        padding-bottom: 65%;
     }
     #chat-section {
         width: 100%;
