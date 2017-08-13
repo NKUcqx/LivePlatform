@@ -111,10 +111,10 @@ export default {
     mounted: function () {
         var _this = this
         this.editor = CodeMirror.fromTextArea(document.getElementById('codemirror'), _this.options)
-        this.editor.on('change', function (i, op) {
+        this.editor.on('change', function (cm) {
             console.log(i)
             console.log(op)
-            _this.send(op)
+            _this.send(cm)
             /* var nowvalue = cm.getValue()
             // wsSend(_this.socket, nowvalue)
             // _this.socket.emit('updateMessage',)
@@ -170,7 +170,7 @@ export default {
         receive (data) {
             // code(data.data)
             // console.log('codereceive'+data.data)
-            this.editor.replaceRange(data.data.text, data.data.from, data.data.to)
+            this.editor.setValue(data.data)
         }
     },
     watch: {
@@ -179,7 +179,7 @@ export default {
             if (newVal !== editorValue) {
                 this.skipNextChangeEvent = true
                 var scrollInfo = this.editor.getScrollInfo()
-                this.editor.setValue(newVal)
+                // this.editor.setValue(newVal)
                 this.editor.scrollTo(scrollInfo.left, scrollInfo.top)
             }
         },
