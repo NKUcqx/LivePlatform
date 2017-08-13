@@ -71,6 +71,49 @@ class UserTestCase(TestCase):
         user_json = json.dumps(user_dic)
         response=self.c.post('/signup/',user_json, content_type = "application/json")
         self.assertEqual(response.status_code, 400)
+class PunishmentTestCase(TestCase):
+    def setUp(self):
+        self.user1=User.objects.create_user(username='HIHA',password='1234',phone='15302178925')
+        self.user2=User.objects.create_user(username='baobao',password='1234',phone='15222856278')
+        self.user3=User.objects.create_user(username='xiaolaotou',password='1234',phone='13752652469')
+        self.user4=User.objects.create_user(username='chenqixiang',password='1234',email='892670992@qq.com')
+        self.room1=LiveRoom(name='toutouroom',creater=self.user3)
+        self.room1.save()
+        self.room2=LiveRoom(name='baobaoroom',creater=self.user2)
+        self.room2.save()
+    def test_banSpeakOne(self): 
+        banSpeakOne(self.room1,self.user1)
+        banSpeakOne(self.room1,self.user2)
+        punishment1=Punishment.objects.filter(room=self.room1,user=self.user1,punishment='S')
+        punishment2=Punishment.objects.filter(room=self.room1,user=self.user2,punishment='S')
+        self.assertEqual(len(punishment1),1)
+        self.assertEqual(len(punishment2),1)
+    def test_banSpeakPublic(self):
+        banSpeakPublic(self.room1,[self.user1,self.user2])
+        punishment1=Punishment.objects.filter(room=self.room1,punishment='S')
+        self.assertEqual(len(punishment1),2)
+    def test_outOne(self):
+        outOne(self.room2,self.user1)
+        outOne(self.room2,self.user2)
+        self.assertEqual(len(Punishment.objects.filter(room=self.room2,user=self.user1,punishment='K')),1)
+        self.assertEqual(len(Punishment.objects.filter(room=self.room2,user=self.user2,punishment='K')),1)
+    def test_clean_table(self):
+        banSpeakOne(self.room1,self.user1)
+        banSpeakOne(self.room2,self.user1)
+        outOne(self.room2,self.user1)
+        outOne(self.room2,self.user2)
+        clean_table(self.room1)
+        self.assertEqual(len(Punishment.objects.filter(room=self.room1)),0)
+    def test_is_ban_speak(self):
+        banSpeakOne(self.room1,self.user1)
+        banSpeakOne(self.room1,self.user2)
+        self.assertTrue(is_ban_speak(self.room1,self.user1))
+        self.assertEqual(is_ban_speak(self.room1,self.user3),False)
+    def test_is_out(self):
+        outOne(self.room1,self.user1)
+        outOne(self.room1,self.user2)
+        self.assertTrue(is_out(self.room1,self.user1))
+        self.assertEqual(is_out(self.room1,self.user3),False) 
 class RoomViewTestCase(TestCase):
     def setUp(self):
         self.c = Client()

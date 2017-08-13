@@ -20,17 +20,17 @@
             </div>
             <div id="main-section" @mouseenter="isMouseOnMain = true" @mouseleave = "isMouseOnMain = false">
                 <close-button class="close-button" @close="closeMain" :isWork="(isWorkOnMain)?true:false" v-if="isMouseOnMain"></close-button>
-                <my-canvas ref="canvas" :WIDTH="mainWIDTH" :HEIGHT="mainWIDTH * 0.65" SIZE="large" @send="emitCanvas"></my-canvas>
+                <codedemo ref="code" :WIDTH="mainWIDTH" :HEIGHT="mainWIDTH * 0.65" @send="emitCode"></codedemo>
             </div>
         </div>
         <div id="right-part" ref="rightPart">
             <div id="minor-section" ref="minor" v-if="isShow"  @mouseenter="isMouseOnMinor = true" @mouseleave = "isMouseOnMinor = false">
                 <close-button class="close-button" @close="closeMinor" :isWork="(isWorkOnMain)?false:true" v-if="isMouseOnMinor"></close-button>
-                <codedemo ref="code" :WIDTH="mainWIDTH * 0.7" :HEIGHT="minorWIDTH * 0.65" @send="emitCode"></codedemo>
+                <my-canvas ref="canvas" :WIDTH="mainWIDTH * 0.7" :HEIGHT="minorWIDTH * 0.65" SIZE="" @send="emitCanvas"></my-canvas>
             </div>
             <div id="chat-section">
-            <!--chat :WIDTH="minorWIDTH" :HEIGHT="chatHeight" :USERNAME="user.nickname" :ROLE="user.role" @send="emitCode"></chat-->
-                <img src="../../static/white.png" :width="minorWIDTH" :height="chatHeight">
+                <chatdemo ref="chat" :ROLE="true" :USERNAME="user.nickname" :ROOM="100" :WIDTH="minorWIDTH" :HEIGHT="chatHeight" @send="emitChat"></chatdemo>
+            
             </div>      
         </div>
     </div>
@@ -41,7 +41,7 @@ import Topbar from './tinyComponents/Topbar'
 import MyCanvas from './tinyComponents/Canvas'
 import CloseButton from './tinyComponents/CloseButton'
 import Codedemo from './Codedemo'
-import Chat from './Chat'
+import Chatdemo from './Chat'
 import io from 'socket.io-client'
 import { mapGetters } from 'vuex'
 import { isValid } from '../utils/checks'
@@ -51,7 +51,7 @@ export default {
         MyCanvas,
         CloseButton,
         Codedemo,
-        Chat
+        Chatdemo
     },
     data () {
         return {
@@ -105,8 +105,9 @@ export default {
         buildConnect () {
             this.socket = io('http://localhost:8002')
             this.listen('connect', () => {
-                this.emit('', null, 0, 'join')
+                this.emit(this.user.id, null, 0, '', 'join')
                 this.listen('loadHistory', (data) => {
+                    this.user.socketid = data.socketid
                     console.log('loadHistory: ', data)
                 })
                 this.listen('Error', (data) => { // this receiver will get error msg directly
@@ -118,28 +119,30 @@ export default {
             })
         },
         emitCanvas (data) {
-            this.emit(data, 'canvas', 2)
+            this.emit(data, 'canvas', 1)
         },
-        emitChat (data) {
-            this.emit(data, 'chat', 2)
+        emitChat (data, to = null) {
+            this.emit(data, 'chat', 2, to)
         },
         emitCode (data) {
-            this.emit(data, 'code', 1)
+            this.emit(data, 'code') // default is 1
         },
         emitSlide (data) {
-            this.emit(data, 'slide', 1)
+            this.emit(data, 'slide')
         },
-        emit (data, dataType, type = 1, signal = 'sendMessage') {
+        emit (data, dataType, type = 1, to = null, signal = 'sendMessage') { // to which user he wanna send to
             const pack = {
-                room_name: 'this.room_name',
-                nickname: 'this.nickname',
+                id: this.user.userid,
+                room_name: '26157be4ed7675ae7e8dfb82f169ba34',
                 content: {
+                    id: this.user.userid,
                     nickname: this.user.nickname,
                     data: data,
                     dataType: dataType
                 },
                 type: type,
-                signal: signal
+                signal: signal,
+                to: to // that user's id, once it is a valid id, server will use type 0 directly whatever the 'type' is !!!
             }
             this.socket.emit(signal, pack)
         },
@@ -185,6 +188,7 @@ export default {
     #studio {
         width: 100%;
         min-width: 800px;
+        min-height: 600px;
         text-align: left;
         background-color: rgb(239,239,239);
     }

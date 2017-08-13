@@ -59,7 +59,6 @@ class User(AbstractUser):
 #clean the liveroom hold by the leaving user
 @receiver(user_logged_out, sender = User)
 def cleanUserRoom(sender, **kwargs):
-    #print (kwargs['request'].user.id)
     for room in LiveRoom.objects.filter(creater_id = kwargs['request'].user.id, is_living = True):
         room.is_living = False
         room.save()
@@ -86,7 +85,7 @@ class LiveRoomManager(models.Manager):
     def room_creater_count(self, creater_id):
         return self.filter(creater_id = creater_id).count()
     def room_audience_count(self, amount_to, amount_from = 0):
-        return self.filter(audience_amount__gte = amount_from,audience_amount__lte = amount_to).count()
+        return self.filter(audience_amount__gte = amount_from, audience_amount__lte = amount_to).count()
     def room_living_count(self,is_living):
         return self.filter(is_living = is_living).count()
     def audience_count(self,room_id):
@@ -120,8 +119,9 @@ def checkEndAndLiving(sender, instance, **kwargs):
 
 @receiver(post_save, sender = LiveRoom)
 def checkDirExistence(sender, instance, **kwargs):
-    if(os.path.exists(os.path.join('frontend', 'static', 'rooms', instance.file_name)) is False):
+    if(not os.path.exists(instance.file_name)):
         os.makedirs(instance.file_name)
+    if(not os.path.exists(os.path.join(instance.file_name, 'log.txt'))):
         os.mknod(os.path.join(instance.file_name,'log.txt'))
 
 class Punishment(models.Model):
