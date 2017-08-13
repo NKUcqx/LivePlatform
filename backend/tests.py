@@ -3,7 +3,7 @@ from backend.myview import room_view, user_view, toolkits
 from backend.models import LiveRoom, User
 from django.utils import timezone
 from django.forms.models import model_to_dict
-from backend.models import User, Punishment, LiveRoom
+from backend.models import User,LiveRoom
 from backend.myview.user_view import random_str
 from backend.myview.user_view import test_phone
 from backend.myview.user_view import test_email
@@ -90,8 +90,6 @@ class UserTestCase(TestCase):
         response = self.c.post(
             '/signup/', user_json, content_type="application/json")
         self.assertEqual(response.status_code, 400)
-
-
 '''class PunishmentTestCase(TestCase):
     def setUp(self):
         self.user1=User.objects.create_user(username='HIHA',password='1234',phone='15302178925')
@@ -134,9 +132,7 @@ class UserTestCase(TestCase):
         outOne(self.room1,self.user1)
         outOne(self.room1,self.user2)
         self.assertTrue(is_out(self.room1,self.user1))
-        self.assertEqual(is_out(self.room1,self.user3),False)'''
-
-
+        self.assertEqual(is_out(self.room1,self.user3),False) '''
 class RoomViewTestCase(TestCase):
     def setUp(self):
         self.c = Client()
