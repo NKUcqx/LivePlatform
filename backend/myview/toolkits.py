@@ -49,7 +49,6 @@ def encode_json(obj):
         return ''
 
 def bi2obj(request):# in binary form
-    #if(request.method == "POST"):
     body_unicode = request.body.decode('utf-8')
     body = json.loads(body_unicode)
     return body
