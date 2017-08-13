@@ -33,6 +33,7 @@ module.exports = {
     'no-fallthrough': 0,
     'no-unneeded-ternary': 0,
     'no-undef': 0,
+    'valid-typeof': 0,
     'no-new-wrappers': 0
   }
 }

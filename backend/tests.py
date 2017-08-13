@@ -235,6 +235,13 @@ class RoomViewTestCase(TestCase):
         content = json.loads(res.content.decode('utf8'))
         self.assertEqual(len(content['rooms']), 1)
 
+        req = json.dumps({})
+        res = self.c.get('/getroomamount/', json.loads(req))
+        content = json.loads(res.content.decode('utf8'))
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(content['living_amount'], 1)
+        self.assertEqual(content['end_amount'], 2)
+
     def tearDown(self):
         pass
 
@@ -254,5 +261,9 @@ class ToolkitsTestCase(TestCase):
         result = toolkits.encode_json(True)
         self.assertTrue(result)
 
+    '''def test_bi2obj(self):
+        json_data = json.dumps({'bool': True, 'integer': 1, 'NoneType': None, 'Null': 'null', 'undefiend': 'undefiend'})
+        request = json.dumps({body:json_data})
+        pass'''
     def tearDown(self):
         pass

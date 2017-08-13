@@ -82,8 +82,15 @@ def getRooms(request):
         item['thumbnail_path'] = '/' + \
             '/'.join(file[file.index('frontend') + 1:])
         file = item['slide_path'].split('/')
-        item['slide_path'] = '/' + '/'.join(file[file.index('frontend') + 1:])
-    return JsonResponse({"rooms": list(rooms_dict)})
+        item['slide_path'] = '/' + '/'.join(file[file.index('frontend') + 1 : ])
+    return JsonResponse({'rooms': list(rooms_dict)})
+
+#@login_required
+@require_GET
+def getRoomAmount(request):
+    living_amount = LiveRoom.objects.room_living_count(is_living = True)
+    end_amount = LiveRoom.objects.room_living_count(is_living = False)
+    return JsonResponse({'living_amount': living_amount, 'end_amount': end_amount})
 
 
 @login_required
