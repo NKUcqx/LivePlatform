@@ -1,5 +1,5 @@
 <template>
-    <Carousel id="carousel" height="auto" v-model="page" trigger="click" arrow="never" :height="this.height">
+    <Carousel id="carousel" height="auto" v-model="page" trigger="click" arrow="never" :height="this.height" dots="none">
         <Carousel-item :height="this.height">
             <div class="demo-carousel" id="carousel1">
                 <login></login>

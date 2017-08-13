@@ -35,6 +35,7 @@ export default {
         var _this = this
         console.log(this.options)
         this.editor = CodeMirror.fromTextArea(this.$el, this.options)
+        this.editor.setSize('100%', '100%')
         this.editor.on('change', function (cm) {
             var nowvalue = cm.getValue()
             // wsSend(_this.socket, nowvalue)
