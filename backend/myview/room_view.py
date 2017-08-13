@@ -67,7 +67,7 @@ def getRooms(request):
         item['thumbnail_path'] = '/' + '/'.join(file[file.index('frontend') + 1 : ])
         file = item['slide_path'].split('/')
         item['slide_path'] = '/' + '/'.join(file[file.index('frontend') + 1 : ])
-    return JsonResponse({"rooms": list(rooms_dict)})
+    return JsonResponse({'rooms': list(rooms_dict)})
 
 @login_required
 @require_POST
