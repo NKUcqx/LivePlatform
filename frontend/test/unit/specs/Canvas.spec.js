@@ -3,7 +3,7 @@ import Vue from 'vue'
 import { getPropsVm, getRenderedVm } from './utils.js'
 let assert = require("assert")
 
-describe('画板工具栏按钮', function() {
+describe('画板工具栏按钮', function () {
     let canvasVm = getRenderedVm(Canvas)
     let toolButton = canvasVm.$el.querySelector('#show-tool')
     it('画板工具栏按钮加载情况', function() {
