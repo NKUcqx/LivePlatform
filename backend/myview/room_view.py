@@ -19,7 +19,8 @@ def generate_room_path():
     now = now.strftime('%Y%M%d%H%m%S') + str(random.uniform(0,10))
     md5 = hashlib.md5()
     md5.update(now.encode('utf-8'))
-    return md5.hexdigest()
+    name = md5.hexdigest()
+    return os.path.join('frontend', 'static', 'rooms', name)
 
 def create_folder(file_name):
     if(os.path.exists(os.path.join('frontend/static/rooms/' , file_name))):
