@@ -1,7 +1,7 @@
 import * as messages from '../../../src/utils/messages.js'
 let assert = require('assert')
 
-describe('makeCanvasInfo()', function() {
+describe('makeCanvasInfo()', function () {
     let parameter1 = {
         type: 'pen',
         ox: 6,
@@ -10,14 +10,14 @@ describe('makeCanvasInfo()', function() {
         ey: 6,
         width: 6,
         fontSize: 6,
-        text:'hello',
+        text: 'hello',
         color: {
             hex: '#666666',
             a: 6
         },
         isFill: true
     }
-    it('正常传入所有参数', function() {
+    it('正常传入所有参数', function () {
         assert.equal('pen', messages.makeCanvasInfo(parameter1).type)
         assert.deepEqual([6, 6], messages.makeCanvasInfo(parameter1).start)
         assert.deepEqual([6, 6], messages.makeCanvasInfo(parameter1).end)
@@ -34,13 +34,13 @@ describe('makeCanvasInfo()', function() {
         oy: 6,
         ex: 6,
         fontSize: 6,
-        text:'hello',
+        text: 'hello',
         color: {
             hex: '#666666',
             a: 6
         }
     }
-    it('少传入部分参数', function() {
+    it('少传入部分参数', function () {
         assert.equal('pen', messages.makeCanvasInfo(parameter2).type)
         assert.deepEqual([6, 6], messages.makeCanvasInfo(parameter2).start)
         assert.equal(undefined, messages.makeCanvasInfo(parameter2).end)
@@ -59,14 +59,14 @@ describe('makeCanvasInfo()', function() {
         ey: 6,
         width: 6,
         fontSize: 6,
-        text:'',
+        text: '',
         color: {
             hex: '',
             a: 0
         },
         isFill: false
     }
-    it('参数传入空值', function() {
+    it('参数传入空值', function () {
         assert.equal('', messages.makeCanvasInfo(parameter3).type)
         assert.equal(undefined, messages.makeCanvasInfo(parameter3).start)
         assert.deepEqual([6, 6], messages.makeCanvasInfo(parameter3).end)
@@ -92,7 +92,7 @@ describe('makeCanvasInfo()', function() {
         },
         isFill: null
     }
-    it('参数传入null', function() {
+    it('参数传入null', function () {
         assert.equal(null, messages.makeCanvasInfo(parameter4).type)
         assert.equal(undefined, messages.makeCanvasInfo(parameter4).start)
         assert.equal(undefined, messages.makeCanvasInfo(parameter4).end)
