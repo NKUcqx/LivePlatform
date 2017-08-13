@@ -113,7 +113,7 @@ class UserTestCase(TestCase):
         outOne(self.room1,self.user1)
         outOne(self.room1,self.user2)
         self.assertTrue(is_out(self.room1,self.user1))
-        self.assertEqual(is_out(self.room1,self.user3),False)''' 
+        self.assertEqual(is_out(self.room1,self.user3),False)'''
 class RoomViewTestCase(TestCase):
     def setUp(self):
         self.c = Client()
@@ -135,7 +135,7 @@ class RoomViewTestCase(TestCase):
         self.assertTrue(os.path.exists("frontend/static/rooms/unittest"))
         self.assertTrue(os.path.isdir("frontend/static/rooms/unittest"))
         self.assertTrue(os.path.isfile("frontend/static/rooms/unittest/log.txt"))
-    def test_create_get_end_room(self):
+    def test_create_get_end_room_amount(self):
         room = {"name" : "test_room1"}
         res = self.c.post('/createroom/',room)
         self.assertEqual(res.status_code, 200)
@@ -202,6 +202,14 @@ class RoomViewTestCase(TestCase):
         res = self.c.get('/getroom/', req)
         content = json.loads(res.content.decode('utf8'))
         self.assertEqual(len(content['rooms']), 1)
+
+        req = json.dumps({})
+        res = self.c.get('/getroomamount/', json.loads(req))
+        content = json.loads(res.content.decode('utf8'))
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(content['living_amount'], 1)
+        self.assertEqual(content['end_amount'], 2)
+
     def tearDown(self):
         pass
 
@@ -219,5 +227,9 @@ class ToolkitsTestCase(TestCase):
         result = toolkits.encode_json(True)
         self.assertTrue(result)
 
+    '''def test_bi2obj(self):
+        json_data = json.dumps({'bool': True, 'integer': 1, 'NoneType': None, 'Null': 'null', 'undefiend': 'undefiend'})
+        request = json.dumps({body:json_data})
+        pass'''
     def tearDown(self):
         pass
