@@ -111,10 +111,13 @@ export default {
     mounted: function () {
         var _this = this
         this.editor = CodeMirror.fromTextArea(document.getElementById('codemirror'), _this.options)
-        this.editor.on('change', function (i, op) {
-            console.log(i)
-            console.log(op)
-            _this.send(op)
+        this.editor.on('change', function (cm) {
+            // console.log(i)
+            // console.log(op)
+            _this.send({
+                type: 'code',
+                data: cm.getValue()
+            })
             /* var nowvalue = cm.getValue()
             // wsSend(_this.socket, nowvalue)
             // _this.socket.emit('updateMessage',)
@@ -127,15 +130,8 @@ export default {
                 _this.$emit('input', cm.getValue())
             } */
         })
-        this.socket = wsConnect('/websocket/', (e) => {
-            var select = document.getElementById('select')
-            for (var i = 0; i < select.options.length; i++) {
-                if (select.options[i].value === e.data) {
-                    select.options[i].selected = true
-                    break
-                }
-            }
-        })
+        /* this.socket = wsConnect('/websocket/', (e) => { 
+        }) */
     },
     methods: {
         change: function (code) {
@@ -161,7 +157,11 @@ export default {
             }
             console.log('options.mode:' + this.options.mode)
             this.value = 'code here'
-            wsSend(this.socket, value)
+            // wsSend(this.socket, value)
+            this.send({
+                type: 'lang',
+                data: value
+            })
         },
         send (data) {
             this.$emit('send', data)
@@ -170,7 +170,19 @@ export default {
         receive (data) {
             // code(data.data)
             // console.log('codereceive'+data.data)
-            this.editor.replaceRange(data.data.text, data.data.from, data.data.to)
+            console.log('receive' + data.data.type)
+            if (data.data.type === 'code') {
+                // this.editor.setValue(data.data.data)
+                console.log('setValue' + data.data.data)
+            } else {
+                var select = document.getElementById('select')
+                for (var i = 0; i < select.options.length; i++) {
+                    if (select.options[i].value === data.data.data) {
+                        select.options[i].selected = true
+                        break
+                    }
+                }
+            }
         }
     },
     watch: {
@@ -179,7 +191,7 @@ export default {
             if (newVal !== editorValue) {
                 this.skipNextChangeEvent = true
                 var scrollInfo = this.editor.getScrollInfo()
-                this.editor.setValue(newVal)
+                // this.editor.setValue(newVal)
                 this.editor.scrollTo(scrollInfo.left, scrollInfo.top)
             }
         },

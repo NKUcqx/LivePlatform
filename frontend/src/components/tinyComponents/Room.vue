@@ -1,6 +1,6 @@
 <template>
 <div id="roomitem" @click="enterRoom()">
-    <div id="scene">
+    <div id="scene" :style="background">
         <div id="gray">
         <div id="icon">
         </div>
@@ -8,7 +8,7 @@
     </div>
     <div id="footer">
         <span id="title">{{ item.name }}</span>
-        <span id="teacher"><Icon type="person"></Icon> {{ item.creater }}</span>
+        <span id="teacher"><Icon type="person"></Icon> {{ item.creater_name }}</span>
         <span id="audiences" v-if="item.is_living">
             <Icon type="eye"></Icon>
             {{ item.audience_amount }}
@@ -26,12 +26,21 @@ export default {
     props: {
         item: Object
     },
+    data () {
+        return {
+            background: {
+                backgroundImage: ''
+            }
+        }
+    },
     methods: {
         enterRoom () {
             this.$router.push({ name: 'studio', params: this.item })
         }
     },
     mounted () {
+        this.background.backgroundImage = 'url(' + this.item.thumbnail_path + ')'
+        console.log(this.background.backgroundImage)
     }
 }
 </script>
@@ -49,7 +58,6 @@ export default {
 #scene {
     background-repeat: no-repeat;
     background-size: 100% 100%;
-    background-image: url(../../assets/v1.jpg);
     height: 150px;
 }
 
