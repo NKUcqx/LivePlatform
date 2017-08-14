@@ -30,14 +30,14 @@
                     <ppt :WIDTH="workSize.width" :HEIGHT="workSize.height" @send="emitCode" v-if="style===0||style===3"></ppt>
                 </keep-alive>
                 <keep-alive>
-                    <codedemo ref="code" :WIDTH="workSize.width" :HEIGHT="workSize.height" @send="emitCode" v-if="style===1||style===4"></codedemo>
+                    <codedemo ref="code" :WIDTH="workSize.width" :HEIGHT="workSize.height" :CREATORID="roomInfo.creator_id" @send="emitCode" v-if="style===1||style===4"></codedemo>
                 </keep-alive>
                 <keep-alive>
                     <my-canvas ref="canvas" SIZE="" @send="emitCanvas" :WIDTH="workSize.width" :HEIGHT="workSize.height" id="canvas" v-if="style===2||style===5"></my-canvas>
                 </keep-alive>
             </div>
             <div :class="chatClass">
-                <chatdemo ref="chat" :ROLE="true" :USERNAME="user.nickname" :ROOM="100" :WIDTH="chatSize.width" :HEIGHT="chatSize.height" @send="emitChat"></chatdemo>     
+                <chatdemo ref="chat" :ROLE="roomInfo.creator_id" :USERNAME="user.nickname" :ROOM="100" :WIDTH="chatSize.width" :HEIGHT="chatSize.height" @send="emitChat"></chatdemo>     
             </div> 
     </div>
 </template>
@@ -82,7 +82,7 @@ export default {
     },
     data () {
         return {
-            style: 2,
+            style: 1,
             type: 1,
             closePosition: {
                 right: '',
