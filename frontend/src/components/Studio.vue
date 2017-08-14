@@ -54,7 +54,6 @@ import io from 'socket.io-client'
 import { mapGetters } from 'vuex'
 import { isValid } from '../utils/checks'
 import { beforePost } from '../utils/utils'
-import { Waterfall, WaterfallSlot } from 'vue-waterfall'
 
 const STYLESTATES = {
     0: 'ppt and video',
