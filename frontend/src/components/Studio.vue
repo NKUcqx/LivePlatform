@@ -297,9 +297,6 @@ export default {
         vertical-align:left;
         overflow: hidden;
     }
-    #waterfall {
-        height: 500px;
-    }
     .left-part {
         margin: 20px 5% 20px 5%; 
         display: inline-block;
