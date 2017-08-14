@@ -1,19 +1,20 @@
 <template>
 <div>
-    <div id="relative" ref="relative"></div>
-    <div id="switch" :style="position">
-    <Poptip trigger="hover" content="PPT" class="poptip" v-if="isWork">
-        <span class="switch-item" id="canvas-item" @click="changePanel(0)"><Icon type="ios-checkmark-empty" size="0" class="icon"></Icon></span>
-    </Poptip>
-    <Poptip trigger="hover" content="Code" class="poptip" v-if="isWork">
-        <span class="switch-item" id="ppt-item" @click="changePanel(1)"><Icon type="ios-checkmark-empty" size="0" class="icon"></Icon></span>
-    </Poptip>
-    <Poptip trigger="hover" content="Canvas" class="poptip" v-if="isWork">
-        <span class="switch-item" id="code-item" @click="changePanel(2)"><Icon type="ios-checkmark-empty" size="0" class="icon"></Icon></span>
-    </Poptip>
-    <Poptip trigger="hover" content="Close" class="poptip">
-        <span class="switch-item" id="close-button" @click="closePanel"><Icon type="ios-close-empty" size="5" class="icon"></Icon></span>
-    </Poptip>
+    <div id="relative" ref="relative">
+        <div id="switch">
+            <Poptip trigger="hover" content="PPT" class="poptip" v-if="isWork" placement="bottom">
+                <span class="switch-item" id="canvas-item" @click="changePanel(0)"><Icon type="ios-checkmark-empty" size="5" class="icon"></Icon></span>
+            </Poptip>
+            <Poptip trigger="hover" content="Code" class="poptip" v-if="isWork" placement="bottom">
+                <span class="switch-item" id="ppt-item" @click="changePanel(1)"><Icon type="ios-checkmark-empty" size="5" class="icon"></Icon></span>
+            </Poptip>
+            <Poptip trigger="hover" content="Canvas" class="poptip" v-if="isWork" placement="bottom">
+                <span class="switch-item" id="code-item" @click="changePanel(2)"><Icon type="ios-checkmark-empty" size="5" class="icon"></Icon></span>
+            </Poptip>
+            <Poptip trigger="hover" content="Close" class="poptip" id="close-piptip" placement="bottom">
+                <span class="switch-item" id="close-button" @click="closePanel"><Icon type="ios-close-empty" size="5" class="icon"></Icon></span>
+            </Poptip>
+        </div>
     </div>
 </div>
 </template>
@@ -28,11 +29,6 @@
         },
         data () {
             return {
-                distance: 26,
-                position: {
-                    left: '50px',
-                    top: '50px'
-                }
             }
         },
         methods: {
@@ -44,15 +40,6 @@
             }
         },
         mounted () {
-            this.distance = (this.isWork) ? 78 : 26
-            this.position.left = (this.$refs.relative.offsetLeft - this.distance).toString() + 'px'
-            this.position.top = (this.$refs.relative.offsetTop + 3).toString() + 'px'
-            window.addEventListener('resize', () => {
-                if (this.$refs.relative) {
-                    this.position.left = (this.$refs.relative.offsetLeft - this.distance).toString() + 'px'
-                    this.position.top = (this.$refs.relative.offsetTop + 3).toString() + 'px'
-                }
-            })
         }
     }
 </script>
@@ -65,9 +52,12 @@
     }
     #switch {
         display: block;
-        position: absolute;
+        position: relative;
+        top: 3px;
+        left: -78px;
         height: 14px;
-        z-index: 999;
+        z-index: 5;
+        width: 75px;
     }
     .switch-item {
         display: inline-block;
@@ -90,6 +80,9 @@
     #close-button {
         margin-left: 6px;
         background-color: rgb(237,63,20);
+    }
+    #close-piptip {
+        float: right;
     }
     .poptip {
         text-align: center;

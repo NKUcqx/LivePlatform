@@ -1,14 +1,13 @@
 <template>
-    <div id="studio" :style="wholeHEIGHT">
+    <div id="studio" :style="wholeSize">
         <topbar TYPE="unstart" id="topbar"></topbar>
         <div id="fortop"></div>
-        <div id="left-part" ref="leftPart">
-            <div id="infobar">
+            <div class="infobar left-part">
                 <img src="../assets/logo.png" id="teacher-avatar" alt="head-image" :width="img.size" :height="img.size" @click="avatarModal = true">
                 <div id="studio-info">
                     <div id="title">
                         <h2 id="title-content">{{roomInfo.title}}</h2>
-                        <Button id="switch-section" type="ghost" @click="changeSection()" v-if="isShow"><Icon type="arrow-swap"></Icon></Button>
+                        <Button id="switch-section" type="ghost" @click="changeSection()" v-if="type===1"><Icon type="arrow-swap"></Icon></Button>
                         <Button id="switch-section" type="ghost" @click="openMinor()" v-else><Icon type="android-open"></Icon></Button>
                     </div>
                     <div id="footer">
@@ -19,45 +18,27 @@
                     </div>
                 </div>
             </div>
-            <div id="main-section" @mouseenter="isMouseOnMain = true" @mouseleave = "isMouseOnMain = false">
-                <close-button class="close-button" @close="closeMain" @change="changePanel" :isWork="(style<3)?true:false" v-if="isMouseOnMain"></close-button>
-
+            <div :class="vedioClass" v-show="isVedioShow">
+                <close-button class="close-button" @close="closeVideo()"  @change="changePanel" :isWork="false"></close-button>
                 <keep-alive>
-                    <ppt :WIDTH="mainWIDTH" :HEIGHT="mainWIDTH * 0.65"  @send="emitCode" v-if="style===0"></ppt>
-                </keep-alive>
-                <keep-alive>
-                    <codedemo ref="code" :WIDTH="mainWIDTH" :HEIGHT="mainWIDTH * 0.65" @send="emitCode" v-if="style===1"></codedemo>
-                </keep-alive>
-                <keep-alive>
-                    <my-canvas ref="canvas" :WIDTH="mainWIDTH" :HEIGHT="mainWIDTH * 0.65" SIZE="" @send="emitCanvas" v-if="style===2"></my-canvas>
-                </keep-alive>
-                <keep-alive>
-                    <teacher-rtc  :WIDTH="mainWIDTH * 0.7" :HEIGHT="minorWIDTH * 0.65" v-if="style>2">
-                </teacher-rtc>
-            </div>
-        </div>
-        <div id="right-part" ref="rightPart">
-            <div id="minor-section" ref="minor" v-show="isShow"  @mouseenter="isMouseOnMinor = true" @mouseleave = "isMouseOnMinor = false">
-                <close-button class="close-button" @close="closeMinor"  @change="changePanel" :isWork="(style>2)?true:false" v-if="isMouseOnMinor"></close-button>
-
-                <keep-alive>
-                    <ppt :WIDTH="minorWIDTH" :HEIGHT="minorWIDTH * 0.65"  @send="emitCode" v-if="style===3"></ppt>
-                </keep-alive>
-                <keep-alive>
-                    <codedemo ref="code" :WIDTH="minorWIDTH" :HEIGHT="minorWIDTH * 0.65" @send="emitCode" v-if="style===4"></codedemo>
-                </keep-alive>
-                <keep-alive>
-                    <my-canvas ref="canvas" :WIDTH="minorWIDTH" :HEIGHT="minorWIDTH * 0.65" SIZE="" @send="emitCanvas" v-if="style===5"></my-canvas>
-                </keep-alive>
-                <keep-alive>
-                    <teacher-rtc  :WIDTH="minorWIDTH" :HEIGHT="minorWIDTH * 0.65" v-if="style<3"></teacher-rtc>
+                    <teacher-rtc  :WIDTH="vedioSize.width" :HEIGHT="vedioSize.height"></teacher-rtc>
                 </keep-alive>
             </div>
-            <div id="chat-section">
-                <chatdemo ref="chat" :ROLE="true" :USERNAME="user.nickname" :ROOM="100" :WIDTH="minorWIDTH" :HEIGHT="chatHeight" @send="emitChat"></chatdemo>
-            
-            </div>      
-        </div>
+            <div :class="workClass" v-show="isWorkShow">
+                <close-button class="close-button" @close="closeWork()" @change="changePanel" :isWork="true"></close-button>
+                <keep-alive>
+                    <ppt :WIDTH="workSize.width" :HEIGHT="workSize.height" @send="emitCode" v-if="style===0||style===3"></ppt>
+                </keep-alive>
+                <keep-alive>
+                    <codedemo ref="code" :WIDTH="workSize.width" :HEIGHT="workSize.height" @send="emitCode" v-if="style===1||style===4"></codedemo>
+                </keep-alive>
+                <keep-alive>
+                    <my-canvas ref="canvas" SIZE="" @send="emitCanvas" :WIDTH="workSize.width" :HEIGHT="workSize.height" id="canvas" v-if="style===2||style===5"></my-canvas>
+                </keep-alive>
+            </div>
+            <div :class="chatClass">
+                <chatdemo ref="chat" :ROLE="true" :USERNAME="user.nickname" :ROOM="100" :WIDTH="chatSize.width" :HEIGHT="chatSize.height" @send="emitChat"></chatdemo>     
+            </div> 
     </div>
 </template>
 
@@ -83,6 +64,12 @@ const STYLESTATES = {
     5: 'video and canvas'
 }
 
+const TYPESTATES = {
+    0: 'work and chat',
+    1: 'work and video and chat',
+    2: 'video and chat,'
+}
+
 export default {
     components: {
         Topbar,
@@ -95,20 +82,17 @@ export default {
     },
     data () {
         return {
-            style: 1,
-            isShow: true,
-            isMouseOnMain: false,
-            isMouseOnMinor: false,
+            style: 2,
+            type: 1,
             closePosition: {
                 right: '',
                 top: ''
             },
-            wholeHEIGHT: {
-                height: ''
+            wholeSize: {
+                width: '100%',
+                height: 0 + 'px'
             },
-            mainWIDTH: 0,
-            minorWIDTH: 0,
-            chatHeight: 0,
+            WIDTH: 0,
             img: {
                 size: 50
             },
@@ -125,20 +109,65 @@ export default {
     computed: {
         ...mapGetters({
             user: 'getUser'
-        })
+        }),
+        workClass () {
+            return (this.style < 3) ? 'main-section left-part' : 'minor-section right-part relative'
+        },
+        vedioClass () {
+            return (this.style >= 3) ? 'main-section left-part' : 'minor-section right-part'
+        },
+        chatClass () {
+            let str = 'chat-section right-part'
+            if (this.style >= 3 || this.type !== 1) {
+                str += ' relative'
+            }
+            return str
+        },
+        isWorkShow () {
+            return (this.type <= 1) ? true : false
+        },
+        isVedioShow () {
+            return (this.type >= 1) ? true : false
+        },
+        workSize () {
+            return {
+                width: (this.style < 3) ? this.WIDTH * 0.5 : this.WIDTH * 0.35,
+                height: (this.style < 3) ? this.WIDTH * 0.5 * 0.65 : this.WIDTH * 0.35 * 0.65
+            }
+        },
+        vedioSize () {
+            return {
+                width: (this.style >= 3) ? this.WIDTH * 0.5 : this.WIDTH * 0.35,
+                height: (this.style >= 3) ? this.WIDTH * 0.5 * 0.65 : this.WIDTH * 0.35 * 0.65
+            }
+        },
+        chatSize () {
+            return {
+                width: this.WIDTH * 0.35,
+                height: (this.type === 1) ? this.WIDTH * 0.195 * 0.5 + 90 : this.WIDTH * 0.5 * 0.65 + 100
+            }
+        }
     },
     methods: {
         openMinor () {
-            this.isShow = true
-            this.chatHeight = this.$refs.leftPart.getBoundingClientRect().width * 0.195 + 90
+            this.type = 1
         },
-        closeMain () {
-            this.isShow = false
-            this.chatHeight = this.$refs.leftPart.getBoundingClientRect().height - 20
+        closeWork () {
+            if (this.style < 3 && this.type === 1) {
+                this.changeSection()
+                this.type = 2
+            } else if (this.style >= 3 && this.type === 1) {
+                this.type = 2
+            }
         },
-        closeMinor () {
-            this.isShow = false
-            this.chatHeight = this.$refs.leftPart.getBoundingClientRect().height - 20
+        closeVideo () {
+            console.log(this.type)
+            if (this.style >= 3 && this.type === 1) {
+                this.changeSection()
+                this.type = 0
+            } else if (this.style < 3 && this.type === 1) {
+                this.type = 0
+            }
         },
         changeSection () {
             this.style = (this.style < 3) ? this.style + 3 : this.style - 3
@@ -191,7 +220,7 @@ export default {
         emitSlide (data) {
             this.emit(data, 'slide')
         },
-        emit (data, dataType, to = null, type = 1,  signal = 'sendMessage') { // to which user he wanna send to
+        emit (data, dataType, to = null, type = 1, signal = 'sendMessage') { // to which user he wanna send to
             const pack = {
                 id: this.user.userid,
                 room_name: 'static/rooms/51e2593b505c8ed141ee3f500f2691b4',
@@ -227,19 +256,11 @@ export default {
         //
     },
     mounted () {
-        this.mainWIDTH = this.$refs.leftPart.getBoundingClientRect().width
-        this.minorWIDTH = this.$refs.leftPart.getBoundingClientRect().width * 0.7
-        this.chatHeight = this.$refs.leftPart.getBoundingClientRect().width * 0.195 + 90
-        this.wholeHEIGHT.height = document.documentElement.clientHeight.toString() + 'px'
+        this.WIDTH = document.documentElement.clientWidth
+        this.wholeSize.height = document.documentElement.clientHeight.toString() + 'px'
         window.addEventListener('resize', () => {
-            this.mainWIDTH = this.$refs.leftPart.getBoundingClientRect().width
-            this.minorWIDTH = this.$refs.leftPart.getBoundingClientRect().width * 0.7
-            this.wholeHEIGHT.height = document.documentElement.clientHeight.toString() + 'px'
-            if (this.isShow) {
-                this.chatHeight = this.$refs.leftPart.getBoundingClientRect().width * 0.195 + 90
-            } else {
-                this.chatHeight = this.$refs.leftPart.getBoundingClientRect().height - 20
-            }
+            this.WIDTH = document.documentElement.clientWidth
+            this.wholeSize.height = document.documentElement.clientHeight.toString() + 'px'
         })
         this.buildConnect()
     },
@@ -271,15 +292,17 @@ export default {
         min-height: 600px;
         text-align: left;
         background-color: rgb(239,239,239);
+        vertical-align:left;
+        overflow: hidden;
     }
-    #left-part {
+    .left-part {
         margin: 20px 5% 20px 5%; 
         display: inline-block;
         width: 50%;
         min-width: 400px;
+        float: left;
     }
-    #infobar {
-        width: 100%;
+    .infobar {
         height: 80px;
         border: 1px solid rgb(241,241,241);
     }
@@ -335,39 +358,33 @@ export default {
         float: left;
         height: 24px;
     }
-    #main-section {
-        margin: 30px 0px 0px 0px;
-        width: 100%;
+    .main-section {
         height: 0;
-        padding-bottom: 65%;
+        padding-bottom: calc( 65% * 0.5 );
         background-color: white;
     }
-    #right-part {
-        margin: 20px 5% 20px 0%; 
+    .right-part {
         display: inline-block;
         width: 35%;
         min-width: 280px;
         float: right;
     }
-    #infobar, #minor-section, #chat-section, #main-section {
+    .infobar, .minor-section, .chat-section, .main-section {
         -moz-box-shadow:2px 2px 10px #A1A1A1;
         -webkit-box-shadow:2px 2px 10px #A1A1A1; 
         box-shadow: 2px 2px 10px #A1A1A1;
         background-color: white;
     }
-    #minor-section {
-        display: block;
-        width: 100%;
+    .minor-section {
+        margin: 20px 5% 0px 0%; 
         height: 0;
-        padding-bottom: 65%;
+        padding-bottom: calc( 65% * 0.35 );
     }
-    #chat-section {
-        width: 100%;
-        display: block;
-        margin: 10px 0px 0px 0px;
+    .chat-section {
+        margin: 30px 5% 0px 0%; 
     }
-    #chat-close {
-        position: absolute;
-        color: red;
+    .relative {
+        position: relative !important;
+        top: -120px;
     }
 </style>
