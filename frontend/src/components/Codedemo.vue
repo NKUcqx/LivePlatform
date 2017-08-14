@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { wsConnect, wsSend, wsClose } from '../utils/websockets'
+import { mapGetters } from 'vuex'
 var CodeMirror = require('../../node_modules/codemirror/lib/codemirror.js')
 require('../../node_modules/codemirror/lib/codemirror.css')
 
@@ -64,6 +64,10 @@ export default {
         HEIGHT: {
             type: Number,
             default: 400
+        },
+        CREATORID: {
+            type: Number,
+            default: 0
         }
     },
     data () {
@@ -82,22 +86,19 @@ export default {
             }
         }
     },
-    ready: function () {
-        var _this = this
-        this.editor = CodeMirror.fromTextArea(document.getElementById('codemirror'), _this.options)
-        this.editor.setValue(_this.value)
-        this.editor.on('change', function (cm) {
-            if (_this.skipNextChangeEvent) {
-                _this.skipNextChangeEvent = false
-                return
-            }
-            _this.value = cm.getValue()
-            if (_this.$emit) {
-                _this.$emit('change', cm.getValue())
-            }
+    computed: {
+        ...mapGetters({
+            user: 'getUser'
         })
     },
     mounted: function () {
+        /*
+        你现在如果需要对比当前用户是不是房间的创建者，只需要判断user.userid === CREATERID
+        */
+            console.log('creator:', this.CREATORID)
+            console.log('user: ', this.user.userid)
+            console.log('by gongyansong')
+
         var _this = this
         this.editor = CodeMirror.fromTextArea(document.getElementById('codemirror'), _this.options)
         this.editor.on('change', function (cm) {
