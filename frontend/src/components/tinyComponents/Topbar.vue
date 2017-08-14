@@ -8,9 +8,21 @@
             教育直播平台
         </Menu-item>
         <Menu-item name="2" class="top-right">
-            <span @click="logout()" id="logout"><Icon type="power" size="20" color="rgb(210,100,100)"></Icon></span>
+            <span id="createroom" @click="createModal = true"><Icon type="ios-plus" size="30" color="#5cadff" v-if="TYPE === 'home'"></Icon></span>
+            <span id="createroom"><Icon type="ios-play" size="30" color="rgb(0,180,0)" v-if="TYPE === 'unstart'"></Icon></span>
+            <span id="createroom"><Icon type="ios-close" size="30" color="rgb(210,100,100)" v-if="TYPE === 'started'"></Icon></span>
+            <Modal v-model="createModal" title="Create Room" :width="400" @on-ok="createRoom()">
+                <Form ref="createForm" :model="createForm" :rules="ruleRoomname" :label-width="80">
+                    <Form-item label="title:" prop="roomname">
+                        <Input v-model="createForm.title" size="large" placeholder="Title"></Input>
+                    </Form-item>
+                    <Form-item label="teacher:">
+                        <Input v-model="user.username" size="large" placeholder="Teacher" disabled></Input>
+                    </Form-item>
+                </Form>
+            </Modal>
         </Menu-item>
-        <Submenu name="3" class="top-right">
+        <Submenu name="3" class="top-right" id="submenu">
             <template slot="title">
                 <Icon type="ios-paper"></Icon>
                 个人中心
@@ -39,7 +51,7 @@
                 </Form>
             </Modal>
             <Menu-item name="3-4" class="menu-item">
-                <span @click="modal = true" class="item">修改密码</span>
+                <span @click="modal = true" class="item">Modify Password</span>
                 <Modal v-model="modal" title="修改密码" :width="400" @on-ok="modifyPass()">
                     <Form  ref="modifyForm" :model="form" :rules="ruleNewpass" :label-width="80" >
                         <Form-item label="password:" prop="password">
@@ -55,21 +67,14 @@
                 </Modal>
             </Menu-item>
             <Menu-item class="menu-item">
-                <span @click="createModal = true" class="item">Create Room</span>
-                <Modal v-model="createModal" title="Create Room" :width="400" @on-ok="createRoom()">
-                    <Form ref="createForm" :model="createForm" :rules="ruleRoomname" :label-width="80">
-                        <Form-item label="title:" prop="roomname">
-                            <Input v-model="createForm.title" size="large" placeholder="Title"></Input>
-                        </Form-item>
-                        <Form-item label="teacher:">
-                            <Input v-model="user.username" size="large" placeholder="Teacher" disabled></Input>
-                        </Form-item>
-                    </Form>
-                </Modal>
+                <span @click="logout()" class="item">
+                <Icon type="power" size="10" color="rgb(210,100,100)"></Icon>
+                Logout
+                </span>           
             </Menu-item>
         </Submenu>
         <Menu-item name="2" class="top-right longer">
-            <img src="../../assets/head.jpg" class="head-image" alt="head-image" :width="img.size" :height="img.size" @click="avatarModal = true"  id="avatar">
+            <img :src="user.avatar" class="head-image" alt="head-image" :width="img.size" :height="img.size" @click="avatarModal = true"  id="avatar">
             <Modal v-model="avatarModal" title="Upload Avatar" :width="300" id="avatar-modal">
                     <Upload
                         :headers = "{
@@ -95,6 +100,9 @@
     import { mapGetters, mapActions, mapMutations } from 'vuex'
 
     export default {
+        props: {
+            TYPE: 'home'
+        },
         data () {
             const validatePass = (rule, value, callback) => {
                 checkPassword(rule, value, callback, this.form.reNewPassword, this.$refs.modifyForm, 'reNewPassword')
@@ -217,43 +225,20 @@
                 if (true) {
                     let formData = new FormData()
                     formData.append('name', this.createForm.title)
-                    // formData.append('creater_id',1)
                     this.$http({
                         url: '/createroom/',
                         method: 'POST',
                         body: formData,
                         before: function (request) { beforePost(request) }
                     }).then(function (res) {
-                        console.log(res.body)
+                        console.log(getListFromDB(res.body))
                         this.addLiveRoom(getListFromDB(res.body))
+                        this.$router.push({ name: 'studio', params: getListFromDB(res.body) })
                     }, function (res) {
                         alert(res.status)
                     })
                 }
             }
-            /* toggleClick () {
-                let file = files[0]
-                let formData = new FormData()
-                formData.append('avatar', file)
-                //formData.append('creater_id',1)
-                this.$http({
-                    url:'/avatar/',
-                    method:'POST',
-                    body:formData,
-                    before:function(request){beforePost(request)},
-                }).then(function (res) {
-                    alert(res.body)
-                }, function (res) {
-                    alert(res.status)
-                })
-                if (this.spanLeft === 5) {
-                    this.spanLeft = 2;
-                    this.spanRight = 22;
-                } else {
-                    this.spanLeft = 5;
-                    this.spanRight = 19;
-                }
-            }, */
         },
         mounted () {
             console.log(this.user.avatar)
@@ -270,9 +255,9 @@
     overflow: hidden;
 }
 
-#logout {
+#createroom {
     display: inline-block;
-    padding-top: 2px;
+    padding-top: 5px;
 }
 
 .menu-item {
@@ -312,6 +297,10 @@
 
 .longer {
     height: 60px;
+}
+
+#submenu {
+    text-align: center;
 }
 </style>
 

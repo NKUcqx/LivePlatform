@@ -1,17 +1,17 @@
 <template>
     <div id="home">
-        <topbar id="topbar"></topbar>
+        <topbar TYPE="home" id="topbar"></topbar>
         <div id="fortop"></div>
         <div id="showbar">
             <div id="carousel-containter">
-                <Carousel v-model="carousel" id="carousel" trigger="hover" arrow="always">
+                <Carousel v-model="carousel" id="carousel" trigger="hover" arrow="always" dots="none">
                     <Carousel-item v-for="(livesItem, index) in livesList.slice(0,4)" class="carousel-item" >
-                        <div class="carousl-background" :style="carouselStyle(index)"></div>
+                        <div class="carousl-background" :style="carouselStyle(index)" @click="enterRoom(index)"></div>
                     </Carousel-item>
                 </Carousel>
             </div>
             <div id="carousel-aside">
-                <div class="aside-item" v-for="(livesItem, index) in livesList.slice(0,4)" @mouseover="flipOver(index)" :style="asideStyle(index)">
+                <div class="aside-item" v-for="(livesItem, index) in livesList.slice(0,4)" @mouseover="flipOver(index)" :style="asideStyle(index)" @click="enterRoom(index)">
                 </div>
             </div>
         </div>
@@ -23,6 +23,9 @@
                 </h3>
                 <section class="flexcontainer">
                     <room v-for="livesItem in livesList" :item="livesItem"></room>
+                    <div class="pagediv">
+                        <Page :current="2" :total="50" simple></Page>
+                    </div>
                 </section>
             </Card>
             <Card shadow  class="card" id="video">
@@ -32,6 +35,9 @@
                 </h3>
                 <section class="flexcontainer">
                     <room v-for="videoItem in videosList" :item="videoItem"></room>
+                    <div class="pagediv">
+                        <Page :current="2" :total="50" simple></Page>
+                    </div>
                 </section>
             </Card>
         </div>
@@ -76,26 +82,34 @@
             ...mapActions({
                 getRoomsFromDB: 'getRoomsFromDB'
             }),
+            carouselBackground (index) {
+                return 'url(' + this.livesList[index].thumbnail_path + ')'
+            },
             flipOver (index) {
                 this.carousel = index
             },
             carouselStyle (index) {
+                const that = this
                 return {
-                    backgroundImage: 'url( ../../static/bg' + (index + 3) + '.jpg)'
+                    backgroundImage: that.carouselBackground(index)
                 }
             },
             asideStyle (index) {
+                const that = this
                 if (index === this.carousel) {
                     return {
-                        backgroundImage: 'url( ../../static/bg' + (index + 3) + '.jpg)',
+                        backgroundImage: that.carouselBackground(index),
                         border: '3px solid rgb(0, 180, 0)'
                     }
                 } else {
                     return {
-                        backgroundImage: 'url( ../../static/bg' + (index + 3) + '.jpg)',
+                        backgroundImage: that.carouselBackground(index),
                         border: '1px solid rgb(191, 191, 191)'
                     }
                 }
+            },
+            enterRoom (index) {
+                this.$router.push({ name: 'studio', params: this.livesList[index] })
             }
         },
         mounted: function () {
@@ -111,7 +125,8 @@
 #topbar {
     width: 100%;
     position: fixed;
-    z-index: 999;
+    z-index: 60;
+    overflow: hidden;
 }
 #fortop{
     width: 100%;
@@ -122,9 +137,10 @@
     padding: 0% 10%;
     clear: both;
     overflow: hidden;
-    background-size: 100% 100%;
+    background: rgb(239,239,239);
+    /*background-size: 100% 100%;
     background-repeat: no-repeat;
-    background-image: url(../assets/bg5.jpg);
+    background-image: url(../assets/bg5.jpg);*/
 }
 
 #carousel {
@@ -200,5 +216,11 @@
 
 .flexcontainer {
     text-align: left;
+}
+
+.pagediv {
+    margin-top: 30px;
+    width: 100%;
+    text-align: center;
 }
 </style>

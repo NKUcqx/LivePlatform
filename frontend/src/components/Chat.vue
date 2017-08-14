@@ -5,7 +5,7 @@
                 <Icon class="icon" type="chevron-up" id="lefticon" @click.native="up()"></Icon>
             </h1>
             <h1>
-                <Dropdown trigger="click" @on-click="banspeakall()">
+                <Dropdown trigger="click" @on-click="speakall">
                     <Icon class="icon" type="chatboxes" id="midicon"></Icon>
 <<<<<<< Updated upstream
                     <Dropdown-menu slot="list" v-if="role">
@@ -28,12 +28,12 @@
                 <li v-for="hist of history" id="message">
                     <Dropdown trigger="click" style="margin-left: 20px" id='test1' @on-click="click">
                         <a href="javascript:void(0)" id="name">{{ hist.username }}</a>
-                        <Dropdown-menu slot="list" v-if="role">
-                            <Dropdown-item>禁言</Dropdown-item>
+                        <Dropdown-menu slot="list" v-if="ROLE">
+                            <Dropdown-item name='banspeak'>禁言</Dropdown-item>
                             <Modal v-model="dialog1" title="提示" @on-ok="banspeakone(hist.username)" @on-cancel="cancel()">
                                 <p>您确定要禁言{{hist.username}}这位同学吗？</p>
                             </Modal>
-                            <Dropdown-item>踢出房间</Dropdown-item>
+                            <Dropdown-item name='out'>踢出房间</Dropdown-item>
                             <Modal v-model="dialog2" title="提示" @on-ok="outone(hist.username)" @on-cancel="cancel()">
                                 <p>您确定要踢出{{hist.username}}这位同学吗？</p>
                             </Modal>
@@ -51,7 +51,6 @@
     </div>
 </template>
 <script src="/socket.io/socket.io.js">
-
 </script>
 <script>
     export default {
@@ -86,7 +85,6 @@
                 message: '',
                 history: [],
                 out: [],
-                role: true,
                 dialog1: false,
                 dialog2: false,
                 silence: false,
@@ -225,6 +223,14 @@
                     this.silence = false
                     this.speak = true
                 }
+                if(data.data.chattype==='allspeak'){
+                    console.log('allspeak');
+                    this.silence=false
+                    this.speak=true
+
+
+                }
+
             },
             cancel () {}
         }
