@@ -83,6 +83,13 @@ def un_zip(file_name):
     zip_file.close()
     return split_str
 
+def change_prefix(long_path, target = 'frontend', add = False):
+    if(add):
+        return '/' + target + long_path
+    path_arr = long_path.split('/')
+    path = '/' + '/'.join(path_arr[path_arr.index(target) + 1:])
+    return path
+
 @login_required
 @require_GET
 def getRooms(request):
@@ -110,16 +117,12 @@ def getRooms(request):
         item['end_time'] = item[
             'end_time'].strftime('%Y-%-m-%d %H:%m:%S') if item.get(
                 'end_time', None) is not None else ''
-        file = item['file_name'].split('/')
-        item['file_name'] = '/' + '/'.join(file[file.index('frontend') + 1:])
-        file = item['thumbnail_path'].split('/')
-        item['thumbnail_path'] = '/' + \
-            '/'.join(file[file.index('frontend') + 1:])
-        file = item['slide_path'].split('/')
-        item['slide_path'] = '/' + '/'.join(file[file.index('frontend') + 1 : ])
+        item['file_name'] = change_prefix(item['file_name'])
+        item['thumbnail_path'] = change_prefix(item['thumbnail_path'])
+        item['slide_path'] = change_prefix(item['slide_path'])
     return JsonResponse({'rooms': list(rooms_dict)})
 
-#@login_required
+@login_required
 @require_GET
 def getRoomAmount(request):
     living_amount = LiveRoom.objects.room_living_count(is_living = True)
@@ -169,9 +172,6 @@ def uploadSlide(request):
     # because each person can not create other rooms while living
     else:
         return HttpResponse(content=CODE['24'], status=400)
-
-
-# TODO create error_log.txt
 
 
 @login_required
