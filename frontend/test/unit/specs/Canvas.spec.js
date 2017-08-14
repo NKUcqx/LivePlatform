@@ -3,29 +3,6 @@ import Vue from 'vue'
 import { getPropsVm, getRenderedVm } from './utils.js'
 let assert = require('assert')
 
-describe('画板工具栏按钮', function () {
-    let canvasVm = getRenderedVm(Canvas)
-    let toolButton = canvasVm.$el.querySelector('#show-tool')
-    it('画板工具栏按钮加载情况', function () {
-        assert.equal('absolute', toolButton.style.position)
-        assert.equal('5px', toolButton.style.left)
-        assert.equal('5px', toolButton.style.top)
-        assert.equal(999, toolButton.style.zIndex)
-    })
-    it('模拟鼠标进入', function () {
-        let event = new window.Event('mouseenter')
-        toolButton.dispatchEvent(event)
-        canvasVm._watcher.run()
-        assert.equal(true, canvasVm.toolBar)
-    })
-    it('模拟鼠标退出', function () {
-        let event = new window.Event('mouseleave')
-        toolButton.dispatchEvent(event)
-        canvasVm._watcher.run()
-        assert.equal(false, canvasVm.toolBar)
-    })
-})
-
 describe('画板工具栏', function () {
     let canvasVm = getRenderedVm(Canvas)
     it('画板工具栏默认不显示', function () {
@@ -36,8 +13,6 @@ describe('画板工具栏', function () {
         Vue.nextTick(() => {
             let toolBar = canvasVm.$el.querySelector('#tool-bar')
             assert.equal('absolute', toolBar.style.position)
-            assert.equal('0px', toolBar.style.left)
-            assert.equal('0px', toolBar.style.top)
             assert.equal(999, toolBar.style.zIndex)
             done()
         })
