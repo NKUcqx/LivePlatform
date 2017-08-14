@@ -1,21 +1,22 @@
 <template>
     <div class="container">
-        <h1>CodeMirror Component</h1>
         <main v-cloak id="app">
             <div class="cm-container">
                 <textarea @change="change" id="codemirror"></textarea>
             </div>
-            <select name="mode" id="select" @change="changelan" v-model="mode">
-                <option value="javascript">javascript</option>
-                <option value="vue">vue</option>
-                <option value="text/x-c++src">C++</option>
-                <option value="text/x-c">C</option>
-                <option value="text/x-csharp">C#</option>
-                <option value="text/x-java">Java</option>
-                <option value="sql">sql</option>
-                <option value="text/css">css</option>
-                <option value="htmlmixed">html</option>
-            </select>
+            <div id="relative">
+                <select name="mode" id="select" @change="changelan" v-model="mode">
+                    <option value="javascript" class="option">javascript</option>
+                    <option value="vue" class="option">vue</option>
+                    <option value="text/x-c++src" class="option">C++</option>
+                    <option value="text/x-c" class="option">C</option>
+                    <option value="text/x-csharp" class="option">C#</option>
+                    <option value="text/x-java" class="option">Java</option>
+                    <option value="sql" class="option">sql</option>
+                    <option value="text/css" class="option">css</option>
+                    <option value="htmlmixed" class="option">html</option>
+                </select>
+            </div>
         </main>
     </div>
 </template>
@@ -58,38 +59,26 @@ export default {
     props: {
         WIDTH: {
             type: Number,
-            default: 400
+            default: 600
         },
         HEIGHT: {
             type: Number,
-            default: 600
+            default: 400
         }
     },
     data () {
         return {
+            editor: null,
             mode: 'javascript',
             socket: '',
             skipNextChangeEvent: false,
-            position1: {
-                width: '400px',
-                height: '600px',
-                margin: '0 auto'
-            },
-            position2: {
-                width: '400px',
-                height: '300px',
-                margin: '0 auto'
-            },
             value: String,
             options: {
-                type: Object,
-                default: function () {
-                    return {
-                        mode: 'text/javascript',
-                        lineNumbers: true,
-                        lineWrapping: true
-                    }
-                }
+                mode: 'text/javascript',
+                tabSize: 4,
+                lineNumbers: true,
+                lineWrapping: true,
+                extraKeys: {'Ctrl': 'autocomplete'}
             }
         }
     },
@@ -130,8 +119,9 @@ export default {
                 _this.$emit('input', cm.getValue())
             } */
         })
-        /* this.socket = wsConnect('/websocket/', (e) => { 
+        /* this.socket = wsConnect('/websocket/', (e) => {
         }) */
+        this.editor.setSize(this.WIDTH, this.HEIGHT)
     },
     methods: {
         change: function (code) {
@@ -150,7 +140,7 @@ export default {
             }
             this.options = {
                 mode: _this.mode,
-                tabSize: 2,
+                tabSize: 4,
                 lineNumbers: true,
                 lineWrapping: true,
                 extraKeys: {'Ctrl': 'autocomplete'}
@@ -203,6 +193,9 @@ export default {
                     }
                 }
             }
+        },
+        HEIGHT: function (newVal, oldVal) {
+            this.editor.setSize(this.WIDTH, this.HEIGHT)
         }
     },
     beforeDestroy: function () {
@@ -217,34 +210,36 @@ export default {
   display: none;
 }
 
-body {
-  padding: 30px;
-  font-family: Helvetica, Arial, sans-serif;
-}
-
-h1, h2 {
-  font-weight: 300;
-}
-
 .container {
   margin: 0 auto;
-  max-width: 720px;
-  max-height: 450px;
 }
 
 .cm-container {
   border: #ddd solid 1px;
-  margin-bottom: 10px;
   text-align: left;
 }
 
-footer {
-  margin-top: 20px;
-  padding-top: 10px;
-  border-top: #dedede solid 1px;
+.CodeMirror-code {
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
-.CodeMirror-code {
-        font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+#relative {
+    float: right;
+    width: 0;
+    height: 0;
+}
+
+#select {
+    width: 80px;
+    height: 30px;
+    background-color: white;
+    border: 1px rgb(219,219,219) solid;
+    position: relative;
+    top: -36px;
+    left: -83px;
+}
+
+.option {
+    color: #5cadff;
 }
 </style>
