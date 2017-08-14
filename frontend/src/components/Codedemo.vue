@@ -130,7 +130,7 @@ export default {
                 _this.$emit('input', cm.getValue())
             } */
         })
-        /* this.socket = wsConnect('/websocket/', (e) => { 
+        /* this.socket = wsConnect('/websocket/', (e) => {
         }) */
     },
     methods: {

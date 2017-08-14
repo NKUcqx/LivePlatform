@@ -20,24 +20,24 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">19.44% </span>
+        <span class="strong">3.57% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>7/36</span>
+        <span class='fraction'>1/28</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>0/16</span>
+        <span class='fraction'>0/12</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">33.33% </span>
+        <span class="strong">0% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>3/9</span>
+        <span class='fraction'>0/8</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">19.44% </span>
+        <span class="strong">3.57% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>7/36</span>
+        <span class='fraction'>1/28</span>
       </div>
     </div>
   </div>
@@ -141,20 +141,13 @@
 96
 97
 98
-99
-100
-101
-102
-103
-104
-105
-106</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+99</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -164,7 +157,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -173,7 +168,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">15×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -184,20 +180,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">15×</span>
-<span class="cline-any cline-yes">15×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">8×</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -240,9 +222,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -259,17 +245,19 @@
 &nbsp;
 &lt;script&gt;
 // import { wsConnect, wsSend, wsClose } from '../utils/websockets'
-var CodeMirror = require('../../node_modules/codemirror/lib/codemirror.js')
+import CodeMirror from 'codemirror'
 require('../../node_modules/codemirror/lib/codemirror.css')
 // require('../../entry.js')
 &nbsp;
 export default {
     props: {
+        WIDTH: Number,
+        HEIGHT: Number,
         value: String,
         options: {
             type: Object,
-            default: function () {
-                return {
+            default: function () <span class="fstat-no" title="function not covered" >{</span>
+<span class="cstat-no" title="statement not covered" >                return {</span>
                     mode: 'text/javascript',
                     lineNumbers: true,
                     lineWrapping: true
@@ -277,32 +265,19 @@ export default {
             }
         }
     },
-    data: function () {
-        return {
+    data: function () <span class="fstat-no" title="function not covered" >{</span>
+<span class="cstat-no" title="statement not covered" >        return {</span>
+            editor: null,
             skipNextChangeEvent: false,
             socket: ''
         }
     },
-    ready: function () <span class="fstat-no" title="function not covered" >{</span>
+    mounted: function () <span class="fstat-no" title="function not covered" >{</span>
         var _this = <span class="cstat-no" title="statement not covered" >this</span>
+<span class="cstat-no" title="statement not covered" >        console.log(this.options)</span>
 <span class="cstat-no" title="statement not covered" >        this.editor = CodeMirror.fromTextArea(this.$el, this.options)</span>
-<span class="cstat-no" title="statement not covered" >        this.editor.setValue(this.value)</span>
+<span class="cstat-no" title="statement not covered" >        this.editor.setSize('100%', '100%')</span>
 <span class="cstat-no" title="statement not covered" >        this.editor.on('change', function (cm) <span class="fstat-no" title="function not covered" >{</span></span>
-<span class="cstat-no" title="statement not covered" >            if (_this.skipNextChangeEvent) {</span>
-<span class="cstat-no" title="statement not covered" >                _this.skipNextChangeEvent = false</span>
-<span class="cstat-no" title="statement not covered" >                return</span>
-            }
-<span class="cstat-no" title="statement not covered" >            _this.value = cm.getValue()</span>
-<span class="cstat-no" title="statement not covered" >            if (_this.$emit) {</span>
-<span class="cstat-no" title="statement not covered" >                _this.$emit('change', cm.getValue())</span>
-            }
-        })
-    },
-    mounted: function () {
-        var _this = this
-        this.editor = CodeMirror.fromTextArea(this.$el, this.options)
-&nbsp;
-        this.editor.on('change', function (cm) <span class="fstat-no" title="function not covered" >{</span>
             var nowvalue = <span class="cstat-no" title="statement not covered" >cm.getValue()</span>
             // wsSend(_this.socket, nowvalue)
             // _this.socket.emit('updateMessage',)
@@ -343,6 +318,9 @@ export default {
                     }
                 }
             }
+        },
+        'HEIGHT': function (newVal, oldVal) <span class="fstat-no" title="function not covered" >{</span>
+<span class="cstat-no" title="statement not covered" >            this.editor.setSize(this.WIDTH.toString() + 'px', this.HEIGHT.toString() + 'px')</span>
         }
     },
     beforeDestroy: function () <span class="fstat-no" title="function not covered" >{</span>
@@ -356,6 +334,7 @@ export default {
 &lt;style&gt;
     .CodeMirror-code {
         font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+        font-size: 15px;
     }
 &lt;/style&gt;
 &nbsp;</pre></td></tr>
@@ -364,7 +343,7 @@ export default {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sat Aug 12 2017 07:02:19 GMT+0000 (UTC)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Aug 14 2017 15:30:35 GMT+0800 (CST)
 </div>
 </div>
 <script src="../../prettify.js"></script>

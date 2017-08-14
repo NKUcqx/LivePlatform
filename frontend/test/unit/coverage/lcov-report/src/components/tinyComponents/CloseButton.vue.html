@@ -20,28 +20,28 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">62.5% </span>
+        <span class="strong">0% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>5/8</span>
+        <span class='fraction'>0/3</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">50% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>1/2</span>
+        <span class='fraction'>0/0</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>0/0</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
-        <span class="quiet">Functions</span>
-        <span class='fraction'>0/1</span>
-      </div>
-      <div class='fl pad1y space-right2'>
-        <span class="strong">62.5% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>5/8</span>
+        <span class='fraction'>0/3</span>
       </div>
     </div>
   </div>
-  <div class='status-line medium'></div>
+  <div class='status-line low'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet">1
 2
@@ -139,9 +139,7 @@
 94
 95
 96
-97
-98
-99</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+97</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -162,15 +160,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -184,12 +173,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -241,20 +237,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">&lt;template&gt;
 &lt;div&gt;
-    &lt;div id="relative" ref="relative"&gt;&lt;/div&gt;
-    &lt;div id="switch" :style="position"&gt;
-    &lt;Poptip trigger="hover" content="Canvas" class="poptip" v-if="isWork"&gt;
-        &lt;span class="switch-item" id="canvas-item"&gt;&lt;Icon type="ios-checkmark-empty" size="5" class="icon"&gt;&lt;/Icon&gt;&lt;/span&gt;
-    &lt;/Poptip&gt;
-    &lt;Poptip trigger="hover" content="PPT" class="poptip" v-if="isWork"&gt;
-        &lt;span class="switch-item" id="ppt-item"&gt;&lt;Icon type="ios-checkmark-empty" size="5" class="icon"&gt;&lt;/Icon&gt;&lt;/span&gt;
-    &lt;/Poptip&gt;
-    &lt;Poptip trigger="hover" content="Code" class="poptip" v-if="isWork"&gt;
-        &lt;span class="switch-item" id="code-item"&gt;&lt;Icon type="ios-checkmark-empty" size="5" class="icon"&gt;&lt;/Icon&gt;&lt;/span&gt;
-    &lt;/Poptip&gt;
-    &lt;Poptip trigger="hover" content="Close" class="poptip"&gt;
-        &lt;span class="switch-item" id="close-button" @click="closePanel"&gt;&lt;Icon type="ios-close-empty" size="5" class="icon"&gt;&lt;/Icon&gt;&lt;/span&gt;
-    &lt;/Poptip&gt;
+    &lt;div id="relative" ref="relative"&gt;
+        &lt;div id="switch"&gt;
+            &lt;Poptip trigger="hover" content="PPT" class="poptip" v-if="isWork" placement="bottom"&gt;
+                &lt;span class="switch-item" id="canvas-item" @click="changePanel(0)"&gt;&lt;Icon type="ios-checkmark-empty" size="5" class="icon"&gt;&lt;/Icon&gt;&lt;/span&gt;
+            &lt;/Poptip&gt;
+            &lt;Poptip trigger="hover" content="Code" class="poptip" v-if="isWork" placement="bottom"&gt;
+                &lt;span class="switch-item" id="ppt-item" @click="changePanel(1)"&gt;&lt;Icon type="ios-checkmark-empty" size="5" class="icon"&gt;&lt;/Icon&gt;&lt;/span&gt;
+            &lt;/Poptip&gt;
+            &lt;Poptip trigger="hover" content="Canvas" class="poptip" v-if="isWork" placement="bottom"&gt;
+                &lt;span class="switch-item" id="code-item" @click="changePanel(2)"&gt;&lt;Icon type="ios-checkmark-empty" size="5" class="icon"&gt;&lt;/Icon&gt;&lt;/span&gt;
+            &lt;/Poptip&gt;
+            &lt;Poptip trigger="hover" content="Close" class="poptip" id="close-piptip" placement="bottom"&gt;
+                &lt;span class="switch-item" id="close-button" @click="closePanel"&gt;&lt;Icon type="ios-close-empty" size="5" class="icon"&gt;&lt;/Icon&gt;&lt;/span&gt;
+            &lt;/Poptip&gt;
+        &lt;/div&gt;
     &lt;/div&gt;
 &lt;/div&gt;
 &lt;/template&gt;
@@ -268,27 +265,18 @@
             }
         },
         data () {
-            return {
-                distance: 26,
-                position: {
-                    left: '50px',
-                    top: '50px'
-                }
+<span class="cstat-no" title="statement not covered" >            return {</span>
             }
         },
         methods: {
             closePanel () {
 <span class="cstat-no" title="statement not covered" >                this.$emit('close', </span>'')
+            },
+            changePanel (index) {
+<span class="cstat-no" title="statement not covered" >                this.$emit('change', ind</span>ex)
             }
         },
         mounted () {
-            this.distance = (this.isWork<span class="branch-0 cbranch-no" title="branch not covered" >) ?</span> 78 : 26
-            this.position.left = (this.$refs.relative.offsetLeft - this.distance).toString() + 'px'
-            this.position.top = (this.$refs.relative.offsetTop + 3).toString() + 'px'
-            window.addEventListener('resize', ()<span class="fstat-no" title="function not covered" > =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >                this.position.left = (this.$refs.relative.offsetLeft - this.distance).toString() + '</span>px'
-<span class="cstat-no" title="statement not covered" >                this.position.top = (this.$refs.relative.offsetTop + 3).toString() + '</span>px'
-            })
         }
     }
 &lt;/script&gt;
@@ -301,9 +289,12 @@
     }
     #switch {
         display: block;
-        position: absolute;
+        position: relative;
+        top: 3px;
+        left: -78px;
         height: 14px;
-        z-index: 999;
+        z-index: 5;
+        width: 75px;
     }
     .switch-item {
         display: inline-block;
@@ -327,6 +318,9 @@
         margin-left: 6px;
         background-color: rgb(237,63,20);
     }
+    #close-piptip {
+        float: right;
+    }
     .poptip {
         text-align: center;
     }
@@ -343,7 +337,7 @@
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sat Aug 12 2017 07:02:19 GMT+0000 (UTC)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Aug 14 2017 15:30:35 GMT+0800 (CST)
 </div>
 </div>
 <script src="../../../prettify.js"></script>

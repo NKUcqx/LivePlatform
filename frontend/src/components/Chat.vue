@@ -7,15 +7,9 @@
             <h1>
                 <Dropdown trigger="click" @on-click="speakall">
                     <Icon class="icon" type="chatboxes" id="midicon"></Icon>
-<<<<<<< Updated upstream
-                    <Dropdown-menu slot="list" v-if="role">
-                        <Dropdown-item v-if="speak">全体禁言</Dropdown-item>
-                        <Dropdown-item v-if="silence">取消全体禁言</Dropdown-item>
-=======
                     <Dropdown-menu slot="list" v-if="ROLE">
                         <Dropdown-item v-if="allspeak" name="allsilence">全体禁言</Dropdown-item>
                         <Dropdown-item v-if="allsilence" name='allspeak'>取消全体禁言</Dropdown-item>
->>>>>>> Stashed changes
                     </Dropdown-menu>
                 </Dropdown>
             </h1>
@@ -88,12 +82,12 @@
                 dialog1: false,
                 dialog2: false,
                 silence: false,
-                allsilece:false,
+                allsilece: false,
                 allspeak: true,
                 speak: true,
-                holder:'请输入',
-                input1:true,
-                input2:false,
+                holder: '请输入',
+                input1: true,
+                input2: false,
                 socket: '',
                 position: {
                     width: '',
@@ -112,20 +106,17 @@
             this.position.width = this.WIDTH.toString() + 'px'
             this.position.height = (this.HEIGHT).toString() + 'px'
             this.position.border = this.BORDER + 'px'
-            if (localStorage.silence)
-            {
+            if (localStorage.silence) {
                 console.log('ok')
-                this.silence=localStorage.silence;
+                this.silence = localStorage.silence
                 if (this.silence) {
                     this.speak = false
+                } else {
+                    this.speak = true
                 }
-                else {
-                    this.speak = true;
-                }
-            }
-            else {
-                this.silence=false
-                this.speak=true
+            } else {
+                this.silence = false
+                this.speak = true
             }
         },
         methods: {
@@ -134,22 +125,21 @@
             },
             sendmsg () {
                 console.log(this.ROLE)
-                localStorage.removeItem('silence');
-                localStorage.removeItem('out');
+                localStorage.removeItem('silence')
+                localStorage.removeItem('out')
                 if (this.silence === false) {
-                    if(this.message.trim() !== ''){
-                    this.send({chattype: 'message', message: this.message, username: this.USERNAME})
-                    this.message = ''
-                    document.getElementById('history').scrollTop = document.getElementById('history').scrollHeight
+                    if (this.message.trim() !== '') {
+                        this.send({chattype: 'message', message: this.message, username: this.USERNAME})
+                        this.message = ''
+                        document.getElementById('history').scrollTop = document.getElementById('history').scrollHeight
+                    } else {
+                        console.log('kong')
+                        this.holder = '输入内容不能为空'
+                        this.input1 = false
+                        this.input2 = true
+                        console.log(this.input1)
+                        console.log(this.input2)
                     }
-                else {
-                    console.log('kong')
-                    this.holder='输入内容不能为空'
-                    this.input1=false
-                    this.input2=true
-                    console.log(this.input1)
-                    console.log(this.input2)
-                }
                 }
             },
             up () {
@@ -162,7 +152,7 @@
                 this.dialog1 = true
                 console.log('HIHA')
             },
-            click : function(name) {
+            click: function (name) {
                 if (name === 'banspeak') {
                     this.dialog1 = true
                     console.log('234')
@@ -196,41 +186,34 @@
                     if (data.data.username === this.USERNAME) {
                         localStorage['out'] = true
                         this.$router.go(-1)
-                        }
-
+                    }
                 }
                 if (data.data.chattype === 'banspeakone') {
                     if (data.data.username === this.USERNAME) {
                         localStorage['silence'] = true
                         this.silence = true
-                        this.speak=false
-                       }
-
-
+                        this.speak = false
+                    }
                 }
                 if (data.data.chattype === 'allsilence') {
                     localStorage['silence'] = true
-                    this.allsilece=true;
-                    this.allspeak=false;
+                    this.allsilece = true
+                    this.allspeak = false
                     this.silence = true
                     this.speak = false
-
                 }
                 if (data.data.chattype === 'allspeak') {
                     localStorage['silence'] = false
-                    this.allsilece=false;
-                    this.allspeak=true;
+                    this.allsilece = false
+                    this.allspeak = true
                     this.silence = false
                     this.speak = true
                 }
-                if(data.data.chattype==='allspeak'){
-                    console.log('allspeak');
-                    this.silence=false
-                    this.speak=true
-
-
+                if (data.data.chattype === 'allspeak') {
+                    console.log('allspeak')
+                    this.silence = false
+                    this.speak = true
                 }
-
             },
             cancel () {}
         }

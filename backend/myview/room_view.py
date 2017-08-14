@@ -120,10 +120,6 @@ def uploadSlide(request):
     else:
         return HttpResponse(content=CODE['12'], status=401)
 
-
-# TODO create error_log.txt
-
-
 @login_required
 @require_POST
 def createRoom(request):

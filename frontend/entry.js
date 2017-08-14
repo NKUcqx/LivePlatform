@@ -6,7 +6,7 @@ let path = require('path')
 let fs = require('fs')
 
 // max message list length threshold, write into file when archive this
-const MESSAGE_THRESHOLD = 100
+const MESSAGE_THRESHOLD = 400
 const ERROR_MESSAGE = ['Format Invalid', 'Miss ', 'Must Join this room first', 'Unsupported Type, Choose between 0~3', 'Room not exists', 'Permission Denied']
 
 // buffer area, msg queue, will load into log.txt
@@ -45,22 +45,23 @@ function readFile (roomname, limit = MESSAGE_THRESHOLD) {
     return list
 }
 
-function writeFile (roomname) {
-    if (fs.existsSync(path.join(roomname, 'log.txt'))) {
-        const writeStream = fs.createWriteStream(path.join(roomname, 'log.txt'), {'flags': 'a'})
-        writeStream.on('open', (fd) => {
-            console.log('write log into ' + roomname)
-        })
-        for (let item of room_msg_list[roomname]) {
-            writeStream.write(item + '\r\n')// huan hang
-        }
-        writeStream.close()
-        writeStream.on('close', () => {
-            console.log('finish write file : %s', roomname)
-            room_msg_list[roomname] = room_msg_list[roomname].slice(MESSAGE_THRESHOLD)
-        })
-        writeStream.on('error', (err) => {
-            console.log('write error - %s', err.message)
+function writeFile (room_name) {
+    file_name = path.join(room_name, 'log.txt')
+    if (fs.existsSync(file_name)) {
+        fs.open(file_name, 'a', (err, fd) => {
+            if (err) {
+                throw err
+            }
+            for (let i = 0; i <  room_msg_list[room_name].length; i++) {
+                fs.writeSync(fd, room_msg_list[room_name][i] + '\r\n')
+            }
+            fs.close(fd, (err) => {
+                if (err) {
+                    throw err
+                }
+            })
+            room_msg_list[room_name] = room_msg_list[room_name].slice(MESSAGE_THRESHOLD)
+            console.log('finish')
         })
     } else {
         throw Error('file not exists')
@@ -152,7 +153,7 @@ io.on(listening_signals[0], (socket) => {
             })
             // on sendMessage
             socket.on(listening_signals[3], (data) => {
-                console.log('sendMessage' + data)
+                console.log('sendMessage')
                 // TODO: is it necessary to check all of them ?
                 if (isPackValid(data)) {
                     if (isValid(data.to)) {
@@ -185,7 +186,7 @@ io.on(listening_signals[0], (socket) => {
             })
             // on endRoom
             socket.on(listening_signals[6], (data) => {
-                if(isValid(data.id) && room_creater_list[data.id]) {
+                if (isValid(data.id) && room_creater_list[data.id]) {
                     try {
                         writeFile(data.room_name)
                         delete room_audience_list[data.room_name]

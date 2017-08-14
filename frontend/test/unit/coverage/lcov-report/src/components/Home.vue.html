@@ -22,7 +22,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>0/10</span>
+        <span class='fraction'>0/14</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
@@ -37,7 +37,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>0/10</span>
+        <span class='fraction'>0/14</span>
       </div>
     </div>
   </div>
@@ -246,7 +246,35 @@
 201
 202
 203
-204</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -331,8 +359,13 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -346,9 +379,20 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -451,18 +495,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">&lt;template&gt;
     &lt;div id="home"&gt;
-        &lt;topbar id="topbar"&gt;&lt;/topbar&gt;
+        &lt;topbar TYPE="home" id="topbar"&gt;&lt;/topbar&gt;
         &lt;div id="fortop"&gt;&lt;/div&gt;
         &lt;div id="showbar"&gt;
             &lt;div id="carousel-containter"&gt;
-                &lt;Carousel v-model="carousel" id="carousel" trigger="hover" arrow="always"&gt;
+                &lt;Carousel v-model="carousel" id="carousel" trigger="hover" arrow="always" dots="none"&gt;
                     &lt;Carousel-item v-for="(livesItem, index) in livesList.slice(0,4)" class="carousel-item" &gt;
-                        &lt;div class="carousl-background" :style="carouselStyle(index)"&gt;&lt;/div&gt;
+                        &lt;div class="carousl-background" :style="carouselStyle(index)" @click="enterRoom(index)"&gt;&lt;/div&gt;
                     &lt;/Carousel-item&gt;
                 &lt;/Carousel&gt;
             &lt;/div&gt;
             &lt;div id="carousel-aside"&gt;
-                &lt;div class="aside-item" v-for="(livesItem, index) in livesList.slice(0,4)" @mouseover="flipOver(index)" :style="asideStyle(index)"&gt;
+                &lt;div class="aside-item" v-for="(livesItem, index) in livesList.slice(0,4)" @mouseover="flipOver(index)" :style="asideStyle(index)" @click="enterRoom(index)"&gt;
                 &lt;/div&gt;
             &lt;/div&gt;
         &lt;/div&gt;
@@ -474,6 +518,9 @@
                 &lt;/h3&gt;
                 &lt;section class="flexcontainer"&gt;
                     &lt;room v-for="livesItem in livesList" :item="livesItem"&gt;&lt;/room&gt;
+                    &lt;div class="pagediv"&gt;
+                        &lt;Page :current="2" :total="50" simple&gt;&lt;/Page&gt;
+                    &lt;/div&gt;
                 &lt;/section&gt;
             &lt;/Card&gt;
             &lt;Card shadow  class="card" id="video"&gt;
@@ -483,6 +530,9 @@
                 &lt;/h3&gt;
                 &lt;section class="flexcontainer"&gt;
                     &lt;room v-for="videoItem in videosList" :item="videoItem"&gt;&lt;/room&gt;
+                    &lt;div class="pagediv"&gt;
+                        &lt;Page :current="2" :total="50" simple&gt;&lt;/Page&gt;
+                    &lt;/div&gt;
                 &lt;/section&gt;
             &lt;/Card&gt;
         &lt;/div&gt;
@@ -527,26 +577,34 @@
             ...mapActions({
                 getRoomsFromDB: 'getRoomsFromDB'
             }),
+            carouselBackground (index) {
+<span class="cstat-no" title="statement not covered" >                return 'url(' + this.livesList[index].thumbnail_path + </span>')'
+            },
             flipOver (index) {
 <span class="cstat-no" title="statement not covered" >                this.carousel = in</span>dex
             },
             carouselStyle (index) {
+                const tha<span class="cstat-no" title="statement not covered" >t = t</span>his
 <span class="cstat-no" title="statement not covered" >                return {</span>
-                    backgroundImage: 'url( ../../static/bg' + (index + 3) + '.jpg)'
+                    backgroundImage: that.carouselBackground(index)
                 }
             },
             asideStyle (index) {
+                const tha<span class="cstat-no" title="statement not covered" >t = t</span>his
 <span class="cstat-no" title="statement not covered" >                if (index === this.carousel) {</span>
 <span class="cstat-no" title="statement not covered" >                    return {</span>
-                        backgroundImage: 'url( ../../static/bg' + (index + 3) + '.jpg)',
+                        backgroundImage: that.carouselBackground(index),
                         border: '3px solid rgb(0, 180, 0)'
                     }
                 } else {
 <span class="cstat-no" title="statement not covered" >                    return {</span>
-                        backgroundImage: 'url( ../../static/bg' + (index + 3) + '.jpg)',
+                        backgroundImage: that.carouselBackground(index),
                         border: '1px solid rgb(191, 191, 191)'
                     }
                 }
+            },
+            enterRoom (index) {
+<span class="cstat-no" title="statement not covered" >                this.$router.push({ name: 'studio', params: this.livesList[index]</span> })
             }
         },
         mounted: function<span class="fstat-no" title="function not covered" > () {</span>
@@ -562,7 +620,8 @@
 #topbar {
     width: 100%;
     position: fixed;
-    z-index: 999;
+    z-index: 60;
+    overflow: hidden;
 }
 #fortop{
     width: 100%;
@@ -573,9 +632,10 @@
     padding: 0% 10%;
     clear: both;
     overflow: hidden;
-    background-size: 100% 100%;
+    background: rgb(239,239,239);
+    /*background-size: 100% 100%;
     background-repeat: no-repeat;
-    background-image: url(../assets/bg5.jpg);
+    background-image: url(../assets/bg5.jpg);*/
 }
 &nbsp;
 #carousel {
@@ -604,7 +664,7 @@
     display: inline-block;
     width: calc(25% - 5px);
     height: 500px;
-    background-color: rgb(120, 120, 120);
+    background-color: rgba(0, 0, 0, 0);
     float: right;
 }
 &nbsp;
@@ -652,13 +712,19 @@
 .flexcontainer {
     text-align: left;
 }
+&nbsp;
+.pagediv {
+    margin-top: 30px;
+    width: 100%;
+    text-align: center;
+}
 &lt;/style&gt;</pre></td></tr>
 </table></pre>
 <div class='push'></div><!-- for sticky footer -->
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sat Aug 12 2017 07:02:19 GMT+0000 (UTC)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Aug 14 2017 15:30:35 GMT+0800 (CST)
 </div>
 </div>
 <script src="../../prettify.js"></script>

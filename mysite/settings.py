@@ -77,9 +77,9 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'liveplat',
-        'USER': 'root',
-        'PASSWORD': 'root',
+        'NAME': 'group3',
+        'USER': 'jason',
+        'PASSWORD': '',
     }
 }
 
