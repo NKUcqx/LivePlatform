@@ -1,5 +1,5 @@
 <template>
-    <div class="dialog" :style="position">
+    <div class="dialog" id='test':style="position">
         <div class="head">
             <h1>
                 <Icon class="icon" type="chevron-up" id="lefticon" @click.native="up()"></Icon>
@@ -7,9 +7,15 @@
             <h1>
                 <Dropdown trigger="click" @on-click="speakall">
                     <Icon class="icon" type="chatboxes" id="midicon"></Icon>
+<<<<<<< Updated upstream
+                    <Dropdown-menu slot="list" v-if="role">
+                        <Dropdown-item v-if="speak">全体禁言</Dropdown-item>
+                        <Dropdown-item v-if="silence">取消全体禁言</Dropdown-item>
+=======
                     <Dropdown-menu slot="list" v-if="ROLE">
-                        <Dropdown-item v-if="speak" name="allsilence">全体禁言</Dropdown-item>
-                        <Dropdown-item v-if="silence" name='allspeak'>取消全体禁言</Dropdown-item>
+                        <Dropdown-item v-if="allspeak" name="allsilence">全体禁言</Dropdown-item>
+                        <Dropdown-item v-if="allsilence" name='allspeak'>取消全体禁言</Dropdown-item>
+>>>>>>> Stashed changes
                     </Dropdown-menu>
                 </Dropdown>
             </h1>
@@ -20,7 +26,7 @@
         <div class="historymessage">
             <ul id="history">
                 <li v-for="hist of history" id="message">
-                    <Dropdown trigger="click" style="margin-left: 20px" @on-click="click(name)">
+                    <Dropdown trigger="click" style="margin-left: 20px" id='test1' @on-click="click">
                         <a href="javascript:void(0)" id="name">{{ hist.username }}</a>
                         <Dropdown-menu slot="list" v-if="ROLE">
                             <Dropdown-item name='banspeak'>禁言</Dropdown-item>
@@ -38,8 +44,8 @@
             </ul>
         </div>
         <div class="input">
-            <Input id="messageInput" v-model="message" placeHolder="Enter To Send" :disabled='silence'>
-                <Button id="sendBtn" type="primary" slot="append" @click='sendmsg()'>Send</Button>
+            <Input :class="input1 === true ? 'messageInput1' : 'messageInput2'" v-model="message" :placeholder='holder' :disabled='silence'@on-enter='sendmsg()'>
+                <Button id="sendBtn" type="primary" slot="append" @click='sendmsg()':disabled="message.trim()==''">Send</Button>
             </Input>
         </div>
     </div>
@@ -82,7 +88,12 @@
                 dialog1: false,
                 dialog2: false,
                 silence: false,
+                allsilece:false,
+                allspeak: true,
                 speak: true,
+                holder:'请输入',
+                input1:true,
+                input2:false,
                 socket: '',
                 position: {
                     width: '',
@@ -101,18 +112,44 @@
             this.position.width = this.WIDTH.toString() + 'px'
             this.position.height = (this.HEIGHT).toString() + 'px'
             this.position.border = this.BORDER + 'px'
-            console.log(this.position)
+            if (localStorage.silence)
+            {
+                console.log('ok')
+                this.silence=localStorage.silence;
+                if (this.silence) {
+                    this.speak = false
+                }
+                else {
+                    this.speak = true;
+                }
+            }
+            else {
+                this.silence=false
+                this.speak=true
+            }
         },
         methods: {
             send (data) {
-            this.$emit('send', data)
+                this.$emit('send', data)
             },
             sendmsg () {
                 console.log(this.ROLE)
+                localStorage.removeItem('silence');
+                localStorage.removeItem('out');
                 if (this.silence === false) {
-                    this.send({chattype:'message',message:this.message,username:this.USERNAME})
+                    if(this.message.trim() !== ''){
+                    this.send({chattype: 'message', message: this.message, username: this.USERNAME})
                     this.message = ''
                     document.getElementById('history').scrollTop = document.getElementById('history').scrollHeight
+                    }
+                else {
+                    console.log('kong')
+                    this.holder='输入内容不能为空'
+                    this.input1=false
+                    this.input2=true
+                    console.log(this.input1)
+                    console.log(this.input2)
+                }
                 }
             },
             up () {
@@ -125,59 +162,66 @@
                 this.dialog1 = true
                 console.log('HIHA')
             },
-            click(name){
+            click : function(name) {
                 if (name === 'banspeak') {
                     this.dialog1 = true
                     console.log('234')
                 } else this.dialog2 = true
             },
-            speakall:function (name) {
+            speakall: function (name) {
                 console.log(name)
                 if (this.ROLE === true) {
                     if (name === 'allsilence') {
-                        this.send({chattype:'allsilence'})
+                        this.send({chattype: 'allsilence'})
                     } else {
-                        this.send({chattype:'allspeak'})
+                        this.send({chattype: 'allspeak'})
                     }
                 }
             },
             banspeakone (name) {
                 if (this.ROLE === true) {
-                    this.send({chattype:'banspeakone',username:name})
+                    this.send({chattype: 'banspeakone', username: name})
                 }
             },
             outone (name) {
                 if (this.ROLE === true) {
-                    this.send({chattype:'outone',username:name})
+                    this.send({chattype: 'outone', username: name})
                 }
             },
             receive (data) {
-                console.log(data.data.chattype)
-                if (data.data.chattype==='message'){
-                    console.log('message');
-                    this.history.push({username:data.data.username,message:data.data.message})
+                if (data.data.chattype === 'message') {
+                    this.history.push({username: data.data.username, message: data.data.message})
                 }
-                if(data.data.chattype==='outone'){
-                    if(data.data.username===this.USERNAME){
-                        console.log('outone');
-                        this.$route.go(-1)
+                if (data.data.chattype === 'outone') {
+                    if (data.data.username === this.USERNAME) {
+                        localStorage['out'] = true
+                        this.$router.go(-1)
                         }
 
                 }
-                if(data.data.chattype==='banspeakone'){
-                    if(data.data.username===this.USERNAME){
-                        console.log('banspeakone');
-                        this.silence=true
+                if (data.data.chattype === 'banspeakone') {
+                    if (data.data.username === this.USERNAME) {
+                        localStorage['silence'] = true
+                        this.silence = true
                         this.speak=false
-                        }
+                       }
 
 
                 }
-                if(data.data.chattype==='allsilence'){
-                    console.log('allsilence');
-                    this.silence=true
-                    this.speak=false
+                if (data.data.chattype === 'allsilence') {
+                    localStorage['silence'] = true
+                    this.allsilece=true;
+                    this.allspeak=false;
+                    this.silence = true
+                    this.speak = false
 
+                }
+                if (data.data.chattype === 'allspeak') {
+                    localStorage['silence'] = false
+                    this.allsilece=false;
+                    this.allspeak=true;
+                    this.silence = false
+                    this.speak = true
                 }
                 if(data.data.chattype==='allspeak'){
                     console.log('allspeak');
@@ -219,6 +263,32 @@
         width: 100%;
         background-color: #FAFAFA;
     }
+    .messageInput2::-webkit-input-placeholder { 
+        color:red;
+        }
+    .messageInput2:-moz-placeholder { 
+        color:#999;
+        }
+    .messageInput2::-moz-placeholder {
+        color:#999;
+        }
+    .messageInput2:-ms-input-placeholder {        
+        color:#999;
+        }
+    .messageInput1 {
+        margin-left: 1px;
+        height: 90%;
+    }
+    .messageInput2 {
+        margin-left: 1px;
+        height: 90%;
+        border-color:red;
+        border-width:1px;
+    }
+    a{
+        display:inline;
+        font-size:10px;
+    }
     h1 {
         display: inline;
         font-size: 200px;
@@ -235,10 +305,11 @@
         cursor: pointer;
     }
     #content {
-        display: inline-block;
+        display: inline;
         width: 90%;
         word-wrap: break-word;
-        white-space: normal
+        white-space: normal;
+        font-size:10px;
     }
     li {
         list-style-type: none;
@@ -248,6 +319,7 @@
         display: inline;
         margin-top: 2px;
         text-align: left;
+        font-size:10px;
     }
     /*end custom file input*/
     .icon {
@@ -262,10 +334,6 @@
         float: right;
     }
     #midicon { 
-    }
-    #messageInput {
-        margin-left: 1px;
-        height: 90%;
     }
     #sendBtn {
         background-color: #5cadff;
