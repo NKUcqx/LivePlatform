@@ -105,12 +105,12 @@
         },
         methods: {
             send (data) {
-            this.$emit('send', data)
+                this.$emit('send', data)
             },
             sendmsg () {
                 console.log(this.ROLE)
                 if (this.silence === false) {
-                    this.send({chattype:'message',message:this.message,username:this.USERNAME})
+                    this.send({chattype: 'message', message: this.message, username: this.USERNAME})
                     this.message = ''
                     document.getElementById('history').scrollTop = document.getElementById('history').scrollHeight
                 }
@@ -125,68 +125,61 @@
                 this.dialog1 = true
                 console.log('HIHA')
             },
-            click(name){
+            click (name) {
                 if (name === 'banspeak') {
                     this.dialog1 = true
                     console.log('234')
                 } else this.dialog2 = true
             },
-            speakall:function (name) {
+            speakall: function (name) {
                 console.log(name)
                 if (this.ROLE === true) {
                     if (name === 'allsilence') {
-                        this.send({chattype:'allsilence'})
+                        this.send({chattype: 'allsilence'})
                     } else {
-                        this.send({chattype:'allspeak'})
+                        this.send({chattype: 'allspeak'})
                     }
                 }
             },
             banspeakone (name) {
                 if (this.ROLE === true) {
-                    this.send({chattype:'banspeakone',username:name})
+                    this.send({chattype: 'banspeakone', username: name})
                 }
             },
             outone (name) {
                 if (this.ROLE === true) {
-                    this.send({chattype:'outone',username:name})
+                    this.send({chattype: 'outone', username: name})
                 }
             },
             receive (data) {
                 console.log(data.data.chattype)
-                if (data.data.chattype==='message'){
-                    console.log('message');
-                    this.history.push({username:data.data.username,message:data.data.message})
+                if (data.data.chattype === 'message') {
+                    console.log('message')
+                    this.history.push({username: data.data.username, message: data.data.message})
                 }
-                if(data.data.chattype==='outone'){
-                    if(data.data.username===this.USERNAME){
-                        console.log('outone');
+                if (data.data.chattype === 'outone') {
+                    if (data.data.username === this.USERNAME) {
+                        console.log('outone')
                         this.$route.go(-1)
-                        }
-
+                    }
                 }
-                if(data.data.chattype==='banspeakone'){
-                    if(data.data.username===this.USERNAME){
-                        console.log('banspeakone');
-                        this.silence=true
-                        this.speak=false
-                        }
-
-
+                if (data.data.chattype === 'banspeakone') {
+                    if (data.data.username === this.USERNAME) {
+                        console.log('banspeakone')
+                        this.silence = true
+                        this.speak = false
+                    }
                 }
-                if(data.data.chattype==='allsilence'){
-                    console.log('allsilence');
-                    this.silence=true
-                    this.speak=false
-
+                if (data.data.chattype === 'allsilence') {
+                    console.log('allsilence')
+                    this.silence = true
+                    this.speak = false
                 }
-                if(data.data.chattype==='allspeak'){
-                    console.log('allspeak');
-                    this.silence=false
-                    this.speak=true
-
-
+                if (data.data.chattype === 'allspeak') {
+                    console.log('allspeak')
+                    this.silence = false
+                    this.speak = true
                 }
-
             },
             cancel () {}
         }

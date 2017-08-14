@@ -112,8 +112,8 @@ export default {
         var _this = this
         this.editor = CodeMirror.fromTextArea(document.getElementById('codemirror'), _this.options)
         this.editor.on('change', function (cm) {
-            //console.log(i)
-            //console.log(op)
+            // console.log(i)
+            // console.log(op)
             _this.send(cm.getValue())
             /* var nowvalue = cm.getValue()
             // wsSend(_this.socket, nowvalue)

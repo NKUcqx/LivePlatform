@@ -4,11 +4,11 @@
 	<Form-item prop="verification">
 	 	<Row>
 		    <Col span="12">
-		    	<Input v-model="form.verification" placeholder="Input VERIFICATION"><Icon type="star" slot="prepend" v-if="this.father==='login'"></Icon></Input>
+		    	<Input v-model="form.verification" placeholder="Input VERIFICATION"><Icon id="star" type="star" slot="prepend" v-if="this.father==='login'"></Icon></Input>
 		    </Col>
 		    <Col span="6" offset="6">
-			    <Button type="primary" v-if="this.state === 'unsent'" @click="testUsername()" class="buttons">Achieve</Button>
-			    <Button type="primary" disabled v-else class="buttons">{{time}}</Button>
+			    <Button id="achieve" type="primary" v-if="this.state === 'unsent'" @click="testUsername()" class="buttons">Achieve</Button>
+			    <Button id="time" type="primary" disabled v-else class="buttons">{{time}}</Button>
 		    </Col>
 		</Row>
 	</Form-item>

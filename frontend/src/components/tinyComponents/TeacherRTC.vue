@@ -167,7 +167,7 @@ export default {
         mute () {
             this.sound = false
             this.localStream.disableAudio()
-        },
+        }
     }
 }
 </script>

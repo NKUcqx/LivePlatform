@@ -191,7 +191,7 @@ export default {
         emitSlide (data) {
             this.emit(data, 'slide')
         },
-        emit (data, dataType, to = null, type = 1,  signal = 'sendMessage') { // to which user he wanna send to
+        emit (data, dataType, to = null, type = 1, signal = 'sendMessage') { // to which user he wanna send to
             const pack = {
                 id: this.user.userid,
                 room_name: 'static/rooms/51e2593b505c8ed141ee3f500f2691b4',
