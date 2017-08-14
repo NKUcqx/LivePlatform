@@ -17,7 +17,7 @@ let room_audience_list = {}
 // signals server will fire
 let fire_signals = ['Error', 'updateMessage', 'loadHistory', 'getAudience'] // wtf? whether space needed at the head of bracket or not!?
 // signals server will listening
-let listening_signals = ['connection', 'disconnect', 'join', 'sendMessage', 'getAudience', 'leave', 'endRoom']
+let listening_signals = ['connection', 'disconnecting', 'join', 'sendMessage', 'getAudience', 'kickout', 'endRoom']
 
 function readFile (roomname, limit = MESSAGE_THRESHOLD) {
     let list = []
@@ -39,7 +39,7 @@ function readFile (roomname, limit = MESSAGE_THRESHOLD) {
     return list
 }
 
-function writeFile (room_name) {
+function writeFile (room_name, clear = false) {
     file_name = path.join(room_name, 'log.txt')
     if (fs.existsSync(file_name)) {
         fs.open(file_name, 'a', (err, fd) => {
@@ -54,12 +54,31 @@ function writeFile (room_name) {
                     throw err
                 }
             })
-            room_msg_list[room_name] = room_msg_list[room_name].slice(MESSAGE_THRESHOLD)
+            if (clear) {
+                clearRoom(room_name)
+            } else {
+                room_msg_list[room_name] = room_msg_list[room_name].slice(MESSAGE_THRESHOLD)
+            }
             console.log('finish')
         })
     } else {
         throw Error('file not exists')
     }
+}
+
+function kickoutUser (room_name, user_id) {
+    room_audience_list[room_name][user_id].leave(room_name)
+    room_audience_list[room_name].splice(user_id, 1)
+    console.log(user_id + ' was kicked out from ' + room_name)
+}
+
+function clearRoom (room_name) {
+    for (let user in room_audience_list[room_name]) {
+        kickoutUser(room_name, user)
+    }
+    delete room_audience_list[room_name]
+    delete room_creater_list[room_name]
+    delete room_msg_list[room_name]
 }
 
 function isPackValid (data) {
@@ -136,13 +155,14 @@ io.on(listening_signals[0], (socket) => {
             if (!room_audience_list[data.room_name]) {
                 room_creater_list[data.room_name] = socket // save the creater to ask for history
                 room_audience_list[data.room_name] = []
+                room_msg_list[data.room_name] = []
+                console.log('create room: %s by %s', data.room_name, data.id)
             }
             socket.join(data.room_name, () => {
                 console.log(data.id + ' has joined : ' + data.room_name)
                 // push this socket into audience list via its id
                 room_audience_list[data.room_name][data.id] = socket
-                room_msg_list[data.room_name] = []
-                // load history messages
+                // ask for history from creater
                 sendMessage(room_creater_list[data.room_name], fire_signals[2], data.id)
             })
             // on sendMessage
@@ -174,17 +194,24 @@ io.on(listening_signals[0], (socket) => {
                     sendMessage(socket, fire_signals[0], ERROR_MESSAGE[1])
                 }
             })
+            // on kickout
             socket.on(listening_signals[5], (data) => {
-                delete room_audience_list[data.room_name][socket.id]
-                console.log('User ' + socket.id + ' has left the room.')
+                if (isPackValid(data) && isValid(data.to)) {
+                    room_audience_list[data.room_name][data.to].leave(data.room_name)
+                    room_audience_list[data.room_name].splice(data.to, 1)
+                    console.log('User ' + data.id + ' has left the room.')
+                }
             })
             // on endRoom
-            socket.on(listening_signals[6], (data) => {
-                if (isValid(data.id) && room_creater_list[data.id]) {
+            /*socket.on(listening_signals[6], (data) => {
+                if (room_creater_list[data.room_name].id === socket.id) {
                     try {
                         writeFile(data.room_name)
-                        delete room_audience_list[data.room_name]
-                        delete room_creater_list[data.id]
+                        io.sockets.clients(socket.room).forEach((listener) => {
+                            listener.leave(socket.room)
+                        })
+                        delete room_audience_list[data.room_name] // just clear data in server, still need to 'leave' the audience
+                        delete room_creater_list[data.room_name]
                         delete room_msg_list[data.room_name]
                         console.log('LiveRoom : ' + data.room_name + ' ended')
                     } catch (Error) {
@@ -193,15 +220,26 @@ io.on(listening_signals[0], (socket) => {
                 } else {
                     sendMessage(socket, fire_signals[0], ERROR_MESSAGE[5])
                 }
-            })
+            })*/
         } else {
             sendMessage(socket, fire_signals[0], ERROR_MESSAGE[1])
         }
     })
-    socket.on(listening_signals[1], () => {
-        // TODO: how to get room_name ?
-        // TODO: write the remaining msg into file
-        console.log('user : ' + socket.id + ' disconnect')
+    // on disconnecting
+    socket.on(listening_signals[1], (reason) => {
+        console.log(reason)
+        let room_name = Object.keys(socket.rooms)[1]
+        if (room_creater_list[room_name] === socket) { // if creater is leaving, flush the msg list, kick out audiences, delete all data lists
+            writeFile(room_name, true) // TODO: what if remaining data less than threshold ?
+        } else { // if uesr leaving, just clear him in audience_list
+            for (let user in room_audience_list[room_name]) {
+                console.log(user+'<<<<<<')
+                if (room_audience_list[room_name][user] === socket) {
+                    kickoutUser(room_name, user)
+                    break
+                }
+            }
+        }
     })
 })
 
