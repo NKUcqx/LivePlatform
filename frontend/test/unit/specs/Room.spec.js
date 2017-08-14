@@ -7,7 +7,7 @@ describe('footer加载情况', function () {
     it('直播props传值', function () {
         let myItem = {
             name: 'g128',
-            creater: 'gyg',
+            creater_name: 'gyg',
             audience_amount: 666,
             create_time: '2017-8-12 11:10:16',
             is_living: true
@@ -21,7 +21,7 @@ describe('footer加载情况', function () {
     it('录播props传值', function () {
         let myItem = {
             name: 'g128',
-            creater: 'gyg',
+            creater_name: 'gyg',
             audience_amount: 666,
             create_time: '2017-8-12 11:10:16',
             is_living: false
