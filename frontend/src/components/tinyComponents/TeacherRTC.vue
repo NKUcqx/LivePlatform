@@ -1,19 +1,22 @@
 <template>
-    <div class="teacherRTC">
-            <Card class="video" :style="position1">
+    <div class="teacherRTC"  @mouseenter="showToolBar()" @mouseleave="hideToolBar()">
+            <div class="video">
                 <div id="agora_local" :style="position2"></div>
-            </Card>
-            <br><br>
-            <Button class="join" :disabled="isJoin" @click="join()">开始直播</Button>
-            <Button class="leave" :disabled="!(isJoin)" @click="leave()">结束直播</Button>
-            <Button-group shape="circle">
-                <Button icon="arrow-right-b" :disabled="isPublish" @click="publish()"></Button>
-                <Button icon="ios-pause" :disabled="!(isPublish)" @click="unpublish()"></Button>
-            </Button-group>
-            <Button-group shape="circle">
-                <Button icon="ios-mic-outline" :disabled="sound" @click="speak()"></Button>
-                <Button icon="ios-mic-off" :disabled="!(sound)" @click="mute()"></Button>
-            </Button-group>
+            </div>
+            <div id="relative">
+                <div id="toolbar" :style="toolbarStyle" v-show="isBarShown">
+                    <Button class="join buttons" :disabled="isJoin" @click="join()" type="ghost">Start</Button>
+                    <Button class="leave buttons" :disabled="!(isJoin)" @click="leave()" type="ghost">End</Button>
+                    <Button-group shape="circle">
+                        <Button icon="arrow-right-b" :disabled="isPublish" @click="publish()" type="ghost" class="buttons"></Button>
+                        <Button icon="ios-pause" :disabled="!(isPublish)" @click="unpublish()" type="ghost" class="buttons"></Button>
+                    </Button-group>
+                    <Button-group shape="circle">
+                        <Button icon="ios-mic-outline" :disabled="sound" @click="speak()" type="ghost" class="buttons"></Button>
+                        <Button icon="ios-mic-off" :disabled="!(sound)" @click="mute()" type="ghost" class="buttons"></Button>
+                    </Button-group>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -27,34 +30,47 @@ export default {
         },
         HEIGHT: {
             type: Number,
-            default: 400
+            default: 100
         },
         ROOM: {
             type: String,
             default: '1000'
         }
     },
+    watch: {
+        'HEIGHT': function () {
+            console.log(this.HEIGHT)
+            this.position2.width = this.WIDTH.toString() + 'px'
+            this.position2.height = (this.HEIGHT).toString() + 'px'
+            this.toolbarStyle.width = this.WIDTH.toString() + 'px'
+        }
+    },
     data () {
         return {
+            isBarShown: false,
             isJoin: false,
             isPublish: true,
             sound: true,
             appKey: '0c6a0a8f844c49d78a9aac0907dfc1d8',
             client: undefined,
             localStream: undefined,
-            position1: {
-                width: '650px',
-                height: '450px',
-                display: 'inline-block'
+            toolbarStyle: {
+                width: ''
             },
             position2: {
-                width: '600px',
-                height: '400px',
+                width: '100%',
+                height: '100%',
                 display: 'inline-block'
             }
         }
     },
     methods: {
+        showToolBar () {
+            this.isBarShown = true
+        },
+        hideToolBar () {
+            this.isBarShown = false
+        },
         join () {
             this.isJoin = true
             let dynamicKey = null
@@ -158,6 +174,26 @@ export default {
 
 <style scoped>
 .video {
-    background-color: rgb(200, 200, 200);
+}
+
+#relative {
+    width: 0;
+    height: 0;
+    display: block;
+    float: left;
+}
+
+#toolbar {
+    position: relative;
+    top: -36px;
+    left: 0px;
+    height: 36px;
+    float: left;
+    overflow: hidden;
+    text-align: center;
+}
+
+.buttons {
+    background-color: rgba(0,0,0,0) !important;
 }
 </style>

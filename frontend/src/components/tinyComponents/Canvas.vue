@@ -1,8 +1,11 @@
 <template>
 	<div id="canvas" ref="canvas">
-		<div :style="btnPosition" id="show-tool" ref="showTool"  @mouseenter="showToolBar()" @mouseleave="hideToolBar()">
+        <div id="relative" @mouseenter="showToolBar()" @mouseleave="hideToolBar()">
+            <Button type="ghost" :size="SIZE" shape="circle" icon="wrench" id="tool-button"></Button>
+        </div>
+		<!--div :style="btnPosition" id="show-tool" ref="showTool"  @mouseenter="showToolBar()" @mouseleave="hideToolBar()">
 			<Button type="ghost" :size="SIZE" shape="circle" icon="wrench" id="tool-button"></Button>
-		</div>
+		</div-->
 		<Row >
 		<div ref="toolbar" id="tool-bar" :style="toolBarPosition" v-if="this.toolBar" @mouseenter="showToolBar()" @mouseleave="hideToolBar()">
 			<Poptip trigger="hover" content="choose pen" placement="top"  class="buttons">
@@ -119,12 +122,10 @@ export default {
                 position: 'absolute',
                 left: '30px',
                 top: '30px',
-                zIndex: 999
+                zIndex: 400
             },
             toolBarPosition: {
                 position: 'absolute',
-                left: '0px',
-                top: '0px',
                 zIndex: 999
             }
         }
@@ -491,36 +492,49 @@ export default {
                 })
             })
         }
-        window.addEventListener('resize', () => {
+        /* window.addEventListener('resize', () => {
             this.btnPosition.left = (this.$refs.canvas.offsetLeft + 5).toString() + 'px'
             this.btnPosition.top = (this.$refs.canvas.offsetTop + 5).toString() + 'px'
-        })
-        this.btnPosition.left = (this.$refs.canvas.offsetLeft + 5).toString() + 'px'
-        this.btnPosition.top = (this.$refs.canvas.offsetTop + 5).toString() + 'px'
+        }) */
+        /* this.btnPosition.left = (this.$refs.canvas.offsetLeft + 5).toString() + 'px'
+        this.btnPosition.top = (this.$refs.canvas.offsetTop + 5).toString() + 'px' */
         this.context = this.$refs.board.getContext('2d')
     }
 }
 </script>
 
 <style scoped>
+    #relative {
+        width: 0;
+        height: 0;
+        float: left;
+    }
+
+    #tool-button {
+        position: relative;
+        top: 5px;
+        left: 5px;
+        z-index: 999;
+        color: #5cadff;
+        cursor: pointer;
+    }
+
     #canvas{
+        width: 100%;
+        height: 100%;
     }
 
     #draw-board {
 
     }
     #board {
-        
     }
     .buttons {
         display: inline-block;
     }
-    #tool-button {
-        color: #5cadff;
-        cursor: pointer;
-    }
+
     #tool-button:hover {
-        color: blue;
+        color: gray;
     }
     #tool-bar{
         padding-left: 50px;

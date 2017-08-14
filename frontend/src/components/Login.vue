@@ -198,6 +198,7 @@ export default {
                     alert(CONST.success('Login'))
                     that.$router.push({path: '/home'})
                 }, function (res) {
+                    that.showPinImg()
                     alert(res)
                 })
             })
