@@ -36,12 +36,6 @@ function readFile (roomname, limit = MESSAGE_THRESHOLD) {
             list.push(line)// contain time & msg , msg need to convert to json obj
         }
     })
-    readStream.on('end', () => {
-        console.log('end')
-    })
-    readStream.on('close', () => {
-        console.log('close')
-    })
     return list
 }
 

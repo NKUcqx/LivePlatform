@@ -520,13 +520,14 @@ export default {
     }
 
     #canvas{
+        width: 100%;
+        height: 100%;
     }
 
     #draw-board {
 
     }
     #board {
-        
     }
     .buttons {
         display: inline-block;
