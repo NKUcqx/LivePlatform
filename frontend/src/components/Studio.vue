@@ -78,9 +78,7 @@ export default {
         Codedemo,
         Chatdemo,
         TeacherRtc,
-        StudentRtc,
-        Waterfall,
-        WaterfallSlot
+        StudentRtc
     },
     data () {
         return {
