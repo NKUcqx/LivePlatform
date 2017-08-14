@@ -6,7 +6,7 @@ let path = require('path')
 let fs = require('fs')
 
 // max message list length threshold, write into file when archive this
-const MESSAGE_THRESHOLD = 100
+const MESSAGE_THRESHOLD = 400
 const ERROR_MESSAGE = ['Format Invalid', 'Miss ', 'Must Join this room first', 'Unsupported Type, Choose between 0~3', 'Room not exists', 'Permission Denied']
 
 // buffer area, msg queue, will load into log.txt
@@ -35,12 +35,6 @@ function readFile (roomname, limit = MESSAGE_THRESHOLD) {
             // list.push(line);
             list.push(line)// contain time & msg , msg need to convert to json obj
         }
-    })
-    readStream.on('end', () => {
-        console.log('end')
-    })
-    readStream.on('close', () => {
-        console.log('close')
     })
     return list
 }
