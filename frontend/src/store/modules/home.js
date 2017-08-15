@@ -51,7 +51,8 @@ const actions = {
             params: {
                 is_living: isLive,
                 limit: state.showNum,
-                start: start
+                start: start,
+                order_by: (isLive) ? '-audience_amount' : '-end_time'
             }
         }).then(function (res) {
             (isLive) ? state.liveRooms = getListFromDB(res.body) : state.videoRooms = getListFromDB(res.body);

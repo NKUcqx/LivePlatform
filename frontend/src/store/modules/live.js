@@ -21,7 +21,7 @@ const mutations = {
 }
 
 const actions = {
-    BeginLive: (staet) => {
+    BeginLive: (state) => {
 
     },
     destroyLive: ({ state, commit }) => {

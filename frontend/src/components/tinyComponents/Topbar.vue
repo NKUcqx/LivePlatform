@@ -74,7 +74,7 @@
             </Menu-item>
         </Submenu>
         <Menu-item name="2" class="top-right longer">
-            <img :src="user.avatar" class="head-image" alt="head-image" :width="img.size" :height="img.size" @click="avatarModal = true"  id="avatar">
+            <img :src="user.avatar" class="head-image" alt="head-image" :width="img.size" :height="img.size" @click="avatarModal = true"  id="avatar" ref="avatar">
             <Modal v-model="avatarModal" title="Upload Avatar" :width="300" id="avatar-modal">
                     <Upload
                         :headers = "{
@@ -83,12 +83,18 @@
                         name="avatar"
                         type="drag"
                         :on-success="changeAvatar"
+                        :format="['jpg','jpeg','png','gif','bmp']"
+                        :max-size="200"
+                        :show-upload-list="false"
+                        :on-format-error="avatarTypeError"
+                        :on-exceeded-size="avatarSizeError"
                         action="/changeavatar/">
                         <div>
-                            <img :src="user.avatar" id="show-avatar">
+                            <img :src="user.avatar" id="show-avatar" ref="bigAvatar" alt="file size too large">
                             <div id="avatar-text">click image or drag to update your avatar</div>
                         </div>
                     </Upload>
+                    <div slot="footer"></div>
             </Modal>
         </Menu-item>
     </Menu>
@@ -245,9 +251,20 @@
                 }
             },
             changeAvatar (res, file) {
-                this.setAvatar('static/users/' + this.user.username + '/' + file.name)
+                let that = this
+                setTimeout(function () {
+                    console.log(that.user)
+                    that.setAvatar('static/users/' + that.user.username + '/' + file.name)
+                }, 4000)
+                this.$Message.success(CONST.success('Upload Success!'))
                 console.log('static/users/' + this.user.username + '/' + file.name)
                 console.log(this.user.avatar)
+            },
+            avatarSizeError (file, fileList) {
+                this.$Message.error('Image size must be under 200K')
+            },
+            avatarTypeError (file, fileList) {
+                this.$Message.error('Image must be jpg jpeg png gif bmp')
             },
             endLive () {
                 console.log('topbar endLive')
@@ -256,6 +273,10 @@
         },
         mounted () {
             console.log(this.user)
+        },
+        updated () {
+            this.$refs.avatar.src = this.user.avatar
+            this.$refs.bigAvatar.src = this.user.avatar
         }
     }
 </script>

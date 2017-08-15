@@ -25,4 +25,6 @@ urlpatterns = [
     url(r'^getroom/$', room_view.getRooms, name='get_room'),
     url(r'^getroomamount/$', room_view.getRoomAmount, name='get_room_amount'),
     url(r'^updateroom/$', room_view.updateRoom, name='update_room'),
+    url(r'^setthumbnail/$', room_view.uploadThumbnail, name='set_thumbnail'),
+    url(r'^uploadslide/$', room_view.uploadSlide, name='upload_slide'),
 ]
