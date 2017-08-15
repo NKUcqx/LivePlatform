@@ -27,7 +27,7 @@ export default {
         },
         HEIGHT: {
             type: Number,
-            default: 100
+            default: 500
         },
         ROOM: {
             type: String,
@@ -51,6 +51,8 @@ export default {
                 this.$Message.success('Live has already started !')
                 this.join()
             } else if (oldVal === true && newVal === false) {
+                this.$Message.success('Live has already ended !')
+                console.log('teacher leave')
                 this.leave()
             }
         }
@@ -68,8 +70,8 @@ export default {
                 width: ''
             },
             position2: {
-                width: '100%',
-                height: '100%',
+                width: '600px',
+                height: '500px',
                 display: 'inline-block'
             }
         }

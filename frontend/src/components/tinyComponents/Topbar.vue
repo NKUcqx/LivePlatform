@@ -7,7 +7,7 @@
         <Menu-item name="1">
             教育直播平台
         </Menu-item>
-        <Menu-item name="2" class="top-right">
+        <Menu-item name="2" class="top-right" v-if="user.role==='T'">
             <span id="createroom" @click="createModal = true"><Icon type="ios-plus" size="30" color="#5cadff" v-if="TYPE === 'home'"></Icon></span>
             <span id="startlive" @click="startLive()"><Icon type="ios-play" size="30" color="rgb(0,180,0)" v-if="TYPE==='studio'&&!liveState.isStart"></Icon></span>
             <span @click="endLive()"><Icon  id="endlive" type="android-exit" size="25" color="rgb(210,100,100)" v-if="TYPE==='studio'&&liveState.isStart"></Icon></span>
@@ -174,13 +174,13 @@
             ...mapMutations({
                 addLiveRoom: 'addLiveRoom',
                 setAvatar: 'setAvatar',
-                startLive: 'startLive',
-                endLive: 'endLive'
+                startLive: 'startLive'
             }),
             ...mapActions({
                 logoutSubmit: 'logout',
                 changePass: 'changePass',
-                changeInfo: 'changeInfo'
+                changeInfo: 'changeInfo',
+                destroyLive: 'destroyLive'
             }),
             getCookie () {
                 return getCookie('csrftoken')
@@ -238,8 +238,7 @@
                         before: function (request) { beforePost(request) }
                     }).then(function (res) {
                         console.log(getListFromDB(res.body))
-                        this.addLiveRoom(getListFromDB(res.body))
-                        this.$router.push({ name: 'studio', params: getListFromDB(res.body) })
+                        this.$router.push({ name: 'studio', query: getListFromDB(res.body) })
                     }, function (res) {
                         alert(res.status)
                     })
@@ -249,10 +248,14 @@
                 this.setAvatar('static/users/' + this.user.username + '/' + file.name)
                 console.log('static/users/' + this.user.username + '/' + file.name)
                 console.log(this.user.avatar)
+            },
+            endLive () {
+                console.log('topbar endLive')
+                this.$router.push({ path: '/home' })
             }
         },
         mounted () {
-            console.log(this.user.avatar)
+            console.log(this.user)
         }
     }
 </script>

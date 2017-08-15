@@ -24,6 +24,10 @@ export const getAvatar = (state) => {
     return state.user.avatar
 }
 
+export const getRole = (state) => {
+    return state.user.role
+}
+
 export const isLogin = (state) => {
     return state.user.isLogin
 }

@@ -23,5 +23,6 @@ urlpatterns = [
     url(r'^endroom/$', room_view.endRoom, name='end_room'),
     url(r'^createroom/$', room_view.createRoom, name='create_room'),
     url(r'^getroom/$', room_view.getRooms, name='get_room'),
+    url(r'^getroomamount/$', room_view.getRoomAmount, name='get_room_amount'),
     url(r'^updateroom/$', room_view.updateRoom, name='update_room'),
 ]

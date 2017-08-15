@@ -1,45 +1,49 @@
+import Vue from 'vue'
+import { beforePost } from '../../utils/utils'
+
 const state = {
     isStart: false
-    /* isPlay: false,
-    isSilence: false */
 }
 
 const getters = {
     getLiveState: (state) => {
         return state
     }
-    /* // 0 means silence 1 means have sound
-    getSoundState: (state) => {
-        return (state.isSilence) ? 0 : 1
-    } */
 }
 
 const mutations = {
     startLive: (state) => {
         state.isStart = true
-        state.isPlay = true
     },
-    /* pauseLive: (state) => {
-        state.isPlay = false
-    },
-    replayLive: (state) => {
-        state.isPlay = (state.isStart) ? true : false
-    },
-    SilenceLive: (state) => {
-        state.isSilence = (state.isStart) ? true : false
-    },
-    speakLive: (state) => {
-        state.isSilence = false
-    }, */
     endLive: (state) => {
-        state.isStart = false
-        state.isPlay = false
-        state.isSilence = false
+        (state.isStart === true) ? state.isStart = false : ''
+    }
+}
+
+const actions = {
+    BeginLive: (staet) => {
+
+    },
+    destroyLive: ({ state, commit }) => {
+        return new Promise((resolve, reject) => {
+            Vue.http({
+                url: '/endroom/',
+                method: 'POST',
+                before: function (request) { beforePost(request) }
+            }).then(function (res) {
+                console.log('endroom')
+                resolve()
+                commit('endLive')
+            }, function (res) {
+                reject()
+            })
+        })
     }
 }
 
 export default {
     state,
     getters,
-    mutations
+    mutations,
+    actions
 }

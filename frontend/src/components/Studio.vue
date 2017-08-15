@@ -1,6 +1,6 @@
 <template>
     <div id="studio" :style="wholeSize">
-        <topbar TYPE="studio" id="topbar"></topbar>
+        <topbar TYPE="studio" id="topbar" ref="topBar"></topbar>
         <div id="fortop"></div>
             <div class="infobar left-part">
                 <img src="../assets/logo.png" id="teacher-avatar" alt="head-image" :width="img.size" :height="img.size" @click="avatarModal = true">
@@ -51,7 +51,7 @@ import StudentRtc from './tinyComponents/StudentRTC'
 import Codedemo from './Codedemo'
 import Chatdemo from './Chat'
 import io from 'socket.io-client'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import { isValid } from '../utils/checks'
 import { beforePost } from '../utils/utils'
 
@@ -149,6 +149,9 @@ export default {
         }
     },
     methods: {
+        ...mapActions({
+            destroyLive: 'destroyLive'
+        }),
         openMinor () {
             this.type = 1
         },
@@ -176,16 +179,11 @@ export default {
             this.style = (this.style < 3) ? index : index + 3
         },
         endRoom () {
-            console.log('endroom')
-            this.$http({
-                url: '/endroom/',
-                method: 'POST',
-                before: function (request) { beforePost(request) }
-            }).then(function (res) {
-                console.log('endroom')
-                this.$router.push({path: '/home'})
+            let that = this
+            this.destroyLive().then(function () {
+                that.$router.push({ path: '/home' })
             }, function (res) {
-                alert(res.status)
+                alert(res)
             })
         },
         buildConnect () {
@@ -251,10 +249,11 @@ export default {
         let room = this.$route.query
         // wating for optimization
         this.roomInfo.id = room.id
-        this.roomInfo.teacher = room.creater_name
+        this.roomInfo.teacher = (room.creater_name) ? room.creater_name : room.creater_nickname
         this.roomInfo.audience = room.audience_amount
         this.roomInfo.title = room.name
         this.roomInfo.creator_id = room.creater
+        this.roomInfo.is_living = room.is_living
         //
     },
     mounted () {
@@ -267,8 +266,8 @@ export default {
         this.buildConnect()
     },
     beforeDestroy () {
-        console.log(this.roomInfo.creator_id, this.user.userid)
-        if (this.roomInfo.creator_id.toString() === this.user.userid.toString()) {
+        console.log(this.roomInfo.is_living)
+        if (this.roomInfo.creator_id.toString() === this.user.userid.toString() && this.roomInfo.is_living) {
             this.endRoom()
         }
     }
