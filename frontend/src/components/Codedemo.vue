@@ -95,33 +95,25 @@ export default {
         /*
         你现在如果需要对比当前用户是不是房间的创建者，只需要判断user.userid === CREATERID
         */
-            console.log('creator:', this.CREATORID)
-            console.log('user: ', this.user.userid)
-            console.log('by gongyansong')
-
         var _this = this
         this.editor = CodeMirror.fromTextArea(document.getElementById('codemirror'), _this.options)
         this.editor.on('change', function (cm) {
-            // console.log(i)
-            // console.log(op)
             _this.send({
                 type: 'code',
                 data: cm.getValue()
             })
-            /* var nowvalue = cm.getValue()
-            // wsSend(_this.socket, nowvalue)
-            // _this.socket.emit('updateMessage',)
-            if (_this.skipNextChangeEvent) {
-                _this.skipNextChangeEvent = false
-                return
-            }
-            if (_this.$emit) {
-                _this.$emit('change', cm.getValue())
-                _this.$emit('input', cm.getValue())
-            } */
         })
-        /* this.socket = wsConnect('/websocket/', (e) => {
-        }) */
+        this.editor.on('cursorActivity', function () {
+            // console.log(_this.editor.getCursor("anchor"))
+            // console.log(_this.editor.getCursor("head"))
+            _this.send({
+                type: 'cursor',
+                data: {
+                    from: _this.editor.getCursor('anchor'),
+                    to: _this.editor.getCursor('head')
+                }
+            })
+        })
         this.editor.setSize(this.WIDTH, this.HEIGHT)
     },
     methods: {
@@ -155,17 +147,22 @@ export default {
             })
         },
         send (data) {
-            this.$emit('send', data)
-            console.log('codesend' + data)
+            console.log('userid是' + this.user.userid)
+            console.log('creator是' + this.CREATORID)
+            if (this.user.userid == this.CREATORID) {
+                this.$emit('send', data)
+                console.log('codesend' + data)
+                console.log('sendsuccess')
+            }
         },
         receive (data) {
             // code(data.data)
             // console.log('codereceive'+data.data)
             console.log('receive' + data.data.type)
             if (data.data.type === 'code') {
-                // this.editor.setValue(data.data.data)
+                this.editor.setValue(data.data.data)
                 console.log('setValue' + data.data.data)
-            } else {
+            } else if (data.data.type === 'lang') {
                 var select = document.getElementById('select')
                 for (var i = 0; i < select.options.length; i++) {
                     if (select.options[i].value === data.data.data) {
@@ -173,6 +170,8 @@ export default {
                         break
                     }
                 }
+            } else {
+                this.editor.setSelection({ line:data.data.data.from.line, ch:data.data.data.from.ch}, { line:data.data.data.to.line, ch:data.data.data.to.ch})
             }
         }
     },
