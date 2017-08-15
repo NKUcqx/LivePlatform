@@ -1,6 +1,6 @@
 <template>
     <div id="studio" :style="wholeSize">
-        <topbar TYPE="unstart" id="topbar"></topbar>
+        <topbar TYPE="studio" id="topbar"></topbar>
         <div id="fortop"></div>
             <div class="infobar left-part">
                 <img src="../assets/logo.png" id="teacher-avatar" alt="head-image" :width="img.size" :height="img.size" @click="avatarModal = true">
@@ -33,7 +33,7 @@
                     <codedemo ref="code" :WIDTH="workSize.width" :HEIGHT="workSize.height" :CREATORID="roomInfo.creator_id" @send="emitCode" v-if="style===1||style===4"></codedemo>
                 </keep-alive>
                 <keep-alive>
-                    <my-canvas ref="canvas" SIZE="" @send="emitCanvas" :WIDTH="workSize.width" :HEIGHT="workSize.height" id="canvas" v-if="style===2||style===5"></my-canvas>
+                    <my-canvas ref="canvas" :SIZE="(style<3)?'':'small'" @send="emitCanvas" :WIDTH="workSize.width" :HEIGHT="workSize.height" id="canvas" v-if="style===2||style===5"></my-canvas>
                 </keep-alive>
             </div>
             <div :class="chatClass">
@@ -247,12 +247,14 @@ export default {
         }
     },
     created () {
-        console.log(this.$route.params)
-        this.roomInfo.id = this.$route.params.id
-        this.roomInfo.teacher = this.$route.params.creater_name
-        this.roomInfo.audience = this.$route.params.audience_amount
-        this.roomInfo.title = this.$route.params.name
-        this.roomInfo.creator_id = this.$route.params.creater
+        console.log(this.$route.query)
+        let room = this.$route.query
+        // wating for optimization
+        this.roomInfo.id = room.id
+        this.roomInfo.teacher = room.creater_name
+        this.roomInfo.audience = room.audience_amount
+        this.roomInfo.title = room.name
+        this.roomInfo.creator_id = room.creater
         //
     },
     mounted () {

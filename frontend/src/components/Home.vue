@@ -109,7 +109,7 @@
                 }
             },
             enterRoom (index) {
-                this.$router.push({ name: 'studio', params: this.livesList[index] })
+                this.$router.push({ name: 'studio', query: this.livesList[index] })
             }
         },
         mounted: function () {

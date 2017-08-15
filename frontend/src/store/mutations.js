@@ -36,3 +36,9 @@ export const emptyUser = (state) => {
     state.session.hasSession = false
     Vue.localStorage.set('session_key', null)
 }
+
+export const setAvatar = (state, url) => {
+    if (state.user.isLogin) {
+        state.user.avatar = url
+    }
+}

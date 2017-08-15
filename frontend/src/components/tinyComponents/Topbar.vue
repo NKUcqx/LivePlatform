@@ -9,8 +9,8 @@
         </Menu-item>
         <Menu-item name="2" class="top-right">
             <span id="createroom" @click="createModal = true"><Icon type="ios-plus" size="30" color="#5cadff" v-if="TYPE === 'home'"></Icon></span>
-            <span id="createroom"><Icon type="ios-play" size="30" color="rgb(0,180,0)" v-if="TYPE === 'unstart'"></Icon></span>
-            <span id="createroom"><Icon type="ios-close" size="30" color="rgb(210,100,100)" v-if="TYPE === 'started'"></Icon></span>
+            <span id="startlive" @click="startLive()"><Icon type="ios-play" size="30" color="rgb(0,180,0)" v-if="TYPE==='studio'&&!liveState.isStart"></Icon></span>
+            <span @click="endLive()"><Icon  id="endlive" type="android-exit" size="25" color="rgb(210,100,100)" v-if="TYPE==='studio'&&liveState.isStart"></Icon></span>
             <Modal v-model="createModal" title="Create Room" :width="400" @on-ok="createRoom()">
                 <Form ref="createForm" :model="createForm" :rules="ruleRoomname" :label-width="80">
                     <Form-item label="title:" prop="roomname">
@@ -82,9 +82,11 @@
                         }"
                         name="avatar"
                         type="drag"
+                        :on-success="changeAvatar"
                         action="/changeavatar/">
                         <div>
-                            <img src="../../assets/addroom.png">
+                            <img :src="user.avatar" id="show-avatar">
+                            <div id="avatar-text">click image or drag to update your avatar</div>
                         </div>
                     </Upload>
             </Modal>
@@ -164,12 +166,16 @@
         },
         computed: {
             ...mapGetters({
-                user: 'getUser'
+                user: 'getUser',
+                liveState: 'getLiveState'
             })
         },
         methods: {
             ...mapMutations({
-                addLiveRoom: 'addLiveRoom'
+                addLiveRoom: 'addLiveRoom',
+                setAvatar: 'setAvatar',
+                startLive: 'startLive',
+                endLive: 'endLive'
             }),
             ...mapActions({
                 logoutSubmit: 'logout',
@@ -238,6 +244,11 @@
                         alert(res.status)
                     })
                 }
+            },
+            changeAvatar (res, file) {
+                this.setAvatar('static/users/' + this.user.username + '/' + file.name)
+                console.log('static/users/' + this.user.username + '/' + file.name)
+                console.log(this.user.avatar)
             }
         },
         mounted () {
@@ -255,9 +266,14 @@
     overflow: hidden;
 }
 
-#createroom {
+#createroom, #startlive {
     display: inline-block;
     padding-top: 5px;
+}
+
+#endlive {
+    padding-top: 16px;
+    padding-right: 7px;
 }
 
 .menu-item {
@@ -302,5 +318,19 @@
 #submenu {
     text-align: center;
 }
-</style>
 
+#avatar-text {
+    font-size: 15px;
+    margin-top: 10px;
+    color: #5cadff;
+}
+
+#show-avatar {
+    display: inline-block;
+    margin-top: 10px; 
+    height: 90px;
+    width: 90px;
+    border-radius: 50%;
+    border: 2px solid rgba(180,230,180,0.7);
+}
+</style>
