@@ -36,35 +36,35 @@
                 defalut: ''
             }
         },
-        data() {
+        data () {
             return {
                 index: 0,
                 sources: [require('../assets/bg3.jpg'), require('../assets/bg4.jpg'), require('../assets/bg5.jpg'), require('../assets/bg6.jpg')],
                 setautoplay: false,
                 autoplayspeed: 0,
-                setdots:'inside',
+                setdots: 'inside',
                 position: {
                     width: '',
                     height: ''
                 }
             }
         },
-        mounted() {
+        mounted () {
             this.position.width = this.WIDTH
             this.position.height = this.HEIGHT
-            //this.sources=this.SOURCES
+            // this.sources=this.SOURCES
         },
         methods: {
-            send(data) {
+            send (data) {
                 this.$emit('send', data)
             },
-            changeppt:function(oldValue, value){
+            changeppt: function (oldValue, value) {
                 console.log(value)
                 console.log('çhange')
             }
         },
-        watch:{
-            index:function(oldValue, value){
+        watch: {
+            index: function (oldValue, value) {
                 console.log(value)
                 console.log('numberchange')
             }
