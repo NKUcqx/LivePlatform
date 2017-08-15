@@ -7,10 +7,10 @@
                 <div id="toolbar" :style="toolbarStyle" v-show="isBarShown">
                     <!--Button class="join buttons" :disabled="isJoin" @click="join()" type="ghost">Start</Button>
                     <Button class="leave buttons" :disabled="!(isJoin)" @click="leave()" type="ghost">End</Button-->
-                    <Button icon="arrow-right-b" v-show="isPublish===false" @click="publish()" type="circle" class="buttons left"></Button>
-                    <Button icon="ios-pause" v-show="isPublish===true" @click="unpublish()" type="circle" class="buttons left"></Button>
-                    <Button icon="ios-mic-off" v-show="sound===false" @click="speak()" type="circle" class="buttons right"></Button>
-                    <Button icon="ios-mic-outline" v-show="sound===true" @click="mute()" type="circle" class="buttons right"></Button>
+                    <Button icon="arrow-right-b" v-show="hasVideo===false" @click="enableVideo()" type="circle" class="buttons left"></Button>
+                    <Button icon="ios-pause" v-show="hasVideo===true" @click="disableVideo()" type="circle" class="buttons left"></Button>
+                    <Button icon="ios-mic-off" v-show="hasAudio===false" @click="enableAudio()" type="circle" class="buttons right"></Button>
+                    <Button icon="ios-mic-outline" v-show="hasAudio===true" @click="disableAudio()" type="circle" class="buttons right"></Button>
                 </div>
             </div>
         </div>
@@ -61,8 +61,8 @@ export default {
         return {
             isBarShown: false,
             isJoin: false,
-            isPublish: true,
-            sound: true,
+            hasVideo: true,
+            hasAudio: true,
             appKey: '0c6a0a8f844c49d78a9aac0907dfc1d8',
             client: undefined,
             localStream: undefined,
@@ -97,7 +97,7 @@ export default {
                     console.log('User ' + uid + ' join channel successfully')
                     // 创建本地音视频流
                     that.localStream = AgoraRTC.createStream({streamID: uid,
-                        audio: that.sound,
+                        audio: true,
                         video: true,
                         screen: false})
                     that.localStream.setVideoProfile('720p_3')
@@ -122,17 +122,8 @@ export default {
             }, function (err) {
                 console.log('AgoraRTC client init failed', err)
             })
-
-            let channelKey = ''
             this.client.on('error', function (err) {
                 console.log('Got error msg:', err.reason)
-                if (err.reason === 'DYNAMIC_KEY_TIMEOUT') {
-                    that.client.renewChannelKey(channelKey, function () {
-                        console.log('Renew channel key successfully')
-                    }, function (err) {
-                        console.log('Renew channel key failed: ', err)
-                    })
-                }
             })
         },
         leave () {
@@ -155,32 +146,28 @@ export default {
                 }
             })
         },
-        publish () {
+        enableVideo () {
             this.$Modal.info({
                 title: '教育直播平台提醒您：',
-                content: '<p>您已经重启了直播</p>'
+                content: '<p>您已经重启了视频教学</p>'
             })
-            this.isPublish = true
-            this.client.publish(this.localStream, function (err) {
-                console.log('Publish local stream error: ' + err)
-            })
+            this.hasVideo = true
+            this.localStream.enableVideo()
         },
-        unpublish () {
+        disableVideo () {
             this.$Modal.info({
                 title: '教育直播平台提醒您：',
-                content: '<p>您已经暂停了直播</p>'
+                content: '<p>您已经暂停了视频教学</p>'
             })
-            this.isPublish = false
-            this.client.unpublish(this.localStream, function (err) {
-                console.log('Unpublish local stream failed' + err)
-            })
+            this.hasVideo = false
+            this.localStream.disableVideo()
         },
-        speak () {
-            this.sound = true
+        enableAudio () {
+            this.hasAudio = true
             this.localStream.enableAudio()
         },
-        mute () {
-            this.sound = false
+        disableAudio () {
+            this.hasAudio = false
             this.localStream.disableAudio()
         }
     }
