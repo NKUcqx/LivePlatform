@@ -17,7 +17,7 @@ let room_audience_list = {}
 // signals server will fire
 let fire_signals = ['Error', 'updateMessage', 'loadHistory', 'getAudience'] // wtf? whether space needed at the head of bracket or not!?
 // signals server will listening
-let listening_signals = ['connection', 'disconnect', 'join', 'sendMessage', 'getAudience', 'leave', 'endRoom']
+let listening_signals = ['connection', 'disconnecting', 'join', 'sendMessage', 'getAudience', 'kickout', 'endRoom']
 
 function readFile (roomname, limit = MESSAGE_THRESHOLD) {
     let list = []
@@ -39,27 +39,67 @@ function readFile (roomname, limit = MESSAGE_THRESHOLD) {
     return list
 }
 
-function writeFile (roomname) {
-    if (fs.existsSync(path.join(roomname, 'log.txt'))) {
-        const writeStream = fs.createWriteStream(path.join(roomname, 'log.txt'), {'flags': 'a'})
-        writeStream.on('open', (fd) => {
-            console.log('write log into ' + roomname)
-        })
-        for (let item of room_msg_list[roomname]) {
-            writeStream.write(item + '\r\n')// huan hang
-        }
-        writeStream.close()
-        writeStream.on('close', () => {
-            console.log('finish write file : %s', roomname)
-            room_msg_list[roomname] = room_msg_list[roomname].slice(MESSAGE_THRESHOLD)
-        })
-        writeStream.on('error', (err) => {
-            console.log('write error - %s', err.message)
+function writeFile (room_name, clear = false) {
+    file_name = path.join(room_name, 'log.txt')
+    if (fs.existsSync(file_name)) {
+        fs.open(file_name, 'a', (err, fd) => {
+            console.log('start')
+            if (err) {
+                throw err
+            }
+            for (let i = 0; i <  MESSAGE_THRESHOLD; i++) {
+                fs.writeSync(fd, room_msg_list[room_name][i] + '\r\n')
+            }
+            fs.close(fd, (err) => {
+                if (err) {
+                    throw err
+                }
+            })
+            if (clear === true) {
+                clearRoom(room_name)
+            } else {
+                room_msg_list[room_name] = room_msg_list[room_name].slice(MESSAGE_THRESHOLD)
+            }
+            console.log('finish')
         })
     } else {
         throw Error('file not exists')
     }
 }
+
+function clearRoom (room_name) {
+    for (let user in room_audience_list[room_name]) {
+        kickoutUser(room_name, user)
+    }
+    delete room_audience_list[room_name]
+    delete room_creater_list[room_name]
+    delete room_msg_list[room_name]
+}
+
+function kickoutUser (room_name, user) {
+    let type = typeof user
+    if (room_audience_list[room_name]) {
+        if (type === 'string') { // using user_id
+            room_audience_list[room_name][user].leave(room_name)
+            room_audience_list[room_name].splice(user, 1)
+            console.log(user + ' was kicked out from ' + room_name)
+        } else if (type === 'object') { // using raw socket instance
+            console.log('user.id : %s', user.id)
+            for (let item in room_audience_list[room_name]) {
+                console.log('here we get ' + item + '<<<<<<')
+                console.log('socket id : ' + room_audience_list[room_name][item].id)
+                if (room_audience_list[room_name][item].id === user.id) {
+                    console.log('ming zhong %s', item)
+                    kickoutUser(room_name, item)
+                    break
+                } else {
+                    console.log('miss' + item)
+                }
+            }
+        }
+    }
+}
+
 
 function isPackValid (data) {
     return isValid(data.room_name) &&
@@ -84,7 +124,7 @@ function logMessage (room_name, content, type, signal = 'sendMessage') {
     })
     room_msg_list[room_name].push(json_data)
     if (room_msg_list[room_name].length > MESSAGE_THRESHOLD) { // if it is filled, dump into log.txt
-        writeFile(room_name, room_msg_list[room_name])
+        writeFile(room_name)
     }
 }
 // TODO: param log's order
@@ -132,21 +172,22 @@ io.on(listening_signals[0], (socket) => {
     // on join
     socket.on(listening_signals[2], (data) => {
         if (isValid(data.room_name) && isValid(data.id)) {
-            if (!room_audience_list[data.room_name]) {
+            if (!room_creater_list[data.room_name]) {
                 room_creater_list[data.room_name] = socket // save the creater to ask for history
                 room_audience_list[data.room_name] = []
+                room_msg_list[data.room_name] = []
+                console.log('create room: %s by %s', data.room_name, data.id)
             }
             socket.join(data.room_name, () => {
-                console.log(data.id + ' has joined : ' + data.room_name)
+                console.log(data.id + ' has joined : ' + data.room_name + 'socket : ' + socket.id)
                 // push this socket into audience list via its id
                 room_audience_list[data.room_name][data.id] = socket
-                room_msg_list[data.room_name] = []
-                // load history messages
+                // ask for history from creater
                 sendMessage(room_creater_list[data.room_name], fire_signals[2], data.id)
             })
             // on sendMessage
             socket.on(listening_signals[3], (data) => {
-                console.log('sendMessage' + data)
+                console.log('sendMessage')
                 // TODO: is it necessary to check all of them ?
                 if (isPackValid(data)) {
                     if (isValid(data.to)) {
@@ -173,34 +214,25 @@ io.on(listening_signals[0], (socket) => {
                     sendMessage(socket, fire_signals[0], ERROR_MESSAGE[1])
                 }
             })
+            // on kickout
             socket.on(listening_signals[5], (data) => {
-                delete room_audience_list[data.room_name][socket.id]
-                console.log('User ' + socket.id + ' has left the room.')
-            })
-            // on endRoom
-            socket.on(listening_signals[6], (data) => {
-                if(isValid(data.id) && room_creater_list[data.id]) {
-                    try {
-                        writeFile(data.room_name)
-                        delete room_audience_list[data.room_name]
-                        delete room_creater_list[data.id]
-                        delete room_msg_list[data.room_name]
-                        console.log('LiveRoom : ' + data.room_name + ' ended')
-                    } catch (Error) {
-                        sendMessage(socket, fire_signals[0], ERROR_MESSAGE[4] + data.room_name)
-                    }
-                } else {
-                    sendMessage(socket, fire_signals[0], ERROR_MESSAGE[5])
+                if (isPackValid(data) && isValid(data.to)) {
+                    kickoutUser(data.room_name, data.to)
                 }
             })
         } else {
             sendMessage(socket, fire_signals[0], ERROR_MESSAGE[1])
         }
     })
-    socket.on(listening_signals[1], () => {
-        // TODO: how to get room_name ?
-        // TODO: write the remaining msg into file
-        console.log('user : ' + socket.id + ' disconnect')
+    // on disconnecting
+    socket.on(listening_signals[1], (reason) => {
+        console.log(reason)
+        let room_name = Object.keys(socket.rooms)[1]
+        if (room_creater_list[room_name] && room_creater_list[room_name].id === socket.id) { // if creater is leaving, flush the msg list, kick out audiences, delete all data lists
+            writeFile(room_name, true) // TODO: what if remaining data less than threshold ?
+        } else { // if uesr leaving, just clear him in audience_list
+            kickoutUser(room_name, socket)
+        }
     })
 })
 

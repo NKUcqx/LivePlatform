@@ -24,7 +24,7 @@
                 <section class="flexcontainer">
                     <room v-for="livesItem in livesList" :item="livesItem"></room>
                     <div class="pagediv">
-                        <Page :current="2" :total="50" simple></Page>
+                        <Page :current="1" :total="3" simple></Page>
                     </div>
                 </section>
             </Card>
@@ -36,7 +36,7 @@
                 <section class="flexcontainer">
                     <room v-for="videoItem in videosList" :item="videoItem"></room>
                     <div class="pagediv">
-                        <Page :current="2" :total="50" simple></Page>
+                        <Page :current="1" :total="3" simple></Page>
                     </div>
                 </section>
             </Card>

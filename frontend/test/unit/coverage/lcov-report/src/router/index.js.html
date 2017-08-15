@@ -20,28 +20,28 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">100% </span>
+        <span class="strong">8.33% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>1/1</span>
+        <span class='fraction'>1/12</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">100% </span>
+        <span class="strong">0% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>0/0</span>
+        <span class='fraction'>0/6</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">100% </span>
+        <span class="strong">0% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>0/0</span>
+        <span class='fraction'>0/3</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">100% </span>
+        <span class="strong">8.33% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>1/1</span>
+        <span class='fraction'>1/12</span>
       </div>
     </div>
   </div>
-  <div class='status-line high'></div>
+  <div class='status-line low'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet">1
 2
@@ -101,7 +101,36 @@
 56
 57
 58
-59</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -122,6 +151,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -129,6 +162,25 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -166,10 +218,13 @@ import Welcome from '@/components/Welcome'
 import Home from '@/components/Home'
 import Studio from '@/components/Studio'
 import Codedemo from '@/components/Codedemo'
+import Chat from '@/components/Chat'
 import Canvas from '@/components/tinyComponents/Canvas'
 import CloseButton from '@/components/tinyComponents/CloseButton'
 import TeacherRTC from '@/components/tinyComponents/TeacherRTC'
 import StudentRTC from '@/components/tinyComponents/StudentRTC'
+import store from '../store'
+import { CONST } from '../utils/const'
 &nbsp;
 Vue.use(Router)
 &nbsp;
@@ -177,23 +232,41 @@ export default new Router({
     routes: [
         {
             path: '',
-            name: 'Welcome',
-            component: Welcome
+            name: 'welcome',
+            component: Welcome,
+            beforeEnter: (to, from, next) =&gt; <span class="fstat-no" title="function not covered" >{</span>
+<span class="cstat-no" title="statement not covered" >                if (store.getters.isLogin) {</span>
+<span class="cstat-no" title="statement not covered" >                    next('/home')</span>
+                } else {
+<span class="cstat-no" title="statement not covered" >                    next()</span>
+                }
+            }
         },
         {
             path: '/home',
             name: 'home',
-            component: Home
+            component: Home,
+            beforeEnter: (to, from, next) =&gt; <span class="fstat-no" title="function not covered" >{</span>
+<span class="cstat-no" title="statement not covered" >                if (!store.getters.isLogin) {</span>
+<span class="cstat-no" title="statement not covered" >                    alert(CONST.login)</span>
+<span class="cstat-no" title="statement not covered" >                    next('/')</span>
+                } else {
+<span class="cstat-no" title="statement not covered" >                    next()</span>
+                }
+            }
         },
         {
             path: '/studio',
             name: 'studio',
-            component: Studio
-        },
-        {
-            path: '/close',
-            name: 'close',
-            component: CloseButton
+            component: Studio,
+            beforeEnter: (to, from, next) =&gt; <span class="fstat-no" title="function not covered" >{</span>
+<span class="cstat-no" title="statement not covered" >                if (!store.getters.isLogin) {</span>
+<span class="cstat-no" title="statement not covered" >                    alert(CONST.login)</span>
+<span class="cstat-no" title="statement not covered" >                    next('/')</span>
+                } else {
+<span class="cstat-no" title="statement not covered" >                    next()</span>
+                }
+            }
         },
         {
             path: '/canvas',
@@ -214,6 +287,11 @@ export default new Router({
             path: '/student',
             name: 'student',
             component: StudentRTC
+        },
+        {
+            path: '/chat',
+            name: 'chat',
+            component: Chat
         }
     ]
 })
@@ -223,7 +301,7 @@ export default new Router({
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sat Aug 12 2017 07:02:19 GMT+0000 (UTC)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Aug 14 2017 15:30:35 GMT+0800 (CST)
 </div>
 </div>
 <script src="../../prettify.js"></script>

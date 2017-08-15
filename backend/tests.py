@@ -157,7 +157,7 @@ class RoomViewTestCase(TestCase):
         self.assertTrue(
             os.path.isfile("frontend/static/rooms/unittest/log.txt"))
 
-    '''def test_create_get_end_room(self):
+    def test_create_get_end_room(self):
         room = {"name": "test_room1"}
         res = self.c.post('/createroom/', room)
         self.assertEqual(res.status_code, 200)
@@ -225,12 +225,11 @@ class RoomViewTestCase(TestCase):
         content = json.loads(res.content.decode('utf8'))
         self.assertEqual(len(content['rooms']), 1)
 
-        req = json.dumps({})
-        res = self.c.get('/getroomamount/', json.loads(req))
+        res = self.c.get('/getroomamount/', {})
         content = json.loads(res.content.decode('utf8'))
         self.assertEqual(res.status_code, 200)
         self.assertEqual(content['living_amount'], 1)
-        self.assertEqual(content['end_amount'], 2)'''
+        self.assertEqual(content['end_amount'], 2)
 
     def tearDown(self):
         pass

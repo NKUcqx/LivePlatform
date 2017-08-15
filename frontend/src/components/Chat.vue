@@ -214,11 +214,6 @@
                     this.silence = false
                     this.speak = true
                 }
-                if (data.data.chattype === 'allspeak') {
-                    console.log('allspeak')
-                    this.silence = false
-                    this.speak = true
-                }
             },
             cancel () {}
         }
