@@ -95,17 +95,17 @@ export default {
     },
     watch: {
         'WIDTH': function (newVal, oldVal) {
-            /*let imgData = this.context.getImageData(0, 0, oldVal, oldVal * 0.65)
+            /* let imgData = this.context.getImageData(0, 0, oldVal, oldVal * 0.65)
             this.$refs.board.width = this.WIDTH
             this.$refs.board.height = this.HEIGHT
-            this.context.putImageData(imgData, 0, 0, 0, 0, this.WIDTH, this.HEIGHT)*/
-            var nc = document.createElement("canvas");
-            nc.width = this.$refs.board.width;
-            nc.height = this.$refs.board.height;
-            nc.getContext("2d").drawImage(this.$refs.board,0,0);
-            this.$refs.board.width = this.WIDTH;
-            this.$refs.board.height = this.HEIGHT;
-            this.context.drawImage(nc,0,0,this.WIDTH,this.HEIGHT);
+            this.context.putImageData(imgData, 0, 0, 0, 0, this.WIDTH, this.HEIGHT) */
+            var nc = document.createElement('canvas')
+            nc.width = this.$refs.board.width
+            nc.height = this.$refs.board.height
+            nc.getContext('2d').drawImage(this.$refs.board, 0, 0)
+            this.$refs.board.width = this.WIDTH
+            this.$refs.board.height = this.HEIGHT
+            this.context.drawImage(nc, 0, 0, this.WIDTH, this.HEIGHT)
         }
     },
     data () {

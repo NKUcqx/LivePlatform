@@ -171,7 +171,7 @@ export default {
                     }
                 }
             } else {
-                this.editor.setSelection({ line:data.data.data.from.line, ch:data.data.data.from.ch}, { line:data.data.data.to.line, ch:data.data.data.to.ch})
+                this.editor.setSelection({ line: data.data.data.from.line, ch: data.data.data.from.ch }, { line: data.data.data.to.line, ch: data.data.data.to.ch })
             }
         }
     },
