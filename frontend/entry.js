@@ -43,10 +43,11 @@ function writeFile (room_name, clear = false) {
     file_name = path.join(room_name, 'log.txt')
     if (fs.existsSync(file_name)) {
         fs.open(file_name, 'a', (err, fd) => {
+            console.log('start')
             if (err) {
                 throw err
             }
-            for (let i = 0; i <  room_msg_list[room_name].length; i++) {
+            for (let i = 0; i <  MESSAGE_THRESHOLD; i++) {
                 fs.writeSync(fd, room_msg_list[room_name][i] + '\r\n')
             }
             fs.close(fd, (err) => {
@@ -54,7 +55,7 @@ function writeFile (room_name, clear = false) {
                     throw err
                 }
             })
-            if (clear) {
+            if (clear === true) {
                 clearRoom(room_name)
             } else {
                 room_msg_list[room_name] = room_msg_list[room_name].slice(MESSAGE_THRESHOLD)
@@ -66,12 +67,6 @@ function writeFile (room_name, clear = false) {
     }
 }
 
-function kickoutUser (room_name, user_id) {
-    room_audience_list[room_name][user_id].leave(room_name)
-    room_audience_list[room_name].splice(user_id, 1)
-    console.log(user_id + ' was kicked out from ' + room_name)
-}
-
 function clearRoom (room_name) {
     for (let user in room_audience_list[room_name]) {
         kickoutUser(room_name, user)
@@ -80,6 +75,31 @@ function clearRoom (room_name) {
     delete room_creater_list[room_name]
     delete room_msg_list[room_name]
 }
+
+function kickoutUser (room_name, user) {
+    let type = typeof user
+    if (room_audience_list[room_name]) {
+        if (type === 'string') { // using user_id
+            room_audience_list[room_name][user].leave(room_name)
+            room_audience_list[room_name].splice(user, 1)
+            console.log(user + ' was kicked out from ' + room_name)
+        } else if (type === 'object') { // using raw socket instance
+            console.log('user.id : %s', user.id)
+            for (let item in room_audience_list[room_name]) {
+                console.log('here we get ' + item + '<<<<<<')
+                console.log('socket id : ' + room_audience_list[room_name][item].id)
+                if (room_audience_list[room_name][item].id === user.id) {
+                    console.log('ming zhong %s', item)
+                    kickoutUser(room_name, item)
+                    break
+                } else {
+                    console.log('miss' + item)
+                }
+            }
+        }
+    }
+}
+
 
 function isPackValid (data) {
     return isValid(data.room_name) &&
@@ -104,7 +124,7 @@ function logMessage (room_name, content, type, signal = 'sendMessage') {
     })
     room_msg_list[room_name].push(json_data)
     if (room_msg_list[room_name].length > MESSAGE_THRESHOLD) { // if it is filled, dump into log.txt
-        writeFile(room_name, room_msg_list[room_name])
+        writeFile(room_name)
     }
 }
 // TODO: param log's order
@@ -152,14 +172,14 @@ io.on(listening_signals[0], (socket) => {
     // on join
     socket.on(listening_signals[2], (data) => {
         if (isValid(data.room_name) && isValid(data.id)) {
-            if (!room_audience_list[data.room_name]) {
+            if (!room_creater_list[data.room_name]) {
                 room_creater_list[data.room_name] = socket // save the creater to ask for history
                 room_audience_list[data.room_name] = []
                 room_msg_list[data.room_name] = []
                 console.log('create room: %s by %s', data.room_name, data.id)
             }
             socket.join(data.room_name, () => {
-                console.log(data.id + ' has joined : ' + data.room_name)
+                console.log(data.id + ' has joined : ' + data.room_name + 'socket : ' + socket.id)
                 // push this socket into audience list via its id
                 room_audience_list[data.room_name][data.id] = socket
                 // ask for history from creater
@@ -197,30 +217,9 @@ io.on(listening_signals[0], (socket) => {
             // on kickout
             socket.on(listening_signals[5], (data) => {
                 if (isPackValid(data) && isValid(data.to)) {
-                    room_audience_list[data.room_name][data.to].leave(data.room_name)
-                    room_audience_list[data.room_name].splice(data.to, 1)
-                    console.log('User ' + data.id + ' has left the room.')
+                    kickoutUser(data.room_name, data.to)
                 }
             })
-            // on endRoom
-            /*socket.on(listening_signals[6], (data) => {
-                if (room_creater_list[data.room_name].id === socket.id) {
-                    try {
-                        writeFile(data.room_name)
-                        io.sockets.clients(socket.room).forEach((listener) => {
-                            listener.leave(socket.room)
-                        })
-                        delete room_audience_list[data.room_name] // just clear data in server, still need to 'leave' the audience
-                        delete room_creater_list[data.room_name]
-                        delete room_msg_list[data.room_name]
-                        console.log('LiveRoom : ' + data.room_name + ' ended')
-                    } catch (Error) {
-                        sendMessage(socket, fire_signals[0], ERROR_MESSAGE[4] + data.room_name)
-                    }
-                } else {
-                    sendMessage(socket, fire_signals[0], ERROR_MESSAGE[5])
-                }
-            })*/
         } else {
             sendMessage(socket, fire_signals[0], ERROR_MESSAGE[1])
         }
@@ -229,16 +228,10 @@ io.on(listening_signals[0], (socket) => {
     socket.on(listening_signals[1], (reason) => {
         console.log(reason)
         let room_name = Object.keys(socket.rooms)[1]
-        if (room_creater_list[room_name] === socket) { // if creater is leaving, flush the msg list, kick out audiences, delete all data lists
+        if (room_creater_list[room_name] && room_creater_list[room_name].id === socket.id) { // if creater is leaving, flush the msg list, kick out audiences, delete all data lists
             writeFile(room_name, true) // TODO: what if remaining data less than threshold ?
         } else { // if uesr leaving, just clear him in audience_list
-            for (let user in room_audience_list[room_name]) {
-                console.log(user+'<<<<<<')
-                if (room_audience_list[room_name][user] === socket) {
-                    kickoutUser(room_name, user)
-                    break
-                }
-            }
+            kickoutUser(room_name, socket)
         }
     })
 })

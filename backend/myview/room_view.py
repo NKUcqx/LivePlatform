@@ -68,7 +68,7 @@ def getRooms(request):
         'id', 'name', 'file_name', 'creater', 'audience_amount', 'create_time',
         'end_time', 'slide_path', 'thumbnail_path', 'is_living', 'is_silence')
     for item in rooms_dict:
-        item['creater_name'] = User.objects.get(
+        item['creator_nickname'] = User.objects.get(
             pk=int(item['creater'])).nickname
         item['create_time'] = item['create_time'].strftime(
             '%Y-%-m-%d %H:%m:%S')
@@ -159,7 +159,7 @@ def createRoom(request):
                     return HttpResponse(content=CODE['20'], status=415)
             room.save()
             room = model_to_json(room)
-            room['creater_nickname'] = User.objects.get(
+            room['creator_nickname'] = User.objects.get(
                 pk=room['creater']).nickname
             request.session['room'] = room
             return JsonResponse({'room': room})  # return the new room's id
