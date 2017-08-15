@@ -24,7 +24,8 @@ const state = {
         nickname: '',
         avatar: null,
         gender: '',
-        isLogin: false
+        isLogin: false,
+        role: 'S'
     }
 }
 

@@ -5,13 +5,13 @@
         <div id="showbar">
             <div id="carousel-containter">
                 <Carousel v-model="carousel" id="carousel" trigger="hover" arrow="always" dots="none">
-                    <Carousel-item v-for="(livesItem, index) in livesList.slice(0,4)" class="carousel-item" >
+                    <Carousel-item v-for="(livesItem, index) in mostPopular" class="carousel-item" >
                         <div class="carousl-background" :style="carouselStyle(index)" @click="enterRoom(index)"></div>
                     </Carousel-item>
                 </Carousel>
             </div>
             <div id="carousel-aside">
-                <div class="aside-item" v-for="(livesItem, index) in livesList.slice(0,4)" @mouseover="flipOver(index)" :style="asideStyle(index)" @click="enterRoom(index)">
+                <div class="aside-item" v-for="(livesItem, index) in mostPopular" @mouseover="flipOver(index)" :style="asideStyle(index)" @click="enterRoom(index)">
                 </div>
             </div>
         </div>
@@ -24,7 +24,7 @@
                 <section class="flexcontainer">
                     <room v-for="livesItem in livesList" :item="livesItem"></room>
                     <div class="pagediv">
-                        <Page :current="2" :total="50" simple></Page>
+                        <Page :current="1" :total="roomAmount.liveAmount" :page-size="pageSize" @on-change="changeLivePage" simple></Page>
                     </div>
                 </section>
             </Card>
@@ -36,7 +36,7 @@
                 <section class="flexcontainer">
                     <room v-for="videoItem in videosList" :item="videoItem"></room>
                     <div class="pagediv">
-                        <Page :current="2" :total="50" simple></Page>
+                        <Page :current="1" :total="roomAmount.videoAmount" :page-size="pageSize" @on-change="changeVideoPage" simple></Page>
                     </div>
                 </section>
             </Card>
@@ -60,16 +60,16 @@
             return {
                 WIDTH: window.document.documentElement.clientWidth,
                 HEIGHT: document.documentElement.clientHeight,
-                carousel: 0,
-
-                // delete later
-                background: new Array(4)
+                carousel: 0
             }
         },
         computed: {
             ...mapGetters({
                 getLiveRooms: 'getLiveRooms',
-                getVideoRooms: 'getVideoRooms'
+                getVideoRooms: 'getVideoRooms',
+                roomAmount: 'getRoomAmount',
+                pageSize: 'getPageSize',
+                mostPopular: 'getMostPopular'
             }),
             livesList () {
                 return this.getLiveRooms
@@ -80,7 +80,8 @@
         },
         methods: {
             ...mapActions({
-                getRoomsFromDB: 'getRoomsFromDB'
+                getRoomsFromDB: 'getRoomsFromDB',
+                getRoomAmountFromDB: 'getRoomAmountFromDB'
             }),
             carouselBackground (index) {
                 return 'url(' + this.livesList[index].thumbnail_path + ')'
@@ -110,11 +111,18 @@
             },
             enterRoom (index) {
                 this.$router.push({ name: 'studio', query: this.livesList[index] })
+            },
+            changeVideoPage (page) {
+                this.getRoomsFromDB({ isLive: false, start: (page - 1) * this.pageSize })
+            },
+            changeLivePage (page) {
+                this.getRoomsFromDB({ isLive: true, start: (page - 1) * this.pageSize })
             }
         },
         mounted: function () {
-            this.getRoomsFromDB(true)
-            this.getRoomsFromDB(false)
+            this.getRoomsFromDB({ isLive: true })
+            this.getRoomsFromDB({ isLive: false })
+            this.getRoomAmountFromDB()
         }
     }
 </script>
