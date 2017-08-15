@@ -122,11 +122,11 @@
                 dialog2: false,
                 dialog3: false,
                 silence: false,
-                allsilece: false,
+                allsilence: false,
                 allspeak: true,
                 speak: true,
                 indeterminate: true,
-                checkAll:false,
+                checkAll: false,
                 bans: [],
                 cans: [],
                 position: {
@@ -173,11 +173,8 @@
                             username: this.USERNAME,
                             userid: this.USERID
                         })
-                        console.log(this.CREATERID)
-                        console.log(this.USERID)
                         this.message = ''
                         document.getElementById('history').scrollTop = document.getElementById('history').scrollHeight
-                        console.log('chat send')
                     }
                 }
             },
@@ -213,27 +210,25 @@
             },
             handleCheckAll: function(data) {
                 if (this.indeterminate) {
-                    this.checkAll = false;
+                    this.checkAll = false
                 } else {
-                    this.checkAll = !this.checkAll;
+                    this.checkAll = !this.checkAll
                 }
-                this.indeterminate = false;
+                this.indeterminate = false
                 this.cans = this.bans
             },
             checkchange: function(data) {
                 if (data.length === this.bans.length) {
-                    this.indeterminate = false;
-                    this.checkAll = true;
+                    this.indeterminate = false
+                    this.checkAll = true
                 } else if (data.length > 0) {
-                    this.indeterminate = true;
-                    this.checkAll = false;
+                    this.indeterminate = true
+                    this.checkAll = false
                 } else {
-                    this.indeterminate = false;
-                    this.checkAll = false;
+                    this.indeterminate = false
+                    this.checkAll = false
                 }
                 this.cans = data
-                console.log('canspeak')
-                console.log(data)
             },
             canspeak: function() {
                 for (var index = 0; index < this.cans.length; index++) {
@@ -241,10 +236,8 @@
                         chattype: 'canspeak',
                         userid: this.cans[index]
                     })
-                    console.log('canspeak;;')
-                    console.log(this.cans[index])
-                    this.indeterminate=true
-                    this.checkAll=false
+                    this.indeterminate = true
+                    this.checkAll = false
                 }
             },
             banspeakone(id, name) {
@@ -264,71 +257,79 @@
                     })
                 }
             },
+            messolve(data) {
+                this.history.push({
+                    username: data.data.username,
+                    message: data.data.message,
+                    userid: data.data.userid
+                })
+            },
+            outsolve(data) {
+                if (data.data.userid === this.USERID) {
+                    localStorage['out'] = true
+                    this.$router.go(-1)
+                }
+            },
+            banonesolve(data) {
+                if (data.data.userid === this.USERID) {
+                    localStorage['silence'] = true
+                    this.silence = true
+                    this.speak = false
+                }
+                this.bans.push({
+                    userid: data.data.userid,
+                    username: data.data.username
+                })
+            },
+            banpublicsolve(data) {
+                if (data.data.userid !== this.USERID) {
+                    localStorage['silence'] = true
+                    this.allsilence = true
+                    this.allspeak = false
+                    this.silence = true
+                    this.speak = false
+                } else {
+                    this.allsilence = true
+                    this.allspeak = false
+                }
+            },
+            allspeaksolve(data) {
+                localStorage['silence'] = false
+                this.allsilence = false
+                this.allspeak = true
+                this.silence = false
+                this.speak = true
+            },
+            canspeaksolve(data) {
+                for (var index = 0; index < this.bans.length; index++) {
+                    if (this.bans[index].userid === data.data.userid) {
+                        this.bans.splice(index, 1)
+                    }
+                }
+                if (data.data.userid === this.USERID) {
+                    this.silence = false
+                    this.speak = true
+                    localStorage['silence'] = false
+                }
+            },
             receive(data) {
                 if (data.data.chattype === 'message') {
-                    console.log('chat recive')
-                    console.log(data.data.userid)
-                    console.log(this.CREATERID)
-                    console.log(data.data.message)
-                    this.history.push({
-                        username: data.data.username,
-                        message: data.data.message,
-                        userid: data.data.userid
-                    })
+                    this.messolve(data)
                 }
                 if (data.data.chattype === 'outone') {
-                    if (data.data.userid === this.USERID) {
-                        localStorage['out'] = true
-                        this.$router.go(-1)
-                    }
+                    this.outsolve(data)
                 }
                 if (data.data.chattype === 'banspeakone') {
-                    if (data.data.userid === this.USERID) {
-                        localStorage['silence'] = true
-                        this.silence = true
-                        this.speak = false
-                    }
-                    this.bans.push({
-                        userid: data.data.userid,
-                        username: data.data.username
-                    })
+                    this.banonesolve(data)
                 }
                 if (data.data.chattype === 'allsilence') {
-                    if (data.data.userid !== this.USERID) {
-                        localStorage['silence'] = true
-                        this.allsilece = true
-                        this.allspeak = false
-                        this.silence = true
-                        this.speak = false
-                    }
+                    this.banpublicsolve(data)
                 }
                 if (data.data.chattype === 'allspeak') {
-                    localStorage['silence'] = false
-                    this.allsilece = false
-                    this.allspeak = true
-                    this.silence = false
-                    this.speak = true
-                }
-                if (data.data.chattype === 'allspeak') {
-                    this.silence = false
-                    this.speak = true
+                    this.allspeaksolve(data)
                 }
                 if (data.data.chattype === 'canspeak') {
-                    console.log('canspeak--recive')
-                    console.log(this.bans)
-                    for (var index = 0; index < this.bans.length; index++) {
-                        if (this.bans[index].userid === data.data.userid) {
-                            this.bans.splice(index, 1)
-                            console.log(index)
-                            console.log(this.bans)
-                        }
-                    }
-                    if (data.data.userid === this.USERID) {
-                        this.silence = false
-                        this.speak = true
-                        localStorage['silence'] = false
-                    }
-                    console.log('canspeak--recive')
+                    this.canspeaksolve(data)
                 }
             },
             cancel() {}
