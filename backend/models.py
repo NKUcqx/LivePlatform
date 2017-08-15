@@ -67,7 +67,7 @@ class User(AbstractUser):
 @receiver(user_logged_out, sender=User)
 def cleanUserRoom(sender, **kwargs):
     for room in LiveRoom.objects.filter(
-            creater_id=kwargs['request'].user.id, is_living=True):
+            creator_id=kwargs['request'].user.id, is_living=True):
         room.is_living = False
         room.save()
 
@@ -94,8 +94,8 @@ class LiveRoomManager(models.Manager):
     def room_count(self):
         return self.count()
 
-    def room_creater_count(self, creater_id):
-        return self.filter(creater_id=creater_id).count()
+    def room_creator_count(self, creator_id):
+        return self.filter(creator_id=creator_id).count()
 
     def room_audience_count(self, amount_to, amount_from=0):
         return self.filter(
@@ -115,7 +115,7 @@ class LiveRoomManager(models.Manager):
 
 class LiveRoom(models.Model):
     name = models.CharField(max_length=30)  # ,db_index = True
-    creater = models.ForeignKey(
+    creator = models.ForeignKey(
         User,
         default=get_User)  # no need to CASCADE when user get deleted ,right?
     audience_amount = models.PositiveIntegerField(
@@ -136,8 +136,8 @@ class LiveRoom(models.Model):
     objects = LiveRoomManager()
 
     def __unicode__(self):
-        return "ID : {}, RoomName: {} , Creater: {}".format(
-            self.ID, self.name, self.creater)
+        return "ID : {}, RoomName: {} , creator: {}".format(
+            self.ID, self.name, self.creator)
 
 
 @receiver(pre_save, sender=LiveRoom)

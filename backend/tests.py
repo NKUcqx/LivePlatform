@@ -67,12 +67,6 @@ class UserTestCase(TestCase):
         self.assertTrue(test_phone('13752652469'))
         self.assertTrue(test_phone('13662197063'))
 
-    def test_create_user_folder(self):
-        self.assertTrue(create_user_folder('23'))
-        self.assertTrue(create_user_folder('22'))
-        self.assertEqual(create_user_folder('892670995@qq.com'), False)
-        self.assertEqual(create_user_folder('13513616853'), False)
-
     def test_sendTo(self):
         user_dic = {"email": "15302178925@163.com", "code": "4345"}
         user_json = json.dumps(user_dic)

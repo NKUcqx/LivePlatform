@@ -77,9 +77,9 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'liveplat',
-        'USER': 'root',
-        'PASSWORD': 'root',
+        'NAME': 'group3',
+        'USER': 'jason',
+        'PASSWORD': '',
     }
 }
 
@@ -114,7 +114,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)

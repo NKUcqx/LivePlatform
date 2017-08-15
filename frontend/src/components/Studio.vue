@@ -223,7 +223,7 @@ export default {
         emit (data, dataType, to = null, type = 1, signal = 'sendMessage') { // to which user he wanna send to
             const pack = {
                 id: this.user.userid,
-                room_name: 'static/rooms/51e2593b505c8ed141ee3f500f2691b4',
+                room_name: 'static/rooms/da8b043782e79c9a00b87e6d333c67c2',
                 content: {
                     id: this.user.userid,
                     nickname: this.user.nickname,

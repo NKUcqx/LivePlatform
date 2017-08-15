@@ -83,12 +83,24 @@ def un_zip(file_name):
     zip_file.close()
     return split_str
 
-def change_prefix(long_path, target = 'frontend', add = False):
+def change_prefix(long_path, add = False, target = 'frontend'):
     if(add):
         return '/' + target + long_path
-    path_arr = long_path.split('/')
-    path = '/' + '/'.join(path_arr[path_arr.index(target) + 1:])
+    try:
+        path_arr = long_path.split('/')
+        path = '/' + '/'.join(path_arr[path_arr.index(target) + 1:])
+    except ValueError:
+        return long_path
     return path
+
+def wrap_room(room): # room in dict form
+    room['creator_id'] = room.get('creator', room.get('creator_id', None))
+    room['creator_nickname'] = User.objects.get(pk=int(room['creator_id'])).nickname
+    room['create_time'] = room['create_time'].strftime('%Y-%-m-%d %H:%m:%S')
+    room['end_time'] = room['end_time'].strftime('%Y-%-m-%d %H:%m:%S') if room.get('end_time', None) is not None else ''
+    room['file_name'] = change_prefix(room['file_name'])
+    room['thumbnail_path'] = change_prefix(room['thumbnail_path'])
+    room['slide_path'] = change_prefix(room['slide_path'])
 
 @login_required
 @require_GET
@@ -97,8 +109,8 @@ def getRooms(request):
         request.GET.get('order_by', '-audience_amount'))
     if ('id' in request.GET):
         rooms = rooms.filter(id=request.GET.get('id'))
-    if ('creater_id' in request.GET):
-        rooms = rooms.filter(creater_id=request.GET.get('creater_id'))
+    if ('creator_id' in request.GET):
+        rooms = rooms.filter(creator_id=request.GET.get('creator_id'))
     if ('is_living' in request.GET):
         rooms = rooms.filter(is_living=True if
                              request.GET.get('is_living') == 'true' else False)
@@ -106,20 +118,9 @@ def getRooms(request):
         start = int(request.GET.get('start', 0))
         limit = start + int(request.GET.get('limit'))
         rooms = rooms[start:limit]
-    rooms_dict = rooms.values(
-        'id', 'name', 'file_name', 'creater', 'audience_amount', 'create_time',
-        'end_time', 'slide_path', 'thumbnail_path', 'is_living', 'is_silence')
+    rooms_dict = rooms.values()
     for item in rooms_dict:
-        item['creater_name'] = User.objects.get(
-            pk=int(item['creater'])).nickname
-        item['create_time'] = item['create_time'].strftime(
-            '%Y-%-m-%d %H:%m:%S')
-        item['end_time'] = item[
-            'end_time'].strftime('%Y-%-m-%d %H:%m:%S') if item.get(
-                'end_time', None) is not None else ''
-        item['file_name'] = change_prefix(item['file_name'])
-        item['thumbnail_path'] = change_prefix(item['thumbnail_path'])
-        item['slide_path'] = change_prefix(item['slide_path'])
+        item = wrap_room(item)
     return JsonResponse({'rooms': list(rooms_dict)})
 
 @login_required
@@ -136,7 +137,7 @@ def uploadThumbnail(request):
     # must satisfy: login and is a teacher and has created a live room
     if ('room' in request.session):
         room = request.session['room']
-        if(str(request.user.id) == room['creater']):
+        if(str(request.user.id) == room['creator_id']):
             thumbnail = request.FILES.get('avatar')
             thumbnail_type = os.path.splitext(thumbnail.name)[1]
             if (thumbnail_type in IMG_LIST):
@@ -155,7 +156,7 @@ def uploadThumbnail(request):
 def uploadSlide(request):
     if ('room' in request.session):
         room = request.session['room']
-        if(str(request.user.id) == room['creater']):
+        if(str(request.user.id) == room['creator_id']):
             slide = request.FILES.get('avatar', None)
             if(slide is not None):
                 slide_type = os.path.splitext(slide.name)[1]
@@ -179,7 +180,7 @@ def uploadSlide(request):
 def createRoom(request):
     # can check log in status because of comments above
     if (request.user.role == 'T' and 'room' not in request.session):
-        creater_id = request.user.id
+        creator_id = request.user.id
         thumbnail = request.FILES.get('thumbnail', None)
         name = request.POST.get('name')
         is_silence = True if request.POST.get('is_silence', None) is not None else False
@@ -188,14 +189,12 @@ def createRoom(request):
         if (create_folder(file_name)):
             room = LiveRoom(
                 name=name,
-                creater_id=creater_id,
+                creator_id=creator_id,
                 file_name=file_name,
                 is_silence=is_silence,
                 is_living=is_living)
             room.save()
-            room = model_to_json(room)
-            room['creater_nickname'] = User.objects.get(
-                pk = room['creater']).nickname
+            room = wrap_room(model_to_json(room))
             request.session['room'] = room
             return JsonResponse({'room': room})  # return the new room's id
         else:
@@ -213,7 +212,7 @@ def updateRoom(request):
     user = request.user
     room = request.session.get('room', None)
     body = bi2obj(request)
-    if (room and user and str(user.id) == room['creater']):
+    if (room and user and str(user.id) == room['creator_id']):
         room_db = LiveRoom.objects.get(pk=int(room['id']))
         new_amount = body.get('audience_amount', None)
         new_name = body.get('name', None)
@@ -222,7 +221,7 @@ def updateRoom(request):
         if (new_name is not None and new_name != ''):
             room_db.name = new_name
         room_db.save()
-        room = model_to_json(room_db)
+        room = wrap_room(model_to_json(room_db))
         request.session['room'] = room  # update session's room
         return JsonResponse({'room': room})
     else:
@@ -235,9 +234,7 @@ def endRoom(request):
     user = request.user
     room = request.session.get('room', None)
     if (room):
-        # _id is a default field add by Django (can save one query from user
-        # table)
-        if (user and str(user.id) == room['creater']):
+        if (user and str(user.id) == room['creator_id']):
             room_db = LiveRoom.objects.get(pk=int(room['id']))
             room_db.is_living = False  # will set end_time automatically by db
             room_db.save()
@@ -255,7 +252,7 @@ def silenceRoom(request):
     body = bi2obj(request)
     user = request.user
     if (user.role == 'T' and 'room' in request.session
-            and user.id == request.session.get('room').get('creater')):
+            and user.id == request.session.get('room').get('creator_id')):
         room = request.session.get('room')
         room_db = LiveRoom.objects.get(pk=int(room['id']))
         room_db.is_silence = body['is_silence']
