@@ -1,9 +1,50 @@
 <template>
     <div id="studio" :style="wholeSize">
         <topbar TYPE="studio" id="topbar" ref="topBar"></topbar>
+        <Modal v-model="uploadModal" id="upload-modal">
+            <Upload
+                :headers = "{
+                    'X-CSRFToken': getCookie() 
+                }"
+                name="thumbnail"
+                type="drag"
+                :on-success="changeThumbnail"
+                :on-format-error="thumbnailTypeError"
+                :on-exceeded-size="thumbnailSizeError"
+                :show-upload-list="false"
+                :format="['jpg','jpeg','png','gif','bmp']"
+                :max-size="300"
+                action="/setthumbnail/">
+                <div>
+                    <img :src="roomInfo.img" id="show-thumbnail">
+                    <div class="upload-text">click image or drag to update your thumbnail of live</div>
+                </div>
+            </Upload>
+            <Upload
+                :headers = "{
+                    'X-CSRFToken': getCookie() 
+                }"
+                name="silde"
+                type="drag"
+                :on-success="uploadSlide"
+                :on-format-error="slideTypeError"
+                :on-exceeded-size="slideSizeError"
+                action="/uploadslide/"
+                :show-upload-list="true"
+                :format="['ppt','pptx','key']"
+                :max-size="10*1024"
+                id="upload-ppt">
+                <div>
+                    <img src="../assets/PPT.png" id="show-slide">
+                    <div class="upload-text">click image or drag to upload your slide</div>
+            </Upload>
+            <div slot="footer" id="modal-footer">
+                <Button type="primary" @click="readyForLive()">Ready</Button>
+            </div>
+        </Modal>
         <div id="fortop"></div>
             <div class="infobar left-part">
-                <img src="../assets/logo.png" id="teacher-avatar" alt="head-image" :width="img.size" :height="img.size" @click="avatarModal = true">
+                <img src="../assets/logo.png" id="teacher-avatar" :class="(isCreator)?'creator-avatar':''" alt="head-image" :width="img.size" :height="img.size" @click="showUploadModal()">
                 <div id="studio-info">
                     <div id="title">
                         <h2 id="title-content">{{roomInfo.title}}</h2>
@@ -53,7 +94,8 @@ import Chatdemo from './Chat'
 import io from 'socket.io-client'
 import { mapGetters, mapActions } from 'vuex'
 import { isValid } from '../utils/checks'
-import { beforePost } from '../utils/utils'
+import { beforePost, getCookie } from '../utils/utils'
+import { CONST } from '../utils/const'
 
 const STYLESTATES = {
     0: 'ppt and video',
@@ -84,6 +126,7 @@ export default {
         return {
             style: 1,
             type: 1,
+            uploadModal: false,
             closePosition: {
                 right: '',
                 top: ''
@@ -102,7 +145,10 @@ export default {
                 teacher: 'gongyansongisgood',
                 audience: 3000,
                 room_id: '',
-                creator_id: 0
+                creator_id: 0,
+                is_living: false,
+                img: '',
+                slide: ''
             }
         }
     },
@@ -146,12 +192,18 @@ export default {
                 width: this.WIDTH * 0.35,
                 height: (this.type === 1) ? this.WIDTH * 0.195 * 0.5 + 90 : this.WIDTH * 0.5 * 0.65 + 100
             }
+        },
+        isCreator () {
+            return this.roomInfo.creator_id.toString() === this.user.userid.toString() && this.roomInfo.is_living
         }
     },
     methods: {
         ...mapActions({
             destroyLive: 'destroyLive'
         }),
+        getCookie () {
+            return getCookie('csrftoken')
+        },
         openMinor () {
             this.type = 1
         },
@@ -242,6 +294,42 @@ export default {
             } else {
                 throw Error('param format error')
             }
+        },
+        changeThumbnail (res, file) {
+            console.log('static/users/' + this.user.username + '/' + file.name)
+            let that = this
+            setTimeout(function () {
+                that.roomInfo.img = 'static/users/' + that.user.username + '/' + file.name
+            }, 5000)
+            this.$Message.success(CONST.success('Upload Thumbnail'))
+        },
+        uploadSlide (res, file) {
+            this.$Message.success(CONST.success('Upload Slide'))
+        },
+        thumbnailTypeError (file, fileList) {
+            this.$Message.error('thumbnail must be jpg jpeg png gif bmp')
+        },
+        thumbnailSizeError (file, fileList) {
+            this.$Message.error('thumbnail must under 300K')
+        },
+        slideTypeError (file, fileList) {
+            this.$Message.error('slide must be ppt pptx key')
+        },
+        slideSizeError (file, fileList) {
+            this.$Message.error('slide must under 10M')
+        },
+        readyForLive () {
+            this.uploadModal = false
+            this.$Notice.info({
+                title: 'Reopen the modal',
+                desc: 'You can click the avatar on your left to change your thumbnail and ppt!',
+                duration: 4
+            })
+        },
+        showUploadModal () {
+            if (this.roomInfo.creator_id.toString() === this.user.userid.toString() && this.roomInfo.is_living) {
+                this.uploadModal = true
+            }
         }
     },
     created () {
@@ -254,6 +342,8 @@ export default {
         this.roomInfo.title = room.name
         this.roomInfo.creator_id = room.creater
         this.roomInfo.is_living = room.is_living
+        this.roomInfo.img = room.thumbnail_path
+        this.roomInfo.slide = room.slide_path
         //
     },
     mounted () {
@@ -264,10 +354,13 @@ export default {
             this.wholeSize.height = document.documentElement.clientHeight.toString() + 'px'
         })
         this.buildConnect()
+        if (this.isCreator) {
+            this.uploadModal = true
+        }
     },
     beforeDestroy () {
         console.log(this.roomInfo.is_living)
-        if (this.roomInfo.creator_id.toString() === this.user.userid.toString() && this.roomInfo.is_living) {
+        if (this.isCreator) {
             this.endRoom()
         }
     }
@@ -296,6 +389,9 @@ export default {
         vertical-align:left;
         overflow: hidden;
     }
+    #upload-modal {
+        text-align: center;
+    }
     .left-part {
         margin: 20px 5% 20px 5%; 
         display: inline-block;
@@ -313,6 +409,9 @@ export default {
         background-color: rgb(210,210,210);
         border-radius: 50%;
         margin: 15px 10px 15px 10px;
+    }
+    .creator-avatar {
+        cursor: pointer;
     }
     #studio-info {
         display: inline-block;
@@ -387,5 +486,27 @@ export default {
     .relative {
         position: relative !important;
         top: -120px;
+    }
+    #show-slide {
+        width: 64px;
+        height: 64px;
+        padding-top: 10px;
+    }
+    #show-thumbnail {
+        width: 150px;
+        height: 90px;
+        padding-top: 10px;
+    }
+    .upload-text {
+        font-size: 15px;
+        margin-top: 10px;
+        color: #5cadff;
+    }
+    #upload-ppt {
+        margin-top: 40px;
+    }
+    #modal-footer {
+        text-align: center;
+        padding: 15px;
     }
 </style>

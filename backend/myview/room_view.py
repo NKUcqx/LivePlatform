@@ -98,7 +98,7 @@ def uploadThumbnail(request):
     # must satisfy: login and is a teacher and has created a live room
     if (request.user.role == 'T' and 'room' in request.session):
         room = upload_thumbnail(
-            request.session.get('room').id, request.FILES.get('thumbnail'))
+            request.session.get('room')['id'], request.FILES.get('thumbnail'))
         return JsonResponse({'room': model_to_json(room)})
     # because each person can not create other rooms while living
     elif ('room' not in request. session):
@@ -112,7 +112,7 @@ def uploadThumbnail(request):
 def uploadSlide(request):
     if (request.user.role == 'T' and 'room' in request.session):
         room = upload_slide(
-            request.session.get('room').id, request.FILES.get('slide'))
+            request.session.get('room')['id'], request.FILES.get('slide'))
         return JsonResponse({'room': model_to_json(room)})
     # because each person can not create other rooms while living
     elif ('room' not in request. session):

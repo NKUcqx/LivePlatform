@@ -41,6 +41,10 @@ export default {
     mounted () {
         this.background.backgroundImage = 'url(' + this.item.thumbnail_path + ')'
         console.log(this.background.backgroundImage)
+    },
+    updated () {
+        this.background.backgroundImage = 'url(' + this.item.thumbnail_path + ')'
+        console.log('update: ', this.background.backgroundImage)
     }
 }
 </script>

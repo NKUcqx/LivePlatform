@@ -49,7 +49,7 @@
 				<Button :size="SIZE" type="default" shape="circle" icon="minus-round" @click="minusFontSize()" class="buttons"></Button>
 			</Poptip>
 		</div>
-		<Modal v-model="showColorPicker" :width="250" :closable="false" :ok-text="1" :cancel-text="2" id="modal">
+		<Modal v-model="showColorPicker" :width="250" :closable="false" id="modal">
 	        <div style="text-align:center">
 	            <color-picker v-model="canvas.color"></color-picker>
 	        </div>
