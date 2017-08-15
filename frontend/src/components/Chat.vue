@@ -32,7 +32,7 @@
                                 <p>您确定要踢出{{hist.username}}这位同学吗？</p>
                             </Modal>
                             <Dropdown-item name='out'>解除禁言</Dropdown-item>
-                            <Modal v-model="dialog2" title="提示" @on-ok="canspeak" @on-cancel="cancel()">
+                            <Modal v-model="dialog3" title="提示" @on-ok="canspeak" @on-cancel="cancel()">
                                 <p>您要解除下面哪位同学的禁言</p>
                                 <div style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;">
                                     <Checkbox @click.prevent.native="handleCheckAll">全选</Checkbox>
@@ -54,11 +54,11 @@
                             <Modal v-model="dialog2" title="提示" @on-ok="outone(hist.userid)" @on-cancel="cancel()">
                                 <p>您确定要踢出{{hist.username}}这位同学吗？</p>
                             </Modal>
-                            <Dropdown-item name='out'>解除禁言</Dropdown-item>
-                            <Modal v-model="dialog2" title="提示" @on-ok="canspeak" @on-cancel="cancel()">
+                            <Dropdown-item name='canspeak'>解除禁言</Dropdown-item>
+                            <Modal v-model="dialog3" title="提示" @on-ok="canspeak" @on-cancel="cancel()">
                                 <p>您要解除下面哪位同学的禁言</p>
                                 <div style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;">
-                                    <Checkbox @click.prevent.native="checkAllGroupChange">全选</Checkbox>
+                                    <Checkbox :indeterminate="indeterminate" :value="checkAll" @click.prevent.native="handleCheckAll">全选</Checkbox>
                                 </div>
                                 <Checkbox-group v-for="ban of bans" @on-change="checkchange">
                                     <Checkbox :label='ban.userid'>{{ban.username}}</Checkbox>
@@ -120,10 +120,13 @@
                 out: [],
                 dialog1: false,
                 dialog2: false,
+                dialog3: false,
                 silence: false,
                 allsilece: false,
                 allspeak: true,
                 speak: true,
+                indeterminate: true,
+                checkAll:false,
                 bans: [],
                 cans: [],
                 position: {
@@ -143,7 +146,7 @@
             this.position.width = this.WIDTH.toString() + 'px'
             this.position.height = (this.HEIGHT).toString() + 'px'
             this.position.border = this.BORDER + 'px'
-            /*if (localStorage.silence) {
+            /* if (localStorage.silence) {
                 this.silence = localStorage.silence
                 if (this.silence) {
                     this.speak = false
@@ -153,7 +156,7 @@
             } else {
                 this.silence = false
                 this.speak = true
-            }*/
+            } */
         },
         methods: {
             send(data) {
@@ -190,7 +193,9 @@
             click: function(name) {
                 if (name === 'banspeak') {
                     this.dialog1 = true
-                } else this.dialog2 = true
+                } else if (name === 'out') {
+                    this.dialog2 = true
+                } else this.dialog3 = true
             },
             speakall: function(name) {
                 if (this.USERID === this.CREATERID) {
@@ -207,9 +212,25 @@
                 }
             },
             handleCheckAll: function(data) {
-                this.cans = data
+                if (this.indeterminate) {
+                    this.checkAll = false;
+                } else {
+                    this.checkAll = !this.checkAll;
+                }
+                this.indeterminate = false;
+                this.cans = this.bans
             },
             checkchange: function(data) {
+                if (data.length === this.bans.length) {
+                    this.indeterminate = false;
+                    this.checkAll = true;
+                } else if (data.length > 0) {
+                    this.indeterminate = true;
+                    this.checkAll = false;
+                } else {
+                    this.indeterminate = false;
+                    this.checkAll = false;
+                }
                 this.cans = data
                 console.log('canspeak')
                 console.log(data)
@@ -222,6 +243,8 @@
                     })
                     console.log('canspeak;;')
                     console.log(this.cans[index])
+                    this.indeterminate=true
+                    this.checkAll=false
                 }
             },
             banspeakone(id, name) {
@@ -291,7 +314,7 @@
                     this.speak = true
                 }
                 if (data.data.chattype === 'canspeak') {
-                    console.log("canspeak--recive")
+                    console.log('canspeak--recive')
                     console.log(this.bans)
                     for (var index = 0; index < this.bans.length; index++) {
                         if (this.bans[index].userid === data.data.userid) {
@@ -305,7 +328,7 @@
                         this.speak = true
                         localStorage['silence'] = false
                     }
-                    console.log("canspeak--recive")
+                    console.log('canspeak--recive')
                 }
             },
             cancel() {}
