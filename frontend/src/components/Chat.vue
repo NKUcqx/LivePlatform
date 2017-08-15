@@ -1,5 +1,5 @@
 <template>
-    <div class="dialog" id='test':style="position">
+    <div class="dialog" id='test' :style="position">
         <div class="head">
             <h1>
                 <Icon class="icon" type="chevron-up" id="lefticon" @click.native="up()"></Icon>
@@ -7,7 +7,7 @@
             <h1>
                 <Dropdown trigger="click" @on-click="speakall">
                     <Icon class="icon" type="chatboxes" id="midicon"></Icon>
-                    <Dropdown-menu slot="list" v-if="ROLE">
+                    <Dropdown-menu slot="list" v-if="USERID===CREATERID">
                         <Dropdown-item v-if="allspeak" name="allsilence">全体禁言</Dropdown-item>
                         <Dropdown-item v-if="allsilence" name='allspeak'>取消全体禁言</Dropdown-item>
                     </Dropdown-menu>
@@ -20,42 +20,81 @@
         <div class="historymessage">
             <ul id="history">
                 <li v-for="hist of history" id="message">
-                    <Dropdown trigger="click" style="margin-left: 20px" id='test1' @on-click="click">
+                    <Dropdown v-if='hist.userid!==CREATERID' trigger="click" style="margin-left: 20px" id='test1' @on-click="click">
                         <a href="javascript:void(0)" id="name">{{ hist.username }}</a>
-                        <Dropdown-menu slot="list" v-if="ROLE">
-                            <Dropdown-item name='banspeak'>禁言</Dropdown-item>
-                            <Modal v-model="dialog1" title="提示" @on-ok="banspeakone(hist.username)" @on-cancel="cancel()">
+                        <Dropdown-menu slot="list" v-if="USERID===CREATERID">
+                            <Dropdown-item name='banspeak'>test</Dropdown-item>
+                            <Modal v-model="dialog1" title="提示" @on-ok="banspeakone(hist.userid,hist.username)" @on-cancel="cancel()">
                                 <p>您确定要禁言{{hist.username}}这位同学吗？</p>
                             </Modal>
                             <Dropdown-item name='out'>踢出房间</Dropdown-item>
-                            <Modal v-model="dialog2" title="提示" @on-ok="outone(hist.username)" @on-cancel="cancel()">
+                            <Modal v-model="dialog2" title="提示" @on-ok="outone(hist.userid)" @on-cancel="cancel()">
                                 <p>您确定要踢出{{hist.username}}这位同学吗？</p>
+                            </Modal>
+                            <Dropdown-item name='out'>解除禁言</Dropdown-item>
+                            <Modal v-model="dialog2" title="提示" @on-ok="canspeak" @on-cancel="cancel()">
+                                <p>您要解除下面哪位同学的禁言</p>
+                                <div style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;">
+                                    <Checkbox @click.prevent.native="handleCheckAll">全选</Checkbox>
+                                </div>
+                                <Checkbox-group v-for="ban of bans" @on-change="checkchange">
+                                    <Checkbox :label='ban.userid'>{{ban.username}}</Checkbox>
+                                </Checkbox-group>
                             </Modal>
                         </Dropdown-menu>
                     </Dropdown>
-                    <p id="content">{{ hist.message }}</p>
+                    <Dropdown v-if='hist.userid===CREATERID' trigger="click" style="margin-left: 20px" id='test1' @on-click="click">
+                        <a href="javascript:void(0)" id="name" class='teacher'>{{ hist.username }}</a>
+                        <Dropdown-menu slot="list" v-if="this.USERID===this.CREATERID">
+                            <Dropdown-item name='banspeak'>禁言</Dropdown-item>
+                            <Modal v-model="dialog1" title="提示" @on-ok="banspeakone(hist.userid,hist.username)" @on-cancel="cancel()">
+                                <p>您确定要禁言{{hist.username}}这位同学吗？</p>
+                            </Modal>
+                            <Dropdown-item name='out'>踢出房间</Dropdown-item>
+                            <Modal v-model="dialog2" title="提示" @on-ok="outone(hist.userid)" @on-cancel="cancel()">
+                                <p>您确定要踢出{{hist.username}}这位同学吗？</p>
+                            </Modal>
+                            <Dropdown-item name='out'>解除禁言</Dropdown-item>
+                            <Modal v-model="dialog2" title="提示" @on-ok="canspeak" @on-cancel="cancel()">
+                                <p>您要解除下面哪位同学的禁言</p>
+                                <div style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;">
+                                    <Checkbox @click.prevent.native="checkAllGroupChange">全选</Checkbox>
+                                </div>
+                                <Checkbox-group v-for="ban of bans" @on-change="checkchange">
+                                    <Checkbox :label='ban.userid'>{{ban.username}}</Checkbox>
+                                </Checkbox-group>
+                            </Modal>
+                        </Dropdown-menu>
+                    </Dropdown>
+                    <p v-if='hist.userid===CREATERID' id="content" class='teacher'>{{ hist.message }}</p>
+                    <p v-if='hist.userid!==CREATERID' id="content">{{ hist.message }}</p>
                 </li>
             </ul>
         </div>
         <div class="input">
-            <Input :class="input1 === true ? 'messageInput1' : 'messageInput2'" v-model="message" :placeholder='holder' :disabled='silence'@on-enter='sendmsg()'>
-                <Button id="sendBtn" type="primary" slot="append" @click='sendmsg()':disabled="message.trim()==''">Send</Button>
+            <Input class="messageInput" v-model="message" placeholder='please enter' :disabled='silence' @on-enter='sendmsg()'>
+            <Button id="sendBtn" type="primary" slot="append" @click='sendmsg()' :disabled="message.trim()==''">Send</Button>
             </Input>
         </div>
     </div>
 </template>
 <script src="/socket.io/socket.io.js">
+
 </script>
 <script>
     export default {
         props: {
-            ROLE: {
-                type: Boolean,
-                default: false
+            CREATERID: {
+                type: Number,
+                default: 0
             },
             USERNAME: {
                 type: String,
                 default: 'lili'
+            },
+            USERID: {
+                type: Number,
+                default: 0
             },
             ROOM: {
                 type: Number,
@@ -74,7 +113,7 @@
                 default: 1
             }
         },
-        data () {
+        data() {
             return {
                 message: '',
                 history: [],
@@ -85,10 +124,8 @@
                 allsilece: false,
                 allspeak: true,
                 speak: true,
-                holder: '请输入',
-                input1: true,
-                input2: false,
-                socket: '',
+                bans: [],
+                cans: [],
                 position: {
                     width: '',
                     height: '',
@@ -97,17 +134,16 @@
             }
         },
         watch: {
-            'HEIGHT': function () {
+            'HEIGHT': function() {
                 this.position.width = this.WIDTH.toString() + 'px'
                 this.position.height = (this.HEIGHT).toString() + 'px'
             }
         },
-        mounted () {
+        mounted() {
             this.position.width = this.WIDTH.toString() + 'px'
             this.position.height = (this.HEIGHT).toString() + 'px'
             this.position.border = this.BORDER + 'px'
-            if (localStorage.silence) {
-                console.log('ok')
+            /*if (localStorage.silence) {
                 this.silence = localStorage.silence
                 if (this.silence) {
                     this.speak = false
@@ -117,90 +153,131 @@
             } else {
                 this.silence = false
                 this.speak = true
-            }
+            }*/
         },
         methods: {
-            send (data) {
+            send(data) {
                 this.$emit('send', data)
             },
-            sendmsg () {
-                console.log(this.ROLE)
+            sendmsg() {
                 localStorage.removeItem('silence')
                 localStorage.removeItem('out')
                 if (this.silence === false) {
                     if (this.message.trim() !== '') {
-                        this.send({chattype: 'message', message: this.message, username: this.USERNAME})
+                        this.send({
+                            chattype: 'message',
+                            message: this.message,
+                            username: this.USERNAME,
+                            userid: this.USERID
+                        })
+                        console.log(this.CREATERID)
+                        console.log(this.USERID)
                         this.message = ''
                         document.getElementById('history').scrollTop = document.getElementById('history').scrollHeight
-                    } else {
-                        console.log('kong')
-                        this.holder = '输入内容不能为空'
-                        this.input1 = false
-                        this.input2 = true
-                        console.log(this.input1)
-                        console.log(this.input2)
+                        console.log('chat send')
                     }
                 }
             },
-            up () {
+            up() {
                 document.getElementById('history').scrollTop = 0
             },
-            down () {
+            down() {
                 document.getElementById('history').scrollTop = document.getElementById('history').scrollHeight
             },
-            dialog1change () {
+            dialog1change() {
                 this.dialog1 = true
-                console.log('HIHA')
             },
-            click: function (name) {
+            click: function(name) {
                 if (name === 'banspeak') {
                     this.dialog1 = true
-                    console.log('234')
                 } else this.dialog2 = true
             },
-            speakall: function (name) {
-                console.log(name)
-                if (this.ROLE === true) {
+            speakall: function(name) {
+                if (this.USERID === this.CREATERID) {
                     if (name === 'allsilence') {
-                        this.send({chattype: 'allsilence'})
+                        this.send({
+                            chattype: 'allsilence',
+                            userid: this.USERID
+                        })
                     } else {
-                        this.send({chattype: 'allspeak'})
+                        this.send({
+                            chattype: 'allspeak'
+                        })
                     }
                 }
             },
-            banspeakone (name) {
-                if (this.ROLE === true) {
-                    this.send({chattype: 'banspeakone', username: name})
+            handleCheckAll: function(data) {
+                this.cans = data
+            },
+            checkchange: function(data) {
+                this.cans = data
+                console.log('canspeak')
+                console.log(data)
+            },
+            canspeak: function() {
+                for (var index = 0; index < this.cans.length; index++) {
+                    this.send({
+                        chattype: 'canspeak',
+                        userid: this.cans[index]
+                    })
+                    console.log('canspeak;;')
+                    console.log(this.cans[index])
                 }
             },
-            outone (name) {
-                if (this.ROLE === true) {
-                    this.send({chattype: 'outone', username: name})
+            banspeakone(id, name) {
+                if (this.USERID === this.CREATERID) {
+                    this.send({
+                        chattype: 'banspeakone',
+                        userid: id,
+                        username: name
+                    })
                 }
             },
-            receive (data) {
+            outone(id) {
+                if (this.USERID === this.CREATERID) {
+                    this.send({
+                        chattype: 'outone',
+                        userid: id
+                    })
+                }
+            },
+            receive(data) {
                 if (data.data.chattype === 'message') {
-                    this.history.push({username: data.data.username, message: data.data.message})
+                    console.log('chat recive')
+                    console.log(data.data.userid)
+                    console.log(this.CREATERID)
+                    console.log(data.data.message)
+                    this.history.push({
+                        username: data.data.username,
+                        message: data.data.message,
+                        userid: data.data.userid
+                    })
                 }
                 if (data.data.chattype === 'outone') {
-                    if (data.data.username === this.USERNAME) {
+                    if (data.data.userid === this.USERID) {
                         localStorage['out'] = true
                         this.$router.go(-1)
                     }
                 }
                 if (data.data.chattype === 'banspeakone') {
-                    if (data.data.username === this.USERNAME) {
+                    if (data.data.userid === this.USERID) {
                         localStorage['silence'] = true
                         this.silence = true
                         this.speak = false
                     }
+                    this.bans.push({
+                        userid: data.data.userid,
+                        username: data.data.username
+                    })
                 }
                 if (data.data.chattype === 'allsilence') {
-                    localStorage['silence'] = true
-                    this.allsilece = true
-                    this.allspeak = false
-                    this.silence = true
-                    this.speak = false
+                    if (data.data.userid !== this.USERID) {
+                        localStorage['silence'] = true
+                        this.allsilece = true
+                        this.allspeak = false
+                        this.silence = true
+                        this.speak = false
+                    }
                 }
                 if (data.data.chattype === 'allspeak') {
                     localStorage['silence'] = false
@@ -210,24 +287,33 @@
                     this.speak = true
                 }
                 if (data.data.chattype === 'allspeak') {
-                    console.log('allspeak')
                     this.silence = false
                     this.speak = true
                 }
-                if (data.data.chattype === 'allspeak') {
-                    console.log('allspeak')
-                    this.silence = false
-                    this.speak = true
+                if (data.data.chattype === 'canspeak') {
+                    console.log("canspeak--recive")
+                    console.log(this.bans)
+                    for (var index = 0; index < this.bans.length; index++) {
+                        if (this.bans[index].userid === data.data.userid) {
+                            this.bans.splice(index, 1)
+                            console.log(index)
+                            console.log(this.bans)
+                        }
+                    }
+                    if (data.data.userid === this.USERID) {
+                        this.silence = false
+                        this.speak = true
+                        localStorage['silence'] = false
+                    }
+                    console.log("canspeak--recive")
                 }
             },
-            cancel () {}
+            cancel() {}
         }
     }
 </script>
 <style>
-    .dialog {
-
-    }
+    .dialog {}
     .head {
         height: 30px;
         width: 100%;
@@ -251,31 +337,13 @@
         width: 100%;
         background-color: #FAFAFA;
     }
-    .messageInput2::-webkit-input-placeholder { 
-        color:red;
-        }
-    .messageInput2:-moz-placeholder { 
-        color:#999;
-        }
-    .messageInput2::-moz-placeholder {
-        color:#999;
-        }
-    .messageInput2:-ms-input-placeholder {        
-        color:#999;
-        }
-    .messageInput1 {
-        margin-left: 1px;
-        height: 90%;
+    .teacher {
+        color: blue;
+        font-size: 14px;
     }
-    .messageInput2 {
-        margin-left: 1px;
-        height: 90%;
-        border-color:red;
-        border-width:1px;
-    }
-    a{
-        display:inline;
-        font-size:10px;
+    a {
+        display: inline;
+        font-size: 10px;
     }
     h1 {
         display: inline;
@@ -289,7 +357,7 @@
         background-color: white;
         overflow: auto;
     }
-    h1{
+    h1 {
         cursor: pointer;
     }
     #content {
@@ -297,7 +365,7 @@
         width: 90%;
         word-wrap: break-word;
         white-space: normal;
-        font-size:10px;
+        font-size: 10px;
     }
     li {
         list-style-type: none;
@@ -307,7 +375,7 @@
         display: inline;
         margin-top: 2px;
         text-align: left;
-        font-size:10px;
+        font-size: 10px;
     }
     /*end custom file input*/
     .icon {
@@ -321,8 +389,7 @@
         margin-right: 5px;
         float: right;
     }
-    #midicon { 
-    }
+    #midicon {}
     #sendBtn {
         background-color: #5cadff;
         color: white;
