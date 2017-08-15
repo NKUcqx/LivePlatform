@@ -56,7 +56,7 @@
 	        <div slot="footer"></div>
 	    </Modal>
 	    <Col span="24" id="draw-board">
-			<canvas ref="board" id="board" :width="WIDTH" :height="HEIGHT"></canvas>
+			<canvas ref="board" id="board"></canvas>
 			<Input :on-keydown="testText()" ref="text" id="text" v-model="canvas.text" v-if="canvas.isInput" autofocus :style="position" type="textarea" autosize></Input>
 		</Col>
 		</Row>
@@ -91,6 +91,21 @@ export default {
         SIZE: {
             type: Number,
             default: ''
+        }
+    },
+    watch: {
+        'WIDTH': function (newVal, oldVal) {
+            /*let imgData = this.context.getImageData(0, 0, oldVal, oldVal * 0.65)
+            this.$refs.board.width = this.WIDTH
+            this.$refs.board.height = this.HEIGHT
+            this.context.putImageData(imgData, 0, 0, 0, 0, this.WIDTH, this.HEIGHT)*/
+            var nc = document.createElement("canvas");
+            nc.width = this.$refs.board.width;
+            nc.height = this.$refs.board.height;
+            nc.getContext("2d").drawImage(this.$refs.board,0,0);
+            this.$refs.board.width = this.WIDTH;
+            this.$refs.board.height = this.HEIGHT;
+            this.context.drawImage(nc,0,0,this.WIDTH,this.HEIGHT);
         }
     },
     data () {
@@ -484,7 +499,8 @@ export default {
         }
     },
     mounted () {
-        console.log(this.WIDTH)
+        this.$refs.board.width = this.WIDTH
+        this.$refs.board.height = this.HEIGHT
         if (true) {
             ['mousemove', 'mousedown', 'mouseup'].map((eventName) => {
                 this.$refs.board.addEventListener(eventName, ({ offsetX: x, offsetY: y, buttons }) => {

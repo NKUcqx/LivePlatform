@@ -7,6 +7,7 @@ import * as getters from './getters'
 import * as mutations from './mutations'
 import home from './modules/home'
 import welcome from './modules/welcome'
+import live from './modules/live'
 // import * as mutations from './mutations'
 // import tests from './modules/testmodules'
 
@@ -34,7 +35,8 @@ export default new Vuex.Store({
     mutations,
     modules: {
         welcome,
-        home
+        home,
+        live
     }
     /* :debug,
     plugins: [localStoragePlugin] */

@@ -5,16 +5,12 @@
             </div>
             <div id="relative">
                 <div id="toolbar" :style="toolbarStyle" v-show="isBarShown">
-                    <Button class="join buttons" :disabled="isJoin" @click="join()" type="ghost">Start</Button>
-                    <Button class="leave buttons" :disabled="!(isJoin)" @click="leave()" type="ghost">End</Button>
-                    <Button-group shape="circle">
-                        <Button icon="arrow-right-b" :disabled="isPublish" @click="publish()" type="ghost" class="buttons"></Button>
-                        <Button icon="ios-pause" :disabled="!(isPublish)" @click="unpublish()" type="ghost" class="buttons"></Button>
-                    </Button-group>
-                    <Button-group shape="circle">
-                        <Button icon="ios-mic-outline" :disabled="sound" @click="speak()" type="ghost" class="buttons"></Button>
-                        <Button icon="ios-mic-off" :disabled="!(sound)" @click="mute()" type="ghost" class="buttons"></Button>
-                    </Button-group>
+                    <!--Button class="join buttons" :disabled="isJoin" @click="join()" type="ghost">Start</Button>
+                    <Button class="leave buttons" :disabled="!(isJoin)" @click="leave()" type="ghost">End</Button-->
+                    <Button icon="arrow-right-b" v-show="isPublish===false" @click="publish()" type="circle" class="buttons left"></Button>
+                    <Button icon="ios-pause" v-show="isPublish===true" @click="unpublish()" type="circle" class="buttons left"></Button>
+                    <Button icon="ios-mic-off" v-show="sound===false" @click="speak()" type="circle" class="buttons right"></Button>
+                    <Button icon="ios-mic-outline" v-show="sound===true" @click="mute()" type="circle" class="buttons right"></Button>
                 </div>
             </div>
         </div>
@@ -22,6 +18,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
     props: {
         WIDTH: {
@@ -37,12 +34,25 @@ export default {
             default: '1000'
         }
     },
+    computed: {
+        ...mapGetters({
+            user: 'getUser',
+            liveState: 'getLiveState'
+        })
+    },
     watch: {
         'HEIGHT': function () {
-            console.log(this.HEIGHT)
             this.position2.width = this.WIDTH.toString() + 'px'
             this.position2.height = (this.HEIGHT).toString() + 'px'
             this.toolbarStyle.width = this.WIDTH.toString() + 'px'
+        },
+        'liveState.isStart': function (newVal, oldVal) {
+            if (oldVal === false && newVal === true) {
+                this.$Message.success('Live has already started !')
+                this.join()
+            } else if (oldVal === true && newVal === false) {
+                this.leave()
+            }
         }
     },
     data () {
@@ -124,6 +134,7 @@ export default {
             })
         },
         leave () {
+            let that = this
             this.$Modal.confirm({
                 title: '教育直播平台提醒您：',
                 content: '<p>确定退出直播吗？</p>',
@@ -131,6 +142,8 @@ export default {
                     this.isJoin = false
                     this.client.leave(function () {
                         console.log('Leavel channel successfully')
+                        // add by gongyansong
+                        that.$router.push({path: '/home'})
                     }, function (err) {
                         console.log('Leave channel failed: ', err)
                     })
@@ -185,15 +198,23 @@ export default {
 
 #toolbar {
     position: relative;
-    top: -36px;
+    top: -38px;
     left: 0px;
-    height: 36px;
+    height: 32px;
     float: left;
     overflow: hidden;
-    text-align: center;
 }
 
 .buttons {
+    color: rgb(45,140,240);
     background-color: rgba(0,0,0,0) !important;
+    margin: 0px 10px 0px 10px;
+}
+
+.left {
+}
+
+.right {
+    float: right;
 }
 </style>
