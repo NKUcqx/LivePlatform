@@ -123,4 +123,4 @@ yarn.lock
 migrations/
 rooms/
 users/
-coverage/**/*.html
+coverage/
