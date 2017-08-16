@@ -99,7 +99,7 @@ export default {
             this.$refs.board.width = this.WIDTH
             this.$refs.board.height = this.HEIGHT
             this.context.putImageData(imgData, 0, 0, 0, 0, this.WIDTH, this.HEIGHT) */
-            var nc = document.createElement('canvas')
+            let nc = document.createElement('canvas')
             nc.width = this.$refs.board.width
             nc.height = this.$refs.board.height
             nc.getContext('2d').drawImage(this.$refs.board, 0, 0)
@@ -157,6 +157,12 @@ export default {
         }
     },
     methods: {
+        getHistory () {
+            return makeCanvasInfo({
+                type: 'history',
+                canvas: this.$refs.board.toDataURL('image/png')
+            })
+        },
         showToolBar () {
             this.toolBar = true
         },
@@ -492,6 +498,16 @@ export default {
                 case 'text':
                     this.setProperty(1, canvasInfo.color.hex, canvasInfo.color.a)
                     this.drawText(canvasInfo.start[0] * this.WIDTH, canvasInfo.start[1] * this.HEIGHT, canvasInfo.fontSize * this.WIDTH, canvasInfo.text, canvasInfo.isFill)
+                    break
+                case 'history':
+                    console.log(canvasInfo)
+                    let img = new Image()
+                    let that = this
+                    img.onload = function () {
+                        that.context.drawImage(img, 0, 0, this.WIDTH, this.HEIGHT) // Or at whatever offset you like
+                    }
+                    img.src = canvasInfo.canvas
+                    // this.context.putImageData(canvasInfo.canvas, 0, 0)
                     break
                 case 'clear':
                     this.drawClear()
