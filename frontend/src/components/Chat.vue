@@ -6,7 +6,8 @@
             </h1>
             <h1>
                 <Dropdown trigger="click" @on-click="speakall">
-                    <Icon class="icon" type="chatboxes" id="midicon"></Icon>
+                    <Icon type="android-notifications" v-if='allspeak'class='icon' id='midicon'></Icon>
+                    <Icon type="android-notifications-off" v-if='allsilence'class='icon' id='midicon'></Icon>
                     <Dropdown-menu slot="list" v-if="USERID===CREATERID">
                         <Dropdown-item v-if="allspeak" name="allsilence">全体禁言</Dropdown-item>
                         <Dropdown-item v-if="allsilence" name='allspeak'>取消全体禁言</Dropdown-item>
@@ -201,10 +202,12 @@
                             chattype: 'allsilence',
                             userid: this.USERID
                         })
+                        console.log('allslience send')
                     } else {
                         this.send({
                             chattype: 'allspeak'
                         })
+                        console.log('allspeak send')
                     }
                 }
             },
@@ -363,16 +366,17 @@
     }
     .teacher {
         color: blue;
-        font-size: 14px;
+        font-size: 12px;
     }
     a {
         display: inline;
-        font-size: 10px;
+        font-size: 12px;
     }
     h1 {
         display: inline;
         font-size: 200px;
         margin: 200px;
+        cursor: pointer;
     }
     ul {
         width: 100%;
@@ -381,15 +385,12 @@
         background-color: white;
         overflow: auto;
     }
-    h1 {
-        cursor: pointer;
-    }
     #content {
         display: inline;
         width: 90%;
         word-wrap: break-word;
         white-space: normal;
-        font-size: 10px;
+        font-size: 12px;
     }
     li {
         list-style-type: none;
@@ -397,9 +398,8 @@
     p {
         word-break: break-word;
         display: inline;
-        margin-top: 2px;
         text-align: left;
-        font-size: 10px;
+        font-size: 12px;
     }
     /*end custom file input*/
     .icon {
@@ -413,7 +413,6 @@
         margin-right: 5px;
         float: right;
     }
-    #midicon {}
     #sendBtn {
         background-color: #5cadff;
         color: white;
@@ -422,6 +421,5 @@
     #name {
         float: left;
         display: inline;
-        margin-top: 2px;
     }
 </style>
