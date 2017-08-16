@@ -239,7 +239,7 @@ export default {
             })
         },
         buildConnect () {
-            this.socket = io('http://localhost:8002')
+            this.socket = io('http://localhost:8002', {transports: ['websocket'], upgrade: false})
             this.listen('connect', () => {
                 this.emit(this.user.id, null, '', 0, 'join')
                 this.listen('loadHistory', (data) => {
