@@ -6,7 +6,7 @@
             <span slot="close">关</span>
         </i-switch>
         <Tag background-color="blue">跳转</Tag>
-        <Input-number v-model="index" :max="ppt.number" :min="0" size="small"></Input-number>
+        <Input-number v-model="index" :max="imgs.length" :min="1" size="small"></Input-number>
         <Tag background-color="blue">播放速度</Tag>
         <Slider v-model="autoplayspeed" :min="500" :max="10000" :step="100" :length='400'></Slider>
         <Carousel v-model="index" :autoplay="setautoplay" :autoplay-speed="autoplayspeed" :dots='setdots' trigger="click" arrow="hover" @on-change='changeppt'>
@@ -27,7 +27,7 @@
                 type: Number,
                 defalut: 7
             },
-            SOU:{
+            SOU: {
                 type: String,
                 defalut: '/rooms/room1/'
             },
@@ -40,10 +40,10 @@
                 default: 400
             }
         },
-        data() {
+        data () {
             return {
                 index: 0,
-                imgs:[],
+                imgs: [],
                 binpath: '/static',
                 setautoplay: false,
                 autoplayspeed: 0,
@@ -59,42 +59,51 @@
             }
         },
         watch: {
-            'HEIGHT': function () {
-            this.position.width = this.WIDTH.toString() + 'px'
-            this.position.height = (this.HEIGHT).toString() + 'px'
-            this.ppt.source=this.SOU
-            this.ppt.number=this.NUM
-            console.log(this.ppt.sou)
-            for (let i = 1; i <=this.ppt.number; i++) {
-                this.imgs.push(this.binpath +this.ppt.source + 'bg' + i + '.jpg')
-            }
-            
+            'SOU': function () {
+                this.position.width = this.WIDTH.toString() + 'px'
+                this.position.height = (this.HEIGHT).toString() + 'px'
+                this.ppt.source = this.SOU
+                this.ppt.number = this.NUM
+                console.log(this.position.height)
+                console.log(this.position.width)
+                console.log(this.ppt.source)
+                console.log(this.ppt.number)
+                console.log(this.NUM)
+                console.log(this.SOU)
+                for (let i = 1; i <= this.ppt.number; i++) {
+                    this.imgs.push(this.binpath + this.ppt.source + 'bg' + i + '.jpg')
+                }
+            },
+            NUM: function () {
+                this.position.width = this.WIDTH.toString() + 'px'
+                this.position.height = (this.HEIGHT).toString() + 'px'
+                this.ppt.source = this.SOU
+                this.ppt.number = this.NUM
+                console.log(this.position.height)
+                console.log(this.position.width)
+                console.log(this.ppt.source)
+                console.log(this.ppt.number)
+                console.log(this.NUM)
+                console.log(this.SOU)
+                for (let i = 1; i <= 7; i++) {
+                    this.imgs.push(this.binpath +'/rooms/room1/'+ 'bg' + i + '.jpg')
+                }
             }
         },
-        mounted() {
+        mounted () {
             this.position.width = this.WIDTH.toString() + 'px'
             this.position.height = (this.HEIGHT).toString() + 'px'
-            this.ppt.source=this.SOU
-            this.ppt.number=this.NUM
-            console.log(this.ppt.sou)
-            for (let i = 1; i <=this.ppt.number; i++) {
-                this.imgs.push(this.binpath +this.ppt.source + 'bg' + i + '.jpg')
+            for (let i = 1; i <= 7; i++) {
+                this.imgs.push(this.binpath + '/rooms/room1/' + 'bg' + i + '.jpg')
             }
-            
         },
         methods: {
-            send(data) {
+            send (data) {
                 this.$emit('send', data)
             },
-            changeppt: function(oldValue, value) {
+            changeppt: function (oldValue, value) {
                 console.log(value)
                 console.log('çhange')
-            }
-        },
-        watch: {
-            index: function(oldValue, value) {
-                console.log(value)
-                console.log('numberchange')
             }
         }
     }
