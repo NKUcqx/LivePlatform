@@ -6,12 +6,12 @@
             <span slot="close">关</span>
         </i-switch>
         <Tag background-color="blue">跳转</Tag>
-        <Input-number v-model="index" :max="sources.length-1" :min="0" size="small"></Input-number>
+        <Input-number v-model="index" :max="ppt.number" :min="0" size="small"></Input-number>
         <Tag background-color="blue">播放速度</Tag>
         <Slider v-model="autoplayspeed" :min="500" :max="10000" :step="100" :length='400'></Slider>
-       <Carousel v-model="index" :autoplay="setautoplay" :autoplay-speed="autoplayspeed" :dots='setdots' trigger="click" arrow="hover" @on-change='changeppt'>
-            <Carousel-item v-for='source of sources'>
-                <img :src="source">
+        <Carousel v-model="index" :autoplay="setautoplay" :autoplay-speed="autoplayspeed" :dots='setdots' trigger="click" arrow="hover" @on-change='changeppt'>
+            <Carousel-item v-for='img of imgs'>
+                <img :src='img'>
             </Carousel-item>
         </Carousel>
         <div>
@@ -19,52 +19,80 @@
 <script>
     export default {
         props: {
-            WIDTH: {
-                type: Number,
-                default: 400
-            },
-            HEIGHT: {
-                type: Number,
-                default: 200
-            },
             INDEX: {
                 type: Number,
                 default: 0
             },
-            SOURCES: {
+            NUM: {
+                type: Number,
+                defalut: 7
+            },
+            SOU:{
                 type: String,
-                defalut: ''
+                defalut: '/rooms/room1/'
+            },
+            WIDTH: {
+                type: Number,
+                default: 600
+            },
+            HEIGHT: {
+                type: Number,
+                default: 400
             }
         },
-        data () {
+        data() {
             return {
                 index: 0,
-                sources: [require('../assets/bg3.jpg'), require('../assets/bg4.jpg'), require('../assets/bg5.jpg'), require('../assets/bg6.jpg')],
+                imgs:[],
+                binpath: '/static',
                 setautoplay: false,
                 autoplayspeed: 0,
                 setdots: 'inside',
                 position: {
                     width: '',
                     height: ''
+                },
+                ppt: {
+                    source: '',
+                    number: 0
                 }
             }
         },
-        mounted () {
-            this.position.width = this.WIDTH
-            this.position.height = this.HEIGHT
-            // this.sources=this.SOURCES
+        watch: {
+            'HEIGHT': function () {
+            this.position.width = this.WIDTH.toString() + 'px'
+            this.position.height = (this.HEIGHT).toString() + 'px'
+            this.ppt.source=this.SOU
+            this.ppt.number=this.NUM
+            console.log(this.ppt.sou)
+            for (let i = 1; i <=this.ppt.number; i++) {
+                this.imgs.push(this.binpath +this.ppt.source + 'bg' + i + '.jpg')
+            }
+            
+            }
+        },
+        mounted() {
+            this.position.width = this.WIDTH.toString() + 'px'
+            this.position.height = (this.HEIGHT).toString() + 'px'
+            this.ppt.source=this.SOU
+            this.ppt.number=this.NUM
+            console.log(this.ppt.sou)
+            for (let i = 1; i <=this.ppt.number; i++) {
+                this.imgs.push(this.binpath +this.ppt.source + 'bg' + i + '.jpg')
+            }
+            
         },
         methods: {
-            send (data) {
+            send(data) {
                 this.$emit('send', data)
             },
-            changeppt: function (oldValue, value) {
+            changeppt: function(oldValue, value) {
                 console.log(value)
                 console.log('çhange')
             }
         },
         watch: {
-            index: function (oldValue, value) {
+            index: function(oldValue, value) {
                 console.log(value)
                 console.log('numberchange')
             }
@@ -72,7 +100,7 @@
     }
 </script>
 <style>
-   Slider{
-       display:inline;
-   }
+    Slider {
+        display: inline;
+    }
 </style>
