@@ -8,7 +8,7 @@
     </div>
     <div id="footer">
         <span id="title">{{ item.name }}</span>
-        <span id="teacher"><Icon type="person"></Icon> {{ item.creater_name }}</span>
+        <span id="teacher"><Icon type="person"></Icon> {{ item.creator_nickname }}</span>
         <span id="audiences" v-if="item.is_living">
             <Icon type="eye"></Icon>
             {{ item.audience_amount }}

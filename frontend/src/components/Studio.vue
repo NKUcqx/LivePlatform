@@ -24,7 +24,7 @@
                 :headers = "{
                     'X-CSRFToken': getCookie() 
                 }"
-                name="silde"
+                name="slide"
                 type="drag"
                 :on-success="uploadSlide"
                 :on-format-error="slideTypeError"
@@ -48,7 +48,7 @@
                 <div id="studio-info">
                     <div id="title">
                         <h2 id="title-content">{{roomInfo.title}}</h2>
-                        <Button id="switch-section" type="ghost" @click="changeSection()" v-if="type===1"><Icon type="arrow-swap"></Icon></Button>
+                        <Button id="switch-section" type="ghost" @click="test()" v-if="type===1"><Icon type="arrow-swap"></Icon></Button>
                         <Button id="switch-section" type="ghost" @click="openMinor()" v-else><Icon type="android-open"></Icon></Button>
                     </div>
                     <div id="footer">
@@ -239,9 +239,8 @@ export default {
             })
         },
         buildConnect () {
-            this.socket = io('http://localhost:8002')
+            this.socket = io('http://localhost:8002', {transports: ['websocket'], upgrade: false})
             this.listen('connect', () => {
-                this.emit(this.user.id, null, '', 0, 'join')
                 this.listen('loadHistory', (data) => {
                     const toWhom = data
                     // get current content
@@ -256,13 +255,14 @@ export default {
                 this.listen('updateMessage', (data) => {
                     this.$refs[data.dataType].receive(data)
                 })
+                this.emit(this.user.id, null, '', 0, 'join')
             })
         },
         emitCanvas (data) {
             this.emit(data, 'canvas', null)
         },
-        emitChat (data, to = null) {
-            this.emit(data, 'chat', to, 2)
+        emitChat (data, to = null, isKick = false) {
+            this.emit(data, 'chat', to, 2, isKick ? 'kickout' : 'sendMessage')
         },
         emitCode (data) {
             this.emit(data, 'code') // default is 1
@@ -273,7 +273,7 @@ export default {
         emit (data, dataType, to = null, type = 1, signal = 'sendMessage') { // to which user he wanna send to
             const pack = {
                 id: this.user.userid,
-                room_name: 'static/rooms/51e2593b505c8ed141ee3f500f2691b4',
+                room_name: 'static/rooms/da8b043782e79c9a00b87e6d333c67c2',
                 content: {
                     id: this.user.userid,
                     nickname: this.user.nickname,
@@ -337,10 +337,10 @@ export default {
         let room = this.$route.query
         // wating for optimization
         this.roomInfo.id = room.id
-        this.roomInfo.teacher = (room.creater_name) ? room.creater_name : room.creater_nickname
+        this.roomInfo.teacher = room.creator_nickname
         this.roomInfo.audience = room.audience_amount
         this.roomInfo.title = room.name
-        this.roomInfo.creator_id = room.creater
+        this.roomInfo.creator_id = room.creator_id
         this.roomInfo.is_living = room.is_living
         this.roomInfo.img = room.thumbnail_path
         this.roomInfo.slide = room.slide_path

@@ -67,12 +67,6 @@ class UserTestCase(TestCase):
         self.assertTrue(test_phone('13752652469'))
         self.assertTrue(test_phone('13662197063'))
 
-    def test_create_user_folder(self):
-        self.assertTrue(create_user_folder('23'))
-        self.assertTrue(create_user_folder('22'))
-        self.assertEqual(create_user_folder('892670995@qq.com'), False)
-        self.assertEqual(create_user_folder('13513616853'), False)
-
     def test_sendTo(self):
         user_dic = {"email": "15302178925@163.com", "code": "4345"}
         user_json = json.dumps(user_dic)
@@ -163,7 +157,7 @@ class RoomViewTestCase(TestCase):
         self.assertTrue(
             os.path.isfile("frontend/static/rooms/unittest/log.txt"))
 
-    '''def test_create_get_end_room(self):
+    def test_create_get_end_room(self):
         room = {"name": "test_room1"}
         res = self.c.post('/createroom/', room)
         self.assertEqual(res.status_code, 200)
@@ -231,12 +225,11 @@ class RoomViewTestCase(TestCase):
         content = json.loads(res.content.decode('utf8'))
         self.assertEqual(len(content['rooms']), 1)
 
-        req = json.dumps({})
-        res = self.c.get('/getroomamount/', json.loads(req))
+        res = self.c.get('/getroomamount/', {})
         content = json.loads(res.content.decode('utf8'))
         self.assertEqual(res.status_code, 200)
         self.assertEqual(content['living_amount'], 1)
-        self.assertEqual(content['end_amount'], 2)'''
+        self.assertEqual(content['end_amount'], 2)
 
     def tearDown(self):
         pass

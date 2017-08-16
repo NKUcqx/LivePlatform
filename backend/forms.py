@@ -9,7 +9,7 @@ class TestForm(forms.ModelForm):
 class LiveRoomForm(forms.ModelForm):
     class Meta:
         model = LiveRoom
-        fields = ('name','creater')
+        fields = ('name','creator')
 
 class UserForm(forms.ModelForm):
     class Meta:

@@ -67,7 +67,7 @@ class User(AbstractUser):
 @receiver(user_logged_out, sender=User)
 def cleanUserRoom(sender, **kwargs):
     for room in LiveRoom.objects.filter(
-            creater_id=kwargs['request'].user.id, is_living=True):
+            creator_id=kwargs['request'].user.id, is_living=True):
         room.is_living = False
         room.save()
 
@@ -94,8 +94,8 @@ class LiveRoomManager(models.Manager):
     def room_count(self):
         return self.count()
 
-    def room_creater_count(self, creater_id):
-        return self.filter(creater_id=creater_id).count()
+    def room_creator_count(self, creator_id):
+        return self.filter(creator_id=creator_id).count()
 
     def room_audience_count(self, amount_to, amount_from=0):
         return self.filter(
@@ -115,7 +115,7 @@ class LiveRoomManager(models.Manager):
 
 class LiveRoom(models.Model):
     name = models.CharField(max_length=30)  # ,db_index = True
-    creater = models.ForeignKey(
+    creator = models.ForeignKey(
         User,
         default=get_User)  # no need to CASCADE when user get deleted ,right?
     audience_amount = models.PositiveIntegerField(
@@ -123,7 +123,7 @@ class LiveRoom(models.Model):
     )  # present live audience amount if is_living = True else total amount
     is_living = models.BooleanField(default=True)
     is_silence = models.BooleanField(default=False)
-    create_time = models.DateTimeField(auto_now_add=True)
+    create_time = models.DateTimeField()
     end_time = models.DateTimeField(
         null=True, blank=True
     )  # identified whether it's A Live or not by whether end_time is null
@@ -134,10 +134,15 @@ class LiveRoom(models.Model):
         upload_to=get_file_path,
         default='frontend/static/rooms/default_thumbnail.jpg')
     objects = LiveRoomManager()
+    def save(self, *args, **kwargs):
+        ''' On save, create timestamps '''
+        if not self.id:
+            self.create_time = timezone.now()
+        return super(LiveRoom, self).save(*args, **kwargs)
 
     def __unicode__(self):
-        return "ID : {}, RoomName: {} , Creater: {}".format(
-            self.ID, self.name, self.creater)
+        return "ID : {}, RoomName: {} , creator: {}".format(
+            self.ID, self.name, self.creator)
 
 
 @receiver(pre_save, sender=LiveRoom)
