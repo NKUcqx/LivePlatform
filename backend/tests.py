@@ -152,10 +152,9 @@ class RoomViewTestCase(TestCase):
 
     def test_create_folder(self):
         room_view.create_folder("unittest")
-        self.assertTrue(os.path.exists("frontend/static/rooms/unittest"))
-        self.assertTrue(os.path.isdir("frontend/static/rooms/unittest"))
-        self.assertTrue(
-            os.path.isfile("frontend/static/rooms/unittest/log.txt"))
+        self.assertTrue(os.path.exists("unittest"))
+        self.assertTrue(os.path.isdir("unittest"))
+        self.assertTrue(os.path.isfile("unittest/log.txt"))
 
     def test_create_get_end_room(self):
         room = {"name": "test_room1"}
@@ -231,6 +230,10 @@ class RoomViewTestCase(TestCase):
         self.assertEqual(content['living_amount'], 1)
         self.assertEqual(content['end_amount'], 2)
 
+    def test_change_prefix(self):
+        self.assertEqual(room_view.change_prefix('1/2/3', True, '0'), '/0/1/2/3')
+        self.assertEqual(room_view.change_prefix('1/2/3', False, '2'), '/3')
+        
     def tearDown(self):
         pass
 
