@@ -56,7 +56,7 @@
         top: 3px;
         left: -78px;
         height: 14px;
-        z-index: 5;
+        z-index: 400;
         width: 75px;
     }
     .switch-item {

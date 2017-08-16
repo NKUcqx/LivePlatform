@@ -68,13 +68,13 @@
             <div :class="workClass" v-show="isWorkShow">
                 <close-button class="close-button" @close="closeWork()" @change="changePanel" :isWork="true"></close-button>
                 <keep-alive>
-                    <ppt :WIDTH="workSize.width" :HEIGHT="workSize.height" @send="emitCode" v-if="style===0||style===3"></ppt>
+                    <ppt :WIDTH="workSize.width" :HEIGHT="workSize.height" @send="emitCode" v-show="style===0||style===3"></ppt>
                 </keep-alive>
                 <keep-alive>
-                    <codedemo ref="code" :WIDTH="workSize.width" :HEIGHT="workSize.height" :CREATORID="roomInfo.creator_id" @send="emitCode" v-if="style===1||style===4"></codedemo>
+                    <codedemo ref="code" :WIDTH="workSize.width" :HEIGHT="workSize.height" :CREATORID="roomInfo.creator_id" @send="emitCode" v-show="style===1||style===4"></codedemo>
                 </keep-alive>
                 <keep-alive>
-                    <my-canvas ref="canvas" :SIZE="(style<3)?'':'small'" @send="emitCanvas" :WIDTH="workSize.width" :HEIGHT="workSize.height" id="canvas" v-if="style===2||style===5"></my-canvas>
+                    <my-canvas ref="canvas" :SIZE="(style<3)?'':'small'" @send="emitCanvas" :WIDTH="workSize.width" :HEIGHT="workSize.height" id="canvas" v-show="style===2||style===5"></my-canvas>
                 </keep-alive>
             </div>
             <div :class="chatClass">
@@ -176,21 +176,24 @@ export default {
             return (this.type >= 1) ? true : false
         },
         workSize () {
+            let theWidth = (this.WIDTH < 800) ? 800 : this.WIDTH
             return {
-                width: (this.style < 3) ? this.WIDTH * 0.5 : this.WIDTH * 0.35,
-                height: (this.style < 3) ? this.WIDTH * 0.5 * 0.65 : this.WIDTH * 0.35 * 0.65
+                width: (this.style < 3) ? theWidth * 0.5 : theWidth * 0.35,
+                height: (this.style < 3) ? theWidth * 0.5 * 0.65 : theWidth * 0.35 * 0.65
             }
         },
         vedioSize () {
+            let theWidth = (this.WIDTH < 800) ? 800 : this.WIDTH
             return {
-                width: (this.style >= 3) ? this.WIDTH * 0.5 : this.WIDTH * 0.35,
-                height: (this.style >= 3) ? this.WIDTH * 0.5 * 0.65 : this.WIDTH * 0.35 * 0.65
+                width: (this.style >= 3) ? theWidth * 0.5 : theWidth * 0.35,
+                height: (this.style >= 3) ? theWidth * 0.5 * 0.65 : theWidth * 0.35 * 0.65
             }
         },
         chatSize () {
+            let theWidth = (this.WIDTH < 800) ? 800 : this.WIDTH
             return {
-                width: this.WIDTH * 0.35,
-                height: (this.type === 1) ? this.WIDTH * 0.195 * 0.5 + 90 : this.WIDTH * 0.5 * 0.65 + 100
+                width: theWidth * 0.35,
+                height: (this.type === 1) ? theWidth * 0.195 * 0.5 + 90 : theWidth * 0.5 * 0.65 + 100
             }
         },
         isCreator () {
@@ -239,20 +242,25 @@ export default {
             })
         },
         buildConnect () {
+            let that = this
             this.socket = io('http://localhost:8002', {transports: ['websocket'], upgrade: false})
             this.listen('connect', () => {
                 this.listen('loadHistory', (data) => {
                     const toWhom = data
                     // get current content
-                    this.emit(history, 'code', toWhom)
-                    this.emit(history, 'canvas', toWhom)
-                    // this.emit(history, 'chat')
+                    let canvasHistory = that.$refs['canvas'].getHistory()
+                    let codeHistory = that.$refs['code'].getHistory()
+                    console.log(codeHistory)
+                    that.emit(codeHistory, 'code', toWhom)
+                    that.emit(canvasHistory, 'canvas', toWhom)
+                    // this.emcanvasHistory(history, 'chat')
                     console.log('loadHistory: ', toWhom)
                 })
                 this.listen('Error', (data) => { // this receiver will get error msg directly
                     console.log('Error: ', data)
                 })
                 this.listen('updateMessage', (data) => {
+                    console.log('updateMessage:', data)
                     this.$refs[data.dataType].receive(data)
                 })
                 this.emit(this.user.id, null, '', 0, 'join')
@@ -273,7 +281,7 @@ export default {
         emit (data, dataType, to = null, type = 1, signal = 'sendMessage') { // to which user he wanna send to
             const pack = {
                 id: this.user.userid,
-                room_name: 'static/rooms/da8b043782e79c9a00b87e6d333c67c2',
+                room_name: this.roomInfo.room_name,
                 content: {
                     id: this.user.userid,
                     nickname: this.user.nickname,
@@ -344,6 +352,7 @@ export default {
         this.roomInfo.is_living = room.is_living
         this.roomInfo.img = room.thumbnail_path
         this.roomInfo.slide = room.slide_path
+        this.roomInfo.room_name = room.file_name
         //
     },
     mounted () {
@@ -372,7 +381,7 @@ export default {
         min-width: 800px;
         width: 100%;
         position: fixed;
-        z-index: 60;
+        z-index: 500;  /*middle*/
         overflow: hidden;
     }
     #fortop{

@@ -117,6 +117,12 @@ export default {
         this.editor.setSize(this.WIDTH, this.HEIGHT)
     },
     methods: {
+        getHistory: function () {
+            return {
+                type: 'code',
+                data: this.editor.getValue()
+            }
+        },
         change: function (code) {
             console.log('change', code)
             // this.send({data:code})

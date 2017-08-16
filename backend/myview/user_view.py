@@ -3,6 +3,7 @@ from django.forms.models import model_to_dict
 from django.views.decorators.http import require_POST, require_GET
 from django.contrib import auth
 from django.contrib.sessions.models import Session
+from django.views.decorators.csrf import csrf_exempt
 from random import Random
 from django.core.mail import send_mail
 from . import toolkits
@@ -127,7 +128,6 @@ def signupSubmit(request):
         return HttpResponse(content=CODE['4'], status=400)
 
 # 登录执行的函数，接收POST请求，返回字符串
-
 
 @require_POST
 def loginSubmit(request):

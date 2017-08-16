@@ -95,17 +95,11 @@ export default {
     },
     watch: {
         'WIDTH': function (newVal, oldVal) {
-            /* let imgData = this.context.getImageData(0, 0, oldVal, oldVal * 0.65)
+            console.log(newVal)
+            let data = this.getHistory()
             this.$refs.board.width = this.WIDTH
             this.$refs.board.height = this.HEIGHT
-            this.context.putImageData(imgData, 0, 0, 0, 0, this.WIDTH, this.HEIGHT) */
-            let nc = document.createElement('canvas')
-            nc.width = this.$refs.board.width
-            nc.height = this.$refs.board.height
-            nc.getContext('2d').drawImage(this.$refs.board, 0, 0)
-            this.$refs.board.width = this.WIDTH
-            this.$refs.board.height = this.HEIGHT
-            this.context.drawImage(nc, 0, 0, this.WIDTH, this.HEIGHT)
+            this.draw(data)
         }
     },
     data () {
@@ -501,13 +495,12 @@ export default {
                     break
                 case 'history':
                     console.log(canvasInfo)
-                    let img = new Image()
                     let that = this
-                    img.onload = function () {
-                        that.context.drawImage(img, 0, 0, this.WIDTH, this.HEIGHT) // Or at whatever offset you like
+                    var image = new Image()
+                    image.onload = function () {
+                        that.context.drawImage(image, 0, 0, that.WIDTH, that.HEIGHT) // Or at whatever offset you like
                     }
-                    img.src = canvasInfo.canvas
-                    // this.context.putImageData(canvasInfo.canvas, 0, 0)
+                    image.src = canvasInfo.canvas
                     break
                 case 'clear':
                     this.drawClear()
@@ -524,12 +517,6 @@ export default {
                 })
             })
         }
-        /* window.addEventListener('resize', () => {
-            this.btnPosition.left = (this.$refs.canvas.offsetLeft + 5).toString() + 'px'
-            this.btnPosition.top = (this.$refs.canvas.offsetTop + 5).toString() + 'px'
-        }) */
-        /* this.btnPosition.left = (this.$refs.canvas.offsetLeft + 5).toString() + 'px'
-        this.btnPosition.top = (this.$refs.canvas.offsetTop + 5).toString() + 'px' */
         this.context = this.$refs.board.getContext('2d')
     }
 }
@@ -546,7 +533,7 @@ export default {
         position: relative;
         top: 5px;
         left: 5px;
-        z-index: 999;
+        z-index: 400;
         color: #5cadff;
         cursor: pointer;
     }
