@@ -190,6 +190,7 @@ export default {
         login () {
             const that = this
             checkForm(this, this.$refs['form'], () => {
+                that.showPinImg()
                 let data = {
                     username: this.form.user,
                     password: this.form.password
@@ -198,7 +199,6 @@ export default {
                     alert(CONST.success('Login'))
                     that.$router.push({path: '/home'})
                 }, function (res) {
-                    that.showPinImg()
                     alert(res)
                 })
             })

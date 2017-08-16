@@ -35,12 +35,16 @@ export default {
     },
     methods: {
         enterRoom () {
-            this.$router.push({ name: 'studio', params: this.item })
+            this.$router.push({ name: 'studio', query: this.item })
         }
     },
     mounted () {
         this.background.backgroundImage = 'url(' + this.item.thumbnail_path + ')'
         console.log(this.background.backgroundImage)
+    },
+    updated () {
+        this.background.backgroundImage = 'url(' + this.item.thumbnail_path + ')'
+        console.log('update: ', this.background.backgroundImage)
     }
 }
 </script>

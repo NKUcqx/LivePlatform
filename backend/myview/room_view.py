@@ -172,12 +172,7 @@ def uploadSlide(request):
             return HttpResponse(content=CODE['12'], status=401)
     # because each person can not create other rooms while living
     else:
-<<<<<<< HEAD
         return HttpResponse(content=CODE['24'], status=400)
-
-=======
-        return HttpResponse(content=CODE['12'], status=401)
->>>>>>> cqx/node_server_update
 
 @login_required
 @require_POST
@@ -198,13 +193,7 @@ def createRoom(request):
                 is_silence=is_silence,
                 is_living=is_living)
             room.save()
-<<<<<<< HEAD
             room = wrap_room(model_to_json(room))
-=======
-            room = model_to_json(room)
-            room['creator_nickname'] = User.objects.get(
-                pk=room['creater']).nickname
->>>>>>> cqx/node_server_update
             request.session['room'] = room
             return JsonResponse({'room': room})  # return the new room's id
         else:

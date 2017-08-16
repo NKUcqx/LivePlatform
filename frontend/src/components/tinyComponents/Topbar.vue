@@ -7,10 +7,10 @@
         <Menu-item name="1">
             教育直播平台
         </Menu-item>
-        <Menu-item name="2" class="top-right">
+        <Menu-item name="2" class="top-right" v-if="user.role==='T'">
             <span id="createroom" @click="createModal = true"><Icon type="ios-plus" size="30" color="#5cadff" v-if="TYPE === 'home'"></Icon></span>
-            <span id="createroom"><Icon type="ios-play" size="30" color="rgb(0,180,0)" v-if="TYPE === 'unstart'"></Icon></span>
-            <span id="createroom"><Icon type="ios-close" size="30" color="rgb(210,100,100)" v-if="TYPE === 'started'"></Icon></span>
+            <span id="startlive" @click="startLive()"><Icon type="ios-play" size="30" color="rgb(0,180,0)" v-if="TYPE==='studio'&&!liveState.isStart"></Icon></span>
+            <span @click="endLive()"><Icon  id="endlive" type="android-exit" size="25" color="rgb(210,100,100)" v-if="TYPE==='studio'&&liveState.isStart"></Icon></span>
             <Modal v-model="createModal" title="Create Room" :width="400" @on-ok="createRoom()">
                 <Form ref="createForm" :model="createForm" :rules="ruleRoomname" :label-width="80">
                     <Form-item label="title:" prop="roomname">
@@ -74,7 +74,7 @@
             </Menu-item>
         </Submenu>
         <Menu-item name="2" class="top-right longer">
-            <img :src="user.avatar" class="head-image" alt="head-image" :width="img.size" :height="img.size" @click="avatarModal = true"  id="avatar">
+            <img :src="user.avatar" class="head-image" alt="head-image" :width="img.size" :height="img.size" @click="avatarModal = true"  id="avatar" ref="avatar">
             <Modal v-model="avatarModal" title="Upload Avatar" :width="300" id="avatar-modal">
                     <Upload
                         :headers = "{
@@ -82,11 +82,19 @@
                         }"
                         name="avatar"
                         type="drag"
+                        :on-success="changeAvatar"
+                        :format="['jpg','jpeg','png','gif','bmp']"
+                        :max-size="200"
+                        :show-upload-list="false"
+                        :on-format-error="avatarTypeError"
+                        :on-exceeded-size="avatarSizeError"
                         action="/changeavatar/">
                         <div>
-                            <img src="../../assets/addroom.png">
+                            <img :src="user.avatar" id="show-avatar" ref="bigAvatar" alt="file size too large">
+                            <div id="avatar-text">click image or drag to update your avatar</div>
                         </div>
                     </Upload>
+                    <div slot="footer"></div>
             </Modal>
         </Menu-item>
     </Menu>
@@ -164,17 +172,21 @@
         },
         computed: {
             ...mapGetters({
-                user: 'getUser'
+                user: 'getUser',
+                liveState: 'getLiveState'
             })
         },
         methods: {
             ...mapMutations({
-                addLiveRoom: 'addLiveRoom'
+                addLiveRoom: 'addLiveRoom',
+                setAvatar: 'setAvatar',
+                startLive: 'startLive'
             }),
             ...mapActions({
                 logoutSubmit: 'logout',
                 changePass: 'changePass',
-                changeInfo: 'changeInfo'
+                changeInfo: 'changeInfo',
+                destroyLive: 'destroyLive'
             }),
             getCookie () {
                 return getCookie('csrftoken')
@@ -232,16 +244,39 @@
                         before: function (request) { beforePost(request) }
                     }).then(function (res) {
                         console.log(getListFromDB(res.body))
-                        this.addLiveRoom(getListFromDB(res.body))
-                        this.$router.push({ name: 'studio', params: getListFromDB(res.body) })
+                        this.$router.push({ name: 'studio', query: getListFromDB(res.body) })
                     }, function (res) {
                         alert(res.status)
                     })
                 }
+            },
+            changeAvatar (res, file) {
+                let that = this
+                setTimeout(function () {
+                    console.log(that.user)
+                    that.setAvatar('static/users/' + that.user.username + '/' + file.name)
+                }, 4000)
+                this.$Message.success(CONST.success('Upload Success!'))
+                console.log('static/users/' + this.user.username + '/' + file.name)
+                console.log(this.user.avatar)
+            },
+            avatarSizeError (file, fileList) {
+                this.$Message.error('Image size must be under 200K')
+            },
+            avatarTypeError (file, fileList) {
+                this.$Message.error('Image must be jpg jpeg png gif bmp')
+            },
+            endLive () {
+                console.log('topbar endLive')
+                this.$router.push({ path: '/home' })
             }
         },
         mounted () {
-            console.log(this.user.avatar)
+            console.log(this.user)
+        },
+        updated () {
+            this.$refs.avatar.src = this.user.avatar
+            this.$refs.bigAvatar.src = this.user.avatar
         }
     }
 </script>
@@ -255,9 +290,14 @@
     overflow: hidden;
 }
 
-#createroom {
+#createroom, #startlive {
     display: inline-block;
     padding-top: 5px;
+}
+
+#endlive {
+    padding-top: 16px;
+    padding-right: 7px;
 }
 
 .menu-item {
@@ -302,5 +342,19 @@
 #submenu {
     text-align: center;
 }
-</style>
 
+#avatar-text {
+    font-size: 15px;
+    margin-top: 10px;
+    color: #5cadff;
+}
+
+#show-avatar {
+    display: inline-block;
+    margin-top: 10px; 
+    height: 90px;
+    width: 90px;
+    border-radius: 50%;
+    border: 2px solid rgba(180,230,180,0.7);
+}
+</style>

@@ -5,16 +5,12 @@
             </div>
             <div id="relative">
                 <div id="toolbar" :style="toolbarStyle" v-show="isBarShown">
-                    <Button class="join buttons" :disabled="isJoin" @click="join()" type="ghost">Start</Button>
-                    <Button class="leave buttons" :disabled="!(isJoin)" @click="leave()" type="ghost">End</Button>
-                    <Button-group shape="circle">
-                        <Button icon="arrow-right-b" :disabled="isPublish" @click="publish()" type="ghost" class="buttons"></Button>
-                        <Button icon="ios-pause" :disabled="!(isPublish)" @click="unpublish()" type="ghost" class="buttons"></Button>
-                    </Button-group>
-                    <Button-group shape="circle">
-                        <Button icon="ios-mic-outline" :disabled="sound" @click="speak()" type="ghost" class="buttons"></Button>
-                        <Button icon="ios-mic-off" :disabled="!(sound)" @click="mute()" type="ghost" class="buttons"></Button>
-                    </Button-group>
+                    <!--Button class="join buttons" :disabled="isJoin" @click="join()" type="ghost">Start</Button>
+                    <Button class="leave buttons" :disabled="!(isJoin)" @click="leave()" type="ghost">End</Button-->
+                    <Button icon="arrow-right-b" v-show="hasVideo===false" @click="enableVideo()" type="circle" class="buttons left"></Button>
+                    <Button icon="ios-pause" v-show="hasVideo===true" @click="disableVideo()" type="circle" class="buttons left"></Button>
+                    <Button icon="ios-mic-off" v-show="hasAudio===false" @click="enableAudio()" type="circle" class="buttons right"></Button>
+                    <Button icon="ios-mic-outline" v-show="hasAudio===true" @click="disableAudio()" type="circle" class="buttons right"></Button>
                 </div>
             </div>
         </div>
@@ -22,6 +18,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
     props: {
         WIDTH: {
@@ -30,27 +27,42 @@ export default {
         },
         HEIGHT: {
             type: Number,
-            default: 100
+            default: 500
         },
         ROOM: {
             type: String,
             default: '1000'
         }
     },
+    computed: {
+        ...mapGetters({
+            user: 'getUser',
+            liveState: 'getLiveState'
+        })
+    },
     watch: {
         'HEIGHT': function () {
-            console.log(this.HEIGHT)
             this.position2.width = this.WIDTH.toString() + 'px'
             this.position2.height = (this.HEIGHT).toString() + 'px'
             this.toolbarStyle.width = this.WIDTH.toString() + 'px'
+        },
+        'liveState.isStart': function (newVal, oldVal) {
+            if (oldVal === false && newVal === true) {
+                this.$Message.success('Live has already started !')
+                this.join()
+            } else if (oldVal === true && newVal === false) {
+                this.$Message.success('Live has already ended !')
+                console.log('teacher leave')
+                this.leave()
+            }
         }
     },
     data () {
         return {
             isBarShown: false,
             isJoin: false,
-            isPublish: true,
-            sound: true,
+            hasVideo: true,
+            hasAudio: true,
             appKey: '0c6a0a8f844c49d78a9aac0907dfc1d8',
             client: undefined,
             localStream: undefined,
@@ -58,8 +70,8 @@ export default {
                 width: ''
             },
             position2: {
-                width: '100%',
-                height: '100%',
+                width: '600px',
+                height: '500px',
                 display: 'inline-block'
             }
         }
@@ -85,7 +97,7 @@ export default {
                     console.log('User ' + uid + ' join channel successfully')
                     // 创建本地音视频流
                     that.localStream = AgoraRTC.createStream({streamID: uid,
-                        audio: that.sound,
+                        audio: true,
                         video: true,
                         screen: false})
                     that.localStream.setVideoProfile('720p_3')
@@ -110,20 +122,12 @@ export default {
             }, function (err) {
                 console.log('AgoraRTC client init failed', err)
             })
-
-            let channelKey = ''
             this.client.on('error', function (err) {
                 console.log('Got error msg:', err.reason)
-                if (err.reason === 'DYNAMIC_KEY_TIMEOUT') {
-                    that.client.renewChannelKey(channelKey, function () {
-                        console.log('Renew channel key successfully')
-                    }, function (err) {
-                        console.log('Renew channel key failed: ', err)
-                    })
-                }
             })
         },
         leave () {
+            let that = this
             this.$Modal.confirm({
                 title: '教育直播平台提醒您：',
                 content: '<p>确定退出直播吗？</p>',
@@ -131,6 +135,8 @@ export default {
                     this.isJoin = false
                     this.client.leave(function () {
                         console.log('Leavel channel successfully')
+                        // add by gongyansong
+                        that.$router.push({path: '/home'})
                     }, function (err) {
                         console.log('Leave channel failed: ', err)
                     })
@@ -140,32 +146,28 @@ export default {
                 }
             })
         },
-        publish () {
+        enableVideo () {
             this.$Modal.info({
                 title: '教育直播平台提醒您：',
-                content: '<p>您已经重启了直播</p>'
+                content: '<p>您已经重启了视频教学</p>'
             })
-            this.isPublish = true
-            this.client.publish(this.localStream, function (err) {
-                console.log('Publish local stream error: ' + err)
-            })
+            this.hasVideo = true
+            this.localStream.enableVideo()
         },
-        unpublish () {
+        disableVideo () {
             this.$Modal.info({
                 title: '教育直播平台提醒您：',
-                content: '<p>您已经暂停了直播</p>'
+                content: '<p>您已经暂停了视频教学</p>'
             })
-            this.isPublish = false
-            this.client.unpublish(this.localStream, function (err) {
-                console.log('Unpublish local stream failed' + err)
-            })
+            this.hasVideo = false
+            this.localStream.disableVideo()
         },
-        speak () {
-            this.sound = true
+        enableAudio () {
+            this.hasAudio = true
             this.localStream.enableAudio()
         },
-        mute () {
-            this.sound = false
+        disableAudio () {
+            this.hasAudio = false
             this.localStream.disableAudio()
         }
     }
@@ -185,15 +187,23 @@ export default {
 
 #toolbar {
     position: relative;
-    top: -36px;
+    top: -38px;
     left: 0px;
-    height: 36px;
+    height: 32px;
     float: left;
     overflow: hidden;
-    text-align: center;
 }
 
 .buttons {
+    color: rgb(45,140,240);
     background-color: rgba(0,0,0,0) !important;
+    margin: 0px 10px 0px 10px;
+}
+
+.left {
+}
+
+.right {
+    float: right;
 }
 </style>
