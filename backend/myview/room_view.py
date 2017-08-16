@@ -101,7 +101,7 @@ def change_prefix(long_path, add = False, target = 'static'):
         return '/' + os.path.join(target, long_path)
     try:
         path_arr = long_path.split('/')
-        path = '/' + '/'.join(path_arr[path_arr.index(target) + 1:])
+        path = '/' + '/'.join(path_arr[path_arr.index(target):])
     except ValueError:
         return long_path
     return path

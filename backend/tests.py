@@ -232,7 +232,7 @@ class RoomViewTestCase(TestCase):
 
     def test_change_prefix(self):
         self.assertEqual(room_view.change_prefix('1/2/3', True, '0'), '/0/1/2/3')
-        self.assertEqual(room_view.change_prefix('1/2/3', False, '2'), '/3')
+        self.assertEqual(room_view.change_prefix('1/2/3', False, '2'), '/2/3')
         
     def tearDown(self):
         pass
