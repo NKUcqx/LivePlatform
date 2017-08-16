@@ -7,7 +7,8 @@ const canvasInfo = {
     fontSize: 0,
     text: '',
     color: '#FFFFFF',
-    isFill: false
+    isFill: false,
+    canvas: null
 }
 
 export const makeCanvasInfo = ({
@@ -20,7 +21,8 @@ export const makeCanvasInfo = ({
     fontSize,
     text,
     color,
-    isFill
+    isFill,
+    canvas
 }) => {
     let canvasInfo = {
         color: {}
@@ -36,5 +38,6 @@ export const makeCanvasInfo = ({
         canvasInfo.color.hex = color.hex
         canvasInfo.color.a = color.a
     }
+    (canvas) ? canvasInfo.canvas = canvas : null
     return canvasInfo
 }
