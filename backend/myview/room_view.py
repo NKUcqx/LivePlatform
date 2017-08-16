@@ -21,6 +21,7 @@ API_key = [ # to get more free conversion chances ..
         ]
 IMG_LIST = ('.jpg', '.jpeg' '.png', '.svg', '.gif')
 SLIDE_LIST = ('.ppt', '.pptx', '.pps', '.pdf')
+processes = {} # converting process of cloudconvert, to check the status
 #model_to_dict = toolkits.model_to_dict
 
 
@@ -50,28 +51,40 @@ def upload_thumbnail(room_id, thumbnail):
 
 def upload_slide(room_id, slide):
     room = LiveRoom.objects.get(pk = room_id)
-    converted_file = convert_file(slide, room.file_name) # upload the slide and download the conversion to room.filename
+    room.slide_path = slide
+    room.save() # save the .ppt
+    # upload the slide and download the conversion to room.filename
+    converted_file = convert_file(room.slide_path.name, room.id, room.file_name)
     unziped_file = un_zip(converted_file)
     room.slide_path = unziped_file
     room.save()
     return room
 
-def convert_file(file, upload_to):
+def check_convert_status(process_id): # i.e. upload_to
+    process = processes[process_id]
+    process.refresh()
+    process.wait()
+    return process['message']
+
+def convert_file(file, process_id, upload_to):
     # TODO: if(type(file) )
-    api = cloudconvert.Api(API_key[1]) # TODO: random.randint(0,1)
-    split_arr = os.path.splitext(file.name)
+    file_handler = open(file, 'rb')
+    api = cloudconvert.Api(API_key[0]) # TODO: random.randint(0,1)
+    split_arr = os.path.splitext(file_handler.name)
     realname = split_arr[0].split('/')[-1]
     postfix = split_arr[1][1:]
     process = api.convert({
-        'inputformat': postfix, # get ext then emit '.'
+        'inputformat': postfix,
         'outputformat': 'jpg', # TODO: will change to any type laterly 
         'input': 'upload',
-        'filename': realname + postfix,
-        'file': file
+        'filename': '%s.%s' % (realname, postfix),
+        'file': file_handler
     })
+    processes[process_id] = process
     process.wait()
     process.download(upload_to)
-    return upload_to + realname + '.zip' # TODO: So ugly..
+    #return upload_to + realname + '.zip' # TODO: So ugly..
+    return '%s/%s.zip' % (upload_to, realname)
 
 def un_zip(file_name):
     zip_file = zipfile.ZipFile(file_name)
@@ -140,7 +153,7 @@ def uploadThumbnail(request):
     if ('room' in request.session):
         room = request.session['room']
         if(str(request.user.id) == room['creator_id']):
-            thumbnail = request.FILES.get('avatar')
+            thumbnail = request.FILES.get('thumbnail')
             thumbnail_type = os.path.splitext(thumbnail.name)[1]
             if (thumbnail_type in IMG_LIST):
                 room = upload_thumbnail(room['id'], thumbnail)
@@ -159,13 +172,15 @@ def uploadSlide(request):
     if ('room' in request.session):
         room = request.session['room']
         if(str(request.user.id) == room['creator_id']):
-            slide = request.FILES.get('avatar', None)
+            slide = request.FILES.get('slide', None)
             if(slide is not None):
                 slide_type = os.path.splitext(slide.name)[1]
                 # must add dot ! otherwise user could upload file like
                 # "somepdf" instead of "some.pdf"  #any type else ?
                 if (slide_type in SLIDE_LIST):
+                    print('start uploading file: %s', slide.name)
                     room = upload_slide(room['id'], slide)
+                    print('finish uploading .')
                     return JsonResponse({'room': wrap_room(room)})
                 else:
                     return HttpResponse(content = CODE['20'], status=415)
@@ -176,6 +191,15 @@ def uploadSlide(request):
     else:
         return HttpResponse(content=CODE['24'], status=400)
 
+@login_required
+@require_GET
+def getConvertStatus(request):
+    if('room' in request.session):
+        room = request.session['room']
+        message = check_convert_status(room['id'])
+        return JsonResponse({'message': message})
+    else:
+        return HttpResponse(content = CODE['24'], status = 400)
 @login_required
 @require_POST
 def createRoom(request):

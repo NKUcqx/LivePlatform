@@ -24,7 +24,7 @@
                 :headers = "{
                     'X-CSRFToken': getCookie() 
                 }"
-                name="silde"
+                name="slide"
                 type="drag"
                 :on-success="uploadSlide"
                 :on-format-error="slideTypeError"
@@ -337,10 +337,10 @@ export default {
         let room = this.$route.query
         // wating for optimization
         this.roomInfo.id = room.id
-        this.roomInfo.teacher = (room.creater_name) ? room.creater_name : room.creater_nickname
+        this.roomInfo.teacher = room.creator_nickname
         this.roomInfo.audience = room.audience_amount
         this.roomInfo.title = room.name
-        this.roomInfo.creator_id = room.creater
+        this.roomInfo.creator_id = room.creator_id
         this.roomInfo.is_living = room.is_living
         this.roomInfo.img = room.thumbnail_path
         this.roomInfo.slide = room.slide_path

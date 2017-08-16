@@ -12,7 +12,7 @@ urlpatterns = [
     url(r'^testusername/$', user_view.testUsername, name='test_username'),
     url(r'^changepass/$', user_view.changePassword, name='change_password'),
     url(r'^getsession/$', user_view.getUserFromSession, name='get_session'),
-    url(r'^changeavatar/$', room_view.uploadSlide, name='change_avatar'),
+    url(r'^changeavatar/$', user_view.changeAvatar, name='change_avatar'),
     url(r'^changeinfo/$',
         user_view.changeGenderAndNickname,
         name='change_info'),
