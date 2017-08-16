@@ -48,7 +48,7 @@
                 <div id="studio-info">
                     <div id="title">
                         <h2 id="title-content">{{roomInfo.title}}</h2>
-                        <Button id="switch-section" type="ghost" @click="changeSection()" v-if="type===1"><Icon type="arrow-swap"></Icon></Button>
+                        <Button id="switch-section" type="ghost" @click="test()" v-if="type===1"><Icon type="arrow-swap"></Icon></Button>
                         <Button id="switch-section" type="ghost" @click="openMinor()" v-else><Icon type="android-open"></Icon></Button>
                     </div>
                     <div id="footer">
@@ -241,7 +241,6 @@ export default {
         buildConnect () {
             this.socket = io('http://localhost:8002', {transports: ['websocket'], upgrade: false})
             this.listen('connect', () => {
-                this.emit(this.user.id, null, '', 0, 'join')
                 this.listen('loadHistory', (data) => {
                     const toWhom = data
                     // get current content
@@ -256,13 +255,14 @@ export default {
                 this.listen('updateMessage', (data) => {
                     this.$refs[data.dataType].receive(data)
                 })
+                this.emit(this.user.id, null, '', 0, 'join')
             })
         },
         emitCanvas (data) {
             this.emit(data, 'canvas', null)
         },
-        emitChat (data, to = null) {
-            this.emit(data, 'chat', to, 2)
+        emitChat (data, to = null, isKick = false) {
+            this.emit(data, 'chat', to, 2, isKick ? 'kickout' : 'sendMessage')
         },
         emitCode (data) {
             this.emit(data, 'code') // default is 1

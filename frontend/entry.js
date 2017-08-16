@@ -79,7 +79,7 @@ function clearRoom (room_name) {
 function kickoutUser (room_name, user) {
     let type = typeof user
     if (room_audience_list[room_name]) {
-        if (type === 'string') { // using user_id
+        if (type === 'string' && room_audience_list[room_name][user]) { // using user_id
             room_audience_list[room_name][user].leave(room_name)
             room_audience_list[room_name].splice(user, 1)
             console.log(user + ' was kicked out from ' + room_name)
