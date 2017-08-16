@@ -86,7 +86,7 @@
                 console.log(this.NUM)
                 console.log(this.SOU)
                 for (let i = 1; i <= 7; i++) {
-                    this.imgs.push(this.binpath +'/rooms/room1/'+ 'bg' + i + '.jpg')
+                    this.imgs.push(this.binpath + '/rooms/room1/' + 'bg' + i + '.jpg')
                 }
             }
         },

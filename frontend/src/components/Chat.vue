@@ -113,7 +113,7 @@
                 default: 1
             }
         },
-        data() {
+        data () {
             return {
                 message: '',
                 history: [],
@@ -137,12 +137,12 @@
             }
         },
         watch: {
-            'HEIGHT': function() {
+            'HEIGHT': function () {
                 this.position.width = this.WIDTH.toString() + 'px'
                 this.position.height = (this.HEIGHT).toString() + 'px'
             }
         },
-        mounted() {
+        mounted () {
             this.position.width = this.WIDTH.toString() + 'px'
             this.position.height = (this.HEIGHT).toString() + 'px'
             this.position.border = this.BORDER + 'px'
@@ -159,10 +159,10 @@
             } */
         },
         methods: {
-            send(data) {
+            send (data) {
                 this.$emit('send', data)
             },
-            sendmsg() {
+            sendmsg () {
                 localStorage.removeItem('silence')
                 localStorage.removeItem('out')
                 if (this.silence === false) {
@@ -178,23 +178,23 @@
                     }
                 }
             },
-            up() {
+            up () {
                 document.getElementById('history').scrollTop = 0
             },
-            down() {
+            down () {
                 document.getElementById('history').scrollTop = document.getElementById('history').scrollHeight
             },
-            dialog1change() {
+            dialog1change () {
                 this.dialog1 = true
             },
-            click: function(name) {
+            click: function (name) {
                 if (name === 'banspeak') {
                     this.dialog1 = true
                 } else if (name === 'out') {
                     this.dialog2 = true
                 } else this.dialog3 = true
             },
-            speakall: function(name) {
+            speakall: function (name) {
                 if (this.USERID === this.CREATERID) {
                     if (name === 'allsilence') {
                         this.send({
@@ -208,7 +208,7 @@
                     }
                 }
             },
-            handleCheckAll: function(data) {
+            handleCheckAll: function (data) {
                 if (this.indeterminate) {
                     this.checkAll = false
                 } else {
@@ -217,7 +217,7 @@
                 this.indeterminate = false
                 this.cans = this.bans
             },
-            checkchange: function(data) {
+            checkchange: function (data) {
                 if (data.length === this.bans.length) {
                     this.indeterminate = false
                     this.checkAll = true
@@ -230,7 +230,7 @@
                 }
                 this.cans = data
             },
-            canspeak: function() {
+            canspeak: function () {
                 for (var index = 0; index < this.cans.length; index++) {
                     this.send({
                         chattype: 'canspeak',
@@ -240,7 +240,7 @@
                     this.checkAll = false
                 }
             },
-            banspeakone(id, name) {
+            banspeakone (id, name) {
                 if (this.USERID === this.CREATERID) {
                     this.send({
                         chattype: 'banspeakone',
@@ -249,7 +249,7 @@
                     })
                 }
             },
-            outone(id) {
+            outone (id) {
                 if (this.USERID === this.CREATERID) {
                     this.send({
                         chattype: 'outone',
@@ -257,20 +257,20 @@
                     })
                 }
             },
-            messolve(data) {
+            messolve (data) {
                 this.history.push({
                     username: data.data.username,
                     message: data.data.message,
                     userid: data.data.userid
                 })
             },
-            outsolve(data) {
+            outsolve (data) {
                 if (data.data.userid === this.USERID) {
                     localStorage['out'] = true
                     this.$router.go(-1)
                 }
             },
-            banonesolve(data) {
+            banonesolve (data) {
                 if (data.data.userid === this.USERID) {
                     localStorage['silence'] = true
                     this.silence = true
@@ -281,7 +281,7 @@
                     username: data.data.username
                 })
             },
-            banpublicsolve(data) {
+            banpublicsolve (data) {
                 if (data.data.userid !== this.USERID) {
                     localStorage['silence'] = true
                     this.allsilence = true
@@ -293,14 +293,14 @@
                     this.allspeak = false
                 }
             },
-            allspeaksolve(data) {
+            allspeaksolve (data) {
                 localStorage['silence'] = false
                 this.allsilence = false
                 this.allspeak = true
                 this.silence = false
                 this.speak = true
             },
-            canspeaksolve(data) {
+            canspeaksolve (data) {
                 for (var index = 0; index < this.bans.length; index++) {
                     if (this.bans[index].userid === data.data.userid) {
                         this.bans.splice(index, 1)
@@ -312,7 +312,7 @@
                     localStorage['silence'] = false
                 }
             },
-            receive(data) {
+            receive (data) {
                 if (data.data.chattype === 'message') {
                     this.messolve(data)
                 }
@@ -332,7 +332,7 @@
                     this.canspeaksolve(data)
                 }
             },
-            cancel() {}
+            cancel () {}
         }
     }
 </script>
