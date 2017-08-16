@@ -98,10 +98,10 @@ def un_zip(file_name):
 
 def change_prefix(long_path, add = False, target = 'static'):
     if(add):
-        return '/' + target + long_path
+        return '/' + os.path.join(target, long_path)
     try:
         path_arr = long_path.split('/')
-        path = '/' + '/'.join(path_arr[path_arr.index(target):])
+        path = '/' + '/'.join(path_arr[path_arr.index(target) + 1:])
     except ValueError:
         return long_path
     return path
