@@ -83,24 +83,26 @@ def un_zip(file_name):
     zip_file.close()
     return split_str
 
-def change_prefix(long_path, add = False, target = 'frontend'):
+def change_prefix(long_path, add = False, target = 'static'):
     if(add):
         return '/' + target + long_path
     try:
         path_arr = long_path.split('/')
-        path = '/' + '/'.join(path_arr[path_arr.index(target) + 1:])
+        path = '/' + '/'.join(path_arr[path_arr.index(target):])
     except ValueError:
         return long_path
     return path
 
-def wrap_room(room): # room in dict form
+def wrap_room(room): # room instance
+    room = model_to_json(room)
     room['creator_id'] = room.get('creator', room.get('creator_id', None))
     room['creator_nickname'] = User.objects.get(pk=int(room['creator_id'])).nickname
-    room['create_time'] = room['create_time'].strftime('%Y-%-m-%d %H:%m:%S')
-    room['end_time'] = room['end_time'].strftime('%Y-%-m-%d %H:%m:%S') if room.get('end_time', None) is not None else ''
+    #room['create_time'] = room['create_time'].strftime('%Y-%-m-%d %H:%m:%S')
+    #room['end_time'] = room['end_time'].strftime('%Y-%-m-%d %H:%m:%S') if room.get('end_time', None) is not None else ''
     room['file_name'] = change_prefix(room['file_name'])
     room['thumbnail_path'] = change_prefix(room['thumbnail_path'])
     room['slide_path'] = change_prefix(room['slide_path'])
+    return room
 
 @login_required
 @require_GET
@@ -118,10 +120,10 @@ def getRooms(request):
         start = int(request.GET.get('start', 0))
         limit = start + int(request.GET.get('limit'))
         rooms = rooms[start:limit]
-    rooms_dict = rooms.values()
-    for item in rooms_dict:
-        item = wrap_room(item)
-    return JsonResponse({'rooms': list(rooms_dict)})
+    room_list = []
+    for item in rooms:
+        room_list.append(wrap_room(item))
+    return JsonResponse({'rooms': room_list})
 
 @login_required
 @require_GET
@@ -142,7 +144,7 @@ def uploadThumbnail(request):
             thumbnail_type = os.path.splitext(thumbnail.name)[1]
             if (thumbnail_type in IMG_LIST):
                 room = upload_thumbnail(room['id'], thumbnail)
-                return JsonResponse({'room': model_to_json(room)})
+                return JsonResponse({'room': wrap_room(room)})
             else:
                 return HttpResponse(content = CODE['20'], status = 415)
         else:
@@ -164,7 +166,7 @@ def uploadSlide(request):
                 # "somepdf" instead of "some.pdf"  #any type else ?
                 if (slide_type in SLIDE_LIST):
                     room = upload_slide(room['id'], slide)
-                    return JsonResponse({'room': model_to_json(room)})
+                    return JsonResponse({'room': wrap_room(room)})
                 else:
                     return HttpResponse(content = CODE['20'], status=415)
             return HttpResponse(content = CODE['5']) # no changes, but it is nobody's fault, return 200
@@ -193,13 +195,13 @@ def createRoom(request):
                 is_silence=is_silence,
                 is_living=is_living)
             room.save()
-            room = wrap_room(model_to_json(room))
+            room = wrap_room(room)
             request.session['room'] = room
             return JsonResponse({'room': room})  # return the new room's id
         else:
             return HttpResponse(content = CODE['6'], status = 500)
-    elif ('room' in request.
-          session):  # because each person can not create other rooms while living
+    elif ('room' in request.session):
+    # because each person can not create other rooms while living
         return HttpResponse(content = CODE['21'], status = 400)
     else:
         return HttpResponse(content = CODE['12'], status = 401)
@@ -220,7 +222,7 @@ def updateRoom(request):
         if (new_name is not None and new_name != ''):
             room_db.name = new_name
         room_db.save()
-        room = wrap_room(model_to_json(room_db))
+        room = wrap_room(room_db)
         request.session['room'] = room  # update session's room
         return JsonResponse({'room': room})
     else:
@@ -256,6 +258,6 @@ def silenceRoom(request):
         room_db = LiveRoom.objects.get(pk=int(room['id']))
         room_db.is_silence = body['is_silence']
         room_db.save()
-        return JsonResponse(content=model_to_json(room_db))
+        return JsonResponse(content=wrap_room(room_db))
     else:
         return HttpResponse(content=CODE['12'], status=401)

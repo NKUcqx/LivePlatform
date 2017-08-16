@@ -123,7 +123,7 @@ class LiveRoom(models.Model):
     )  # present live audience amount if is_living = True else total amount
     is_living = models.BooleanField(default=True)
     is_silence = models.BooleanField(default=False)
-    create_time = models.DateTimeField(auto_now_add=True)
+    create_time = models.DateTimeField()
     end_time = models.DateTimeField(
         null=True, blank=True
     )  # identified whether it's A Live or not by whether end_time is null
@@ -134,6 +134,11 @@ class LiveRoom(models.Model):
         upload_to=get_file_path,
         default='frontend/static/rooms/default_thumbnail.jpg')
     objects = LiveRoomManager()
+    def save(self, *args, **kwargs):
+        ''' On save, create timestamps '''
+        if not self.id:
+            self.create_time = timezone.now()
+        return super(LiveRoom, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return "ID : {}, RoomName: {} , creator: {}".format(
