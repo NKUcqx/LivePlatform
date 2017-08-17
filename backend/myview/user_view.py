@@ -18,6 +18,7 @@ import os
 CODE = toolkits.CODE
 bi2obj = toolkits.bi2obj
 model_to_json = toolkits.model_to_json
+
 # 生成随机字段
 
 
@@ -30,14 +31,14 @@ def random_str(randomlength=4):
         string += chars[random.randint(0, length)]
     return string
 
+
 # 检测邮箱是否有效
 
 
 def test_email(email):
     if len(email) >= 5:
-        if re.match(
-            "[a-zA-Z0-9]+\@+[a-zA-Z0-9]+\.+[a-zA-Z]",
-                email) is not None:
+        if re.match("[a-zA-Z0-9]+\@+[a-zA-Z0-9]+\.+[a-zA-Z]",
+                    email) is not None:
             return True
     return False
 
@@ -49,14 +50,14 @@ def test_phone(phone):
 
 
 def create_user_folder(username):
-    if(os.path.exists(os.path.join('frontend/static/users/', username))):
+    if (os.path.exists(os.path.join('frontend/static/users/', username))):
         return False
     os.makedirs(os.path.join('frontend/static/users/', username))
     return True
 
 
 def get_session_key(request):
-    if(not request.session.session_key):
+    if (not request.session.session_key):
         request.session.save()
     return request.session.session_key
 
@@ -64,7 +65,7 @@ def get_session_key(request):
 @require_GET
 def getUser(request):
     user_id = request.GET.get('user_id', None)
-    if(user_id):
+    if (user_id):
         try:
             user = User.objects.get(pk=user_id)
             return JsonResponse({'user': model_to_json(user)})
@@ -74,6 +75,7 @@ def getUser(request):
         # must have a user_id
         return HttpResponse(content=CODE['4'], status=400)
 
+
 # 发送邮件
 
 
@@ -82,14 +84,13 @@ def sendTo(request):
     body = bi2obj(request)
     email = body['email']
     code = body['code']
-    if(test_email(email)):
+    if (test_email(email)):
         try:
             message = u"您的注册码为" + str(code)
             send_mail(
                 u'注册用户验证信息',
                 message,
-                '15302178925@163.com',
-                [email],
+                '15302178925@163.com', [email],
                 fail_silently=False)
             return HttpResponse(content=CODE['0'])
         except BaseException:
@@ -98,6 +99,7 @@ def sendTo(request):
     else:
         return HttpResponse(content=CODE['10'], status=400)
 
+
 # 注册执行的函数，接收GET请求，返回字符串
 
 
@@ -105,42 +107,46 @@ def sendTo(request):
 def signupSubmit(request):
     body = bi2obj(request)
     form = UserForm(body)
-    if(form.is_valid()):
+    if (form.is_valid()):
         instance = form.save(commit=False)
-        if(create_user_folder(instance.username)):
+        if (create_user_folder(instance.username)):
             user = User.objects.create_user(
                 username=instance.username,
                 password=instance.password,
                 gender=instance.gender,
                 nickname=instance.nickname,
-                email=instance.username if test_email(
-                    instance.username) else None,
-                phone=instance.username if test_phone(
-                    instance.username) else None)
+                email=instance.username
+                if test_email(instance.username) else None,
+                phone=instance.username
+                if test_phone(instance.username) else None)
             form.save(commit=False)
             user.save()
             session_key = get_session_key(request)
-            return JsonResponse(
-                {'user': model_to_json(user), 'session_key': session_key})
+            return JsonResponse({
+                'user': model_to_json(user),
+                'session_key': session_key
+            })
         else:
             return HttpResponse(content=CODE['1'], status=500)
     else:
         return HttpResponse(content=CODE['4'], status=400)
 
+
 # 登录执行的函数，接收POST请求，返回字符串
+
 
 @require_POST
 def loginSubmit(request):
     body = bi2obj(request)
     user = auth.authenticate(
-        request,
-        username=body['username'],
-        password=body['password'])
-    if(user is not None):
+        request, username=body['username'], password=body['password'])
+    if (user is not None):
         auth.login(request, user)
         session_key = get_session_key(request)
-        return JsonResponse({'user': model_to_json(user),
-                             'session_key': session_key})
+        return JsonResponse({
+            'user': model_to_json(user),
+            'session_key': session_key
+        })
     else:
         return HttpResponse(content=CODE['13'], status=401)
 
@@ -149,6 +155,7 @@ def loginSubmit(request):
 def logoutSubmit(request):
     auth.logout(request)
     return HttpResponse(content=CODE['0'], status=200)
+
 
 # check the username exists
 
@@ -167,7 +174,7 @@ def testUsername(request):
 def changeAvatar(request):
     user = User.objects.get(pk=request.user.id)
     avatar = request.FILES.get('avatar', None)
-    if(avatar is not None):
+    if (avatar is not None):
         user.avatar = avatar
         user.save()
         return JsonResponse({'user': model_to_json(user)})
@@ -181,10 +188,10 @@ def changeGenderAndNickname(request):
     user = User.objects.get(pk=request.user.id)
     gender = body.get('gender', None)
     nickname = body.get('nickname', None)
-    if(user.gender != gender and gender is not None):
+    if (user.gender != gender and gender is not None):
         user.gender = gender
         user.save()
-    if(user.nickname != nickname and nickname is not None and nickname != ''):
+    if (user.nickname != nickname and nickname is not None and nickname != ''):
         user.nickname = nickname
         user.save()
     return JsonResponse({'user': model_to_json(user)})
@@ -198,14 +205,15 @@ def changePassword(request):
     password = body.get('password', None)
     new_password = body.get('new_password', None)
     res_pack = {}
-    if(username is None or new_password is None):
+    if (username is None or new_password is None):
         return HttpResponse(content=CODE['4'], status=401)
-    if(forget_pw is None):  # means he just wants to reset pw, which need verify his status
+    if (forget_pw is
+            None):  # means he just wants to reset pw, which need verify his status
         user = auth.authenticate(username=username, password=password)
     else:  # means this poor guy has forget his pw, reset directly
         user = User.objects.get(username=username)
         res_pack['session_key'] = get_session_key(request)
-    if(user is not None):
+    if (user is not None):
         user.set_password(new_password)
         user.save()
         res_pack['user'] = model_to_json(user)
@@ -217,7 +225,7 @@ def changePassword(request):
 @require_GET
 def getUserFromSession(request):
     session_key = request.GET.get('session_key', None)
-    if(session_key):
+    if (session_key):
         try:
             session = Session.objects.get(session_key=session_key)
             uid = session.get_decoded().get('_auth_user_id')
