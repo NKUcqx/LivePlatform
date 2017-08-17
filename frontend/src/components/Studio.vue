@@ -2,8 +2,8 @@
     <div id="studio" :style="wholeSize">
         <topbar TYPE="studio" id="topbar" ref="topBar" :AUTHORITY="authority"></topbar>
         <Modal v-model="uploadModal" id="upload-modal">
-            <upload-button UPLOADTYPE="thumbnail" :ONSUCCESS="changeThumbnail" IMGSRC="roomInfo.img"></upload-button>
-            <upload-button UPLOADTYPE="slide" :ONSUCCESS="uploadSlide" IMGSRC="../../assets/PPT.png"></upload-button>
+            <upload-button UPLOADTYPE="thumbnail" :ONSUCCESS="changeThumbnail" :IMGSRC="roomInfo.img"></upload-button>
+            <upload-button UPLOADTYPE="slide" :ONSUCCESS="uploadSlide"></upload-button>
             <div slot="footer" id="modal-footer">
                 <Button type="primary" @click="readyForLive()">Ready</Button>
             </div>
@@ -466,7 +466,7 @@ export default {
     #studio #upload-ppt {
         margin-top: 40px;
     }
-    #studio #modal-footer {
+    #modal-footer {
         text-align: center;
         padding: 15px;
     }
