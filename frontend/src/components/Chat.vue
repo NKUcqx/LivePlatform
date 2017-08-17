@@ -16,9 +16,9 @@
             <ul id="history">
                 <li v-for="hist of history" id="message">
                     <Dropdown trigger="click" style="margin-left: 20px" id='test1' @on-click="click">
-                        <a href="javascript:void(0)" v-if="user.userid===CREATORID" class="teacher" id="name">{{ hist.nickname }}:{{hist.message}}</a>
-                        <a href="javascript:void(0)" v-if="user.userid!==CREATORID" class="student" id="name">{{ hist.nickname }}:{{hist.message}}</a>
-                        <Dropdown-menu slot="list" v-if="user.userid===CREATORID">
+                        <a href="javascript:void(0)" v-if="hist.role" class="teacher" id="name">{{ hist.nickname }}:{{hist.message}}</a>
+                        <a href="javascript:void(0)" v-if="hist.role===false" class="student" id="name">{{ hist.nickname }}:{{hist.message}}</a>
+                        <Dropdown-menu slot="list" v-if="AUTHORITY">
                             <Dropdown-item name='banspeak'>禁言</Dropdown-item>
                             <Modal v-model="dialog1" title="提示" @on-ok="banspeakone(hist.userid,hist.nickname)" @on-cancel="cancel">
                                 <p>您确定要禁言{{hist.nickname}}这位同学吗？</p>
@@ -58,9 +58,9 @@
     } from 'vuex'
     export default {
         props: {
-            CREATORID: {
-                type: Number,
-                default: ''
+            AUTHORITY: {
+                type: Boolean,
+                default: false
             },
             WIDTH: {
                 type: Number,
@@ -81,7 +81,7 @@
                 liveState: 'getLiveState'
             })
         },
-        data() {
+        data () {
             return {
                 message: '',
                 history: [],
@@ -105,37 +105,15 @@
             }
         },
         watch: {
-            'HEIGHT': function() {
+            'HEIGHT': function () {
                 this.position.width = this.WIDTH.toString() + 'px'
                 this.position.height = (this.HEIGHT).toString() + 'px'
-                console.log("---chat-mounted---1")
-                console.log(this.user.userid)
-                console.log(CREATORID)
-                CREATORID = this.user.userid
-                console.log(CREATORID)
-                console.log("---chat-mounted---1")
-            },
-            'CREATORID': function() {
-                this.position.width = this.WIDTH.toString() + 'px'
-                this.position.height = (this.HEIGHT).toString() + 'px'
-                console.log("---chat-mounted---2")
-                console.log(this.user.userid)
-                console.log(CREATORID)
-                CREATORID = this.user.userid
-                console.log(CREATORID)
-                console.log("---chat-mounted---2")
             }
         },
-        mounted() {
+        mounted () {
             this.position.width = this.WIDTH.toString() + 'px'
             this.position.height = (this.HEIGHT).toString() + 'px'
             this.position.border = this.BORDER + 'px'
-            console.log("---chat-mounted---")
-            console.log(this.user.userid)
-            console.log(this.CREATORID)
-            this.CREATORID = this.user.userid
-            console.log(this.CREATORID)
-            console.log("---chat-mounted---")
             /* if (localStorage.silence) {
                 this.silence = localStorage.silence
                 if (this.silence) {
@@ -149,10 +127,10 @@
             } */
         },
         methods: {
-            send(data) {
+            send (data) {
                 this.$emit('send', data)
             },
-            sendmsg: function() {
+            sendmsg: function () {
                 localStorage.removeItem('silence')
                 localStorage.removeItem('out')
                 if (this.silence === false) {
@@ -161,46 +139,43 @@
                             chattype: 'message',
                             message: this.message,
                             userid: this.user.userid,
-                            nickname: this.user.nickname
+                            nickname: this.user.nickname,
+                            role: this.AUTHORITY
                         })
                         this.message = ''
                         document.getElementById('history').scrollTop = document.getElementById('history').scrollHeight
                     }
                 }
             },
-            up: function() {
+            up: function () {
                 document.getElementById('history').scrollTop = 0
             },
-            down: function() {
+            down: function () {
                 document.getElementById('history').scrollTop = document.getElementById('history').scrollHeight
             },
-            click: function(name) {
+            click: function (name) {
                 if (name === 'banspeak') {
                     this.dialog1 = true
                 } else if (name === 'out') {
                     this.dialog2 = true
                 } else this.dialog3 = true
             },
-            banspeakpublic: function() {
-                console.log('allsilence-send--1')
-                console.log(this.user.userid)
-                console.log(this.CREATORID)
-                console.log(this.CREATORID === this.user.userid)
-                if (this.user.userid === this.CREATORID) {
+            banspeakpublic: function () {
+                if (this.AUTHORITY) {
                     console.log('allsilence-send')
                     this.send({
-                        chattype: 'allsilence',
+                        chattype: 'allsilence'
                     })
                 }
             },
-            canspeakpublic: function() {
-                if (this.user.userid === this.CREATORID) {
+            canspeakpublic: function () {
+                if (this.AUTHORITY) {
                     this.send({
                         chattype: 'allspeak'
                     })
                 }
             },
-            handleCheckAll: function(data) {
+            handleCheckAll: function (data) {
                 if (this.indeterminate) {
                     this.checkAll = false
                 } else {
@@ -209,7 +184,7 @@
                 this.indeterminate = false
                 this.cans = this.bans
             },
-            checkchange: function(data) {
+            checkchange: function (data) {
                 if (data.length === this.bans.length) {
                     this.indeterminate = false
                     this.checkAll = true
@@ -222,7 +197,7 @@
                 }
                 this.cans = data
             },
-            canspeak: function() {
+            canspeak: function () {
                 for (var index = 0; index < this.cans.length; index++) {
                     this.send({
                         chattype: 'canspeak',
@@ -232,9 +207,9 @@
                     this.checkAll = false
                 }
             },
-            cancel: function() {},
-            banspeakone(userid, nickname) {
-                if (this.user.userid === this.CREATORID) {
+            cancel: function () {},
+            banspeakone (userid, nickname) {
+                if (this.AUTHORITY) {
                     this.send({
                         chattype: 'banspeakone',
                         userid: userid,
@@ -245,61 +220,56 @@
                     console.log(nickname)
                 }
             },
-            outone(userid) {
-                if (this.user.userid === this.CREATORID) {
+            outone (userid) {
+                if (this.AUTHORITY) {
                     this.send({
                         chattype: 'outone',
                         userid: userid
                     })
                 }
             },
-            messolve(data) {
+            messolve (data) {
                 this.history.push({
                     message: data.data.message,
                     userid: data.data.userid,
-                    nickname: data.data.nickname
+                    nickname: data.data.nickname,
+                    role: data.data.role
                 })
-                console.log('deal with')
-                console.log(data.data.message)
-                console.log(data.data.userid)
             },
-            outsolve(data) {
+            outsolve (data) {
                 if (data.data.userid === this.user.userid) {
                     localStorage['out'] = true
                     this.$router.go(-1)
                 }
             },
-            banonesolve(data) {
-                console.log('ban one re')
-                console.log(data.data.userid)
-                console.log(this.user.userid)
+            banonesolve (data) {
                 if (data.data.userid === this.user.userid) {
                     localStorage['silence'] = true
                     this.silence = true
                     this.speak = false
-                    console.log('ban one re--1')
                 }
                 this.bans.push({
                     userid: data.data.userid,
                     nickname: data.data.nickname
                 })
             },
-            banpublicsolve(data) {
-                console.log('allsilence-receive')
+            banpublicsolve (data) {
                 localStorage['silence'] = true
                 this.allsilence = true
                 this.allspeak = false
-                this.silence = true
-                this.speak = false
+                if (this.AUTHORITY === false) {
+                    this.silence = true
+                    this.speak = false
+                }
             },
-            allspeaksolve(data) {
+            allspeaksolve (data) {
                 localStorage['silence'] = false
                 this.allsilence = false
                 this.allspeak = true
                 this.silence = false
                 this.speak = true
             },
-            canspeaksolve(data) {
+            canspeaksolve (data) {
                 for (var index = 0; index < this.bans.length; index++) {
                     if (this.bans[index].userid === data.data.userid) {
                         this.bans.splice(index, 1)
@@ -311,7 +281,7 @@
                     localStorage['silence'] = false
                 }
             },
-            receive(data) {
+            receive (data) {
                 if (data.data.chattype === 'message') {
                     console.log('recive')
                     this.messolve(data)
@@ -405,11 +375,11 @@
     .icon {
         color: #5cadff;
     }
-    .teacher{
-        color:#5cadff;
+    .teacher {
+        color: #5cadff;
     }
-    .student{
-        color:black;
+    .student {
+        color: black;
     }
     #lefticon {
         margin-left: 5px;
