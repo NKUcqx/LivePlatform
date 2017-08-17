@@ -10,6 +10,7 @@ import Canvas from '@/components/tinyComponents/Canvas'
 import CloseButton from '@/components/tinyComponents/CloseButton'
 import TeacherRTC from '@/components/tinyComponents/TeacherRTC'
 import StudentRTC from '@/components/tinyComponents/StudentRTC'
+import Mp4player from '@/components/tinyComponents/Mp4player'
 import PPT from '@/components/PPT'
 import store from '../store'
 import { CONST } from '../utils/const'
@@ -80,6 +81,11 @@ export default new Router({
             path: '/student',
             name: 'student',
             component: StudentRTC
+        },
+        {
+            path: '/player',
+            name: 'player',
+            component: Mp4player
         },
         {
             path: '/chat',
