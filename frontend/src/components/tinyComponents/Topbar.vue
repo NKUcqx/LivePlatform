@@ -76,25 +76,8 @@
         <Menu-item name="2" class="top-right longer">
             <img :src="user.avatar" class="head-image" alt="head-image" :width="img.size" :height="img.size" @click="avatarModal = true"  id="avatar" ref="avatar">
             <Modal v-model="avatarModal" title="Upload Avatar" :width="300" id="avatar-modal">
-                    <Upload
-                        :headers = "{
-                            'X-CSRFToken': getCookie() 
-                        }"
-                        name="avatar"
-                        type="drag"
-                        :on-success="changeAvatar"
-                        :format="['jpg','jpeg','png','gif','bmp']"
-                        :max-size="200"
-                        :show-upload-list="false"
-                        :on-format-error="avatarTypeError"
-                        :on-exceeded-size="avatarSizeError"
-                        action="/changeavatar/">
-                        <div>
-                            <img :src="user.avatar" id="show-avatar" ref="bigAvatar" alt="file size too large">
-                            <div id="avatar-text">click image or drag to update your avatar</div>
-                        </div>
-                    </Upload>
-                    <div slot="footer"></div>
+                <upload-button UPLOADTYPE="avatar" :ONSUCCESS="changeAvatar" IMGSRC="user.avatar"></upload-button>
+                <div slot="footer"></div>
             </Modal>
         </Menu-item>
     </Menu>
@@ -106,8 +89,12 @@
     import { CONST } from '../../utils/const'
     import { checkPassword, checkRePassword, checkForm } from '../../utils/checks'
     import { mapGetters, mapActions, mapMutations } from 'vuex'
+    import UploadButton from './UploadButton'
 
     export default {
+        components: {
+            UploadButton
+        },
         props: {
             TYPE: 'home'
         },
@@ -273,11 +260,11 @@
         },
         mounted () {
             console.log(this.user)
-        },
-        updated () {
+        }
+        /* updated () {
             this.$refs.avatar.src = this.user.avatar
             this.$refs.bigAvatar.src = this.user.avatar
-        }
+        } */
     }
 </script>
 
@@ -341,20 +328,5 @@
 
 #submenu {
     text-align: center;
-}
-
-#avatar-text {
-    font-size: 15px;
-    margin-top: 10px;
-    color: #5cadff;
-}
-
-#show-avatar {
-    display: inline-block;
-    margin-top: 10px; 
-    height: 90px;
-    width: 90px;
-    border-radius: 50%;
-    border: 2px solid rgba(180,230,180,0.7);
 }
 </style>

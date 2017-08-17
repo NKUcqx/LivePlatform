@@ -2,42 +2,8 @@
     <div id="studio" :style="wholeSize">
         <topbar TYPE="studio" id="topbar" ref="topBar"></topbar>
         <Modal v-model="uploadModal" id="upload-modal">
-            <Upload
-                :headers = "{
-                    'X-CSRFToken': getCookie() 
-                }"
-                name="thumbnail"
-                type="drag"
-                :on-success="changeThumbnail"
-                :on-format-error="thumbnailTypeError"
-                :on-exceeded-size="thumbnailSizeError"
-                :show-upload-list="false"
-                :format="['jpg','jpeg','png','gif','bmp']"
-                :max-size="300"
-                action="/setthumbnail/">
-                <div>
-                    <img :src="roomInfo.img" id="show-thumbnail">
-                    <div class="upload-text">click image or drag to update your thumbnail of live</div>
-                </div>
-            </Upload>
-            <Upload
-                :headers = "{
-                    'X-CSRFToken': getCookie() 
-                }"
-                name="slide"
-                type="drag"
-                :on-success="uploadSlide"
-                :on-format-error="slideTypeError"
-                :on-exceeded-size="slideSizeError"
-                action="/uploadslide/"
-                :show-upload-list="true"
-                :format="['ppt','pptx','key']"
-                :max-size="10*1024"
-                id="upload-ppt">
-                <div>
-                    <img src="../assets/PPT.png" id="show-slide">
-                    <div class="upload-text">click image or drag to upload your slide</div>
-            </Upload>
+            <upload-button UPLOADTYPE="thumbnail" :ONSUCCESS="changeThumbnail" IMGSRC="roomInfo.img"></upload-button>
+            <upload-button UPLOADTYPE="slide" :ONSUCCESS="uploadSlide" IMGSRC="../../assets/PPT.png"></upload-button>
             <div slot="footer" id="modal-footer">
                 <Button type="primary" @click="readyForLive()">Ready</Button>
             </div>
@@ -90,6 +56,7 @@ import MyCanvas from './tinyComponents/Canvas'
 import CloseButton from './tinyComponents/CloseButton'
 import TeacherRtc from './tinyComponents/TeacherRTC'
 import StudentRtc from './tinyComponents/StudentRTC'
+import UploadButton from './tinyComponents/UploadButton'
 import Codedemo from './Codedemo'
 import Chatdemo from './Chat'
 import io from 'socket.io-client'
@@ -121,7 +88,8 @@ export default {
         Codedemo,
         Chatdemo,
         TeacherRtc,
-        StudentRtc
+        StudentRtc,
+        UploadButton
     },
     data () {
         return {
@@ -320,18 +288,6 @@ export default {
         uploadSlide (res, file) {
             this.$Message.success(CONST.success('Upload Slide'))
         },
-        thumbnailTypeError (file, fileList) {
-            this.$Message.error('thumbnail must be jpg jpeg png gif bmp')
-        },
-        thumbnailSizeError (file, fileList) {
-            this.$Message.error('thumbnail must under 300K')
-        },
-        slideTypeError (file, fileList) {
-            this.$Message.error('slide must be ppt pptx key')
-        },
-        slideSizeError (file, fileList) {
-            this.$Message.error('slide must under 10M')
-        },
         readyForLive () {
             this.uploadModal = false
             this.$Notice.info({
@@ -501,21 +457,6 @@ export default {
     .relative {
         position: relative !important;
         top: -120px;
-    }
-    #show-slide {
-        width: 64px;
-        height: 64px;
-        padding-top: 10px;
-    }
-    #show-thumbnail {
-        width: 150px;
-        height: 90px;
-        padding-top: 10px;
-    }
-    .upload-text {
-        font-size: 15px;
-        margin-top: 10px;
-        color: #5cadff;
     }
     #upload-ppt {
         margin-top: 40px;
