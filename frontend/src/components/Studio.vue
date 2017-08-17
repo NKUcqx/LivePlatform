@@ -47,7 +47,7 @@
                 <img src="../assets/logo.png" id="teacher-avatar" :class="(isCreator)?'creator-avatar':''" alt="head-image" :width="img.size" :height="img.size" @click="showUploadModal()">
                 <div id="studio-info">
                     <div id="title">
-                        <h2 id="title-content">{{roomInfo.title}}aaa</h2>
+                        <h2 id="title-content">{{roomInfo.title}}</h2>
                         <Button id="switch-section" type="ghost" @click="changeSection()" v-if="type===1"><Icon type="arrow-swap"></Icon></Button>
                         <Button id="switch-section" type="ghost" @click="openMinor()" v-else><Icon type="android-open"></Icon></Button>
                     </div>
