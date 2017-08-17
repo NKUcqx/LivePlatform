@@ -33,7 +33,7 @@
                 </keep-alive>
             </div>
             <div :class="workClass" v-show="isWorkShow">
-                <close-button class="close-button" @close="closeWork()" @change="changePanel" @send="emitChangeSection" :isWork="true" ref="closeButton" :AUTHORITY="authority"></close-button>
+                <close-button class="close-button" @close="closeWork()" @change="changePanel" @send="emitChangeSection" :isWork="true" :INIT="style" ref="closeButton" :AUTHORITY="authority"></close-button>
                 <keep-alive>
                     <ppt ref="slide" :WIDTH="workSize.width" :HEIGHT="workSize.height" :SOU="roomInfo.slide" @send="emitSlide" v-show="style===0||style===3" :AUTHORITY="authority"></ppt>
                 </keep-alive>
@@ -95,7 +95,7 @@ export default {
     },
     data () {
         return {
-            style: 0,
+            style: 1,
             type: 1,
             uploadModal: false,
             closePosition: {
