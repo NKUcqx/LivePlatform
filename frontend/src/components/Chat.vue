@@ -2,58 +2,30 @@
     <div class="dialog" id='test' :style="position">
         <div class="head">
             <h1>
-                <Icon class="icon" type="chevron-up" id="lefticon" @click.native="up()"></Icon>
+                <Icon class="icon" type="chevron-up" id="lefticon" @click.native="up"></Icon>
             </h1>
             <h1>
-                <Dropdown trigger="click" @on-click="speakall">
-                    <Icon type="android-notifications" v-if='allspeak'class='icon' id='midicon'></Icon>
-                    <Icon type="android-notifications-off" v-if='allsilence'class='icon' id='midicon'></Icon>
-                    <Dropdown-menu slot="list" v-if="USERID===CREATERID">
-                        <Dropdown-item v-if="allspeak" name="allsilence">全体禁言</Dropdown-item>
-                        <Dropdown-item v-if="allsilence" name='allspeak'>取消全体禁言</Dropdown-item>
-                    </Dropdown-menu>
-                </Dropdown>
+                <Icon type="android-notifications" v-if='allspeak' class='icon' id='midicon' @click.native='banspeakpublic'></Icon>
+                <Icon type="android-notifications-off" v-if='allsilence' class='icon' id='midicon' @click.native='canspeakpublic'></Icon>
             </h1>
             <h1>
-                <Icon class="icon" type="chevron-down" id="righticon" @click.native="down()"></Icon>
+                <Icon class="icon" type="chevron-down" id="righticon" @click.native="down"></Icon>
             </h1>
         </div>
         <div class="historymessage">
             <ul id="history">
                 <li v-for="hist of history" id="message">
-                    <Dropdown v-if='hist.userid!==CREATERID' trigger="click" style="margin-left: 20px" id='test1' @on-click="click">
-                        <a href="javascript:void(0)" id="name">{{ hist.username }}</a>
-                        <Dropdown-menu slot="list" v-if="USERID===CREATERID">
-                            <Dropdown-item name='banspeak'>test</Dropdown-item>
-                            <Modal v-model="dialog1" title="提示" @on-ok="banspeakone(hist.userid,hist.username)" @on-cancel="cancel()">
-                                <p>您确定要禁言{{hist.username}}这位同学吗？</p>
-                            </Modal>
-                            <Dropdown-item name='out'>踢出房间</Dropdown-item>
-                            <Modal v-model="dialog2" title="提示" @on-ok="outone(hist.userid)" @on-cancel="cancel()">
-                                <p>您确定要踢出{{hist.username}}这位同学吗？</p>
-                            </Modal>
-                            <Dropdown-item name='out'>解除禁言</Dropdown-item>
-                            <Modal v-model="dialog3" title="提示" @on-ok="canspeak" @on-cancel="cancel()">
-                                <p>您要解除下面哪位同学的禁言</p>
-                                <div style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;">
-                                    <Checkbox @click.prevent.native="handleCheckAll">全选</Checkbox>
-                                </div>
-                                <Checkbox-group v-for="ban of bans" @on-change="checkchange">
-                                    <Checkbox :label='ban.userid'>{{ban.username}}</Checkbox>
-                                </Checkbox-group>
-                            </Modal>
-                        </Dropdown-menu>
-                    </Dropdown>
-                    <Dropdown v-if='hist.userid===CREATERID' trigger="click" style="margin-left: 20px" id='test1' @on-click="click">
-                        <a href="javascript:void(0)" id="name" class='teacher'>{{ hist.username }}</a>
-                        <Dropdown-menu slot="list" v-if="this.USERID===this.CREATERID">
+                    <Dropdown trigger="click" style="margin-left: 20px" id='test1' @on-click="click">
+                        <a href="javascript:void(0)" v-if="user.userid===CREATORID" class="teacher" id="name">{{ hist.nickname }}:{{hist.message}}</a>
+                        <a href="javascript:void(0)" v-if="user.userid!==CREATORID" class="student" id="name">{{ hist.nickname }}:{{hist.message}}</a>
+                        <Dropdown-menu slot="list" v-if="user.userid===CREATORID">
                             <Dropdown-item name='banspeak'>禁言</Dropdown-item>
-                            <Modal v-model="dialog1" title="提示" @on-ok="banspeakone(hist.userid,hist.username)" @on-cancel="cancel()">
-                                <p>您确定要禁言{{hist.username}}这位同学吗？</p>
+                            <Modal v-model="dialog1" title="提示" @on-ok="banspeakone(hist.userid,hist.nickname)" @on-cancel="cancel">
+                                <p>您确定要禁言{{hist.nickname}}这位同学吗？</p>
                             </Modal>
                             <Dropdown-item name='out'>踢出房间</Dropdown-item>
-                            <Modal v-model="dialog2" title="提示" @on-ok="outone(hist.userid)" @on-cancel="cancel()">
-                                <p>您确定要踢出{{hist.username}}这位同学吗？</p>
+                            <Modal v-model="dialog2" title="提示" @on-ok="outone(hist.userid)" @on-cancel="cancel">
+                                <p>您确定要踢出{{hist.nickname}}这位同学吗？</p>
                             </Modal>
                             <Dropdown-item name='canspeak'>解除禁言</Dropdown-item>
                             <Modal v-model="dialog3" title="提示" @on-ok="canspeak" @on-cancel="cancel()">
@@ -62,19 +34,17 @@
                                     <Checkbox :indeterminate="indeterminate" :value="checkAll" @click.prevent.native="handleCheckAll">全选</Checkbox>
                                 </div>
                                 <Checkbox-group v-for="ban of bans" @on-change="checkchange">
-                                    <Checkbox :label='ban.userid'>{{ban.username}}</Checkbox>
+                                    <Checkbox :label='ban.userid'>{{ban.nickname}}</Checkbox>
                                 </Checkbox-group>
                             </Modal>
                         </Dropdown-menu>
                     </Dropdown>
-                    <p v-if='hist.userid===CREATERID' id="content" class='teacher'>{{ hist.message }}</p>
-                    <p v-if='hist.userid!==CREATERID' id="content">{{ hist.message }}</p>
                 </li>
             </ul>
         </div>
         <div class="input">
-            <Input class="messageInput" v-model="message" placeholder='please enter' :disabled='silence' @on-enter='sendmsg()'>
-            <Button id="sendBtn" type="primary" slot="append" @click='sendmsg()' :disabled="message.trim()==''">Send</Button>
+            <Input class="messageInput" v-model="message" placeholder='please enter' :disabled='silence' @on-enter='sendmsg'>
+            <Button id="sendBtn" type="primary" slot="append" @click='sendmsg' :disabled="message.trim()==''">Send</Button>
             </Input>
         </div>
     </div>
@@ -83,23 +53,14 @@
 
 </script>
 <script>
+    import {
+        mapGetters
+    } from 'vuex'
     export default {
         props: {
-            CREATERID: {
+            CREATORID: {
                 type: Number,
-                default: 0
-            },
-            USERNAME: {
-                type: String,
-                default: 'lili'
-            },
-            USERID: {
-                type: Number,
-                default: 0
-            },
-            ROOM: {
-                type: Number,
-                default: 10
+                default: ''
             },
             WIDTH: {
                 type: Number,
@@ -114,7 +75,13 @@
                 default: 1
             }
         },
-        data () {
+        computed: {
+            ...mapGetters({
+                user: 'getUser',
+                liveState: 'getLiveState'
+            })
+        },
+        data() {
             return {
                 message: '',
                 history: [],
@@ -138,15 +105,37 @@
             }
         },
         watch: {
-            'HEIGHT': function () {
+            'HEIGHT': function() {
                 this.position.width = this.WIDTH.toString() + 'px'
                 this.position.height = (this.HEIGHT).toString() + 'px'
+                console.log("---chat-mounted---1")
+                console.log(this.user.userid)
+                console.log(CREATORID)
+                CREATORID = this.user.userid
+                console.log(CREATORID)
+                console.log("---chat-mounted---1")
+            },
+            'CREATORID': function() {
+                this.position.width = this.WIDTH.toString() + 'px'
+                this.position.height = (this.HEIGHT).toString() + 'px'
+                console.log("---chat-mounted---2")
+                console.log(this.user.userid)
+                console.log(CREATORID)
+                CREATORID = this.user.userid
+                console.log(CREATORID)
+                console.log("---chat-mounted---2")
             }
         },
-        mounted () {
+        mounted() {
             this.position.width = this.WIDTH.toString() + 'px'
             this.position.height = (this.HEIGHT).toString() + 'px'
             this.position.border = this.BORDER + 'px'
+            console.log("---chat-mounted---")
+            console.log(this.user.userid)
+            console.log(this.CREATORID)
+            this.CREATORID = this.user.userid
+            console.log(this.CREATORID)
+            console.log("---chat-mounted---")
             /* if (localStorage.silence) {
                 this.silence = localStorage.silence
                 if (this.silence) {
@@ -160,10 +149,10 @@
             } */
         },
         methods: {
-            send (data) {
+            send(data) {
                 this.$emit('send', data)
             },
-            sendmsg () {
+            sendmsg: function() {
                 localStorage.removeItem('silence')
                 localStorage.removeItem('out')
                 if (this.silence === false) {
@@ -171,47 +160,47 @@
                         this.send({
                             chattype: 'message',
                             message: this.message,
-                            username: this.USERNAME,
-                            userid: this.USERID
+                            userid: this.user.userid,
+                            nickname: this.user.nickname
                         })
                         this.message = ''
                         document.getElementById('history').scrollTop = document.getElementById('history').scrollHeight
                     }
                 }
             },
-            up () {
+            up: function() {
                 document.getElementById('history').scrollTop = 0
             },
-            down () {
+            down: function() {
                 document.getElementById('history').scrollTop = document.getElementById('history').scrollHeight
             },
-            dialog1change () {
-                this.dialog1 = true
-            },
-            click: function (name) {
+            click: function(name) {
                 if (name === 'banspeak') {
                     this.dialog1 = true
                 } else if (name === 'out') {
                     this.dialog2 = true
                 } else this.dialog3 = true
             },
-            speakall: function (name) {
-                if (this.USERID === this.CREATERID) {
-                    if (name === 'allsilence') {
-                        this.send({
-                            chattype: 'allsilence',
-                            userid: this.USERID
-                        })
-                        console.log('allslience send')
-                    } else {
-                        this.send({
-                            chattype: 'allspeak'
-                        })
-                        console.log('allspeak send')
-                    }
+            banspeakpublic: function() {
+                console.log('allsilence-send--1')
+                console.log(this.user.userid)
+                console.log(this.CREATORID)
+                console.log(this.CREATORID === this.user.userid)
+                if (this.user.userid === this.CREATORID) {
+                    console.log('allsilence-send')
+                    this.send({
+                        chattype: 'allsilence',
+                    })
                 }
             },
-            handleCheckAll: function (data) {
+            canspeakpublic: function() {
+                if (this.user.userid === this.CREATORID) {
+                    this.send({
+                        chattype: 'allspeak'
+                    })
+                }
+            },
+            handleCheckAll: function(data) {
                 if (this.indeterminate) {
                     this.checkAll = false
                 } else {
@@ -220,7 +209,7 @@
                 this.indeterminate = false
                 this.cans = this.bans
             },
-            checkchange: function (data) {
+            checkchange: function(data) {
                 if (data.length === this.bans.length) {
                     this.indeterminate = false
                     this.checkAll = true
@@ -233,90 +222,98 @@
                 }
                 this.cans = data
             },
-            canspeak: function () {
+            canspeak: function() {
                 for (var index = 0; index < this.cans.length; index++) {
                     this.send({
                         chattype: 'canspeak',
-                        userid: this.cans[index]
+                        userid: this.cans[index].userid
                     })
                     this.indeterminate = true
                     this.checkAll = false
                 }
             },
-            banspeakone (id, name) {
-                if (this.USERID === this.CREATERID) {
+            cancel: function() {},
+            banspeakone(userid, nickname) {
+                if (this.user.userid === this.CREATORID) {
                     this.send({
                         chattype: 'banspeakone',
-                        userid: id,
-                        username: name
+                        userid: userid,
+                        nickname: nickname
                     })
+                    console.log('ban one send--1')
+                    console.log(userid)
+                    console.log(nickname)
                 }
             },
-            outone (id) {
-                if (this.USERID === this.CREATERID) {
+            outone(userid) {
+                if (this.user.userid === this.CREATORID) {
                     this.send({
                         chattype: 'outone',
-                        userid: id
+                        userid: userid
                     })
                 }
             },
-            messolve (data) {
+            messolve(data) {
                 this.history.push({
-                    username: data.data.username,
                     message: data.data.message,
-                    userid: data.data.userid
+                    userid: data.data.userid,
+                    nickname: data.data.nickname
                 })
+                console.log('deal with')
+                console.log(data.data.message)
+                console.log(data.data.userid)
             },
-            outsolve (data) {
-                if (data.data.userid === this.USERID) {
+            outsolve(data) {
+                if (data.data.userid === this.user.userid) {
                     localStorage['out'] = true
                     this.$router.go(-1)
                 }
             },
-            banonesolve (data) {
-                if (data.data.userid === this.USERID) {
+            banonesolve(data) {
+                console.log('ban one re')
+                console.log(data.data.userid)
+                console.log(this.user.userid)
+                if (data.data.userid === this.user.userid) {
                     localStorage['silence'] = true
                     this.silence = true
                     this.speak = false
+                    console.log('ban one re--1')
                 }
                 this.bans.push({
                     userid: data.data.userid,
-                    username: data.data.username
+                    nickname: data.data.nickname
                 })
             },
-            banpublicsolve (data) {
-                if (data.data.userid !== this.USERID) {
-                    localStorage['silence'] = true
-                    this.allsilence = true
-                    this.allspeak = false
-                    this.silence = true
-                    this.speak = false
-                } else {
-                    this.allsilence = true
-                    this.allspeak = false
-                }
+            banpublicsolve(data) {
+                console.log('allsilence-receive')
+                localStorage['silence'] = true
+                this.allsilence = true
+                this.allspeak = false
+                this.silence = true
+                this.speak = false
             },
-            allspeaksolve (data) {
+            allspeaksolve(data) {
                 localStorage['silence'] = false
                 this.allsilence = false
                 this.allspeak = true
                 this.silence = false
                 this.speak = true
             },
-            canspeaksolve (data) {
+            canspeaksolve(data) {
                 for (var index = 0; index < this.bans.length; index++) {
                     if (this.bans[index].userid === data.data.userid) {
                         this.bans.splice(index, 1)
                     }
                 }
-                if (data.data.userid === this.USERID) {
+                if (data.data.userid === this.userid) {
                     this.silence = false
                     this.speak = true
                     localStorage['silence'] = false
                 }
             },
-            receive (data) {
+            receive(data) {
                 if (data.data.chattype === 'message') {
+                    console.log('recive')
                     this.messolve(data)
                 }
                 if (data.data.chattype === 'outone') {
@@ -334,8 +331,7 @@
                 if (data.data.chattype === 'canspeak') {
                     this.canspeaksolve(data)
                 }
-            },
-            cancel () {}
+            }
         }
     }
 </script>
@@ -371,6 +367,10 @@
     a {
         display: inline;
         font-size: 12px;
+        word-break: break-word;
+        text-align: left;
+        font-size: 12px;
+        word-wrap: break-word;
     }
     h1 {
         display: inline;
@@ -404,6 +404,12 @@
     /*end custom file input*/
     .icon {
         color: #5cadff;
+    }
+    .teacher{
+        color:#5cadff;
+    }
+    .student{
+        color:black;
     }
     #lefticon {
         margin-left: 5px;
