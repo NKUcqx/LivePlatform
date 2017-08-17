@@ -192,17 +192,17 @@ export default {
 </script>
 
 <style scoped>
-.video {
+.studentRTC .video {
 }
 
-#relative {
+.studentRTC #relative {
     width: 0;
     height: 0;
     display: block;
     float: left;
 }
 
-#toolbar {
+.studentRTC #toolbar {
     position: relative;
     top: -30px;
     left: 0px;
@@ -211,15 +211,15 @@ export default {
     overflow: hidden;
 }
 
-.left {
+.studentRTC .left {
 }
 
-.right {
+.studentRTC .right {
 }
 
-.buttons {
+.studentRTC .buttons {
     color: rgb(45,140,240);
     background-color: rgba(0,0,0,0) !important;
-    margin: 0px 10px 0px 10px;
+    margin: 0px 10px 0px 5px;
 }
 </style>

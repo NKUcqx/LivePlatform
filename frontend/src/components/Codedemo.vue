@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div id="code-mirror">
         <main v-cloak id="app">
             <div class="cm-container">
                 <textarea @change="change" id="codemirror"></textarea>
@@ -222,26 +222,26 @@ export default {
   display: none;
 }
 
-.container {
+#code-mirror {
   margin: 0 auto;
 }
 
-.cm-container {
+#code-mirror .cm-container {
   border: #ddd solid 1px;
   text-align: left;
 }
 
-.CodeMirror-code {
+#code-mirror .CodeMirror-code {
     font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
-#relative {
+#code-mirror #relative {
     float: right;
     width: 0;
     height: 0;
 }
 
-#select {
+#code-mirror #select {
     width: 80px;
     height: 30px;
     background-color: white;
@@ -251,7 +251,7 @@ export default {
     left: -83px;
 }
 
-.option {
+#code-mirror .option {
     color: #5cadff;
 }
 </style>

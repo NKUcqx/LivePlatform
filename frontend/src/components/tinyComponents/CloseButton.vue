@@ -1,5 +1,6 @@
 <template>
 <div>
+<div id="close-buttons">
     <div id="relative" ref="relative">
         <div id="switch">
             <Poptip trigger="hover" content="PPT" class="poptip" v-if="isWork" placement="bottom">
@@ -16,6 +17,7 @@
             </Poptip>
         </div>
     </div>
+</div>
 </div>
 </template>
 
@@ -79,12 +81,12 @@ export default {
 </script>
 
 <style scoped>
-    #relative {
+    #close-buttons #relative {
         width: 0;
         height: 0;
         float: right;
     }
-    #switch {
+    #close-buttons #switch {
         display: block;
         position: relative;
         top: 3px;
@@ -93,43 +95,43 @@ export default {
         z-index: 400;
         width: 75px;
     }
-    .switch-item {
+    #close-buttons .switch-item {
         display: inline-block;
         height: 14px;
         width: 14px;
         border-radius: 50%;
     }
-    .switch-item:hover {
+    #close-buttons .switch-item:hover {
         cursor: pointer;
     }
-    #canvas-item {
+    #close-buttons #canvas-item {
         background-color: rgb(25,190,107);
     }
-    #ppt-item {
+    #close-buttons #ppt-item {
         background-color: rgb(255,153,0);
     }
-    #code-item {
+    #close-buttons #code-item {
         background-color: rgb(45,140,240);
     }
-    #close-button {
+    #close-buttons #close-button {
         margin-left: 6px;
         background-color: rgb(237,63,20);
     }
-    #close-piptip {
+    #close-buttons #close-piptip {
         float: right;
     }
-    .poptip {
+    #close-buttons .poptip {
         text-align: center;
     }
-    .icon {
+    #close-buttons .icon {
         color: black;
         display: none;
     }
-    .switch-item:hover>.icon {
+    #close-buttons .switch-item:hover>.icon {
         display: inline;
     }
 
-    .show {
+    #close-buttons .show {
         display: inline;
     }
 </style>
