@@ -527,13 +527,13 @@ export default {
 </script>
 
 <style scoped>
-    #relative {
+    #canvas #relative {
         width: 0;
         height: 0;
         float: left;
     }
 
-    #tool-button {
+    #canvas #tool-button {
         position: relative;
         top: 5px;
         left: 5px;
@@ -547,19 +547,19 @@ export default {
         height: 100%;
     }
 
-    #draw-board {
+    #canvas #draw-board {
 
     }
-    #board {
+    #canvas #board {
     }
-    .buttons {
+    #canvas .buttons {
         display: inline-block;
     }
 
-    #tool-button:hover {
+    #canvas #tool-button:hover {
         color: gray;
     }
-    #tool-bar{
+    #canvas #tool-bar{
         padding-left: 50px;
         padding-top: 5px;
         padding-bottom: 5px;

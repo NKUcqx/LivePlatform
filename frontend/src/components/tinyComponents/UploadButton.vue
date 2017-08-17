@@ -28,7 +28,10 @@ export default {
     props: {
         UPLOADTYPE: String,
         ONSUCCESS: Function,
-        IMGSRC: String
+        IMGSRC: {
+            type: String,
+            default: '../../../static/img/PPT.png'
+        }
     },
     computed: {
         chooseName () {

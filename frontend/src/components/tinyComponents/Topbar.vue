@@ -76,7 +76,7 @@
         <Menu-item name="2" class="top-right longer">
             <img :src="user.avatar" class="head-image" alt="head-image" :width="img.size" :height="img.size" @click="avatarModal = true"  id="avatar" ref="avatar">
             <Modal v-model="avatarModal" title="Upload Avatar" :width="300" id="avatar-modal">
-                <upload-button UPLOADTYPE="avatar" :ONSUCCESS="changeAvatar" IMGSRC="user.avatar"></upload-button>
+                <upload-button UPLOADTYPE="avatar" :ONSUCCESS="changeAvatar" :IMGSRC="user.avatar"></upload-button>
                 <div slot="footer"></div>
             </Modal>
         </Menu-item>
@@ -273,21 +273,21 @@
     font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
 }
 
-#topmenu {
+#topbar #topmenu {
     overflow: hidden;
 }
 
-#createroom, #startlive {
+#topbar #createroom, #startlive {
     display: inline-block;
     padding-top: 5px;
 }
 
-#endlive {
+#topbar #endlive {
     padding-top: 16px;
     padding-right: 7px;
 }
 
-.menu-item {
+#topbar .menu-item {
     height: 30px !important;
     padding-top: 0px !important;
     padding-bottom: 0px !important;
@@ -295,7 +295,7 @@
     padding-right: 0px !important;
 }
 
-.item {
+#topbar .item {
     display: inline-block;
     padding: 5px 0px;
     width: 100%;
@@ -303,30 +303,30 @@
     /*border: 1px red solid;*/
 }
 
-.top-right {
+#topbar .top-right {
     float: right !important;
 }
 
-.head-image {
+#topbar .head-image {
     border-radius: 50%;
     margin-top: 9px;
     border: 1px solid rgba(180,230,180,0.7);
     /*background-color: gray;*/
 }
 
-.logo-image {
+#topbar .logo-image {
     margin-top: 9px;
 }
 
-#avatar-modal {
+#topbar #avatar-modal {
     text-align: center;
 }
 
-.longer {
+#topbar .longer {
     height: 60px;
 }
 
-#submenu {
+#topbar #submenu {
     text-align: center;
 }
 </style>

@@ -2,8 +2,8 @@
     <div id="studio" :style="wholeSize">
         <topbar TYPE="studio" id="topbar" ref="topBar" :AUTHORITY="authority"></topbar>
         <Modal v-model="uploadModal" id="upload-modal">
-            <upload-button UPLOADTYPE="thumbnail" :ONSUCCESS="changeThumbnail" IMGSRC="roomInfo.img"></upload-button>
-            <upload-button UPLOADTYPE="slide" :ONSUCCESS="uploadSlide" IMGSRC="../../assets/PPT.png"></upload-button>
+            <upload-button UPLOADTYPE="thumbnail" :ONSUCCESS="changeThumbnail" :IMGSRC="roomInfo.img"></upload-button>
+            <upload-button UPLOADTYPE="slide" :ONSUCCESS="uploadSlide"></upload-button>
             <div slot="footer" id="modal-footer">
                 <Button type="primary" @click="readyForLive()">Ready</Button>
             </div>
@@ -128,7 +128,7 @@ export default {
             user: 'getUser'
         }),
         workClass () {
-            return (this.style < 3) ? 'main-section left-part' : 'minor-section right-part relative'
+            return (this.style < 3) ? 'main-section left-part' : 'minor-section right-part studio-relative'
         },
         vedioClass () {
             return (this.style >= 3) ? 'main-section left-part' : 'minor-section right-part'
@@ -136,7 +136,7 @@ export default {
         chatClass () {
             let str = 'chat-section right-part'
             if (this.style >= 3 || this.type !== 1) {
-                str += ' relative'
+                str += ' studio-relative'
             }
             return str
         },
@@ -365,105 +365,105 @@ export default {
         vertical-align:left;
         overflow: hidden;
     }
-    #upload-modal {
+    #studio #upload-modal {
         text-align: center;
     }
-    .left-part {
+    #studio .left-part {
         margin: 20px 5% 20px 5%; 
         display: inline-block;
         width: 50%;
         min-width: 400px;
         float: left;
     }
-    .infobar {
+    #studio .infobar {
         height: 80px;
         border: 1px solid rgb(241,241,241);
     }
-    #teacher-avatar {  
+    #studio #teacher-avatar {  
         padding: 0px;
         border: 2px solid rgba(180,230,180,0.7);
         background-color: rgb(210,210,210);
         border-radius: 50%;
         margin: 15px 10px 15px 10px;
     }
-    .creator-avatar {
+    #studio .creator-avatar {
         cursor: pointer;
     }
-    #studio-info {
+    #studio #studio-info {
         display: inline-block;
         width: calc(100% - 50px - 30px);
         height: 80px;
     }
-    #studio-info *{
+    #studio #studio-info *{
        overflow: hidden;
     }
-    #studio-info #title {
+    #studio #studio-info #title {
         width: 100%;
         height: 48px;
     }
-    #studio-info #title #title-content{
+    #studio #studio-info #title #title-content{
         float: left;
         font-size: 26px;
         padding: 5px 0px 5px 30px;
         width: 85%;
         height: 48px;
     }
-    #studio-info #footer {
+    #studio #studio-info #footer {
         width: 100%;
         height: 32px;
     }
-    #studio-info #switch-section {
+    #studio #studio-info #switch-section {
         height: 30px;
         float: right;
         margin: 9px 5px 9px 5px;
     }
-    #studio-info #teacher {
+    #studio #studio-info #teacher {
         height: 26px;
         float: right;
     }
-    #studio-info #audience {
+    #studio #studio-info #audience {
         height: 26px;
         float: right;
     }
-    #studio-info #vip {
+    #studio #studio-info #vip {
         float: left;
         height: 24px;
     }
-    #studio-info #roomid {
+    #studio #studio-info #roomid {
         margin-left: 30px;
         float: left;
         height: 24px;
     }
-    .main-section {
+    #studio .main-section {
         height: 0;
         padding-bottom: calc( 65% * 0.5 );
         background-color: white;
     }
-    .right-part {
+    #studio .right-part {
         display: inline-block;
         width: 35%;
         min-width: 280px;
         float: right;
     }
-    .infobar, .minor-section, .chat-section, .main-section {
+    #studio .infobar, .minor-section, .chat-section, .main-section {
         -moz-box-shadow:2px 2px 10px #A1A1A1;
         -webkit-box-shadow:2px 2px 10px #A1A1A1; 
         box-shadow: 2px 2px 10px #A1A1A1;
         background-color: white;
     }
-    .minor-section {
+    #studio .minor-section {
         margin: 20px 5% 0px 0%; 
         height: 0;
         padding-bottom: calc( 65% * 0.35 );
     }
-    .chat-section {
+    #studio .chat-section {
         margin: 30px 5% 0px 0%; 
     }
-    .relative {
+    #studio .studio-relative {
         position: relative !important;
         top: -120px;
     }
-    #upload-ppt {
+    #studio #upload-ppt {
         margin-top: 40px;
     }
     #modal-footer {

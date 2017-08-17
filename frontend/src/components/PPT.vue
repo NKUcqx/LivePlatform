@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="slide">
         <Carousel v-model="index" :autoplay="setautoplay" :autoplay-speed="autoplayspeed" :dots='setdots' trigger="click" :arrow="(AUTHORITY)?'hover':'never'" @on-change='changeppt'>
             <Carousel-item v-for='img of imgs'>
                 <img :src='img' :width="position.width" :height="position.height" class="images">
@@ -153,13 +153,13 @@
 </script>
 
 <style>
-.relative {
+#slide .relative {
     width: 0;
     height: 0;
     float: left;
 }
 
-#bottom-toolbar {
+#slide #bottom-toolbar {
     display: none;
     margin-top: 40px;
     width: 100%;
@@ -169,27 +169,27 @@
     background: -moz-linear-gradient(rgba(92, 173, 255,0), rgba(92, 173, 255,1)); /* Firefox 3.6 - 15 */
     background: linear-gradient(rgba(92, 173, 255,0), rgba(92, 173, 255,1)); /* 标准的语法 */
 }
-#page {
+#slide #page {
     width: 45px;
 }
-#slider {
+#slide #slider {
     display: inline-block;
     width: calc(100% - 200px);
     float: right;
     margin-right: 10px;
 }
-.buttons {
+#slide .buttons {
     color: white !important;
 }
-.buttons:hover {
+#slide .buttons:hover {
     color: #5cadff !important;
 }
-#controls {
+#slide #controls {
     float: left;
     margin-left: 10px;
 }
 
-#showbar {
+#slide #showbar {
     position: relative;
     top: -80px;
     left: 0px;
@@ -198,7 +198,7 @@
     text-align: center;
 }
 
-#showbar:hover #bottom-toolbar {
+#slide #showbar:hover #bottom-toolbar {
     display: block;
 }
 </style>
