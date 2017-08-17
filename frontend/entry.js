@@ -16,34 +16,30 @@ let room_creator_list = {}
 // buffer area, live user in a room, for now , just the amount not user list
 let room_audience_list = {}
 let room_past_audience_list = {} // save his socket
-let room_history_list = {} // room_name : [all msg in log.txt]
 // signals server will fire
 let fire_signals = ['Error', 'updateMessage', 'loadHistory', 'getAudience'] // wtf? whether space needed at the head of bracket or not!?
 // signals server will listening
 let listening_signals = ['connection', 'disconnecting', 'liveJoin', 'sendMessage', 'getAudience', 'kickout', 'endRoom', 'pastJoin']
 
-function readFile (room_name) {
-    const file_name = path.join(room_name, 'log.txt')
-    let list = isValid(room_history_list[room_name], 'object') ? room_history_list[room_name] : []
-    const readStream = fs.createReadStream(file_name)
+function readFile (room_name, id) {
+    const readStream = fs.createReadStream(path.join('.', room_name, 'log.txt'))
     readStream.on('data', (data) => {
-        let info = ''
-        let amount = 0
-        info = info + data
+        let info = '' + data
         let index = info.indexOf('\n')
         while (index > -1) {
-            amount++
             const line = info.substring(0, index)
             info = info.substring(index + 1)
             index = info.indexOf('\n')
-            list.push(line)
+            room_past_audience_list[id]['msg_queue'].push(line)
         }
+       //console.log('............'+room_past_audience_list[id]['msg_queue'].shift())
+       sendNextMessage(id, JSON.parse(room_past_audience_list[id]['msg_queue'].shift()))
     })
-    return list
 }
 
 function writeFile (room_name, clear = false) {
-    let file_name = path.join(room_name, 'log.txt')
+    let file_name = path.join('.', room_name, 'log.txt')
+    console.log(room_name)
     if (fs.existsSync(file_name)) {
         fs.open(file_name, 'a', (err, fd) => {
             console.log('start')
@@ -62,17 +58,13 @@ function writeFile (room_name, clear = false) {
                 clearRoom(room_name)
             } else {
                 room_msg_list[room_name].splice(0, MESSAGE_THRESHOLD)
-                //room_msg_list[room_name] = room_msg_list[room_name].slice(MESSAGE_THRESHOLD)
+                // room_msg_list[room_name] = room_msg_list[room_name].slice(MESSAGE_THRESHOLD)
             }
             console.log('finish')
         })
     } else {
-        throw Error('file not exists')
+        console.log('file not exists')
     }
-}
-
-function loadMsgQueue (room_name, start, amount) {
-
 }
 
 function getRoomName (socket) {
@@ -134,21 +126,24 @@ function logMessage (room_name, content, type, signal = 'sendMessage') {
 }
 
 function sendNextMessage (id, old_msg) {
-    let msg = JSON.parse(room_past_audience_list[id]['msg_queue'].pop())
-    if (isValid(old_msg, 'object')) {
-        const time_slot = msg.time - old_msg.time - TIME_DELAY
-    } else {
-        const time_slot = 100 // default is 100 ms
+    let list = room_past_audience_list[id]
+    if (list['msg_queue'].length <= 0) {
+        console.log('Recording Finished')
+        return
     }
-    sendMessage(room_past_audience_list[id]['socket'], msg.signal, msg.content, 0)
-    setTimeout(sendNextMessage(id, msg), time_slot * 1000)
-    console.log(time_slot)
+    /*if (queue.length < MESSAGE_THRESHOLD * 0.1) { // fill the queue when less than that amount
+        queue.concat(readFile(queue['room_name']))
+    }*/
+    let msg = JSON.parse(list['msg_queue'].shift())
+    const time_slot = isValid(old_msg, 'object') ? msg['time'] - old_msg['time'] - TIME_DELAY : 100
+    sendMessage(list['socket'], msg['signal'], msg['content'], 0)
+    setTimeout(() => {sendNextMessage(id, msg)}, time_slot)
 }
 
 // TODO: omit room_name param, get it from socket
-function sendMessage (socket, signal, content, type = 0, roomname = '', log = false) {
+function sendMessage (socket, signal, content, type = 0, room_name = '', log = false) {
     let error = false
-    let room_name = getRoomName(socket)
+    //let room_name = getRoomName(socket)
     switch (type) {
         case 0: // send to himself
             socket.emit(signal, content)
@@ -196,7 +191,7 @@ function listenSignal (socket, signal_type, callback) {
 }
 
 function listenLiveJoin (socket) {
-    // on join
+    // on LiveJoin
     listenSignal(socket, 2, (data) => {
         console.log(socket.id + '>>>>>>>>LIVE>>>>>>>>>')
         if (isValid(data.room_name) && isValid(data.id)) {
@@ -221,19 +216,17 @@ function listenLiveJoin (socket) {
 }
 
 function listenPastJoin (socket) {
+    // on pastJoin
     listenSignal(socket, 7, (data) => {
         console.log(socket.id + '<<<<<<<PAST<<<<<<<<<')
         if (isValid(data.room_name) && isValid(data.id)) {
-
+            socket.join(data.room_name, () => {})
             room_past_audience_list[data.id] = {
                 'socket': socket,
-                'msg_queue': isValid(room_history_list[data.room_name], 'object') ? room_history_list[data.room_name] : readFile(data.room_name)
+                'room_name': data.room_name,
+                'msg_queue': []
             }
-            // TODO: omit the very first msg
-            setInterval(() => { // wait for readFile
-                //console.log(room_past_audience_list[data.id]['msg_queue'].length)
-                sendNextMessage(data.id, JSON.parse(room_past_audience_list[data.id]['msg_queue'].pop()))
-            }, 2000)
+            readFile(data.room_name, data.id)
         }
     })
 }
