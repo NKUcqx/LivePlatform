@@ -1,19 +1,18 @@
 <template>
-    <div class="studentRTC">
-            <Card class="video" :style="position1">
-                <div id="agora_remote" :style="position2" :disabled="!(screen)"></div>
-            </Card>
-            <br><br>
-            <Button class="join" :disabled="isJoin" @click="join()">开始观看</Button>
-            <Button class="leave" :disabled="!(isJoin)" @click="leave()">结束观看</Button>
-            <Button-group shape="circle">
-                <Button icon="arrow-right-b" :disabled="hasVideo" @click="enableVideo()" type="ghost" class="buttons"></Button>
-                <Button icon="ios-pause" :disabled="!(hasVideo)" @click="disableVideo()" type="ghost" class="buttons"></Button>
-            </Button-group>
-            <Button-group shape="circle">
-                <Button icon="ios-mic-outline" :disabled="hasAudio" @click="enableAudio()"></Button>
-                <Button icon="ios-mic-off" :disabled="!(hasAudio)" @click="disableAudio()"></Button>
-            </Button-group>
+    <div class="studentRTC" @mouseenter="showToolBar()" @mouseleave="hideToolBar()">
+        <div class="video">
+            <div id="agora_remote" :style="position2" :disabled="!(screen)"></div>
+        </div>
+        <!--Button class="join" :disabled="isJoin" @click="join()" type="circle" class="buttons left">开</Button>
+        <Button class="leave" :disabled="!(isJoin)" @click="leave()">结束观看</Button-->
+         <div id="relative">
+            <div id="toolbar" :style="toolbarStyle" v-show="isBarShown">
+
+                <Button icon="arrow-right-b" v-show="hasVideo===false" @click="enableVideo()" type="circle" class="buttons left" size="small"></Button>
+                <Button icon="ios-pause" v-show="hasVideo===true" @click="disableVideo()" type="circle" class="buttons left" size="small"></Button>
+                <Button icon="ios-mic-outline" v-show="hasAudio===false" @click="enableAudio()" type="circle" class="buttons right" size="small"></Button>
+                <Button icon="ios-mic-off" v-show="hasAudio===true" @click="disableAudio()" type="circle" class="buttons right" size="small"></Button>
+            </div>
         </div>
     </div>
 </template>
@@ -34,8 +33,16 @@ export default {
             default: '1000'
         }
     },
+    watch: {
+        'HEIGHT': function () {
+            this.position2.width = this.WIDTH.toString() + 'px'
+            this.position2.height = (this.HEIGHT).toString() + 'px'
+            this.toolbarStyle.width = (this.WIDTH - 50).toString() + 'px'
+        }
+    },
     data () {
         return {
+            isBarShown: false,
             screen: false,
             isJoin: false,
             hasVideo: true,
@@ -43,10 +50,8 @@ export default {
             appKey: '0c6a0a8f844c49d78a9aac0907dfc1d8',
             client: undefined,
             remoteStream: undefined,
-            position1: {
-                width: '650px',
-                height: '450px',
-                display: 'inline-block'
+            toolbarStyle: {
+                width: ''
             },
             position2: {
                 width: '600px',
@@ -56,6 +61,12 @@ export default {
         }
     },
     methods: {
+        showToolBar () {
+            this.isBarShown = true
+        },
+        hideToolBar () {
+            this.isBarShown = false
+        },
         join () {
             this.isJoin = true
             let dynamicKey = null
@@ -122,7 +133,14 @@ export default {
             }
         },
         leave () {
-            this.$Modal.confirm({
+            this.isJoin = false
+            this.screen = false
+            this.client.leave(function () {
+                console.log('Leavel channel successfully')
+            }, function (err) {
+                console.log('Leave channel failed: ', err)
+            })
+            /* this.$Modal.confirm({
                 title: '教育直播平台提醒您：',
                 content: '<p>确定退出直播吗？</p>',
                 onOk: () => {
@@ -137,7 +155,7 @@ export default {
                 onCancel: () => {
                     this.$Message.info('请继续观看直播')
                 }
-            })
+            }) */
         },
         enableVideo () {
             this.$Modal.info({
@@ -163,12 +181,45 @@ export default {
             this.hasAudio = false
             this.remoteStream.disableAudio()
         }
+    },
+    mounted () {
+        this.join()
+    },
+    beforeDestroy () {
+        this.leave()
     }
 }
 </script>
 
 <style scoped>
 .video {
-    background-color: rgb(200, 200, 200);
+}
+
+#relative {
+    width: 0;
+    height: 0;
+    display: block;
+    float: left;
+}
+
+#toolbar {
+    position: relative;
+    top: -30px;
+    left: 0px;
+    height: 32px;
+    float: left;
+    overflow: hidden;
+}
+
+.left {
+}
+
+.right {
+}
+
+.buttons {
+    color: rgb(45,140,240);
+    background-color: rgba(0,0,0,0) !important;
+    margin: 0px 10px 0px 10px;
 }
 </style>
