@@ -1,32 +1,40 @@
 <template>
-    <div :style='position'>
-        <Tag background-color="blue">自动播放</Tag>
-        <i-switch v-model="setautoplay">
-            <span slot="open">开</span>
-            <span slot="close">关</span>
-        </i-switch>
-        <Tag background-color="blue">跳转</Tag>
-        <Input-number v-model="index" :max="imgs.length" :min="1" size="small"></Input-number>
-        <Tag background-color="blue">播放速度</Tag>
-        <Slider v-model="autoplayspeed" :min="500" :max="10000" :step="100" :length='400'></Slider>
-        <Carousel v-model="index" :autoplay="setautoplay" :autoplay-speed="autoplayspeed" :dots='setdots' trigger="click" arrow="hover" @on-change='changeppt'>
+    <div>
+        <Carousel v-model="index" :autoplay="setautoplay" :autoplay-speed="autoplayspeed" :dots='setdots' trigger="click" :arrow="(AUTHORITY)?'hover':'never'" @on-change='changeppt'>
             <Carousel-item v-for='img of imgs'>
-                <img :src='img'>
+                <img :src='img' :width="position.width" :height="position.height" class="images">
             </Carousel-item>
         </Carousel>
-        <div>
+        <div class="relative">
+            <div id="showbar" :style="toolbarStyle">
+            <div id="bottom-toolbar">
+                <div id="controls">
+                    <Poptip trigger="hover" :content="'speed: '+(11-autoplayspeed/1000)" placement="top">
+                        <Button @click="minusSpeed()" type="text" class="buttons" :disabled="!AUTHORITY"><Icon type="minus-round":size="16"></Icon></Button>
+                    </Poptip>
+                    <Poptip trigger="hover" content="manul" placement="top">
+                        <Button  v-show="setautoplay===false" @click="changeAuto()" type="text" class="buttons" :disabled="!AUTHORITY"><Icon type="play" :size="16"></Icon></Button>
+                    </Poptip>
+                    <Poptip trigger="hover" content="auto" placement="top">
+                        <Button v-show="setautoplay===true" @click="changePause()" type="text" class="buttons" :disabled="!AUTHORITY"><Icon type="pause" :size="16"></Icon></Button>
+                    </Poptip>
+                    <Poptip trigger="hover" :content="'speed: '+(11-autoplayspeed/1000)" placement="top">
+                        <Button @click="addSpeed()" type="text" class="buttons" :disabled="!AUTHORITY"><Icon type="plus-round" :size="20"></Icon></Button>
+                    </Poptip>
+                </div>
+                <div id="slider">
+                    <!-- 注意修改一下，不要传length，最好提前知道有几张图片然后传数，不然现在一开始会显示-1，有这样一个小Bug-->
+                    <Slider v-model="index" :min="0" :max="imgs.length-1" :step="1" :disabled="!AUTHORITY"></Slider>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
 </template>
 <script>
+// 目前已经加上了加载历史信息，传送消息，和学生老师权限。 还欠缺的有根据传进来的SOU找到存放PPT图片的文件夹。
     export default {
         props: {
-            INDEX: {
-                type: Number,
-                default: 0
-            },
-            NUM: {
-                type: Number,
-                defalut: 7
-            },
             SOU: {
                 type: String,
                 defalut: '/rooms/room1/'
@@ -38,19 +46,26 @@
             HEIGHT: {
                 type: Number,
                 default: 400
+            },
+            AUTHORITY: {
+                type: Boolean,
+                default: false
             }
         },
         data () {
             return {
+                toolbarStyle: {
+                    width: ''
+                },
                 index: 0,
                 imgs: [],
                 binpath: '/static',
                 setautoplay: false,
-                autoplayspeed: 0,
-                setdots: 'inside',
+                autoplayspeed: 3000,
+                setdots: 'none',
                 position: {
-                    width: '',
-                    height: ''
+                    width: 0,
+                    height: 0
                 },
                 ppt: {
                     source: '',
@@ -88,6 +103,11 @@
                 for (let i = 1; i <= 7; i++) {
                     this.imgs.push(this.binpath + '/rooms/room1/' + 'bg' + i + '.jpg')
                 }
+            },
+            HEIGHT: function () {
+                this.position.width = this.WIDTH
+                this.position.height = this.HEIGHT
+                this.toolbarStyle.width = this.WIDTH.toString() + 'px'
             }
         },
         mounted () {
@@ -96,20 +116,89 @@
             for (let i = 1; i <= 7; i++) {
                 this.imgs.push(this.binpath + '/rooms/room1/' + 'bg' + i + '.jpg')
             }
+            console.log('WIDTH:', this.WIDTH)
+            console.log('SOURCE', this.SOU)
         },
         methods: {
+            getHistory () {
+                return this.index
+            },
+            changeAuto () {
+                this.setautoplay = true
+            },
+            changePause () {
+                this.setautoplay = false
+            },
+            minusSpeed () {
+                this.autoplayspeed = (this.autoplayspeed < 10000) ? this.autoplayspeed + 1000 : this.autoplayspeed
+            },
+            addSpeed () {
+                this.autoplayspeed = (this.autoplayspeed > 1000) ? this.autoplayspeed - 1000 : this.autoplayspeed
+            },
             send (data) {
                 this.$emit('send', data)
+            },
+            receive (data) {
+                this.index = data.data
             },
             changeppt: function (oldValue, value) {
                 console.log(value)
                 console.log('çhange')
+                if (this.AUTHORITY) {
+                    this.send(value)
+                }
             }
         }
     }
 </script>
+
 <style>
-    Slider {
-        display: inline;
-    }
+.relative {
+    width: 0;
+    height: 0;
+    float: left;
+}
+
+#bottom-toolbar {
+    display: none;
+    margin-top: 40px;
+    width: 100%;
+    height: 36px;
+    background: -webkit-linear-gradient(rgba(92, 173, 255, 0), rgba(92, 173, 255,1)); /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(rgba(92, 173, 255,0), rgba(92, 173, 255,1)); /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(rgba(92, 173, 255,0), rgba(92, 173, 255,1)); /* Firefox 3.6 - 15 */
+    background: linear-gradient(rgba(92, 173, 255,0), rgba(92, 173, 255,1)); /* 标准的语法 */
+}
+#page {
+    width: 45px;
+}
+#slider {
+    display: inline-block;
+    width: calc(100% - 200px);
+    float: right;
+    margin-right: 10px;
+}
+.buttons {
+    color: white !important;
+}
+.buttons:hover {
+    color: #5cadff !important;
+}
+#controls {
+    float: left;
+    margin-left: 10px;
+}
+
+#showbar {
+    position: relative;
+    top: -80px;
+    left: 0px;
+    height: 76px;
+    z-index: 400;
+    text-align: center;
+}
+
+#showbar:hover #bottom-toolbar {
+    display: block;
+}
 </style>

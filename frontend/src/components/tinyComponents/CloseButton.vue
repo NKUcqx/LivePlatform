@@ -30,6 +30,10 @@ export default {
         AUTHORITY: {
             type: Boolean,
             default: false
+        },
+        INIT: {
+            type: Number,
+            default: 0
         }
     },
     data () {
@@ -69,6 +73,7 @@ export default {
         }
     },
     mounted () {
+        this.state = this.INIT
     }
 }
 </script>

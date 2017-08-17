@@ -33,12 +33,12 @@
                 </keep-alive>
             </div>
             <div :class="workClass" v-show="isWorkShow">
-                <close-button class="close-button" @close="closeWork()" @change="changePanel" @send="emitChangeSection" :isWork="true" ref="closeButton" :AUTHORITY="authority"></close-button>
+                <close-button class="close-button" @close="closeWork()" @change="changePanel" @send="emitChangeSection" :isWork="true" :INIT="style" ref="closeButton" :AUTHORITY="authority"></close-button>
                 <keep-alive>
-                    <ppt :WIDTH="workSize.width" :HEIGHT="workSize.height" @send="emitCode" v-show="style===0||style===3" :AUTHORITY="authority"></ppt>
+                    <ppt ref="slide" :WIDTH="workSize.width" :HEIGHT="workSize.height" :SOU="roomInfo.slide" @send="emitSlide" v-show="style===0||style===3" :AUTHORITY="authority"></ppt>
                 </keep-alive>
                 <keep-alive>
-                    <codedemo ref="code" :WIDTH="workSize.width" :HEIGHT="workSize.height" :CREATORID="roomInfo.creator_id" @send="emitCode" v-show="style===1||style===4" :AUTHORITY="authority"></codedemo>
+                    <codedemo ref="code" :WIDTH="workSize.width" :HEIGHT="workSize.height" @send="emitCode" v-show="style===1||style===4" :AUTHORITY="authority"></codedemo>
                 </keep-alive>
                 <keep-alive>
                     <my-canvas ref="canvas" :SIZE="(style<3)?'':'small'" @send="emitCanvas" :WIDTH="workSize.width" :HEIGHT="workSize.height" id="canvas" v-show="style===2||style===5" :AUTHORITY="authority"></my-canvas>
@@ -58,6 +58,7 @@ import TeacherRtc from './tinyComponents/TeacherRTC'
 import StudentRtc from './tinyComponents/StudentRTC'
 import UploadButton from './tinyComponents/UploadButton'
 import Codedemo from './Codedemo'
+import Ppt from './PPT'
 import Chatdemo from './Chat'
 import io from 'socket.io-client'
 import { mapGetters, mapActions } from 'vuex'
@@ -87,6 +88,7 @@ export default {
         CloseButton,
         Codedemo,
         Chatdemo,
+        Ppt,
         TeacherRtc,
         StudentRtc,
         UploadButton
@@ -217,10 +219,12 @@ export default {
                 this.listen('loadHistory', (data) => {
                     const toWhom = data
                     // get current content
+                    let slideHistory = that.$refs['slide'].getHistory()
                     let canvasHistory = that.$refs['canvas'].getHistory()
                     let codeHistory = that.$refs['code'].getHistory()
                     let sectionHistory = that.$refs['closeButton'].getHistory()
                     console.log(codeHistory)
+                    that.emit(slideHistory, 'slide', toWhom)
                     that.emit(codeHistory, 'code', toWhom)
                     that.emit(canvasHistory, 'canvas', toWhom)
                     that.emit(sectionHistory, 'closeButton', toWhom)
@@ -319,6 +323,7 @@ export default {
     },
     mounted () {
         this.WIDTH = document.documentElement.clientWidth
+        this.WIDTH = (this.WIDTH < 800) ? 800 : this.WIDTH
         this.wholeSize.height = document.documentElement.clientHeight.toString() + 'px'
         window.addEventListener('resize', () => {
             this.WIDTH = document.documentElement.clientWidth
