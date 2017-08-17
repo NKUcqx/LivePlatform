@@ -5,7 +5,7 @@
                 <textarea @change="change" id="codemirror"></textarea>
             </div>
             <div id="relative">
-                <select name="mode" id="select" @change="changelan" v-model="mode">
+                <select name="mode" id="select" @change="changelan" v-model="mode" :disabled="!AUTHORITY">
                     <option value="javascript" class="option">javascript</option>
                     <option value="vue" class="option">vue</option>
                     <option value="text/x-c++src" class="option">C++</option>
@@ -68,6 +68,10 @@ export default {
         CREATORID: {
             type: Number,
             default: 0
+        },
+        AUTHORITY: {
+            type: Boolean,
+            default: false
         }
     },
     data () {
@@ -82,7 +86,8 @@ export default {
                 tabSize: 4,
                 lineNumbers: true,
                 lineWrapping: true,
-                extraKeys: {'Ctrl': 'autocomplete'}
+                extraKeys: {'Ctrl': 'autocomplete'},
+                readOnly: (this.AUTHORITY) ? false : true
             }
         }
     },
@@ -142,7 +147,8 @@ export default {
                 tabSize: 4,
                 lineNumbers: true,
                 lineWrapping: true,
-                extraKeys: {'Ctrl': 'autocomplete'}
+                extraKeys: {'Ctrl': 'autocomplete'},
+                readOnly: (this.AUTHORITY) ? false : true
             }
             console.log('options.mode:' + this.options.mode)
             this.value = 'code here'
@@ -154,8 +160,8 @@ export default {
         },
         send (data) {
             console.log('userid是' + this.user.userid)
-            console.log('creator是' + this.CREATORID)
-            if (this.user.userid == this.CREATORID) {
+            console.log('AUTHORITY is' + this.AUTHORITY)
+            if (this.AUTHORITY) {
                 this.$emit('send', data)
                 console.log('codesend' + data)
                 console.log('sendsuccess')

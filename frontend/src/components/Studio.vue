@@ -1,6 +1,6 @@
 <template>
     <div id="studio" :style="wholeSize">
-        <topbar TYPE="studio" id="topbar" ref="topBar"></topbar>
+        <topbar TYPE="studio" id="topbar" ref="topBar" :AUTHORITY="authority"></topbar>
         <Modal v-model="uploadModal" id="upload-modal">
             <upload-button UPLOADTYPE="thumbnail" :ONSUCCESS="changeThumbnail" IMGSRC="roomInfo.img"></upload-button>
             <upload-button UPLOADTYPE="slide" :ONSUCCESS="uploadSlide" IMGSRC="../../assets/PPT.png"></upload-button>
@@ -10,7 +10,7 @@
         </Modal>
         <div id="fortop"></div>
             <div class="infobar left-part">
-                <img src="../assets/logo.png" id="teacher-avatar" :class="(isCreator)?'creator-avatar':''" alt="head-image" :width="img.size" :height="img.size" @click="showUploadModal()">
+                <img src="../assets/logo.png" id="teacher-avatar" :class="(authority)?'creator-avatar':''" alt="head-image" :width="img.size" :height="img.size" @click="showUploadModal()">
                 <div id="studio-info">
                     <div id="title">
                         <h2 id="title-content">{{roomInfo.title}}</h2>
@@ -28,24 +28,24 @@
             <div :class="vedioClass" v-show="isVedioShow">
                 <close-button class="close-button" @close="closeVideo()" :isWork="false"></close-button>
                 <keep-alive>
-                    <teacher-rtc :WIDTH="vedioSize.width" :HEIGHT="vedioSize.height" v-if="user.userid == roomInfo.creator_id"></teacher-rtc>
+                    <teacher-rtc :WIDTH="vedioSize.width" :HEIGHT="vedioSize.height" v-if="authority"></teacher-rtc>
                     <student-rtc :WIDTH="vedioSize.width" :HEIGHT="vedioSize.height" v-else></student-rtc>
                 </keep-alive>
             </div>
             <div :class="workClass" v-show="isWorkShow">
-                <close-button class="close-button" @close="closeWork()" @change="changePanel" @send="emitChangeSection" :isWork="true" ref="closeButton"></close-button>
+                <close-button class="close-button" @close="closeWork()" @change="changePanel" @send="emitChangeSection" :isWork="true" ref="closeButton" :AUTHORITY="authority"></close-button>
                 <keep-alive>
-                    <ppt :WIDTH="workSize.width" :HEIGHT="workSize.height" @send="emitCode" v-show="style===0||style===3"></ppt>
+                    <ppt :WIDTH="workSize.width" :HEIGHT="workSize.height" @send="emitCode" v-show="style===0||style===3" :AUTHORITY="authority"></ppt>
                 </keep-alive>
                 <keep-alive>
-                    <codedemo ref="code" :WIDTH="workSize.width" :HEIGHT="workSize.height" :CREATORID="roomInfo.creator_id" @send="emitCode" v-show="style===1||style===4"></codedemo>
+                    <codedemo ref="code" :WIDTH="workSize.width" :HEIGHT="workSize.height" :CREATORID="roomInfo.creator_id" @send="emitCode" v-show="style===1||style===4" :AUTHORITY="authority"></codedemo>
                 </keep-alive>
                 <keep-alive>
-                    <my-canvas ref="canvas" :SIZE="(style<3)?'':'small'" @send="emitCanvas" :WIDTH="workSize.width" :HEIGHT="workSize.height" id="canvas" v-show="style===2||style===5"></my-canvas>
+                    <my-canvas ref="canvas" :SIZE="(style<3)?'':'small'" @send="emitCanvas" :WIDTH="workSize.width" :HEIGHT="workSize.height" id="canvas" v-show="style===2||style===5" :AUTHORITY="authority"></my-canvas>
                 </keep-alive>
             </div>
             <div :class="chatClass">
-                <chatdemo ref="chat" :ROLE="roomInfo.creator_id" :ROOM="100" :WIDTH="chatSize.width" :HEIGHT="chatSize.height" @send="emitChat"></chatdemo>     
+                <chatdemo ref="chat" :AUTHORITY="authority" :ROLE="roomInfo.creator_id" :ROOM="100" :WIDTH="chatSize.width" :HEIGHT="chatSize.height" @send="emitChat"></chatdemo>     
             </div> 
     </div>
 </template>
@@ -165,7 +165,7 @@ export default {
                 height: (this.type === 1) ? theWidth * 0.195 * 0.5 + 90 : theWidth * 0.5 * 0.65 + 100
             }
         },
-        isCreator () {
+        authority () {
             return this.roomInfo.creator_id.toString() === this.user.userid.toString() && this.roomInfo.is_living
         }
     },

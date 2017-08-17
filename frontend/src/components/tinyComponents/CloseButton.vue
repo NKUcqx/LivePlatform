@@ -3,13 +3,13 @@
     <div id="relative" ref="relative">
         <div id="switch">
             <Poptip trigger="hover" content="PPT" class="poptip" v-if="isWork" placement="bottom">
-                <span class="switch-item" id="canvas-item" @click="changePanel(0)"><Icon type="ios-checkmark-empty" size="5" class="icon"></Icon></span>
+                <span class="switch-item" id="canvas-item" @click="changePanel(0)"><Icon type="ios-checkmark-empty" size="5" class="icon" :class="(showIcon(0))?'show':''"></Icon></span>
             </Poptip>
             <Poptip trigger="hover" content="Code" class="poptip" v-if="isWork" placement="bottom">
-                <span class="switch-item" id="ppt-item" @click="changePanel(1)"><Icon type="ios-checkmark-empty" size="5" class="icon"></Icon></span>
+                <span class="switch-item" id="ppt-item" @click="changePanel(1)"><Icon type="ios-checkmark-empty" size="5" class="icon" :class="(showIcon(1))?'show':''"></Icon></span>
             </Poptip>
             <Poptip trigger="hover" content="Canvas" class="poptip" v-if="isWork" placement="bottom">
-                <span class="switch-item" id="code-item" @click="changePanel(2)"><Icon type="ios-checkmark-empty" size="5" class="icon"></Icon></span>
+                <span class="switch-item" id="code-item" @click="changePanel(2)"><Icon type="ios-checkmark-empty" size="5" class="icon" :class="(showIcon(2))?'show':''"></Icon></span>
             </Poptip>
             <Poptip trigger="hover" content="Close" class="poptip" id="close-piptip" placement="bottom">
                 <span class="switch-item" id="close-button" @click="closePanel"><Icon type="ios-close-empty" size="5" class="icon"></Icon></span>
@@ -20,42 +20,57 @@
 </template>
 
 <script>
-    export default {
-        props: {
-            isWork: {
-                type: Boolean,
-                default: false
-            }
+import { CONST } from '../../utils/const'
+export default {
+    props: {
+        isWork: {
+            type: Boolean,
+            default: false
         },
-        data () {
-            return {
-                // 0 means ppt 1 means code 2 means canvas
-                state: 0
-            }
+        AUTHORITY: {
+            type: Boolean,
+            default: false
+        }
+    },
+    data () {
+        return {
+            // 0 means ppt 1 means code 2 means canvas
+            state: 0
+        }
+    },
+    methods: {
+        getHistory () {
+            return this.state
         },
-        methods: {
-            getHistory () {
-                return this.state
-            },
-            send (data) {
-                this.$emit('send', data)
-            },
-            receive (data) {
-                this.state = data.data
-                this.$emit('change', this.state)
-            },
-            closePanel () {
-                this.$emit('close', '')
-            },
-            changePanel (index) {
+        send (data) {
+            this.$emit('send', data)
+        },
+        receive (data) {
+            this.state = data.data
+            this.$emit('change', this.state)
+        },
+        showIcon (index) {
+            if (index === this.state) {
+                return true
+            }
+            return false
+        },
+        closePanel () {
+            this.$emit('close', '')
+        },
+        changePanel (index) {
+            if (this.AUTHORITY) {
                 this.state = index
                 this.$emit('change', this.state)
                 this.send(index)
+            } else {
+                this.$Message.warning(CONST.permission)
             }
-        },
-        mounted () {
         }
+    },
+    mounted () {
     }
+}
 </script>
 
 <style scoped>
@@ -106,6 +121,10 @@
         display: none;
     }
     .switch-item:hover>.icon {
+        display: inline;
+    }
+
+    .show {
         display: inline;
     }
 </style>

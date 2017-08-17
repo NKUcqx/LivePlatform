@@ -46,7 +46,3 @@ export const isJSON = (str) => {
     }
     return result
 }
-
-export default {
-    beforePost
-}
