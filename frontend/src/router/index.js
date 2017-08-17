@@ -10,6 +10,7 @@ import Canvas from '@/components/tinyComponents/Canvas'
 import CloseButton from '@/components/tinyComponents/CloseButton'
 import TeacherRTC from '@/components/tinyComponents/TeacherRTC'
 import StudentRTC from '@/components/tinyComponents/StudentRTC'
+import PPT from '@/components/PPT'
 import store from '../store'
 import { CONST } from '../utils/const'
 
@@ -59,6 +60,11 @@ export default new Router({
             path: '/canvas',
             name: 'canvas',
             component: Canvas
+        },
+        {
+            path: '/slide',
+            name: 'slide',
+            component: PPT
         },
         {
             path: '/code',

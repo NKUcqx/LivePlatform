@@ -29,14 +29,28 @@
         },
         data () {
             return {
+                // 0 means ppt 1 means code 2 means canvas
+                state: 0
             }
         },
         methods: {
+            getHistory () {
+                return this.state
+            },
+            send (data) {
+                this.$emit('send', data)
+            },
+            receive (data) {
+                this.state = data.data
+                this.$emit('change', this.state)
+            },
             closePanel () {
                 this.$emit('close', '')
             },
             changePanel (index) {
-                this.$emit('change', index)
+                this.state = index
+                this.$emit('change', this.state)
+                this.send(index)
             }
         },
         mounted () {

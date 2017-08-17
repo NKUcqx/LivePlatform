@@ -7,10 +7,10 @@
                 <div id="toolbar" :style="toolbarStyle" v-show="isBarShown">
                     <!--Button class="join buttons" :disabled="isJoin" @click="join()" type="ghost">Start</Button>
                     <Button class="leave buttons" :disabled="!(isJoin)" @click="leave()" type="ghost">End</Button-->
-                    <Button icon="arrow-right-b" v-show="hasVideo===false" @click="enableVideo()" type="circle" class="buttons left"></Button>
-                    <Button icon="ios-pause" v-show="hasVideo===true" @click="disableVideo()" type="circle" class="buttons left"></Button>
-                    <Button icon="ios-mic-off" v-show="hasAudio===false" @click="enableAudio()" type="circle" class="buttons right"></Button>
-                    <Button icon="ios-mic-outline" v-show="hasAudio===true" @click="disableAudio()" type="circle" class="buttons right"></Button>
+                    <Button icon="arrow-right-b" v-show="hasVideo===false" @click="enableVideo()" type="circle" class="buttons left" size="small"></Button>
+                    <Button icon="ios-pause" v-show="hasVideo===true" @click="disableVideo()" type="circle" class="buttons left" size="small"></Button>
+                    <Button icon="ios-mic-off" v-show="hasAudio===false" @click="enableAudio()" type="circle" class="buttons right" size="small"></Button>
+                    <Button icon="ios-mic-outline" v-show="hasAudio===true" @click="disableAudio()" type="circle" class="buttons right" size="small"></Button>
                 </div>
             </div>
         </div>
@@ -127,7 +127,15 @@ export default {
             })
         },
         leave () {
-            let that = this
+            this.isJoin = false
+            this.client.leave(function () {
+                console.log('Leavel channel successfully')
+                // add by gongyansong
+                that.$router.push({path: '/home'})
+            }, function (err) {
+                console.log('Leave channel failed: ', err)
+            })
+            /* let that = this
             this.$Modal.confirm({
                 title: '教育直播平台提醒您：',
                 content: '<p>确定退出直播吗？</p>',
@@ -144,7 +152,7 @@ export default {
                 onCancel: () => {
                     this.$Message.info('请继续直播')
                 }
-            })
+            }) */
         },
         enableVideo () {
             this.$Modal.info({
@@ -187,7 +195,7 @@ export default {
 
 #toolbar {
     position: relative;
-    top: -38px;
+    top: -30px;
     left: 0px;
     height: 32px;
     float: left;

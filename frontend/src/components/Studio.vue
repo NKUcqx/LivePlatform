@@ -47,7 +47,7 @@
                 <img src="../assets/logo.png" id="teacher-avatar" :class="(isCreator)?'creator-avatar':''" alt="head-image" :width="img.size" :height="img.size" @click="showUploadModal()">
                 <div id="studio-info">
                     <div id="title">
-                        <h2 id="title-content">{{roomInfo.title}}</h2>
+                        <h2 id="title-content">{{roomInfo.title}}aaa</h2>
                         <Button id="switch-section" type="ghost" @click="changeSection()" v-if="type===1"><Icon type="arrow-swap"></Icon></Button>
                         <Button id="switch-section" type="ghost" @click="openMinor()" v-else><Icon type="android-open"></Icon></Button>
                     </div>
@@ -60,13 +60,14 @@
                 </div>
             </div>
             <div :class="vedioClass" v-show="isVedioShow">
-                <close-button class="close-button" @close="closeVideo()"  @change="changePanel" :isWork="false"></close-button>
+                <close-button class="close-button" @close="closeVideo()" :isWork="false"></close-button>
                 <keep-alive>
-                    <teacher-rtc  :WIDTH="vedioSize.width" :HEIGHT="vedioSize.height"></teacher-rtc>
+                    <teacher-rtc :WIDTH="vedioSize.width" :HEIGHT="vedioSize.height" v-if="user.userid == roomInfo.creator_id"></teacher-rtc>
+                    <student-rtc :WIDTH="vedioSize.width" :HEIGHT="vedioSize.height" v-else></student-rtc>
                 </keep-alive>
             </div>
             <div :class="workClass" v-show="isWorkShow">
-                <close-button class="close-button" @close="closeWork()" @change="changePanel" :isWork="true"></close-button>
+                <close-button class="close-button" @close="closeWork()" @change="changePanel" @send="emitChangeSection" :isWork="true" ref="closeButton"></close-button>
                 <keep-alive>
                     <ppt :WIDTH="workSize.width" :HEIGHT="workSize.height" @send="emitCode" v-show="style===0||style===3"></ppt>
                 </keep-alive>
@@ -78,7 +79,7 @@
                 </keep-alive>
             </div>
             <div :class="chatClass">
-                <chatdemo ref="chat" :ROLE="roomInfo.creator_id" :USERNAME="user.nickname" :ROOM="100" :WIDTH="chatSize.width" :HEIGHT="chatSize.height" @send="emitChat"></chatdemo>     
+                <chatdemo ref="chat" :ROLE="roomInfo.creator_id" :ROOM="100" :WIDTH="chatSize.width" :HEIGHT="chatSize.height" @send="emitChat"></chatdemo>     
             </div> 
     </div>
 </template>
@@ -250,9 +251,11 @@ export default {
                     // get current content
                     let canvasHistory = that.$refs['canvas'].getHistory()
                     let codeHistory = that.$refs['code'].getHistory()
+                    let sectionHistory = that.$refs['closeButton'].getHistory()
                     console.log(codeHistory)
                     that.emit(codeHistory, 'code', toWhom)
                     that.emit(canvasHistory, 'canvas', toWhom)
+                    that.emit(sectionHistory, 'closeButton', toWhom)
                     // this.emcanvasHistory(history, 'chat')
                     console.log('loadHistory: ', toWhom)
                 })
@@ -277,6 +280,9 @@ export default {
         },
         emitSlide (data) {
             this.emit(data, 'slide')
+        },
+        emitChangeSection (data) {
+            this.emit(data, 'closeButton')
         },
         emit (data, dataType, to = null, type = 1, signal = 'sendMessage') { // to which user he wanna send to
             const pack = {
