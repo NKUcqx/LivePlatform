@@ -6,7 +6,7 @@
 import Vue from 'vue'
 
 /**
- * 测试类； 
+ * 测试类；
  * @class check
  * @constructor
  */
@@ -17,11 +17,11 @@ import Vue from 'vue'
  *@method checkSpecialChar
  *@param {string} str 字符串
  *@return {boolean} 返回是否含有特殊字符
- *@example 
-     //string1为真
-     var string1 = checkSpecialChar('123dfg')
-     //string2为假
-     var string2 = checkSpecialChar('$145sdf')
+ *@example
+ * // string1为真
+ * var string1 = checkSpecialChar('123dfg')
+ * // string2为假
+ * var string2 = checkSpecialChar('$145sdf')
  */
 export const checkSpecialChar = (str) => {
     let pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）――|{}【】‘；：”“'。，、？]")
@@ -38,11 +38,11 @@ export const checkSpecialChar = (str) => {
  *@method checkPhone
  *@param {string} phone 手机号
  *@return {boolean} 返回这个字符串是否符合手机号规范
- *@example 
-     //phone1为假
-     var phone1 = checkPhone('12356667')
-     //phone2为真
-     var phone2 = checkPhone('18923458765')
+ *@example
+ * // phone1为假
+ * var phone1 = checkPhone('12356667')
+ * // phone2为真
+ * var phone2 = checkPhone('18923458765')
  */
 export const checkPhone = (phone) => {
     let phoneRe = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/
@@ -65,11 +65,11 @@ export const checkEmail = (email) => {
  *@method checkObjLegal
  *@param {object} obj 对象名
  *@return {boolean} 返回这个对象是否有效
- *@example 
-     //对象中字符串合法返回true,obj1为真
-     var obj1 = checkObjLegal({id: 123, name: 'my123'})
-     //对象中字符串含特殊字符返回false,obj2为假
-     var obj2 = checkObjLegal({id: 123, name: 'my&123'})
+ *@example
+ * // 对象中字符串合法返回true,obj1为真
+ * var obj1 = checkObjLegal({id: 123, name: 'my123'})
+ * // 对象中字符串含特殊字符返回false,obj2为假
+ * var obj2 = checkObjLegal({id: 123, name: 'my&123'})
  */
 export const checkObjLegal = (obj) => {
     for (let item in obj) {
