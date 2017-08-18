@@ -105,7 +105,7 @@ describe('isValid()', function () {
         assert.equal(false, checks.isValid(content))
     })
     it('content:undefined返回false', function () {
-        assert.equal(false, checks.isValid(content))
+        assert.equal(false, checks.isValid(undefined))
     })
     it('content:null返回false', function () {
         let content = null
