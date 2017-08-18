@@ -24,7 +24,7 @@
                                 <p>您确定要禁言{{hist.nickname}}这位同学吗？</p>
                             </Modal>
                             <Dropdown-item name='out'>踢出房间</Dropdown-item>
-                            <Modal v-model="dialog2" title="提示" @on-ok="outone(hist.userid)" @on-cancel="cancel">
+                            <Modal v-model="dialog2" title="提示" @on-ok="outone(hist.userid,hist.nickname)" @on-cancel="cancel">
                                 <p>您确定要踢出{{hist.nickname}}这位同学吗？</p>
                             </Modal>
                             <Dropdown-item name='canspeak'>解除禁言</Dropdown-item>
@@ -54,6 +54,11 @@
 </script>
 <script>
     import {
+        wsConnect,
+        wsSend,
+        wsClose
+    } from '../utils/websockets'
+    import {
         mapGetters
     } from 'vuex'
     export default {
@@ -73,6 +78,10 @@
             BORDER: {
                 type: Number,
                 default: 1
+            },
+            ROOMID: {
+                type: Number,
+                default: 0
             }
         },
         computed: {
@@ -92,6 +101,7 @@
                 silence: false,
                 allsilence: false,
                 allspeak: true,
+                roomid: 0,
                 speak: true,
                 indeterminate: true,
                 checkAll: false,
@@ -111,28 +121,43 @@
             }
         },
         mounted () {
+            console.log('--mounted--')
             this.position.width = this.WIDTH.toString() + 'px'
             this.position.height = (this.HEIGHT).toString() + 'px'
             this.position.border = this.BORDER + 'px'
-            /* if (localStorage.silence) {
-                this.silence = localStorage.silence
-                if (this.silence) {
-                    this.speak = false
-                } else {
-                    this.speak = true
+            this.roomid = this.ROOMID
+            console.log(this.ROOMID)
+            const that = this
+            this.$http({
+                url: '/echo/',
+                method: 'GET',
+                params: {
+                    username: this.user.userid,
+                    roomid: this.roomid
                 }
-            } else {
-                this.silence = false
-                this.speak = true
-            } */
+            }).then(function (res) {
+                var k = res.body
+                console.log(k)
+                if (k === 'allslience') {
+                    this.allsilence = true
+                    this.allspeak = false
+                    if (!this.AUTHORITY) {
+                        this.speak = false
+                        this.silence = true
+                    }
+                } else if (k === 'banone') {
+                    this.speak = false
+                    this.silence = true
+                }
+            }, function () {
+                alert('ajax failure')
+            })
         },
         methods: {
             send (data) {
                 this.$emit('send', data)
             },
             sendmsg: function () {
-                localStorage.removeItem('silence')
-                localStorage.removeItem('out')
                 if (this.silence === false) {
                     if (this.message.trim() !== '') {
                         this.send({
@@ -162,18 +187,41 @@
             },
             banspeakpublic: function () {
                 if (this.AUTHORITY) {
-                    console.log('allsilence-send')
                     this.send({
                         chattype: 'allsilence'
                     })
+                    this.$http({
+                        url: '/banpublic/',
+                        method: 'GET',
+                        params: {
+                            roomid: this.roomid
+                        }
+                    }).then(function (res) {}, function () {
+                        alert('ajax failure')
+                    })
+                    this.$Message.info('您已全局禁言')
                 }
+                // this.socket.send({type:'banspeakpublic',roomid:this.ROOMID})
             },
             canspeakpublic: function () {
                 if (this.AUTHORITY) {
                     this.send({
                         chattype: 'allspeak'
                     })
+                    this.$http({
+                        url: '/canpublic/',
+                        method: 'GET',
+                        params: {
+                            username: this.user.userid,
+                            roomid: this.roomid
+                        }
+                    }).then(function (res) {
+                    }, function () {
+                        alert('ajax failure')
+                    })
+                    this.$Message.info('您已全局解禁')
                 }
+                // this.socket.send({type:'canspeakpublic',roomid:this.ROOMID})
             },
             handleCheckAll: function (data) {
                 if (this.indeterminate) {
@@ -203,6 +251,18 @@
                         chattype: 'canspeak',
                         userid: this.cans[index].userid
                     })
+                    this.$http({
+                        url: '/canspeakone/',
+                        method: 'GET',
+                        params: {
+                            username: this.cans[index].userid,
+                            roomid: this.roomid
+                        }
+                    }).then(function (res) {
+                    }, function () {
+                        alert('ajax failure')
+                    })
+                    // this.socket.send({type:'canspeak',userid:this.cans[index].userid,roomid:this.roomid})
                     this.indeterminate = true
                     this.checkAll = false
                 }
@@ -215,17 +275,41 @@
                         userid: userid,
                         nickname: nickname
                     })
-                    console.log('ban one send--1')
-                    console.log(userid)
-                    console.log(nickname)
+                    // this.socket.send({type:'banspeak',userid:userid.userid,roomid:this.roomid})
+                    this.$http({
+                        url: '/banone/',
+                        method: 'GET',
+                        params: {
+                            username: userid,
+                            roomid: this.roomid
+                        }
+                    }).then(function (res) {
+                        this.$message.info('you have been banned to speak')
+                    }, function () {
+                        alert('ajax failure')
+                    })
+                    this.$Message.info('您已禁言' + nickname + '同学')
                 }
             },
-            outone (userid) {
+            outone (userid, nickname) {
                 if (this.AUTHORITY) {
                     this.send({
                         chattype: 'outone',
                         userid: userid
                     })
+                    this.$http({
+                        url: '/outone/',
+                        method: 'GET',
+                        params: {
+                            username: userid,
+                            roomid: this.roomid
+                        }
+                    }).then(function (res) {
+                        this.$message.info('you out!')
+                    }, function () {
+                        alert('ajax failure')
+                    })
+                    this.$Message.info('您已踢出' + nickname + '同学')
                 }
             },
             messolve (data) {
@@ -238,15 +322,15 @@
             },
             outsolve (data) {
                 if (data.data.userid === this.user.userid) {
-                    localStorage['out'] = true
+                    this.$Message.info('您已被踢出去')
                     this.$router.go(-1)
                 }
             },
             banonesolve (data) {
                 if (data.data.userid === this.user.userid) {
-                    localStorage['silence'] = true
                     this.silence = true
                     this.speak = false
+                    this.$Message.info('您已被禁言')
                 }
                 this.bans.push({
                     userid: data.data.userid,
@@ -254,20 +338,22 @@
                 })
             },
             banpublicsolve (data) {
-                localStorage['silence'] = true
                 this.allsilence = true
                 this.allspeak = false
                 if (this.AUTHORITY === false) {
                     this.silence = true
                     this.speak = false
+                    this.$Message.info('全局禁言')
                 }
             },
             allspeaksolve (data) {
-                localStorage['silence'] = false
                 this.allsilence = false
                 this.allspeak = true
                 this.silence = false
                 this.speak = true
+                if (this.AUTHORITY === false) {
+                    this.$Message.info('全局解禁')
+                }
             },
             canspeaksolve (data) {
                 for (var index = 0; index < this.bans.length; index++) {
@@ -278,7 +364,7 @@
                 if (data.data.userid === this.userid) {
                     this.silence = false
                     this.speak = true
-                    localStorage['silence'] = false
+                    this.$Message.info('您被解除禁言')
                 }
             },
             receive (data) {
