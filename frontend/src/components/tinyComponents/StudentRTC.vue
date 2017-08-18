@@ -175,7 +175,7 @@ export default {
             } else {
                 this.$Modal.warning({
                     title: '教育直播平台提醒您：',
-                    content: '<p>您尚未开启直播</p>'
+                    content: '<p>老师尚未开启直播</p>'
                 })
             }
         },
@@ -190,7 +190,7 @@ export default {
             } else {
                 this.$Modal.warning({
                     title: '教育直播平台提醒您：',
-                    content: '<p>您尚未开启直播</p>'
+                    content: '<p>老师尚未开启直播</p>'
                 })
             }
         },
