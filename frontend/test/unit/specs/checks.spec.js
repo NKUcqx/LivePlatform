@@ -63,6 +63,52 @@ describe('checkObjLegal()', function () {
         assert.equal(false, checks.checkObjLegal({id: 123, name: 'my&123'}))
     })
     it('对象中含空字符串返回false', function () {
-        assert.equal(false, checks.checkObjLegal({id: 123, name: 'my&123'}))
+        assert.equal(false, checks.checkObjLegal({id: 123, name: ''}))
+    })
+})
+
+describe('isValid()', function () {
+    it('content:true,type:boolean返回true', function () {
+        let content = true
+        assert.equal(true, checks.isValid(content, 'boolean'))
+    })
+    it('content:true返回false', function () {
+        let content = true
+        assert.equal(false, checks.isValid(content))
+    })
+    it('content:123,type:number返回true', function () {
+        let content = 123
+        assert.equal(true, checks.isValid(content, 'number'))
+    })
+    it('content:123返回false', function () {
+        let content = 123
+        assert.equal(false, checks.isValid(content))
+    })
+    it('content:"gyg"返回true', function () {
+        let content = 'gyg'
+        assert.equal(true, checks.isValid(content))
+    })
+    it('content:"gyg",type:string返回true', function () {
+        let content = 'gyg'
+        assert.equal(true, checks.isValid(content, 'string'))
+    })
+    it('content:"gyg",type:object返回false', function () {
+        let content = 'gyg'
+        assert.equal(false, checks.isValid(content, 'object'))
+    })
+    it('content:{id:5},type:object返回true', function () {
+        let content = {id: 5}
+        assert.equal(true, checks.isValid(content, 'object'))
+    })
+    it('content:{id:5}返回false', function () {
+        let content = 123
+        assert.equal(false, checks.isValid(content))
+    })
+    it('content:undefined返回false', function () {
+        assert.equal(false, checks.isValid(content))
+    })
+    it('content:null返回false', function () {
+        let content = null
+        assert.equal(false, checks.isValid(content))
     })
 })

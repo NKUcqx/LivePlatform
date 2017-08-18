@@ -11,18 +11,18 @@ describe('getCookie()', function () {
 })
 
 describe('getListFromDB()', function () {
-    let myObj1 = {
+    let testObj1 = {
         key: {id: 1}
     }
-    let myObj2 = {
+    let testObj2 = {
         key1: {id: 1},
         key2: {id: 2}
     }
     it('仅有一个内层key', function () {
-        assert.equal(1, utils.getListFromDB(myObj1).id)
+        assert.equal(1, utils.getListFromDB(testObj1).id)
     })
     it('有两个内层key', function () {
-        assert.equal(1, utils.getListFromDB(myObj2).id)
+        assert.equal(1, utils.getListFromDB(testObj2).id)
     })
     it('null', function () {
         assert.equal(null, utils.getListFromDB(null))
@@ -42,5 +42,32 @@ describe('isJSON()', function () {
     })
     it('null', function () {
         assert.equal(false, utils.isJSON(null))
+    })
+})
+
+describe('getFormatTime()', function () {
+    it('不传入参数', function () {
+        assert.equal('00:00:00', utils.getFormatTime())
+    })
+    it('传入0', function () {
+        assert.equal('00:00:00', utils.getFormatTime(0))
+    })
+    it('秒数小于10', function () {
+        assert.equal('00:00:05', utils.getFormatTime(5))
+    })
+    it('秒数不小于10', function () {
+        assert.equal('00:00:15', utils.getFormatTime(15))
+    })
+    it('分钟数小于10', function () {
+        assert.equal('00:01:20', utils.getFormatTime(80))
+    })
+    it('分钟数不小于10', function () {
+        assert.equal('00:10:06', utils.getFormatTime(606))
+    })
+    it('小时数小于10', function () {
+        assert.equal('01:00:00', utils.getFormatTime(3600))
+    })
+    it('小时数不小于10', function () {
+        assert.equal('11:01:00', utils.getFormatTime(39660))
     })
 })
