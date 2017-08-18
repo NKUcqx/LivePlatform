@@ -23,6 +23,13 @@
 
 <script>
 import { mapGetters } from 'vuex'
+/**
+ * Module codemirror
+ *
+ * @module codemirror
+ * @class codemirror
+ * @constructor
+ */
 var CodeMirror = require('../../node_modules/codemirror/lib/codemirror.js')
 require('../../node_modules/codemirror/lib/codemirror.css')
 
@@ -43,50 +50,141 @@ require('../../node_modules/codemirror/addon/hint/anyword-hint.js')
 require('../../node_modules/codemirror/addon/hint/css-hint.js')
 require('../../node_modules/codemirror/addon/hint/html-hint.js')
 require('../../node_modules/codemirror/addon/hint/sql-hint.js')
-const codes = {
-    javascript: 'var component = {\n\t\tname: "write here"\n}\n\n',
-    vue: '<template>\n<codemirror :value="code"></codemirror>\n</template>\n\n',
-    1: '#include<iostream>\nusing namespace std;\n',
-    2: '#include<stdlib.h>\n',
-    3: 'static void main(string[] args)\n{\n}\n',
-    4: 'public class HelloWorld\n{\n\t\tpublic static void main(String args[])\n\t\t{\n\t\t\t\tSystem.out.println("HelloWorld!");\n\t\t}\n}',
-    sql: '-- your code goes here',
-    5: '#app{\n\t\theight:100px;\n\t\twidth:100px;\n}',
-    htmlmixed: '<!DOCTYPE html>\n<html>'
-}
 
 export default {
     props: {
+        /**
+         *@element WIDTH
+         */
         WIDTH: {
+            /**
+             *@attribute type
+             *@default Number
+             */
             type: Number,
+            /**
+             *@attribute default
+             *@default 600
+             */
             default: 600
         },
+        /**
+         *@element HEIGHT
+         */
         HEIGHT: {
+            /**
+             *@attribute type
+             *@default Number
+             */
             type: Number,
+            /**
+             *@attribute default
+             *@default 400
+             */
             default: 400
         },
+        /**
+         *@element CREATORID
+         */
         CREATORID: {
+            /**
+             *@attribute type
+             *@default Number
+             */
             type: Number,
+            /**
+             *@attribute default
+             *@default 0
+             */
             default: 0
         },
+        /**
+         *@element CREATORID
+         */
         AUTHORITY: {
+            /**
+             *@attribute type
+             *@default Boolean
+             */
             type: Boolean,
+            /**
+             *@attribute default
+             *@default false
+             */
             default: false
         }
     },
     data () {
         return {
+            /**
+             *@property editor
+             *@type object
+             *@default null
+             */
             editor: null,
+            /**
+             *@property mode
+             *@type string
+             *@default 'javascript'
+             */
             mode: 'javascript',
+            /**
+             *@property socket
+             *@type object
+             *@defult ''
+             */
             socket: '',
+            /**
+             *@property skipNextChangeEvent
+             *@type boolean
+             *@default false
+             */
             skipNextChangeEvent: false,
+            /**
+             *@property value
+             *@type type
+             *@default String
+             */
             value: String,
+            /**
+             *@property options
+             *@type object
+             */
             options: {
+                /**
+                 *@attribute mode
+                 *@type string
+                 *@default 'text/javascript'
+                 */
                 mode: 'text/javascript',
+                /**
+                 *@attribute tabSize
+                 *@type Number
+                 *@default 4
+                 */
                 tabSize: 4,
+                /**
+                 *@attribute lineNumbers
+                 *@type boolean
+                 *@default true
+                 */
                 lineNumbers: true,
+                /**
+                 *@attribute lineWrapping
+                 *@type boolean
+                 *@default true
+                 */
                 lineWrapping: true,
+                /**
+                 *@attribute extraKeys
+                 *@type dictionary
+                 *@default true
+                 */
                 extraKeys: {'Ctrl': 'autocomplete'},
+                /**
+                 *@attribute readOnly
+                 *@type boolean
+                 */
                 readOnly: (this.AUTHORITY) ? false : true
             }
         }
@@ -96,18 +194,38 @@ export default {
             user: 'getUser'
         })
     },
+    /**
+     *响应codemirror文本区内的事件，并且调整文本区宽高的大小
+     *@event mounted
+     */
     mounted: function () {
         /*
         你现在如果需要对比当前用户是不是房间的创建者，只需要判断user.userid === CREATERID
         */
+        /**
+         * @property _this
+         * @default this
+         * @static
+         * @private
+         */
         var _this = this
         this.editor = CodeMirror.fromTextArea(document.getElementById('codemirror'), _this.options)
+        /**
+         *响应codemirror文本区的内容改变的事件，利用socketio发送信息
+         *@event onchange
+         *@bubbles editor.on('change')
+         */
         this.editor.on('change', function (cm) {
             _this.send({
                 type: 'code',
                 data: cm.getValue()
             })
         })
+        /**
+         *响应codemirror中光标选中的事件，利用socketio发送信息
+         *@event oncursorActivity
+         *@bubbles editor.on('cursorActivity')
+         */
         this.editor.on('cursorActivity', function () {
             // console.log(_this.editor.getCursor("anchor"))
             // console.log(_this.editor.getCursor("head"))
@@ -122,16 +240,29 @@ export default {
         this.editor.setSize(this.WIDTH, this.HEIGHT)
     },
     methods: {
+        /**
+         *获取codemirror文本框里的值
+         *@method getHistory
+         *@return {object} 返回type为'code'以及取到的值
+         */
         getHistory: function () {
             return {
                 type: 'code',
                 data: this.editor.getValue()
             }
         },
+        /**
+         *打印文本框内容已更改且更改后的信息
+         *@event change
+         */
         change: function (code) {
             console.log('change', code)
             // this.send({data:code})
         },
+        /**
+         *响应更改语言选择的信息，获取现在所选语言，将codemirror的mode设为这个语言，并用socketio发送消息
+         *@event changelan
+         */
         changelan: function () {
             var _this = this
             var select = document.getElementById('select')
@@ -158,6 +289,11 @@ export default {
                 data: value
             })
         },
+        /**
+         *发送消息，判断用户是否有权限发送信息，有就发送成功，没有就发送失败
+         *@event send
+         *@param {object} data（想要发送的信息）
+         */
         send (data) {
             console.log('userid是' + this.user.userid)
             console.log('AUTHORITY is' + this.AUTHORITY)
@@ -167,6 +303,11 @@ export default {
                 console.log('sendsuccess')
             }
         },
+        /**
+         *接受消息，并按照消息的type属性进行分类处理
+         *@event receive
+         *@param {object} data（接受的信息）
+         */
         receive (data) {
             // code(data.data)
             // console.log('codereceive'+data.data)
@@ -188,6 +329,12 @@ export default {
         }
     },
     watch: {
+        /**
+         *实现文档的滚动处理（如果行数太多，控制将文档滚动到适当位置）
+         *@event value
+         *@param {string} newVal
+         *@param {string} oldVal
+         */
         value: function (newVal, oldVal) {
             var editorValue = this.editor.getValue()
             if (newVal !== editorValue) {
@@ -197,6 +344,12 @@ export default {
                 this.editor.scrollTo(scrollInfo.left, scrollInfo.top)
             }
         },
+        /**
+         *实现codemirror文本框内的语言转换
+         *@event options
+         *@param {object} newOptions
+         *@param {string} oldVal
+         */
         options: function (newOptions, oldVal) {
             if (typeof newOptions === 'object') {
                 for (var optionName in newOptions) {
@@ -206,10 +359,20 @@ export default {
                 }
             }
         },
+        /**
+         *实现codemirror文本框长宽调节
+         *@event HEIGHT
+         *@param {string} newVal
+         *@param {string} oldVal
+         */
         HEIGHT: function (newVal, oldVal) {
             this.editor.setSize(this.WIDTH, this.HEIGHT)
         }
     },
+    /**
+     *销毁前将现在的数据清空，防止第二次使用
+     *@event beforeDestroy
+     */
     beforeDestroy: function () {
         if (this.editor) {
             this.editor.toTextArea()
