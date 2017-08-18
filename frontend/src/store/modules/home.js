@@ -137,6 +137,9 @@ const mutations = {
      */
     addMostPopular: (state) => {
         state.mostPopular = state.liveRooms.slice(0, 4)
+    },
+    setPageSize: (state, num) => {
+        state.showNum = num
     }
 }
 

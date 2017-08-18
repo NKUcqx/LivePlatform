@@ -2,15 +2,15 @@
 <div id="topbar">
     <Menu  ref="topmenu" mode="horizontal" active-name="3" class="menu" theme="light" id="topmenu">
         <Menu-item class="longer">
-            <img src="../../assets/logo1.png" class="logo-image" alt="head-image" :width="img.size" :height="img.size"> 
+            <img src="../../assets/logo1.png" class="logo-image" :width="img.size" :height="img.size"> 
         </Menu-item>
         <Menu-item name="1">
             教育直播平台
         </Menu-item>
         <Menu-item name="2" class="top-right" v-if="user.role==='T'">
             <span id="createroom" @click="createModal = true"><Icon type="ios-plus" size="30" color="#5cadff" v-if="TYPE === 'home'"></Icon></span>
-            <span id="startlive" @click="startLive()"><Icon type="ios-play" size="30" color="rgb(0,180,0)" v-if="TYPE==='studio'&&!liveState.isStart"></Icon></span>
-            <span @click="endLive()"><Icon  id="endlive" type="android-exit" size="25" color="rgb(210,100,100)" v-if="TYPE==='studio'&&liveState.isStart"></Icon></span>
+            <span id="startlive" @click="startLive()"><Icon type="ios-play" size="30" color="rgb(0,180,0)" v-if="TYPE==='studio'&&!isLiveStart&&AUTHORITY"></Icon></span>
+            <span @click="endLive()"><Icon  id="endlive" type="android-exit" size="25" color="rgb(210,100,100)" v-if="TYPE==='studio'&&isLiveStart&&AUTHORITY"></Icon></span>
             <Modal v-model="createModal" title="Create Room" :width="400" @on-ok="createRoom()">
                 <Form ref="createForm" :model="createForm" :rules="ruleRoomname" :label-width="80">
                     <Form-item label="title:" prop="roomname">
@@ -96,7 +96,11 @@
             UploadButton
         },
         props: {
-            TYPE: 'home'
+            TYPE: 'home',
+            AUTHORITY: {
+                type: Boolean,
+                default: false
+            }
         },
         data () {
             const validatePass = (rule, value, callback) => {
@@ -160,14 +164,15 @@
         computed: {
             ...mapGetters({
                 user: 'getUser',
-                liveState: 'getLiveState'
+                isLiveStart: 'isLiveStart'
             })
         },
         methods: {
             ...mapMutations({
                 addLiveRoom: 'addLiveRoom',
                 setAvatar: 'setAvatar',
-                startLive: 'startLive'
+                startLive: 'startLive',
+                endTheLive: 'endLive'
             }),
             ...mapActions({
                 logoutSubmit: 'logout',
@@ -244,8 +249,6 @@
                     that.setAvatar('static/users/' + that.user.username + '/' + file.name)
                 }, 4000)
                 this.$Message.success(CONST.success('Upload Success!'))
-                console.log('static/users/' + this.user.username + '/' + file.name)
-                console.log(this.user.avatar)
             },
             avatarSizeError (file, fileList) {
                 this.$Message.error('Image size must be under 200K')
@@ -254,8 +257,18 @@
                 this.$Message.error('Image must be jpg jpeg png gif bmp')
             },
             endLive () {
-                console.log('topbar endLive')
-                this.$router.push({ path: '/home' })
+                let that = this
+                this.$Modal.confirm({
+                    title: '教育直播平台提醒您：',
+                    content: '<p>确定退出直播吗？</p>',
+                    onOk: () => {
+                        console.log('topbar endlive in mutation')
+                        that.endTheLive()
+                    },
+                    onCancel: () => {
+                        this.$Message.info('Continue')
+                    }
+                })
             }
         },
         mounted () {

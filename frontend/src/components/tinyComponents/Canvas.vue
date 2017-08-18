@@ -161,6 +161,11 @@ export default {
                 canvas: this.$refs.board.toDataURL('image/png')
             })
         },
+        reloadClear () {
+            this.send(makeCanvasInfo({
+                type: 'clear'
+            }))
+        },
         showToolBar () {
             this.toolBar = true
         },

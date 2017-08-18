@@ -37,7 +37,7 @@ export default {
     computed: {
         ...mapGetters({
             user: 'getUser',
-            liveState: 'getLiveState'
+            isLiveStart: 'isLiveStart'
         })
     },
     watch: {
@@ -46,13 +46,13 @@ export default {
             this.position2.height = (this.HEIGHT).toString() + 'px'
             this.toolbarStyle.width = this.WIDTH.toString() + 'px'
         },
-        'liveState.isStart': function (newVal, oldVal) {
+        'isLiveStart': function (newVal, oldVal) {
             if (oldVal === false && newVal === true) {
                 this.$Message.success('Live has already started !')
                 this.join()
             } else if (oldVal === true && newVal === false) {
                 this.$Message.success('Live has already ended !')
-                console.log('teacher leave')
+                console.log('in TeacherRTC teacher leave')
                 this.leave()
             }
         }
@@ -127,11 +127,12 @@ export default {
             })
         },
         leave () {
+            let that = this
             this.isJoin = false
             this.client.leave(function () {
                 console.log('Leavel channel successfully')
                 // add by gongyansong
-                that.$router.push({path: '/home'})
+                that.$emit('endroom')
             }, function (err) {
                 console.log('Leave channel failed: ', err)
             })
@@ -178,6 +179,9 @@ export default {
             this.hasAudio = false
             this.localStream.disableAudio()
         }
+    },
+    mounted () {
+        console.log(this.ROOM)
     }
 }
 </script>

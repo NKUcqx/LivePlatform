@@ -306,7 +306,6 @@
     }
 </script>
 <style>
-    .dialog {}
     .head {
         height: 30px;
         width: 100%;

@@ -42,7 +42,7 @@ export default {
         this.background.backgroundImage = 'url(' + this.item.thumbnail_path + ')'
         console.log(this.background.backgroundImage)
     },
-    updated () {
+    beforeUpdate () {
         this.background.backgroundImage = 'url(' + this.item.thumbnail_path + ')'
         console.log('update: ', this.background.backgroundImage)
     }
@@ -53,7 +53,7 @@ export default {
 #roomitem {
     display: inline-block;
     width: 240px;
-    margin: 10px 15px 10px 15px;
+    margin: 15px 15px 15px 15px;
     -moz-box-shadow:0px 0px 5px #878787;
     -webkit-box-shadow:0px 0px 5px #878787;
     box-shadow:0px 0px 5px #878787;

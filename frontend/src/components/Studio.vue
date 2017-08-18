@@ -10,7 +10,7 @@
         </Modal>
         <div id="fortop"></div>
             <div class="infobar left-part">
-                <img src="../assets/logo.png" id="teacher-avatar" :class="(authority)?'creator-avatar':''" alt="head-image" :width="img.size" :height="img.size" @click="showUploadModal()">
+                <img :src="roomInfo.img" id="teacher-avatar" :class="(authority)?'creator-avatar':''" alt="thum" :width="img.size" :height="img.size" @click="showUploadModal()">
                 <div id="studio-info">
                     <div id="title">
                         <h2 id="title-content">{{roomInfo.title}}</h2>
@@ -28,8 +28,8 @@
             <div :class="vedioClass" v-show="isVedioShow">
                 <close-button class="close-button" @close="closeVideo()" :isWork="false"></close-button>
                 <keep-alive>
-                    <teacher-rtc :WIDTH="vedioSize.width" :HEIGHT="vedioSize.height" v-if="authority"></teacher-rtc>
-                    <student-rtc :WIDTH="vedioSize.width" :HEIGHT="vedioSize.height" v-else></student-rtc>
+                    <teacher-rtc :WIDTH="vedioSize.width" :HEIGHT="vedioSize.height" :ROOM="roomInfo.id+''" v-if="authority" @endroom='endRoom'></teacher-rtc>
+                    <student-rtc :WIDTH="vedioSize.width" :HEIGHT="vedioSize.height" :ROOM="roomInfo.id+''" v-else></student-rtc>
                 </keep-alive>
             </div>
             <div :class="workClass" v-show="isWorkShow">
@@ -110,6 +110,7 @@ export default {
             img: {
                 size: 50
             },
+            isEnd: false,
             roomInfo: {
                 id: 500,
                 title: 'Welcome To Our World',
@@ -207,10 +208,31 @@ export default {
         endRoom () {
             let that = this
             this.destroyLive().then(function () {
+                that.isEnd = true
                 that.$router.push({ path: '/home' })
+                window.location.reload(true)
             }, function (res) {
                 alert(res)
             })
+        },
+        loadHistory (toWhom) {
+            // get current content
+            let slideHistory = this.$refs['slide'].getHistory()
+            let canvasHistory = this.$refs['canvas'].getHistory()
+            let codeHistory = this.$refs['code'].getHistory()
+            let sectionHistory = this.$refs['closeButton'].getHistory()
+            console.log(codeHistory)
+            this.emit(slideHistory, 'slide', toWhom)
+            this.emit(codeHistory, 'code', toWhom)
+            this.emit(canvasHistory, 'canvas', toWhom)
+            this.emit(sectionHistory, 'closeButton', toWhom)
+            // this.emcanvasHistory(history, 'chat')
+        },
+        reloadClear () {
+            this.$refs['slide'].reloadClear()
+            this.$refs['canvas'].reloadClear()
+            this.$refs['code'].reloadClear()
+            this.$refs['closeButton'].reloadClear()
         },
         buildConnect () {
             let that = this
@@ -218,17 +240,7 @@ export default {
             this.listen('connect', () => {
                 this.listen('loadHistory', (data) => {
                     const toWhom = data
-                    // get current content
-                    let slideHistory = that.$refs['slide'].getHistory()
-                    let canvasHistory = that.$refs['canvas'].getHistory()
-                    let codeHistory = that.$refs['code'].getHistory()
-                    let sectionHistory = that.$refs['closeButton'].getHistory()
-                    console.log(codeHistory)
-                    that.emit(slideHistory, 'slide', toWhom)
-                    that.emit(codeHistory, 'code', toWhom)
-                    that.emit(canvasHistory, 'canvas', toWhom)
-                    that.emit(sectionHistory, 'closeButton', toWhom)
-                    // this.emcanvasHistory(history, 'chat')
+                    this.loadHistory(toWhom)
                     console.log('loadHistory: ', toWhom)
                 })
                 this.listen('Error', (data) => { // this receiver will get error msg directly
@@ -282,11 +294,11 @@ export default {
             }
         },
         changeThumbnail (res, file) {
-            console.log('static/users/' + this.user.username + '/' + file.name)
+            console.log(this.roomInfo.room_name + '/' + file.name)
             let that = this
             setTimeout(function () {
-                that.roomInfo.img = 'static/users/' + that.user.username + '/' + file.name
-            }, 5000)
+                that.roomInfo.img = that.roomInfo.room_name + '/' + file.name
+            }, 10000)
             this.$Message.success(CONST.success('Upload Thumbnail'))
         },
         uploadSlide (res, file) {
@@ -322,6 +334,7 @@ export default {
         //
     },
     mounted () {
+        console.log('mounted')
         this.WIDTH = document.documentElement.clientWidth
         this.WIDTH = (this.WIDTH < 800) ? 800 : this.WIDTH
         this.wholeSize.height = document.documentElement.clientHeight.toString() + 'px'
@@ -330,13 +343,14 @@ export default {
             this.wholeSize.height = document.documentElement.clientHeight.toString() + 'px'
         })
         this.buildConnect()
-        if (this.isCreator) {
+        if (this.authority) {
             this.uploadModal = true
+            this.reloadClear()
         }
     },
     beforeDestroy () {
-        console.log(this.roomInfo.is_living)
-        if (this.isCreator) {
+        console.log('distory:', this.roomInfo.is_living)
+        if (this.authority && !(this.isEnd)) {
             this.endRoom()
         }
     }

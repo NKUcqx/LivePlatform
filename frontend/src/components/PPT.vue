@@ -1,7 +1,7 @@
 <template>
     <div id="slide">
-        <Carousel v-model="index" :autoplay="setautoplay" :autoplay-speed="autoplayspeed" :dots='setdots' trigger="click" :arrow="(AUTHORITY)?'hover':'never'" @on-change='changeppt'>
-            <Carousel-item v-for='img of imgs'>
+        <Carousel v-model="index" :autoplay="setautoplay" :autoplay-speed="autoplayspeed" :dots='setdots' trigger="click" :arrow="(AUTHORITY)?'hover':'never'" @on-change='changeppt' :style="toolbarStyle"> 
+            <Carousel-item v-for='img of imgs'  :style="toolbarStyle">
                 <img :src='img' :width="position.width" :height="position.height" class="images">
             </Carousel-item>
         </Carousel>
@@ -75,8 +75,6 @@
         },
         watch: {
             'SOU': function () {
-                this.position.width = this.WIDTH.toString() + 'px'
-                this.position.height = (this.HEIGHT).toString() + 'px'
                 this.ppt.source = this.SOU
                 this.ppt.number = this.NUM
                 console.log(this.position.height)
@@ -90,8 +88,6 @@
                 }
             },
             NUM: function () {
-                this.position.width = this.WIDTH.toString() + 'px'
-                this.position.height = (this.HEIGHT).toString() + 'px'
                 this.ppt.source = this.SOU
                 this.ppt.number = this.NUM
                 console.log(this.position.height)
@@ -107,12 +103,12 @@
             HEIGHT: function () {
                 this.position.width = this.WIDTH
                 this.position.height = this.HEIGHT
-                this.toolbarStyle.width = this.WIDTH.toString() + 'px'
+                this.toolbarStyle.width = this.WIDTH.toString() + 'px !important'
             }
         },
         mounted () {
-            this.position.width = this.WIDTH.toString() + 'px'
-            this.position.height = (this.HEIGHT).toString() + 'px'
+            this.position.width = this.WIDTH
+            this.position.height = this.HEIGHT
             for (let i = 1; i <= 7; i++) {
                 this.imgs.push(this.binpath + '/rooms/room1/' + 'bg' + i + '.jpg')
             }
@@ -122,6 +118,9 @@
         methods: {
             getHistory () {
                 return this.index
+            },
+            reloadClear () {
+                this.send(this.index)
             },
             changeAuto () {
                 this.setautoplay = true

@@ -184,6 +184,7 @@ export default {
     },
     mounted () {
         this.join()
+        console.log(this.ROOM)
     },
     beforeDestroy () {
         this.leave()
