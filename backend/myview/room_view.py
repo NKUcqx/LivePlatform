@@ -220,12 +220,12 @@ def getConvertStatus(request):
         return HttpResponse(content=CODE['24'], status=400)
 
 
-def videothread(room):
+def videothread(k,roomname):
     print('video start')
-    print (type('backend/record/Recorder_local --appId "0c6a0a8f844c49d78a9aac0907dfc1d8" --uid 0 --channel '+str(room) +' --appliteDir "backend/record/bin/" --channelProfile 1 --idle 10 --recordFileRootDir '+ '.'))
-    os.system('backend/record/Recorder_local --appId "0c6a0a8f844c49d78a9aac0907dfc1d8" --uid 0 --channel '+ str(room) +' --appliteDir "backend/record/bin/" --channelProfile 1 --idle 60 --recordFileRootDir '+ '.')
+    createtime=time.strftime('%Y%m%d', time.localtime(time.time()))
+    os.system('backend/record/Recorder_local --appId "0c6a0a8f844c49d78a9aac0907dfc1d8" --uid 0 --channel '+ str(k) +' --appliteDir "backend/record/bin/" --channelProfile 1 --idle 120 --recordFileRootDir '+ 'frontend/static/record')
     print('video convert')
-    os.system('python3.6 backend/record/video_convert.py '+ '.' + '/' + time.strftime('%Y%m%d', time.localtime(time.time())) + '/' + str(room) + '*')
+    os.system('python3.6 backend/record/video_convert.py '+ 'frontend/static/record' + '/' +createtime+ '/' + str(k) + '*')
 
 @login_required
 @require_POST
@@ -249,12 +249,13 @@ def createRoom(request):
                 is_silence=is_silence,
                 is_living=is_living)
             room.save()
+            k=room.id
+            room = wrap_room(room)
             print('thread--start')
-            t = threading.Thread(target=videothread,args=(room.id,))
+            t = threading.Thread(target=videothread,args=(k,room['file_name'],))
             threads.append(t)
             t.start()
             print('thread--real')
-            room = wrap_room(room)
             request.session['room'] = room
             return JsonResponse({'room': room})  # return the new room's id
         else:
