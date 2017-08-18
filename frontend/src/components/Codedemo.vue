@@ -1,20 +1,21 @@
 <template>
-    <div id="code-mirror">
+    <div class="container">
         <main v-cloak id="app">
             <div class="cm-container">
                 <textarea @change="change" id="codemirror"></textarea>
             </div>
             <div id="relative">
                 <select name="mode" id="select" @change="changelan" v-model="mode" :disabled="!AUTHORITY">
-                    <option value="javascript" class="option">javascript</option>
-                    <option value="vue" class="option">vue</option>
-                    <option value="text/x-c++src" class="option">C++</option>
-                    <option value="text/x-c" class="option">C</option>
-                    <option value="text/x-csharp" class="option">C#</option>
-                    <option value="text/x-java" class="option">Java</option>
-                    <option value="sql" class="option">sql</option>
-                    <option value="text/css" class="option">css</option>
-                    <option value="htmlmixed" class="option">html</option>
+                    <option value='javascript' class="option">javascript</option>
+                    <option value='vue' class="option">vue</option>
+                    <option value='text/x-c++src' class="option">C++</option>
+                    <option value='text/x-c' class="option">C</option>
+                    <option value='text/x-csharp' class="option">C#</option>
+                    <option value='text/x-java' class="option">Java</option>
+                    <option value='sql' class="option">sql</option>
+                    <option value='text/css' class="option">css</option>
+                    <option value='htmlmixed' class="option">html</option>
+                    <option value='python' class="option">python</option>
                 </select>
             </div>
         </main>
@@ -41,6 +42,7 @@ require('../../node_modules/codemirror/mode/css/css.js')
 require('../../node_modules/codemirror/mode/xml/xml.js')
 require('../../node_modules/codemirror/mode/htmlmixed/htmlmixed.js')
 require('../../node_modules/codemirror/mode/sql/sql.js')
+require('../../node_modules/codemirror/mode/python/python.js')
 
 // require hint addon for javacript
 require('../../node_modules/codemirror/addon/hint/show-hint.js')
@@ -50,6 +52,9 @@ require('../../node_modules/codemirror/addon/hint/anyword-hint.js')
 require('../../node_modules/codemirror/addon/hint/css-hint.js')
 require('../../node_modules/codemirror/addon/hint/html-hint.js')
 require('../../node_modules/codemirror/addon/hint/sql-hint.js')
+require('../../node_modules/codemirror/addon/hint/xml-hint.js')
+
+require('../../node_modules/codemirror/theme/neo.css')
 
 export default {
     props: {
@@ -260,7 +265,9 @@ export default {
             // this.send({data:code})
         },
         /**
-         *响应更改语言选择的信息，获取现在所选语言，将codemirror的mode设为这个语言，并用socketio发送消息
+         *响应更改语言选择的信息，获取现在所选语言，将codemirror的mode设为这个语
+
+言，并用socketio发送消息
          *@event changelan
          */
         changelan: function () {
@@ -274,7 +281,7 @@ export default {
                 }
             }
             this.options = {
-                mode: _this.mode,
+                mode: value,
                 tabSize: 4,
                 lineNumbers: true,
                 lineWrapping: true,
@@ -385,26 +392,26 @@ export default {
   display: none;
 }
 
-#code-mirror {
+.container {
   margin: 0 auto;
 }
 
-#code-mirror .cm-container {
+.cm-container {
   border: #ddd solid 1px;
   text-align: left;
 }
 
-#code-mirror .CodeMirror-code {
+.CodeMirror-code {
     font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
-#code-mirror #relative {
+#relative {
     float: right;
     width: 0;
     height: 0;
 }
 
-#code-mirror #select {
+#select {
     width: 80px;
     height: 30px;
     background-color: white;
@@ -414,7 +421,7 @@ export default {
     left: -83px;
 }
 
-#code-mirror .option {
+.option {
     color: #5cadff;
 }
 </style>
