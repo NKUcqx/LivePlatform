@@ -19,6 +19,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+
 export default {
     props: {
         WIDTH: {
@@ -156,28 +157,46 @@ export default {
             }) */
         },
         enableVideo () {
-            this.$Modal.info({
-                title: '教育直播平台提醒您：',
-                content: '<p>您已经重启了视频教学</p>'
-            })
-            this.hasVideo = true
-            this.localStream.enableVideo()
+            if (this.isLiveStart) {
+                this.$Modal.info({
+                    title: '教育直播平台提醒您：',
+                    content: '<p>您已经重启了视频教学</p>'
+                })
+                this.hasVideo = true
+                this.localStream.enableVideo()
+            } else {
+                this.$Modal.warning({
+                    title: '教育直播平台提醒您：',
+                    content: '<p>您尚未开启直播</p>'
+                })
+            }
         },
         disableVideo () {
-            this.$Modal.info({
-                title: '教育直播平台提醒您：',
-                content: '<p>您已经暂停了视频教学</p>'
-            })
-            this.hasVideo = false
-            this.localStream.disableVideo()
+            if (this.isLiveStart) {
+                this.$Modal.info({
+                    title: '教育直播平台提醒您：',
+                    content: '<p>您已经暂停了视频教学</p>'
+                })
+                this.hasVideo = false
+                this.localStream.disableVideo()
+            } else {
+                this.$Modal.warning({
+                    title: '教育直播平台提醒您：',
+                    content: '<p>您尚未开启直播</p>'
+                })
+            }
         },
         enableAudio () {
-            this.hasAudio = true
-            this.localStream.enableAudio()
+            if (this.isLiveStart) {
+                this.hasAudio = true
+                this.localStream.enableAudio()
+            }
         },
         disableAudio () {
-            this.hasAudio = false
-            this.localStream.disableAudio()
+            if (this.isLiveStart) {
+                this.hasAudio = false
+                this.localStream.disableAudio()
+            }
         }
     },
     mounted () {

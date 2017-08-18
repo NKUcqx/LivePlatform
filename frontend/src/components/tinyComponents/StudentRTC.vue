@@ -18,6 +18,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
     props: {
         WIDTH: {
@@ -59,6 +61,11 @@ export default {
                 display: 'inline-block'
             }
         }
+    },
+    computed: {
+        ...mapGetters({
+            isLiveStart: 'isLiveStart'
+        })
     },
     methods: {
         showToolBar () {
@@ -158,28 +165,46 @@ export default {
             }) */
         },
         enableVideo () {
-            this.$Modal.info({
-                title: '教育直播平台提醒您：',
-                content: '<p>您已经重启了视频教学</p>'
-            })
-            this.hasVideo = true
-            this.remoteStream.enableVideo()
+            if (this.isLiveStart) {
+                this.$Modal.info({
+                    title: '教育直播平台提醒您：',
+                    content: '<p>您已经重启了视频教学</p>'
+                })
+                this.hasVideo = true
+                this.remoteStream.enableVideo()
+            } else {
+                this.$Modal.warning({
+                    title: '教育直播平台提醒您：',
+                    content: '<p>您尚未开启直播</p>'
+                })
+            }
         },
         disableVideo () {
-            this.$Modal.info({
-                title: '教育直播平台提醒您：',
-                content: '<p>您已经暂停了视频教学</p>'
-            })
-            this.hasVideo = false
-            this.remoteStream.disableVideo()
+            if (this.isLiveStart) {
+                this.$Modal.info({
+                    title: '教育直播平台提醒您：',
+                    content: '<p>您已经暂停了视频教学</p>'
+                })
+                this.hasVideo = false
+                this.remoteStream.disableVideo()
+            } else {
+                this.$Modal.warning({
+                    title: '教育直播平台提醒您：',
+                    content: '<p>您尚未开启直播</p>'
+                })
+            }
         },
         enableAudio () {
-            this.hasAudio = true
-            this.remoteStream.enableAudio()
+            if (isLiveStart) {
+                this.hasAudio = true
+                this.remoteStream.enableAudio()
+            }
         },
         disableAudio () {
-            this.hasAudio = false
-            this.remoteStream.disableAudio()
+            if (isLiveStart) {
+                this.hasAudio = false
+                this.remoteStream.disableAudio()
+            }
         }
     },
     mounted () {
