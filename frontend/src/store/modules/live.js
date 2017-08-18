@@ -6,8 +6,8 @@ const state = {
 }
 
 const getters = {
-    getLiveState: (state) => {
-        return state
+    isLiveStart: (state) => {
+        return state.isStart
     }
 }
 
@@ -16,6 +16,7 @@ const mutations = {
         state.isStart = true
     },
     endLive: (state) => {
+        console.log('in Live.js', state.isStart);
         (state.isStart === true) ? state.isStart = false : ''
     }
 }

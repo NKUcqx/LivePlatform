@@ -251,6 +251,12 @@ export default {
                 data: this.editor.getValue()
             }
         },
+        reloadClear () {
+            this.send({
+                type: 'code',
+                data: this.editor.getValue()
+            })
+        },
         /**
          *打印文本框内容已更改且更改后的信息
          *@event change

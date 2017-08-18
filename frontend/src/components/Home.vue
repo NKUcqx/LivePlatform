@@ -2,9 +2,9 @@
     <div id="home">
         <topbar TYPE="home" id="topbar"></topbar>
         <div id="fortop"></div>
-        <div id="showbar">
+        <div id="showbar" :style="style">
             <div id="carousel-containter">
-                <Carousel v-model="carousel" id="carousel" trigger="hover" arrow="always" dots="none">
+                <Carousel v-model="carousel" autoplay="auto" :autoplay-speed="3000" id="carousel" trigger="hover" arrow="always" dots="none" :style="height">
                     <Carousel-item v-for="(livesItem, index) in mostPopular" class="carousel-item" >
                         <div class="carousl-background" :style="carouselStyle(index)" @click="enterRoom(index)"></div>
                     </Carousel-item>
@@ -15,7 +15,7 @@
                 </div>
             </div>
         </div>
-        <div id="container">
+        <div id="container" :style="style">
             <Card shadow class="card" id="live">
                 <h3 slot="title" class="headersection">
                     <Icon type="social-twitch-outline"></Icon>
@@ -45,7 +45,7 @@
 </template>
 
 <script>
-    import { mapGetters, mapActions } from 'vuex'
+    import { mapGetters, mapActions, mapMutations } from 'vuex'
     import Room from './tinyComponents/Room'
     import Topbar from './tinyComponents/Topbar'
     import { beforePost } from '../utils/utils'
@@ -60,31 +60,46 @@
             return {
                 WIDTH: window.document.documentElement.clientWidth,
                 HEIGHT: document.documentElement.clientHeight,
-                carousel: 0
+                carousel: 0,
+                numOfLine: 0,
+                livePage: 1,
+                videoPage: 1,
+                style: {
+                    width: '600px'
+                }
+            }
+        },
+        watch: {
+            WIDTH: function (newVal, oldVal) {
+                this.numOfLine = parseInt((newVal - 35) / 270)
+                this.style.width = (this.numOfLine * 270 + 35).toString() + 'px'
+            },
+            numOfLine: function () {
+                console.log(this.numOfLine)
+                this.setPageSize(this.numOfLine * 2)
+                this.changeLivePage(this.livePage)
+                this.changeVideoPage(this.videoPage)
             }
         },
         computed: {
             ...mapGetters({
-                getLiveRooms: 'getLiveRooms',
-                getVideoRooms: 'getVideoRooms',
+                livesList: 'getLiveRooms',
+                videosList: 'getVideoRooms',
                 roomAmount: 'getRoomAmount',
                 pageSize: 'getPageSize',
                 mostPopular: 'getMostPopular'
-            }),
-            livesList () {
-                return this.getLiveRooms
-            },
-            videosList () {
-                return this.getVideoRooms
-            }
+            })
         },
         methods: {
+            ...mapMutations({
+                setPageSize: 'setPageSize'
+            }),
             ...mapActions({
                 getRoomsFromDB: 'getRoomsFromDB',
                 getRoomAmountFromDB: 'getRoomAmountFromDB'
             }),
             carouselBackground (index) {
-                return 'url(' + this.livesList[index].thumbnail_path + ')'
+                return 'url(' + this.mostPopular[index].thumbnail_path + ')'
             },
             flipOver (index) {
                 this.carousel = index
@@ -92,6 +107,7 @@
             carouselStyle (index) {
                 const that = this
                 return {
+                    height: ((this.numOfLine * 270 + 35) * 0.75 * 0.60).toString() + 'px',
                     backgroundImage: that.carouselBackground(index)
                 }
             },
@@ -99,11 +115,13 @@
                 const that = this
                 if (index === this.carousel) {
                     return {
+                        height: ((this.numOfLine * 270 + 35) * 0.75 * 0.60 * 0.25).toString() + 'px',
                         backgroundImage: that.carouselBackground(index),
                         border: '3px solid rgb(0, 180, 0)'
                     }
                 } else {
                     return {
+                        height: ((this.numOfLine * 270 + 35) * 0.75 * 0.60 * 0.25).toString() + 'px',
                         backgroundImage: that.carouselBackground(index),
                         border: '1px solid rgb(191, 191, 191)'
                     }
@@ -113,9 +131,13 @@
                 this.$router.push({ name: 'studio', query: this.livesList[index] })
             },
             changeVideoPage (page) {
+                console.log('start: ', (page - 1) * this.pageSize)
+                console.log('changeVideoPage: ', this.pageSize)
+                this.livePage = page
                 this.getRoomsFromDB({ isLive: false, start: (page - 1) * this.pageSize })
             },
             changeLivePage (page) {
+                this.videoPage = page
                 this.getRoomsFromDB({ isLive: true, start: (page - 1) * this.pageSize })
             }
         },
@@ -123,6 +145,14 @@
             this.getRoomsFromDB({ isLive: true })
             this.getRoomsFromDB({ isLive: false })
             this.getRoomAmountFromDB()
+            window.addEventListener('resize', () => {
+                this.WIDTH = (document.documentElement.clientWidth < 800) ? 800 : document.documentElement.clientWidth
+            })
+        },
+        created: function () {
+            this.WIDTH = (document.documentElement.clientWidth < 800) ? 800 : document.documentElement.clientWidth
+            this.numOfLine = parseInt((this.WIDTH - 35) / 270)
+            this.style.width = (this.numOfLine * 270 + 35).toString() + 'px'
         }
     }
 </script>
@@ -141,23 +171,22 @@
     height: 60px;
 }
 #showbar {
-    text-align: left;
-    padding: 0% 10%;
+    display: inline-block;
     clear: both;
     overflow: hidden;
-    background: rgb(239,239,239);
+    -moz-box-shadow:2px 2px 10px #A1A1A1;
+    -webkit-box-shadow:2px 2px 10px #A1A1A1; 
+    box-shadow: 2px 2px 10px #A1A1A1;
     /*background-size: 100% 100%;
     background-repeat: no-repeat;
     background-image: url(../assets/bg5.jpg);*/
 }
 
 #carousel {
-    height: 500px;
     background-color: rgb(1, 1, 1);
 }
 
 .carousl-background {
-    height: 500px;
     width: 100%;
     background-size: 100% 100%;
     background-repeat: no-repeat;
@@ -176,7 +205,6 @@
 #carousel-aside {
     display: inline-block;
     width: calc(25% - 5px);
-    height: 500px;
     background-color: rgba(0, 0, 0, 0);
     float: right;
 }
@@ -187,7 +215,6 @@
 
 .aside-item {
     width: 100%;
-    height: calc(500px / 4 + 1px);
     background-color: rgb(255, 255, 255);
     background-repeat: no-repeat;
     background-size: 100% 100%;
@@ -203,22 +230,28 @@
 
 
 #home {
-    min-width: calc(240*4px + 30*4px + 35px);
+    background: rgb(249,249,249);
+    text-align: center;
+    min-width: 800px;
 }
 
-#containter {
+#container {
+    display: inline-block;
     text-align: center;
 }
 
 .card {
     display: inline-block;
-    width: calc(240*4px + 30*4px + 35px);
+    width: 100%;
     margin: 30px 0px;
+    -moz-box-shadow:2px 2px 10px #A1A1A1;
+    -webkit-box-shadow:2px 2px 10px #A1A1A1; 
+    box-shadow: 2px 2px 10px #A1A1A1;
 }
 
 .headersection {
     /*border: 1px red solid;*/
-    
+    padding: 10px 15px;
     text-align: left;
 }
 
@@ -230,5 +263,9 @@
     margin-top: 30px;
     width: 100%;
     text-align: center;
+}
+
+.line-center {
+    text-align: center
 }
 </style>

@@ -48,6 +48,9 @@ export default {
         getHistory () {
             return this.state
         },
+        reloadClear () {
+            this.send(this.state)
+        },
         send (data) {
             this.$emit('send', data)
         },

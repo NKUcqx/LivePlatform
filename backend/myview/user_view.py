@@ -134,7 +134,7 @@ def signupSubmit(request):
 
 # 登录执行的函数，接收POST请求，返回字符串
 
-
+@csrf_exempt
 @require_POST
 def loginSubmit(request):
     body = bi2obj(request)

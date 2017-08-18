@@ -21,7 +21,7 @@ API_key = [ # to get more free conversion chances ..
             '1ExrXf1WpChC9gvOxnzuR5_unapQx1RqigB4Kmyc-teB3tp8kSybrSU-nrcELHwJWYxljLt8euwJwtgFTrdFsQ',
             'LRxCwzT2-CLqFqr936dWjknyulqsjFtXVL1GQLcmJhsgG_Ad7503sH98cGcSvFhQe5pRUWmuR4tb448MvgarEg'
         ]
-IMG_LIST = ('.jpg', '.jpeg' '.png', '.svg', '.gif')
+IMG_LIST = ('.jpg', '.jpeg', '.png', '.svg', '.gif')
 SLIDE_LIST = ('.ppt', '.pptx', '.pps', '.pdf')
 processes = {}  # converting process of cloudconvert, to check the status
 
