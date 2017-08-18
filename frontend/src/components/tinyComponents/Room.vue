@@ -98,6 +98,7 @@ export default {
 }
 
 #endtime {
+    display: block;
     padding: 0px 6px;
     float: right;
 }

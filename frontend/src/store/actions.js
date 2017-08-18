@@ -71,3 +71,21 @@ export const changeInfo = async ({ state }, data) => {
 export const logout = async ({ state }) => {
     return commitPostRequest(state, '/logout/', {})
 }
+
+export const testUsername = async ({ state }, data) => {
+    return new Promise((resolve, reject) => {
+        Vue.http.get('/testusername?username=' + data.username).then(function (res) {
+            if (res.status === 200 && data.father === 'signup') {
+                reject(true)
+            } else {
+                resolve()
+            }
+        }, function (res) {
+            if (res.status === 401 && data.father === 'login') {
+                reject(false)
+            } else {
+                resolve()
+            }
+        })
+    })
+}

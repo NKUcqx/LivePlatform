@@ -1,8 +1,8 @@
 <template>
     <div id="slide">
-        <Carousel v-model="index" :autoplay="setautoplay" :autoplay-speed="autoplayspeed" :dots='setdots' trigger="click" :arrow="(AUTHORITY)?'hover':'never'" @on-change='changeppt' :style="toolbarStyle"> 
-            <Carousel-item v-for='img of imgs'  :style="toolbarStyle">
-                <img :src='img' :width="position.width" :height="position.height" class="images">
+        <Carousel v-model="index" :autoplay="setautoplay" :autoplay-speed="autoplayspeed" :dots='setdots' trigger="click" :arrow="(AUTHORITY)?'hover':'never'" @on-change='changeppt'> 
+            <Carousel-item v-for='img of imgs'>
+                <img :src='img' :style="position" class="images">
             </Carousel-item>
         </Carousel>
         <div class="relative">
@@ -64,8 +64,8 @@
                 autoplayspeed: 3000,
                 setdots: 'none',
                 position: {
-                    width: 0,
-                    height: 0
+                    width: '200px',
+                    height: '400px'
                 },
                 ppt: {
                     source: '',
@@ -100,20 +100,26 @@
                     this.imgs.push(this.binpath + '/rooms/room1/' + 'bg' + i + '.jpg')
                 }
             },
+            WIDTH: function () {
+                console.log('watch the size', this.WIDTH)
+                this.position.width = this.WIDTH.toString() + 'px'
+                this.toolbarStyle.width = this.WIDTH.toString() + 'px'
+            },
             HEIGHT: function () {
-                this.position.width = this.WIDTH
-                this.position.height = this.HEIGHT
-                this.toolbarStyle.width = this.WIDTH.toString() + 'px !important'
+                this.position.height = this.HEIGHT.toString() + 'px'
             }
         },
         mounted () {
-            this.position.width = this.WIDTH
-            this.position.height = this.HEIGHT
+            console.log('mounted the size', this.WIDTH)
+            this.position.width = this.WIDTH.toString() + 'px'
+            this.position.height = this.HEIGHT.toString() + 'px'
+            console.log('WIDTH:', this.WIDTH)
+            console.log('SOURCE', this.SOU)
+        },
+        created () {
             for (let i = 1; i <= 7; i++) {
                 this.imgs.push(this.binpath + '/rooms/room1/' + 'bg' + i + '.jpg')
             }
-            console.log('WIDTH:', this.WIDTH)
-            console.log('SOURCE', this.SOU)
         },
         methods: {
             getHistory () {
@@ -147,6 +153,12 @@
                     this.send(value)
                 }
             }
+        },
+        updated () {
+            console.log('updated the size', this.WIDTH)
+        },
+        activated () {
+            console.log('activated the size', this.WIDTH)
         }
     }
 </script>

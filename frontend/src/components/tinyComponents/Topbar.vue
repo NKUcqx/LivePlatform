@@ -12,9 +12,9 @@
             <span id="startlive" @click="startLive()"><Icon type="ios-play" size="30" color="rgb(0,180,0)" v-if="TYPE==='studio'&&!isLiveStart&&AUTHORITY"></Icon></span>
             <span @click="endLive()"><Icon  id="endlive" type="android-exit" size="25" color="rgb(210,100,100)" v-if="TYPE==='studio'&&isLiveStart&&AUTHORITY"></Icon></span>
             <Modal v-model="createModal" title="Create Room" :width="400" @on-ok="createRoom()">
-                <Form ref="createForm" :model="createForm" :rules="ruleRoomname" :label-width="80">
-                    <Form-item label="title:" prop="roomname">
-                        <Input v-model="createForm.title" size="large" placeholder="Title"></Input>
+                <Form ref="createForm" :model="createform" :rules="ruleRoomname" :label-width="80">
+                    <Form-item label="title:" prop="title">
+                        <Input v-model="createform.title" size="large" placeholder="Title"></Input>
                     </Form-item>
                     <Form-item label="teacher:">
                         <Input v-model="user.username" size="large" placeholder="Teacher" disabled></Input>
@@ -130,10 +130,8 @@
                     newPassword: '',
                     reNewPassword: ''
                 },
-                createForm: {
-                    title: '',
-                    slide: '',
-                    img: ''
+                createform: {
+                    title: ''
                 },
                 ruleInfo: {
                     nickname: [
@@ -154,7 +152,7 @@
                     ]
                 },
                 ruleRoomname: {
-                    roomname: [
+                    title: [
                         { required: true, message: 'Please input roomname', trigger: 'blur' },
                         { type: 'string', min: 6, max: 25, message: 'roomname should be 6 to 25 chars', trigger: 'blur' }
                     ]
@@ -178,7 +176,8 @@
                 logoutSubmit: 'logout',
                 changePass: 'changePass',
                 changeInfo: 'changeInfo',
-                destroyLive: 'destroyLive'
+                destroyLive: 'destroyLive',
+                createLive: 'createLive'
             }),
             getCookie () {
                 return getCookie('csrftoken')
@@ -226,21 +225,17 @@
                 })
             },
             createRoom () {
-                if (true) {
+                let that = this
+                checkForm(this, this.$refs.createForm, () => {
                     let formData = new FormData()
-                    formData.append('name', this.createForm.title)
-                    this.$http({
-                        url: '/createroom/',
-                        method: 'POST',
-                        body: formData,
-                        before: function (request) { beforePost(request) }
-                    }).then(function (res) {
+                    formData.append('name', that.createform.title)
+                    this.createLive(formData).then(function (res) {
                         console.log(getListFromDB(res.body))
-                        this.$router.push({ name: 'studio', query: getListFromDB(res.body) })
+                        that.$router.push({ name: 'studio', query: getListFromDB(res.body) })
                     }, function (res) {
-                        alert(res.status)
+                        alert(res.body)
                     })
-                }
+                })
             },
             changeAvatar (res, file) {
                 let that = this

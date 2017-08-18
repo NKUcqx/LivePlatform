@@ -3,7 +3,7 @@
  *
  * @module check
  */
-import Vue from 'vue'
+import store from '../store'
 
 /**
  * 测试类；
@@ -148,18 +148,10 @@ export const checkVerification = (rule, value, callback, code) => {
  *@param {string} status 判断是登陆还是注册
  */
 export const checkUsername = (rule, value, callback, status) => {
-    Vue.http.get('/testusername?username=' + value).then(function (res) {
-        if (res.status === 200 && status === 'signup') {
-            callback(new Error('username does exist!'))
-        } else {
-            callback()
-        }
+    store.dispatch('testUsername', { username: value, father: status }).then(function () {
+        callback()
     }, function (res) {
-        if (res.status === 401 && status === 'login') {
-            callback(new Error('username never exists!'))
-        } else {
-            callback()
-        }
+        (res) ? callback(new Error('username does exist!')) : callback(new Error('username never exists!'))
     })
 }
 

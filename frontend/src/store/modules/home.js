@@ -166,7 +166,7 @@ const actions = {
             (start === 0) ? commit('addMostPopular') : ''
             console.log(res.body)
         }, function () {
-            alert('ajax failure')
+            alert('getRoomsFrom DBajax failure')
         })
     },
     /**
@@ -182,7 +182,7 @@ const actions = {
             state.roomAmount.liveAmount = res.body.living_amount
             state.roomAmount.videoAmount = res.body.end_amount
         }, function (res) {
-            alert('ajax failure')
+            alert('getRoomAmountFromDB ajax failure')
         })
     }
 }

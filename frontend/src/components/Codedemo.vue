@@ -216,7 +216,7 @@ export default {
          */
         var _this = this
         this.editor = CodeMirror.fromTextArea(document.getElementById('codemirror'), _this.options)
-        this.editor.setValue('please code here')
+        // this.editor.setValue('please code here')
         /**
          *响应codemirror文本区的内容改变的事件，利用socketio发送信息
          *@event onchange
@@ -431,5 +431,9 @@ export default {
 
 .option {
     color: #5cadff;
+}
+
+#code-mirror {
+    overflow: hidden !important;
 }
 </style>
