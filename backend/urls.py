@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from . import views
 from django.views.generic import TemplateView
-from .myview import room_view, user_view
+from .myview import room_view, user_view, punishment_view
 
 urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name="index.html")),
@@ -27,4 +27,10 @@ urlpatterns = [
     url(r'^updateroom/$', room_view.updateRoom, name='update_room'),
     url(r'^setthumbnail/$', room_view.uploadThumbnail, name='set_thumbnail'),
     url(r'^uploadslide/$', room_view.uploadSlide, name='upload_slide'),
+    url(r'^echo/$', punishment_view.echo, name='echo'),
+    url(r'^banpublic/$', punishment_view.banpublic, name='banpublic'),
+    url(r'^canpublic/$', punishment_view.canpublic, name='canpublic'),
+    url(r'^outone/$', punishment_view.outone, name='outone'),
+    url(r'^banone/$', punishment_view.banone, name='banone'),
+    url(r'^canspeakone/$', punishment_view.canspeakone, name='canspeakone'),
 ]
