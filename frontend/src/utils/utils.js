@@ -9,7 +9,7 @@
  * @constructor
  */
 
- /**
+/**
  *获取储存在用户本地终端上的数据，返回cookieValue
  *@method getCookie
  *@param {string} name
@@ -36,7 +36,7 @@ export const getCookie = (name) => {
     return cookieValue
 }
 
- /**
+/**
  *防御CSRF攻击
  *@event beforePost
  *@param {object} request
@@ -48,7 +48,7 @@ export const beforePost = (request) => {
     }
 }
 
- /**
+/**
  *从数据库获取信息
  *@event getListFromDB
  *@param {object} obj
@@ -75,7 +75,7 @@ export const getListFromDB = (obj) => {
     }
 }
 
- /**
+/**
  *如果是JSON字符串，那么返回给定 JSON 字符串转换后的对象
  *@method isJSON
  *@param {string} str
@@ -111,4 +111,15 @@ export const getFormatTime = (inTime) => {
     m = m < 10 ? '0' + m : m
     s = s < 10 ? '0' + s : s
     return h + ':' + m + ':' + s
+}
+
+export const getFormatDate = (inDate) => {
+    let date = inDate.split(' ')[0].split('-')
+    let year = date[0]
+    let month = date[1]
+    let day = date[2]
+    if (month.length === 1) {
+        month = '0' + month
+    }
+    return year + month + day
 }

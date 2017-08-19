@@ -225,8 +225,9 @@ def videothread(roomid,roomname):
     createtime=time.strftime('%Y%m%d', time.localtime(time.time()))
     os.system('backend/record/Recorder_local --appId "0c6a0a8f844c49d78a9aac0907dfc1d8" --uid 0 --channel '+ str(roomid) +' --appliteDir "backend/record/bin/" --channelProfile 1 --idle 120 --recordFileRootDir '+ 'frontend/static/record')
     print('video convert')
-    os.system('python3.6 backend/record/video_convert.py '+ 'frontend/static/record' + '/' +createtime+ '/' + str(roomid) + '*')
-
+    os.system('python3.6 backend/record/video_convert.py '+ 'frontend/static/record/'+createtime+ '/' + str(roomid) + '*')
+    os.system('mv frontend/static/record/'+createtime+'/'+str(roomid)+'* frontend/static/record/'+createtime+'/'+str(roomid))
+    os.system('mv frontend/static/record/'+createtime+'/'+str(roomid)+'/*.mp4 frontend/static/record/'+createtime+'/'+str(roomid)+'/'+str(roomid)+'.mp4')
 @login_required
 @require_POST
 def createRoom(request):
