@@ -556,6 +556,7 @@ export default {
 
     }
     #canvas #board {
+        cursor: url(/static/img/dot.ico),auto;
     }
     #canvas .buttons {
         display: inline-block;
@@ -570,7 +571,4 @@ export default {
         padding-bottom: 5px;
         padding-right: 5px;
 	}
-
-    #board:hover {
-    }
 </style>

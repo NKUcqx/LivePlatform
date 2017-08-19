@@ -3,7 +3,7 @@
         <topbar TYPE="studio" id="topbar" ref="topBar" :AUTHORITY="authority"></topbar>
         <Modal v-model="uploadModal" id="upload-modal">
             <upload-button UPLOADTYPE="thumbnail" :ONSUCCESS="changeThumbnail" :IMGSRC="roomInfo.img"></upload-button>
-            <upload-button UPLOADTYPE="slide" :ONSUCCESS="uploadSlide"></upload-button>
+            <upload-button UPLOADTYPE="slide" :ONSUCCESS="uploadSlide" :ONBEFORE="startLoading"></upload-button>
             <div slot="footer" id="modal-footer">
                 <Button type="primary" @click="readyForLive()">Ready</Button>
             </div>
@@ -35,7 +35,7 @@
             <div :class="workClass" v-show="isWorkShow">
                 <close-button class="close-button" @close="closeWork()" @change="changePanel" @send="emitChangeSection" :isWork="true" :INIT="style" ref="closeButton" :AUTHORITY="authority"></close-button>
                 <keep-alive>
-                    <ppt ref="slide" :WIDTH="workSize.width" :HEIGHT="workSize.height" @send="emitSlide" v-show="style===0||style===3" :AUTHORITY="authority"></ppt>
+                    <ppt ref="slide" :WIDTH="workSize.width" :HEIGHT="workSize.height" :LOADING="loading" @send="emitSlide" v-show="style===0||style===3" :AUTHORITY="authority"></ppt>
                 </keep-alive>
                 <keep-alive>
                     <codedemo ref="code" :WIDTH="workSize.width" :HEIGHT="workSize.height" @send="emitCode" v-show="style===1||style===4" :AUTHORITY="authority"></codedemo>
@@ -95,6 +95,7 @@ export default {
     },
     data () {
         return {
+            loading: false,
             style: 0,
             type: 1,
             uploadModal: false,
@@ -201,6 +202,11 @@ export default {
         }),
         getCookie () {
             return getCookie('csrftoken')
+        },
+        startLoading () {
+            this.loading = true
+            console.log(this.loading)
+            return true
         },
         openMinor () {
             this.type = 1
@@ -329,6 +335,7 @@ export default {
         },
         uploadSlide (res, file) {
             console.log(res.room.slide_path)
+            this.loading = false
             this.setRoomInfo({ slide_path: res.room.slide_path })
             this.$Message.success(CONST.success('Upload Slide'))
         },
