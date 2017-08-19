@@ -41,5 +41,23 @@ export const CONST = {
      *@property permission
      *@type string 'Permission Denied'
      */
-    permission: 'Permission Denied'
+    permission: 'Permission Denied',
+
+    codeDrawing: "\
+              　  へ　　　　　／|      \n\
+            　　 /＼7　　　 ∠＿/     \n\
+            　  /　│　　 ／　／      \n\
+            　 │　Z ＿,＜　／　　 /`ヽ \n\
+            　 │　　　　　ヽ　　 /　　〉\n\
+            　 Y　　　　　`　 /　　/  \n\
+            　ｲ●　､　●　　⊂⊃〈　　/  \n\
+            　()　 へ　　　　|　＼〈  \n\
+            　　ｰ ､_　 ィ　 │ ／／   \n\
+            　 / へ　　 /　ﾉ＜| ＼＼\n\
+            　 ヽ_ﾉ　　(_／　 │／／ \n\
+            　　7　　　　　　　|／   \n\
+            　　＞―r￣￣`ｰ―＿      \n\n\
+            Please Code Here~~~\
+"
 }
+

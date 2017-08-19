@@ -117,7 +117,7 @@
                     return {
                         height: ((this.numOfLine * 270 + 35) * 0.75 * 0.60 * 0.25).toString() + 'px',
                         backgroundImage: that.carouselBackground(index),
-                        border: '3px solid rgb(0, 180, 0)'
+                        border: '3px solid #5cadff'
                     }
                 } else {
                     return {
@@ -152,6 +152,7 @@
         created: function () {
             this.WIDTH = (document.documentElement.clientWidth < 800) ? 800 : document.documentElement.clientWidth
             this.numOfLine = parseInt((this.WIDTH - 35) / 270)
+            this.setPageSize(this.numOfLine * 2)
             this.style.width = (this.numOfLine * 270 + 35).toString() + 'px'
         }
     }

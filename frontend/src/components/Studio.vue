@@ -95,7 +95,7 @@ export default {
     },
     data () {
         return {
-            style: 1,
+            style: 0,
             type: 1,
             uploadModal: false,
             closePosition: {
@@ -111,6 +111,7 @@ export default {
                 size: 50
             },
             isEnd: false,
+            isFirtCodeMirror: true,
             roomInfo: {
                 id: 500,
                 title: 'Welcome To Our World',
@@ -121,6 +122,33 @@ export default {
                 is_living: false,
                 img: '',
                 slide: ''
+            }
+        }
+    },
+    watch: {
+        // 奇技淫巧,避免BUG
+        style: function (newVal, oldVal) {
+            if ((newVal === 1 || newVal === 4) && this.isFirtCodeMirror) {
+                let history = this.$refs['code'].getHistory()
+                console.log(history)
+                let that = this
+                setTimeout(function () {
+                    that.$refs['code'].receive({
+                        data: {
+                            type: 'code',
+                            data: CONST.codeDrawing
+                        }
+                    })
+                    setTimeout(function () {
+                        that.$refs['code'].receive({
+                            data: {
+                                type: 'code',
+                                data: history.data
+                            }
+                        })
+                    }, 1500)
+                }, 100)
+                this.isFirtCodeMirror = false
             }
         }
     },
@@ -209,8 +237,11 @@ export default {
             let that = this
             this.destroyLive().then(function () {
                 that.isEnd = true
+                // window.location.reload(true)
+                setTimeout(function () {
+                    window.location.reload(true)
+                }, 1000)
                 that.$router.push({ path: '/home' })
-                window.location.reload(true)
             }, function (res) {
                 alert(res)
             })
@@ -298,7 +329,7 @@ export default {
             let that = this
             setTimeout(function () {
                 that.roomInfo.img = that.roomInfo.room_name + '/' + file.name
-            }, 10000)
+            }, 5000)
             this.$Message.success(CONST.success('Upload Thumbnail'))
         },
         uploadSlide (res, file) {

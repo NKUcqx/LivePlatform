@@ -25,6 +25,20 @@ const actions = {
     BeginLive: (state) => {
 
     },
+    createLive: ({ state, commit }, formData) => {
+        return new Promise((resolve, reject) => {
+            Vue.http({
+                url: '/createroom/',
+                method: 'POST',
+                body: formData,
+                before: function (request) { beforePost(request) }
+            }).then(function (res) {
+                resolve(res)
+            }, function (res) {
+                reject(res)
+            })
+        })
+    },
     destroyLive: ({ state, commit }) => {
         return new Promise((resolve, reject) => {
             Vue.http({
@@ -36,7 +50,7 @@ const actions = {
                 resolve()
                 commit('endLive')
             }, function (res) {
-                reject()
+                reject(res)
             })
         })
     }

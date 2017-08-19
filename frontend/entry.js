@@ -40,7 +40,7 @@ function readFile (roomname, limit = MESSAGE_THRESHOLD) {
 }
 
 function writeFile (room_name, clear = false) {
-    file_name = path.join(room_name, 'log.txt')
+    file_name = path.join('.', room_name, 'log.txt')
     if (fs.existsSync(file_name)) {
         fs.open(file_name, 'a', (err, fd) => {
             console.log('start')

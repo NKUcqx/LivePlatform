@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import { checkVerification, checkPhone, checkEmail, checkForm } from '../../utils/checks'
 import { beforePost } from '../../utils/utils'
 const countDownNum = 60
@@ -51,6 +52,9 @@ export default {
         }
     },
     methods: {
+        ...mapActions({
+            testUser: 'testUsername'
+        }),
         beginCountdown () {
             const countDown = () => {
                 this.time -= 1
@@ -117,21 +121,16 @@ export default {
                 })
         },
         testUsername () {
-            this.$http.get('/testusername?username=' + this.username)
-                .then(function (res) {
-                    console.log(res.status)
-                    if (res.status === 200 && this.father === 'signup') {
-                        alert('username does exist')
-                    } else {
-                        this.achieveVerification()
-                    }
-                }, function (res) {
-                    if (res.status === 401 && this.father === 'login') {
-                        alert('username does not exist')
-                    } else {
-                        this.achieveVerification()
-                    }
-                })
+            let that = this
+            let data = {
+                username: this.username,
+                father: this.father
+            }
+            this.testUser(data).then(function () {
+                that.achieveVerification()
+            }, function (res) {
+                (res) ? alert('username does exist') : alert('username does not exist')
+            })
         }
     }
 }
