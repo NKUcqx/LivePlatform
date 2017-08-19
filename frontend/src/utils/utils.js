@@ -102,6 +102,20 @@ export const isJSON = (str) => {
     return result
 }
 
+export const Obj2JSON = (obj) => {
+    console.log((typeof obj))
+    let result = false
+    if ((typeof obj) === 'object') {
+        try {
+            result = JSON.stringify(obj)
+        } catch (e) {
+            console.log(e)
+            result = false
+        }
+    }
+    return result
+}
+
 export const getFormatTime = (inTime) => {
     let time = inTime || 0
     let h = parseInt(time / 3600)
@@ -122,4 +136,9 @@ export const getFormatDate = (inDate) => {
         month = '0' + month
     }
     return year + month + day
+}
+
+export const getFileNameFromPath = (path) => {
+    let strArray = path.split('/')
+    return strArray[strArray.length - 1]
 }

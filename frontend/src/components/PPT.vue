@@ -32,20 +32,17 @@
     </div>
 </template>
 <script>
-// 目前已经加上了加载历史信息，传送消息，和学生老师权限。 还欠缺的有根据传进来的SOU找到存放PPT图片的文件夹。
+    import { mapGetters } from 'vuex'
+    import { getFileNameFromPath } from '../utils/utils'
     export default {
         props: {
-            SOU: {
-                type: String,
-                defalut: '/rooms/room1/'
-            },
             WIDTH: {
                 type: Number,
-                default: 600
+                default: 400
             },
             HEIGHT: {
                 type: Number,
-                default: 400
+                default: 260
             },
             AUTHORITY: {
                 type: Boolean,
@@ -55,7 +52,7 @@
         data () {
             return {
                 toolbarStyle: {
-                    width: ''
+                    width: '400px'
                 },
                 index: 0,
                 imgs: [],
@@ -64,41 +61,20 @@
                 autoplayspeed: 3000,
                 setdots: 'none',
                 position: {
-                    width: '200px',
-                    height: '400px'
-                },
-                ppt: {
-                    source: '',
-                    number: 0
+                    width: '400px',
+                    height: '260px'
                 }
             }
         },
+        computed: {
+            ...mapGetters({
+                slideInfo: 'getSlideInfo'
+            })
+        },
         watch: {
-            'SOU': function () {
-                this.ppt.source = this.SOU
-                this.ppt.number = this.NUM
-                console.log(this.position.height)
-                console.log(this.position.width)
-                console.log(this.ppt.source)
-                console.log(this.ppt.number)
-                console.log(this.NUM)
-                console.log(this.SOU)
-                for (let i = 1; i <= this.ppt.number; i++) {
-                    this.imgs.push(this.binpath + this.ppt.source + 'bg' + i + '.jpg')
-                }
-            },
-            NUM: function () {
-                this.ppt.source = this.SOU
-                this.ppt.number = this.NUM
-                console.log(this.position.height)
-                console.log(this.position.width)
-                console.log(this.ppt.source)
-                console.log(this.ppt.number)
-                console.log(this.NUM)
-                console.log(this.SOU)
-                for (let i = 1; i <= 7; i++) {
-                    this.imgs.push(this.binpath + '/rooms/room1/' + 'bg' + i + '.jpg')
-                }
+            slideInfo: function () {
+                console.log(this.slideInfo)
+                this.updateSlide()
             },
             WIDTH: function () {
                 console.log('watch the size', this.WIDTH)
@@ -113,15 +89,25 @@
             console.log('mounted the size', this.WIDTH)
             this.position.width = this.WIDTH.toString() + 'px'
             this.position.height = this.HEIGHT.toString() + 'px'
-            console.log('WIDTH:', this.WIDTH)
-            console.log('SOURCE', this.SOU)
+            console.log(this.slideInfo.slide_path)
+            console.log(getFileNameFromPath(this.slideInfo.slide_path))
         },
         created () {
+            // ***********NEED MODIFY***********
             for (let i = 1; i <= 7; i++) {
                 this.imgs.push(this.binpath + '/rooms/room1/' + 'bg' + i + '.jpg')
             }
+            this.updateSlide()
         },
         methods: {
+            updateSlide () {
+                // *************** NEED MODIFY ***************  this.slideInfo.slide_num
+                this.imgs = []
+                for (let i = 1; i <= 10; i++) {
+                    console.log(this.slideInfo.slide_path + '/' + getFileNameFromPath(this.slideInfo.slide_path) + '-' + i + '.jpg')
+                    this.imgs.push(this.slideInfo.slide_path + '/' + getFileNameFromPath(this.slideInfo.slide_path) + '-' + i + '.jpg')
+                }
+            },
             getHistory () {
                 return this.index
             },
@@ -153,12 +139,6 @@
                     this.send(value)
                 }
             }
-        },
-        updated () {
-            console.log('updated the size', this.WIDTH)
-        },
-        activated () {
-            console.log('activated the size', this.WIDTH)
         }
     }
 </script>

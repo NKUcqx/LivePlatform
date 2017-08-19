@@ -19,7 +19,8 @@ bi2obj = toolkits.bi2obj
 model_to_json = toolkits.model_to_json
 API_key = [ # to get more free conversion chances ..
             '1ExrXf1WpChC9gvOxnzuR5_unapQx1RqigB4Kmyc-teB3tp8kSybrSU-nrcELHwJWYxljLt8euwJwtgFTrdFsQ',
-            'LRxCwzT2-CLqFqr936dWjknyulqsjFtXVL1GQLcmJhsgG_Ad7503sH98cGcSvFhQe5pRUWmuR4tb448MvgarEg'
+            'LRxCwzT2-CLqFqr936dWjknyulqsjFtXVL1GQLcmJhsgG_Ad7503sH98cGcSvFhQe5pRUWmuR4tb448MvgarEg',
+            'dTYHUsdA7JW7piDR_UK7qkVtlxFaoNMh8Mq7uf_7GpRh3JAc1ZjPrT9a4Uzgtm19ZFLbmHZH_R1lZwQmRMKa_g'
         ]
 IMG_LIST = ('.jpg', '.jpeg', '.png', '.svg', '.gif')
 SLIDE_LIST = ('.ppt', '.pptx', '.pps', '.pdf')
@@ -76,7 +77,7 @@ def check_convert_status(process_id):  # i.e. upload_to
 def convert_file(file, process_id, upload_to):
     # TODO: if(type(file) )
     file_handler = open(file, 'rb')
-    api = cloudconvert.Api(API_key[0])  # TODO: random.randint(0,1)
+    api = cloudconvert.Api(API_key[1])  # TODO: random.randint(0,1)
     split_arr = os.path.splitext(file_handler.name)
     realname = split_arr[0].split('/')[-1]
     postfix = split_arr[1][1:]

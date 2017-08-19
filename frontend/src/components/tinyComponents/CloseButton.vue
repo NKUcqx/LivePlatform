@@ -108,17 +108,17 @@ export default {
         cursor: pointer;
     }
     #close-buttons #canvas-item {
-        background-color: rgb(25,190,107);
+        background-color: rgb(25,190,107,0.8);
     }
     #close-buttons #ppt-item {
-        background-color: rgb(255,153,0);
+        background-color: rgb(255,153,0,0.8);
     }
     #close-buttons #code-item {
-        background-color: rgb(45,140,240);
+        background-color: rgb(45,140,240,0.8);
     }
     #close-buttons #close-button {
         margin-left: 6px;
-        background-color: rgb(237,63,20);
+        background-color: rgb(237,63,20,0.8);
     }
     #close-buttons #close-piptip {
         float: right;

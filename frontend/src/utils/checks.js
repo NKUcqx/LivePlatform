@@ -179,3 +179,7 @@ export const isValid = (content, type = 'string') => {
     typeof content === type &&
     content !== ''
 }
+
+export const isNotNull = (data) => {
+    return data !== undefined && data !== null && data !== ''
+}

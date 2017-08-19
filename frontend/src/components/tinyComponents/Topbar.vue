@@ -2,10 +2,10 @@
 <div id="topbar">
     <Menu  ref="topmenu" mode="horizontal" active-name="3" class="menu" theme="light" id="topmenu">
         <Menu-item class="longer">
-            <img src="../../assets/logo1.png" class="logo-image" :width="img.size" :height="img.size"> 
+            <img src="../../assets/logo1.png" class="logo-image" :width="img.size" :height="img.size" @click="goHome()"> 
         </Menu-item>
         <Menu-item name="1">
-            教育直播平台
+            <span @click="goHome()">教育直播平台</span>
         </Menu-item>
         <Menu-item name="2" class="top-right" v-if="user.role==='T'">
             <span id="createroom" @click="createModal = true"><Icon type="ios-plus" size="30" color="#5cadff" v-if="TYPE === 'home'"></Icon></span>
@@ -170,7 +170,8 @@
                 addLiveRoom: 'addLiveRoom',
                 setAvatar: 'setAvatar',
                 startLive: 'startLive',
-                endTheLive: 'endLive'
+                endTheLive: 'endLive',
+                setRoomInfo: 'setRoomInfo'
             }),
             ...mapActions({
                 logoutSubmit: 'logout',
@@ -181,6 +182,13 @@
             }),
             getCookie () {
                 return getCookie('csrftoken')
+            },
+            goHome () {
+                if (this.AUTHORITY) {
+                    (confirm('Are you sure to leave home ?')) ? this.$router.push({name: 'home'}) : ''
+                } else {
+                    this.$router.push({name: 'home'})
+                }
             },
             makeIndoModal () {
                 this.person.nickname = this.user.nickname
@@ -231,7 +239,8 @@
                     formData.append('name', that.createform.title)
                     this.createLive(formData).then(function (res) {
                         console.log(getListFromDB(res.body))
-                        that.$router.push({ name: 'studio', query: getListFromDB(res.body) })
+                        that.setRoomInfo(getListFromDB(res.body))
+                        that.$router.push({ name: 'studio' })
                     }, function (res) {
                         alert(res.body)
                     })

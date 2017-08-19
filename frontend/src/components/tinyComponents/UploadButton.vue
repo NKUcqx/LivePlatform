@@ -73,7 +73,7 @@ export default {
             if (this.UPLOADTYPE === 'thumbnail') {
                 return 300
             } else if (this.UPLOADTYPE === 'slide') {
-                return 10 * 1024
+                return 5 * 1024
             } else if (this.UPLOADTYPE === 'avatar') {
                 return 200
             }
@@ -120,7 +120,7 @@ export default {
             this.$Message.error('thumbnail must under 300K')
         },
         slideSizeError (file, fileList) {
-            this.$Message.error('slide must under 10M')
+            this.$Message.error('slide must under 5M')
         },
         avatarSizeError (file, fileList) {
             this.$Message.error('Image size must be under 200K')

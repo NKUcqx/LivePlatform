@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 export default {
     props: {
         item: Object
@@ -34,8 +35,13 @@ export default {
         }
     },
     methods: {
+        ...mapMutations({
+            setRoomInfo: 'setRoomInfo'
+        }),
         enterRoom () {
-            this.$router.push({ name: 'studio', query: this.item })
+            console.log(this.item)
+            this.setRoomInfo(this.item)
+            this.$router.push({ name: 'studio' })
         }
     },
     mounted () {
