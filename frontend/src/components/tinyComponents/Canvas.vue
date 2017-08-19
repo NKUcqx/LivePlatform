@@ -82,11 +82,11 @@ export default {
     props: {
         WIDTH: {
             type: Number,
-            default: 800
+            default: 400
         },
         HEIGHT: {
             type: Number,
-            default: 600
+            default: 260
         },
         SIZE: {
             type: Number,
@@ -570,4 +570,7 @@ export default {
         padding-bottom: 5px;
         padding-right: 5px;
 	}
+
+    #board:hover {
+    }
 </style>

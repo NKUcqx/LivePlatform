@@ -35,7 +35,7 @@
             <div :class="workClass" v-show="isWorkShow">
                 <close-button class="close-button" @close="closeWork()" @change="changePanel" @send="emitChangeSection" :isWork="true" :INIT="style" ref="closeButton" :AUTHORITY="authority"></close-button>
                 <keep-alive>
-                    <ppt ref="slide" :WIDTH="workSize.width" :HEIGHT="workSize.height" :SOU="roomInfo.slide" @send="emitSlide" v-show="style===0||style===3" :AUTHORITY="authority"></ppt>
+                    <ppt ref="slide" :WIDTH="workSize.width" :HEIGHT="workSize.height" @send="emitSlide" v-show="style===0||style===3" :AUTHORITY="authority"></ppt>
                 </keep-alive>
                 <keep-alive>
                     <codedemo ref="code" :WIDTH="workSize.width" :HEIGHT="workSize.height" @send="emitCode" v-show="style===1||style===4" :AUTHORITY="authority"></codedemo>
@@ -45,7 +45,7 @@
                 </keep-alive>
             </div>
             <div :class="chatClass">
-                <chatdemo ref="chat" :AUTHORITY="authority" :ROLE="roomInfo.creator_id" :ROOM="100" :WIDTH="chatSize.width" :HEIGHT="chatSize.height" @send="emitChat"></chatdemo>     
+                <chatdemo ref="chat" :AUTHORITY="authority" :WIDTH="chatSize.width" :HEIGHT="chatSize.height" @send="emitChat"></chatdemo>     
             </div> 
     </div>
 </template>
@@ -61,7 +61,7 @@ import Codedemo from './Codedemo'
 import Ppt from './PPT'
 import Chatdemo from './Chat'
 import io from 'socket.io-client'
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions, mapMutations } from 'vuex'
 import { isValid } from '../utils/checks'
 import { beforePost, getCookie } from '../utils/utils'
 import { CONST } from '../utils/const'
@@ -112,18 +112,7 @@ export default {
             },
             isEnd: false,
             isFirtCodeMirror: true,
-            roomInfo: {
-                id: 500,
-                title: 'Welcome To Our World',
-                teacher: 'gongyansongisgood',
-                audience: 3000,
-                room_name: '',
-                creator_id: 0,
-                is_living: false,
-                img: '',
-                slide: '',
-                create_time: ''
-            }
+            socket: null
         }
     },
     watch: {
@@ -155,7 +144,8 @@ export default {
     },
     computed: {
         ...mapGetters({
-            user: 'getUser'
+            user: 'getUser',
+            roomInfo: 'getRoomInfo'
         }),
         workClass () {
             return (this.style < 3) ? 'main-section left-part' : 'minor-section right-part studio-relative'
@@ -205,6 +195,10 @@ export default {
         ...mapActions({
             destroyLive: 'destroyLive'
         }),
+        ...mapMutations({
+            emptyRoomInfo: 'emptyRoomInfo',
+            setRoomInfo: 'setRoomInfo'
+        }),
         getCookie () {
             return getCookie('csrftoken')
         },
@@ -242,7 +236,7 @@ export default {
                 setTimeout(function () {
                     window.location.reload(true)
                 }, 1000)
-                that.$router.push({ path: '/home' })
+                that.$router.push({ name: 'home' })
             }, function (res) {
                 alert(res)
             })
@@ -329,11 +323,13 @@ export default {
             console.log(this.roomInfo.room_name + '/' + file.name)
             let that = this
             setTimeout(function () {
-                that.roomInfo.img = that.roomInfo.room_name + '/' + file.name
+                that.setRoomInfo({ thumbnail_path: that.roomInfo.room_name + '/' + file.name })
             }, 5000)
             this.$Message.success(CONST.success('Upload Thumbnail'))
         },
         uploadSlide (res, file) {
+            console.log(res.room.slide_path)
+            this.setRoomInfo({ slide_path: res.room.slide_path })
             this.$Message.success(CONST.success('Upload Slide'))
         },
         readyForLive () {
@@ -351,20 +347,7 @@ export default {
         }
     },
     created () {
-        console.log(this.$route.query)
-        let room = this.$route.query
-        // wating for optimization
-        this.roomInfo.id = room.id
-        this.roomInfo.teacher = room.creator_nickname
-        this.roomInfo.audience = room.audience_amount
-        this.roomInfo.title = room.name
-        this.roomInfo.creator_id = room.creator_id
-        this.roomInfo.is_living = room.is_living
-        this.roomInfo.img = room.thumbnail_path
-        this.roomInfo.slide = room.slide_path
-        this.roomInfo.room_name = room.file_name
-        this.roomInfo.create_time = room.create_time
-        //
+        console.log(this.roomInfo)
     },
     mounted () {
         console.log('mounted')
@@ -382,6 +365,7 @@ export default {
         }
     },
     beforeDestroy () {
+        this.emptyRoomInfo()
         console.log('distory:', this.roomInfo.is_living)
         if (this.authority && !(this.isEnd)) {
             this.endRoom()

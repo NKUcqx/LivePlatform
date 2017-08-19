@@ -37,8 +37,8 @@ export default {
     data () {
         return {
             position: {
-                width: '600px',
-                height: '500px',
+                width: '280px',
+                height: '182px',
                 display: 'inline-block'
             }
         }

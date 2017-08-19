@@ -9,6 +9,7 @@ import home from './modules/home'
 import welcome from './modules/welcome'
 import live from './modules/live'
 import progress from './modules/progress'
+import room from './modules/room'
 // import * as mutations from './mutations'
 // import tests from './modules/testmodules'
 
@@ -39,7 +40,8 @@ export default new Vuex.Store({
         welcome,
         home,
         live,
-        progress
+        progress,
+        room
     }
     /* :debug,
     plugins: [localStoragePlugin] */

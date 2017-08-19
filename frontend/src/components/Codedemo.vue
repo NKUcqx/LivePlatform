@@ -69,9 +69,9 @@ export default {
             type: Number,
             /**
              *@attribute default
-             *@default 600
+             *@default 400
              */
-            default: 600
+            default: 400
         },
         /**
          *@element HEIGHT
@@ -84,9 +84,9 @@ export default {
             type: Number,
             /**
              *@attribute default
-             *@default 400
+             *@default 260
              */
-            default: 400
+            default: 260
         },
         /**
          *@element CREATORID

@@ -92,7 +92,8 @@
         },
         methods: {
             ...mapMutations({
-                setPageSize: 'setPageSize'
+                setPageSize: 'setPageSize',
+                setRoomInfo: 'setRoomInfo'
             }),
             ...mapActions({
                 getRoomsFromDB: 'getRoomsFromDB',
@@ -128,7 +129,8 @@
                 }
             },
             enterRoom (index) {
-                this.$router.push({ name: 'studio', query: this.livesList[index] })
+                this.setRoomInfo(this.mostPopular[index])
+                this.$router.push({ name: 'studio' })
             },
             changeVideoPage (page) {
                 console.log('start: ', (page - 1) * this.pageSize)

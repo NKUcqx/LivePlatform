@@ -24,11 +24,11 @@ export default {
     props: {
         WIDTH: {
             type: Number,
-            default: 600
+            default: 280
         },
         HEIGHT: {
             type: Number,
-            default: 400
+            default: 182
         },
         ROOM: {
             type: String,
@@ -56,8 +56,8 @@ export default {
                 width: ''
             },
             position2: {
-                width: '600px',
-                height: '400px',
+                width: '280px',
+                height: '182px',
                 display: 'inline-block'
             }
         }

@@ -69,25 +69,18 @@
             },
             WIDTH: {
                 type: Number,
-                default: 600
+                default: 280
             },
             HEIGHT: {
                 type: Number,
-                default: 400
-            },
-            BORDER: {
-                type: Number,
-                default: 1
-            },
-            ROOMID: {
-                type: Number,
-                default: 0
+                default: 144.6
             }
         },
         computed: {
             ...mapGetters({
                 user: 'getUser',
-                liveState: 'getLiveState'
+                isLiveStart: 'isLiveStart',
+                roomid: 'getRoomId'
             })
         },
         data () {
@@ -101,7 +94,6 @@
                 silence: false,
                 allsilence: false,
                 allspeak: true,
-                roomid: 0,
                 speak: true,
                 indeterminate: true,
                 foucsid: 0,
@@ -120,6 +112,34 @@
             'HEIGHT': function () {
                 this.position.width = this.WIDTH.toString() + 'px'
                 this.position.height = (this.HEIGHT).toString() + 'px'
+            },
+            'roomid': function () {
+                const that = this
+                console.log('MOUNTED :', this.roomid)
+                this.$http({
+                    url: '/echo/',
+                    method: 'GET',
+                    params: {
+                        username: this.user.userid,
+                        roomid: this.roomid
+                    }
+                }).then(function (res) {
+                    var k = res.body
+                    console.log(k)
+                    if (k === 'allslience') {
+                        this.allsilence = true
+                        this.allspeak = false
+                        if (!this.AUTHORITY) {
+                            this.speak = false
+                            this.silence = true
+                        }
+                    } else if (k === 'banone') {
+                        this.speak = false
+                        this.silence = true
+                    }
+                }, function () {
+                    alert('ajax failure')
+                })
             }
         },
         mounted () {
@@ -127,33 +147,6 @@
             this.position.width = this.WIDTH.toString() + 'px'
             this.position.height = (this.HEIGHT).toString() + 'px'
             this.position.border = this.BORDER + 'px'
-            this.roomid = this.ROOMID
-            console.log(this.ROOMID)
-            const that = this
-            this.$http({
-                url: '/echo/',
-                method: 'GET',
-                params: {
-                    username: this.user.userid,
-                    roomid: this.roomid
-                }
-            }).then(function (res) {
-                var k = res.body
-                console.log(k)
-                if (k === 'allslience') {
-                    this.allsilence = true
-                    this.allspeak = false
-                    if (!this.AUTHORITY) {
-                        this.speak = false
-                        this.silence = true
-                    }
-                } else if (k === 'banone') {
-                    this.speak = false
-                    this.silence = true
-                }
-            }, function () {
-                alert('ajax failure')
-            })
         },
         methods: {
             send (data) {
@@ -209,7 +202,6 @@
                     })
                     this.$Message.info('您已全局禁言')
                 }
-                // this.socket.send({type:'banspeakpublic',roomid:this.ROOMID})
             },
             canspeakpublic: function () {
                 if (this.AUTHORITY) {
@@ -312,6 +304,7 @@
                             roomid: this.roomid
                         }
                     }).then(function (res) {
+                        this.$Message.info('you have been banned to speak')
                     }, function () {
                         alert('ajax failure')
                     })
@@ -331,7 +324,7 @@
                             roomid: this.roomid
                         }
                     }).then(function (res) {
-                        this.$message.info('you out!')
+                        this.$Message.info('you out!')
                     }, function () {
                         alert('ajax failure')
                     })
