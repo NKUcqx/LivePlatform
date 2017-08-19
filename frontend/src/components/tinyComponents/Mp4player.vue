@@ -1,6 +1,6 @@
 <template>
 <div class="player">
-    <video ref="video" src="../../../static/1.mp4" :style="position" 
+    <video ref="video" :src="getVideoSrc" :style="position" 
         @canplay="initPlay" @timeupdate="changeTime" @ended="restore"></video>
     <progress-bar></progress-bar>
 </div>
@@ -9,7 +9,7 @@
 
 <script>
 import { mapGetters, mapMutations } from 'vuex'
-import { getFormatTime } from '../../utils/utils'
+import { getFormatTime, getFormatDate } from '../../utils/utils'
 import ProgressBar from './ProgressBar'
 
 export default {
@@ -24,6 +24,14 @@ export default {
         HEIGHT: {
             type: Number,
             default: 400
+        },
+        CREATETIME: {
+            type: String,
+            default: ''
+        },
+        ROOMID: {
+            type: Number,
+            default: 1
         }
     },
     data () {
@@ -40,7 +48,11 @@ export default {
             isPlay: 'getPlayState',
             currentTime: 'getCurrentTime',
             totalTime: 'getTotalTime'
-        })
+        }),
+        getVideoSrc () {
+            console.log('gyg' + getFormatDate(this.CREATETIME))
+            return 'static/record/' + getFormatDate(this.CREATETIME) + '/' + this.ROOMID + '/' + this.ROOMID + '.mp4'
+        }
     },
     methods: {
         ...mapMutations([

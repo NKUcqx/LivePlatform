@@ -116,11 +116,12 @@ export default {
                 title: 'Welcome To Our World',
                 teacher: 'gongyansongisgood',
                 audience: 3000,
-                room_id: '',
+                room_name: '',
                 creator_id: 0,
                 is_living: false,
                 img: '',
-                slide: ''
+                slide: '',
+                create_time: ''
             }
         }
     },
@@ -331,6 +332,7 @@ export default {
         this.roomInfo.img = room.thumbnail_path
         this.roomInfo.slide = room.slide_path
         this.roomInfo.room_name = room.file_name
+        this.roomInfo.create_time = room.create_time
         //
     },
     mounted () {
