@@ -16,16 +16,16 @@
             <ul id="history">
                 <li v-for="hist of history" id="message">
                     <Dropdown trigger="click" style="margin-left: 20px" id='test1' @on-click="click">
-                        <a href="javascript:void(0)" v-if="hist.role" class="teacher" id="name">{{ hist.nickname }}:{{hist.message}}</a>
-                        <a href="javascript:void(0)" v-if="hist.role===false" class="student" id="name">{{ hist.nickname }}:{{hist.message}}</a>
+                        <a href="javascript:void(0)" v-if="hist.role" class="teacher" id="name" @click='foucs(hist.userid,hist.nickname)'>{{ hist.nickname }}:{{hist.message}}</a>
+                        <a href="javascript:void(0)" v-if="hist.role===false" class="student" id="name"@click='foucs(hist.userid,hist.nickname)'>{{ hist.nickname }}:{{hist.message}}</a>
                         <Dropdown-menu slot="list" v-if="AUTHORITY">
                             <Dropdown-item name='banspeak'>禁言</Dropdown-item>
-                            <Modal v-model="dialog1" title="提示" @on-ok="banspeakone(hist.userid,hist.nickname)" @on-cancel="cancel">
-                                <p>您确定要禁言{{hist.nickname}}这位同学吗？</p>
+                            <Modal v-model="dialog1" title="提示" @on-ok="banspeakone(foucsid,foucsname)" @on-cancel="cancel">
+                                <p>您确定要禁言{{foucsname}}这位同学吗？</p>
                             </Modal>
                             <Dropdown-item name='out'>踢出房间</Dropdown-item>
-                            <Modal v-model="dialog2" title="提示" @on-ok="outone(hist.userid,hist.nickname)" @on-cancel="cancel">
-                                <p>您确定要踢出{{hist.nickname}}这位同学吗？</p>
+                            <Modal v-model="dialog2" title="提示" @on-ok="outone(foucsid,foucsname)" @on-cancel="cancel">
+                                <p>您确定要踢出{{foucsname}}这位同学吗？</p>
                             </Modal>
                             <Dropdown-item name='canspeak'>解除禁言</Dropdown-item>
                             <Modal v-model="dialog3" title="提示" @on-ok="canspeak" @on-cancel="cancel()">
@@ -104,6 +104,8 @@
                 roomid: 0,
                 speak: true,
                 indeterminate: true,
+                foucsid: 0,
+                foucsname: '',
                 checkAll: false,
                 bans: [],
                 cans: [],
@@ -156,6 +158,12 @@
         methods: {
             send (data) {
                 this.$emit('send', data)
+            },
+            foucs (userid, nickname) {
+                this.foucsid = userid
+                this.foucsname = nickname
+                console.log(this.foucsid)
+                console.log(this.foucsname)
             },
             sendmsg: function () {
                 if (this.silence === false) {
@@ -230,9 +238,14 @@
                     this.checkAll = !this.checkAll
                 }
                 this.indeterminate = false
-                this.cans = this.bans
+                console.log(data)
+                for (var i = 0; i < this.bans.length; i++) { this.cans.push(this.bans[i].userid) }
+                console.log(this.cans)
             },
             checkchange: function (data) {
+                console.log('---checkchange---')
+                console.log(data.length)
+                console.log(this.bans.length)
                 if (data.length === this.bans.length) {
                     this.indeterminate = false
                     this.checkAll = true
@@ -243,19 +256,23 @@
                     this.indeterminate = false
                     this.checkAll = false
                 }
-                this.cans = data
+                for (var i = 0; i < data.length; i++) { this.cans.push(data[i]) }
+                console.log(data)
+                console.log('---checkchange---')
             },
             canspeak: function () {
+                console.log('---canspeak---')
                 for (var index = 0; index < this.cans.length; index++) {
+                    console.log(this.cans[index])
                     this.send({
                         chattype: 'canspeak',
-                        userid: this.cans[index].userid
+                        userid: this.cans[index]
                     })
                     this.$http({
                         url: '/canspeakone/',
                         method: 'GET',
                         params: {
-                            username: this.cans[index].userid,
+                            username: this.cans[index],
                             roomid: this.roomid
                         }
                     }).then(function (res) {
@@ -266,16 +283,27 @@
                     this.indeterminate = true
                     this.checkAll = false
                 }
+                console.log('---canspeak---')
             },
             cancel: function () {},
             banspeakone (userid, nickname) {
+                console.log('--banspeakone--')
+                console.log(nickname)
+                console.log(userid)
+                console.log(this.user.userid)
+                console.log('--banspeakone--')
+                var self = this
+                for (let i = 0; i < self.bans.length; i++) {
+                    if (this.bans[i].userid === userid) {
+                        return
+                    }
+                }
                 if (this.AUTHORITY) {
                     this.send({
                         chattype: 'banspeakone',
                         userid: userid,
                         nickname: nickname
                     })
-                    // this.socket.send({type:'banspeak',userid:userid.userid,roomid:this.roomid})
                     this.$http({
                         url: '/banone/',
                         method: 'GET',
@@ -284,11 +312,9 @@
                             roomid: this.roomid
                         }
                     }).then(function (res) {
-                        this.$message.info('you have been banned to speak')
                     }, function () {
                         alert('ajax failure')
                     })
-                    this.$Message.info('您已禁言' + nickname + '同学')
                 }
             },
             outone (userid, nickname) {
@@ -309,7 +335,6 @@
                     }, function () {
                         alert('ajax failure')
                     })
-                    this.$Message.info('您已踢出' + nickname + '同学')
                 }
             },
             messolve (data) {
@@ -322,7 +347,6 @@
             },
             outsolve (data) {
                 if (data.data.userid === this.user.userid) {
-                    this.$Message.info('您已被踢出去')
                     this.$router.go(-1)
                 }
             },
@@ -330,7 +354,6 @@
                 if (data.data.userid === this.user.userid) {
                     this.silence = true
                     this.speak = false
-                    this.$Message.info('您已被禁言')
                 }
                 this.bans.push({
                     userid: data.data.userid,
@@ -356,16 +379,24 @@
                 }
             },
             canspeaksolve (data) {
+                console.log('--canspeaksolve---')
+                console.log(data.data.userid)
+                console.log(this.user.userid)
                 for (var index = 0; index < this.bans.length; index++) {
+                    console.log(this.bans[index].userid)
+                    console.log(data.data.userid)
                     if (this.bans[index].userid === data.data.userid) {
+                        console.log(this.bans[index].userid)
                         this.bans.splice(index, 1)
                     }
+                    console.log(this.bans.length)
                 }
-                if (data.data.userid === this.userid) {
+                if (data.data.userid === this.user.userid) {
                     this.silence = false
                     this.speak = true
                     this.$Message.info('您被解除禁言')
                 }
+                console.log('--canspeaksolve---')
             },
             receive (data) {
                 if (data.data.chattype === 'message') {
@@ -379,6 +410,7 @@
                     this.banonesolve(data)
                 }
                 if (data.data.chattype === 'allsilence') {
+                    console.log('allsilence')
                     this.banpublicsolve(data)
                 }
                 if (data.data.chattype === 'allspeak') {
