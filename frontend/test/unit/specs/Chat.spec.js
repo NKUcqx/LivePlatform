@@ -24,10 +24,10 @@ describe('chat default WIDTH', function () {
     })
     it('set width', () => {
         vm = getPropsVm(chat, {
-            HEIGHT: 500, WIDTH: 400, BORDER: 1
+            BAUTHORITY: false, WIDTH: 400, HEIGHT: 500
         })
+        assert.equal(false, vm.BAUTHORITY)
         assert.equal(500, vm.HEIGHT)
         assert.equal(400, vm.WIDTH)
-        assert.equal(1, vm.BORDER)
     })
 })
