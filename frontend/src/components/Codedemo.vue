@@ -262,6 +262,11 @@ export default {
                 data: this.editor.getValue()
             }
         },
+        /**
+         *发送codemirror文本框里的值
+         *@method reloadClear
+         *@return {object} 返回type为'code'以及取到的值
+         */
         reloadClear () {
             this.send({
                 type: 'code',
@@ -277,9 +282,7 @@ export default {
             // this.send({data:code})
         },
         /**
-         *响应更改语言选择的信息，获取现在所选语言，将codemirror的mode设为这个语
-
-言，并用socketio发送消息
+         *响应更改语言选择的信息，获取现在所选语言，将codemirror的mode设为这个语言，并用socketio发送消息
          *@event changelan
          */
         changelan: function () {
@@ -323,7 +326,7 @@ export default {
             }
         },
         /**
-         *接受消息，并按照消息的type属性进行分类处理
+         *接收消息，并按照消息的type属性进行分类处理
          *@event receive
          *@param {object} data（接受的信息）
          */
