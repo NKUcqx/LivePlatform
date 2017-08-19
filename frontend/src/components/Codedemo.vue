@@ -191,6 +191,10 @@ export default {
                  *@type boolean
                  */
                 readOnly: (this.AUTHORITY) ? false : true,
+                /**
+                 *@attribute theme
+                 *@type string
+                 */
                 theme: 'neo'
             }
         }
