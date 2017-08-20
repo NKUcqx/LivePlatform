@@ -25,11 +25,10 @@
 <script>
 import { mapGetters } from 'vuex'
 /**
- * Module codemirror
+ *Module TinyComponents
  *
- * @module codemirror
- * @class codemirror
- * @constructor
+ *@module TinyComponents
+ *@requires Utils
  */
 var CodeMirror = require('../../node_modules/codemirror/lib/codemirror.js')
 require('../../node_modules/codemirror/lib/codemirror.css')
@@ -55,7 +54,11 @@ require('../../node_modules/codemirror/addon/hint/sql-hint.js')
 require('../../node_modules/codemirror/addon/hint/xml-hint.js')
 
 require('../../node_modules/codemirror/theme/neo.css')
-
+/**
+ *代码编辑器
+ *@class CodeMirror
+ *@constructor
+ */
 export default {
     props: {
         /**
@@ -123,42 +126,42 @@ export default {
         return {
             /**
              *@property editor
-             *@type object
+             *@type Object
              *@default null
              */
             editor: null,
             /**
              *@property mode
-             *@type string
+             *@type String
              *@default 'javascript'
              */
             mode: 'javascript',
             /**
              *@property socket
-             *@type object
+             *@type Object
              *@defult ''
              */
             socket: '',
             /**
              *@property skipNextChangeEvent
-             *@type boolean
+             *@type Boolean
              *@default false
              */
             skipNextChangeEvent: false,
             /**
              *@property value
-             *@type type
+             *@type Type
              *@default String
              */
             value: String,
             /**
              *@property options
-             *@type object
+             *@type Object
              */
             options: {
                 /**
                  *@attribute mode
-                 *@type string
+                 *@type String
                  *@default 'text/javascript'
                  */
                 mode: 'text/javascript',
@@ -170,30 +173,30 @@ export default {
                 tabSize: 4,
                 /**
                  *@attribute lineNumbers
-                 *@type boolean
+                 *@type Boolean
                  *@default true
                  */
                 lineNumbers: true,
                 /**
                  *@attribute lineWrapping
-                 *@type boolean
+                 *@type Boolean
                  *@default true
                  */
                 lineWrapping: true,
                 /**
                  *@attribute extraKeys
-                 *@type dictionary
+                 *@type Dictionary
                  *@default true
                  */
                 extraKeys: {'Ctrl': 'autocomplete'},
                 /**
                  *@attribute readOnly
-                 *@type boolean
+                 *@type Boolean
                  */
                 readOnly: (this.AUTHORITY) ? false : true,
                 /**
                  *@attribute theme
-                 *@type string
+                 *@type String
                  */
                 theme: 'neo'
             }
@@ -353,7 +356,7 @@ export default {
     watch: {
         /**
          *实现文档的滚动处理（如果行数太多，控制将文档滚动到适当位置）
-         *@event value
+         *@event watchvalue
          *@param {string} newVal
          *@param {string} oldVal
          */
@@ -368,7 +371,7 @@ export default {
         },
         /**
          *实现codemirror文本框内的语言转换
-         *@event options
+         *@event watchoptions
          *@param {object} newOptions
          *@param {string} oldVal
          */
@@ -383,7 +386,7 @@ export default {
         },
         /**
          *实现codemirror文本框长宽调节
-         *@event HEIGHT
+         *@event watchHEIGHT
          *@param {string} newVal
          *@param {string} oldVal
          */
