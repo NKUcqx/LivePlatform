@@ -257,7 +257,7 @@ export default {
         /**
          *获取codemirror文本框里的值
          *@method getHistory
-         *@return {object} 返回type为'code'以及取到的值
+         *@return {Object} 返回type为'code'以及取到的值
          */
         getHistory: function () {
             return {
@@ -268,7 +268,7 @@ export default {
         /**
          *发送codemirror文本框里的值
          *@method reloadClear
-         *@return {object} 返回type为'code'以及取到的值
+         *@return {Object} 返回type为'code'以及取到的值
          */
         reloadClear () {
             this.send({
@@ -317,7 +317,7 @@ export default {
         /**
          *发送消息，判断用户是否有权限发送信息，有就发送成功，没有就发送失败
          *@event send
-         *@param {object} data（想要发送的信息）
+         *@param {Object} data（想要发送的信息）
          */
         send (data) {
             console.log('userid是' + this.user.userid)
@@ -331,7 +331,7 @@ export default {
         /**
          *接收消息，并按照消息的type属性进行分类处理
          *@event receive
-         *@param {object} data（接受的信息）
+         *@param {Object} data（接受的信息）
          */
         receive (data) {
             // code(data.data)
@@ -357,8 +357,8 @@ export default {
         /**
          *实现文档的滚动处理（如果行数太多，控制将文档滚动到适当位置）
          *@event watchvalue
-         *@param {string} newVal
-         *@param {string} oldVal
+         *@param {String} newVal
+         *@param {String} oldVal
          */
         value: function (newVal, oldVal) {
             var editorValue = this.editor.getValue()
@@ -372,8 +372,8 @@ export default {
         /**
          *实现codemirror文本框内的语言转换
          *@event watchoptions
-         *@param {object} newOptions
-         *@param {string} oldVal
+         *@param {Object} newOptions
+         *@param {String} oldVal
          */
         options: function (newOptions, oldVal) {
             if (typeof newOptions === 'object') {
@@ -387,8 +387,8 @@ export default {
         /**
          *实现codemirror文本框长宽调节
          *@event watchHEIGHT
-         *@param {string} newVal
-         *@param {string} oldVal
+         *@param {String} newVal
+         *@param {String} oldVal
          */
         HEIGHT: function (newVal, oldVal) {
             this.editor.setSize(this.WIDTH, this.HEIGHT)
