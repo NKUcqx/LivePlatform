@@ -53,6 +53,12 @@
 
 </script>
 <script>
+    /**
+     *Module TinyComponents
+     *
+     *@module TinyComponents
+     *@requires Utils
+     */
     import {
         wsConnect,
         wsSend,
@@ -61,6 +67,11 @@
     import {
         mapGetters
     } from 'vuex'
+    /**
+     *聊天室
+     *@class Chat
+     *@constructor
+     */
     export default {
         props: {
             AUTHORITY: {
@@ -149,15 +160,30 @@
             this.position.border = this.BORDER + 'px'
         },
         methods: {
+            /**
+             *发送数据（被调用的工具函数）
+             *@event send
+             *@param {Object} data（想要发送的数据）
+             */
             send (data) {
                 this.$emit('send', data)
             },
+            /**
+             *获取被点击的学生的id和昵称
+             *@event foucs
+             *@param {Number} userid
+             *@param {String} nickname
+             */
             foucs (userid, nickname) {
                 this.foucsid = userid
                 this.foucsname = nickname
                 console.log(this.foucsid)
                 console.log(this.foucsname)
             },
+            /**
+             *发送消息，对消息的内容，聊天室的状态加以判断限制消息的发送
+             *@event sendmsg
+             */
             sendmsg: function () {
                 if (this.silence === false) {
                     if (this.message.trim() !== '') {
@@ -173,12 +199,25 @@
                     }
                 }
             },
+            /**
+             *设置对象的最顶部即为对象在当前窗口显示的范围内的顶边，即滚动条在最顶端
+             *@event up
+             */
             up: function () {
                 document.getElementById('history').scrollTop = 0
             },
+            /**
+             *设置对象的最顶部距离对象在当前窗口显示的范围内的顶边为网页内容高度，即滚动条在最底端
+             *@event down
+             */
             down: function () {
                 document.getElementById('history').scrollTop = document.getElementById('history').scrollHeight
             },
+            /**
+             *设置用户被禁言、踢出、解除禁言
+             *@event click
+             *@param {String} name
+             */
             click: function (name) {
                 if (name === 'banspeak') {
                     this.dialog1 = true
@@ -186,6 +225,10 @@
                     this.dialog2 = true
                 } else this.dialog3 = true
             },
+            /**
+             *设置全局禁言，发送消息全局禁言
+             *@event banspeakpublic
+             */
             banspeakpublic: function () {
                 if (this.AUTHORITY) {
                     this.send({
@@ -203,6 +246,10 @@
                     this.$Message.info('您已全局禁言')
                 }
             },
+            /**
+             *设置全局解禁
+             *@event canspeakpublic
+             */
             canspeakpublic: function () {
                 if (this.AUTHORITY) {
                     this.send({
@@ -223,6 +270,11 @@
                 }
                 // this.socket.send({type:'canspeakpublic',roomid:this.ROOMID})
             },
+            /**
+             *处理解禁时的全选事件
+             *@event handleCheckAll
+             *@param {Object} data
+             */
             handleCheckAll: function (data) {
                 if (this.indeterminate) {
                     this.checkAll = false
@@ -234,6 +286,11 @@
                 for (var i = 0; i < this.bans.length; i++) { this.cans.push(this.bans[i].userid) }
                 console.log(this.cans)
             },
+            /**
+             *处理解禁时的单个解禁按钮被点击的事件（如果每个被禁言的人都被点击解禁，即为全选）
+             *@event checkchange
+             *@param {Object} data
+             */
             checkchange: function (data) {
                 console.log('---checkchange---')
                 console.log(data.length)
@@ -252,6 +309,10 @@
                 console.log(data)
                 console.log('---checkchange---')
             },
+            /**
+             *处理解禁时的单个解禁的事件，发送被解禁的信息
+             *@event canspeak
+             */
             canspeak: function () {
                 console.log('---canspeak---')
                 for (var index = 0; index < this.cans.length; index++) {
@@ -277,7 +338,17 @@
                 }
                 console.log('---canspeak---')
             },
+            /**
+             *如果点击取消的话就什么都不做
+             *@event cancel
+             */
             cancel: function () {},
+            /**
+             *处理单个禁言的事件，发送被禁言的人的id和昵称
+             *@event banspeakone
+             *@param {Number} userid
+             *@param {String} nickname
+             */
             banspeakone (userid, nickname) {
                 console.log('--banspeakone--')
                 console.log(nickname)
@@ -310,6 +381,12 @@
                     })
                 }
             },
+            /**
+             *处理踢人的事件，发送被踢的人的id
+             *@event outone
+             *@param {Number} userid
+             *@param {String} nickname
+             */
             outone (userid, nickname) {
                 if (this.AUTHORITY) {
                     this.send({
@@ -330,6 +407,11 @@
                     })
                 }
             },
+            /**
+             *处理被发送的消息，在历史消息区域传递被发送的消息的相关信息
+             *@event messolve
+             *@param {Object} data
+             */
             messolve (data) {
                 this.history.push({
                     message: data.data.message,
@@ -338,11 +420,21 @@
                     role: data.data.role
                 })
             },
+            /**
+             *处理被踢的事件，如果用户被踢，则自动返回首页
+             *@event outsolve
+             *@param {Object} data
+             */
             outsolve (data) {
                 if (data.data.userid === this.user.userid) {
                     this.$router.go(-1)
                 }
             },
+            /**
+             *处理被禁言的事件，如果用户被禁言，那么不能发送信息且个人的id和昵称被记录
+             *@event banonesolve
+             *@param {Object} data
+             */
             banonesolve (data) {
                 if (data.data.userid === this.user.userid) {
                     this.silence = true
@@ -353,6 +445,11 @@
                     nickname: data.data.nickname
                 })
             },
+            /**
+             *处理被全局禁言的事件，那么所有学生不能发送信息
+             *@event banpublicsolve
+             *@param {Object} data
+             */
             banpublicsolve (data) {
                 this.allsilence = true
                 this.allspeak = false
@@ -362,6 +459,11 @@
                     this.$Message.info('全局禁言')
                 }
             },
+            /**
+             *处理被全局解禁的事件，那么所有学生都可以发送信息
+             *@event allspeaksolve
+             *@param {Object} data
+             */
             allspeaksolve (data) {
                 this.allsilence = false
                 this.allspeak = true
@@ -371,6 +473,11 @@
                     this.$Message.info('全局解禁')
                 }
             },
+            /**
+             *处理单人被解禁的事件，被解禁后可以发送信息，且关于禁言的记录里信息被移除
+             *@event canspeaksolve
+             *@param {Object} data
+             */
             canspeaksolve (data) {
                 console.log('--canspeaksolve---')
                 console.log(data.data.userid)
@@ -391,6 +498,11 @@
                 }
                 console.log('--canspeaksolve---')
             },
+            /**
+             *接收消息，并按照消息的chattype属性进行分类处理
+             *@event receive
+             *@param {Object} data（接受的信息）
+             */
             receive (data) {
                 if (data.data.chattype === 'message') {
                     console.log('recive')
