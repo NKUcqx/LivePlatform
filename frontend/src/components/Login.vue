@@ -10,7 +10,7 @@
     </Row>
         <Row id="cardrow">
             <Col span="6" offset="9">
-                <Card shadow class="card" v-if="state === 0">
+                <Card shadow class="card" id="login-card" v-if="state === 0">
                     <p slot="title" class="title">Log in</p>
                     <Form ref="form" :model="form" :rules="rule" class="form">
                         <Form-item prop="user">
@@ -44,7 +44,7 @@
 
                     </Form>
                 </Card>
-                <Card shadow class="card" v-else>
+                <Card shadow class="card" id="retrieve-card" v-else>
                     <p slot="title" class="title">Retrieve password</p>
                     <Form ref="retrieveForm" :model="retrieve" :rules="rule2" class="form">
                         <Form-item prop="user">
