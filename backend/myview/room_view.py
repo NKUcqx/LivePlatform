@@ -65,7 +65,6 @@ def upload_slide(room_id, slide):
     count = sum([len(c) for a, b, c in os.walk(room.slide_path.path)])
     return room, count
 
-
 def check_convert_status(process_id):  # i.e. upload_to
     process = processes[process_id]
     process.refresh()
@@ -247,7 +246,7 @@ def createRoom(request):
                 name=name,
                 creator_id=creator_id,
                 file_name=file_name,
-                is_silence=is_silence,
+#                is_silence=is_silence,
                 is_living=is_living)
             room.save()
             roomid=room.id
