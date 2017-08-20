@@ -2,23 +2,26 @@
 // 用于POST请求之前发送csrf的那个函数
 
 /**
- * Module utils
+ * Module Utils
  *
- * @module utils
- * @class utils
+ * @module Utils
+ * @class Utils
  * @constructor
  */
 
 /**
  *获取储存在用户本地终端上的数据，返回cookieValue
  *@method getCookie
- *@param {string} name
- *@return {string|null} 返回cookieValue,如果不存在就返回null
+ *@param {String} name
+ *@return {String|null} 返回cookieValue,如果不存在就返回null
  *@example
- * // getcookie1为null
- * var getcookie1 = getCookie('csrftoken')
- * // getcookie2为null
- * var getcookie2 = getCookie('xxx')
+ *  // getcookie1为null
+ *
+ *  var getcookie1 = getCookie('csrftoken')
+ *
+ *  // getcookie2为null
+ *
+ *  var getcookie2 = getCookie('xxx')
  */
 export const getCookie = (name) => {
     let cookieValue = null
@@ -37,9 +40,9 @@ export const getCookie = (name) => {
 }
 
 /**
- *防御CSRF攻击
+ *增加X-CSRFToken头信息
  *@event beforePost
- *@param {object} request
+ *@param {Object} request
  */
 export const beforePost = (request) => {
     if (!(/^http:.*/.test(request.url) || /^https:.*/.test(request.url))) {
@@ -51,19 +54,24 @@ export const beforePost = (request) => {
 /**
  *从数据库获取信息
  *@event getListFromDB
- *@param {object} obj
- *@return {object} 返回数据库中的信息
+ *@param {Object} obj
+ *@return {Object} 返回数据库中的信息
  *@example
  * // res1.id为1
+ *
  * var res1 = getListFromDB({
  *     key: {id: 1}
  * })
+ *
  * // res2.id为1
+ *
  * var res2 = getListFromDB({
  *     key1: {id: 1},
  *     key2: {id: 2}
  * })
+ *
  * // res3为null
+ *
  * var res3 = getListFromDB(null)
  */
 export const getListFromDB = (obj) => {
@@ -78,14 +86,19 @@ export const getListFromDB = (obj) => {
 /**
  *如果是JSON字符串，那么返回给定 JSON 字符串转换后的对象
  *@method isJSON
- *@param {string} str
- *@return {object|boolean} 返回给定 JSON 字符串str转换后的对象
+ *@param {String} str
+ *@return {Object|Boolean} 传入 JSON 字符串则返回转换后的对象，否则返回false
  *@example
  * // res1.a为"Hello",res1.b为"World"
+ *
  * var res1 =isJSON('{"a": "Hello", "b": "World"}')
+ *
  * // res2为false
+ *
  * var res2 = isJSON('Hello World')
+ *
  * // res3为false
+ *
  * var res3 = isJSON(123)
  */
 export const isJSON = (str) => {
@@ -102,6 +115,12 @@ export const isJSON = (str) => {
     return result
 }
 
+/**
+ *将对象转为JSON字符串
+ *@method Obj2JSON
+ *@param {any type} obj
+ *@return {String|Boolean} 如果传入的是对象，则返回相应类型的JSON字符串，否则返回false
+ */
 export const Obj2JSON = (obj) => {
     console.log((typeof obj))
     let result = false
@@ -116,6 +135,12 @@ export const Obj2JSON = (obj) => {
     return result
 }
 
+/**
+ *转换时间格式
+ *@method getFormatTime
+ *@param {Number} inTime 按秒计的时间
+ *@return {String} "hh:mm:ss"格式
+ */
 export const getFormatTime = (inTime) => {
     let time = inTime || 0
     let h = parseInt(time / 3600)
@@ -127,6 +152,12 @@ export const getFormatTime = (inTime) => {
     return h + ':' + m + ':' + s
 }
 
+/**
+ *转换日期格式
+ *@method getFormatDate
+ *@param {String} inDate 从数据库传来的时间戳"yyyy-m/mm-dd hh:mm:ss"
+ *@return {String} "yyyymmdd"格式
+ */
 export const getFormatDate = (inDate) => {
     let date = inDate.split(' ')[0].split('-')
     let year = date[0]

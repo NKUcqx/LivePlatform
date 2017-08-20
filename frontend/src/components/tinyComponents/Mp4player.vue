@@ -8,10 +8,21 @@
 
 
 <script>
+/**
+ *Module TinyComponents
+ *
+ *@module TinyComponents
+ *@requires Utils
+ */
 import { mapGetters, mapMutations } from 'vuex'
 import { getFormatTime, getFormatDate } from '../../utils/utils'
 import ProgressBar from './ProgressBar'
 
+/**
+ *Mp4播放器
+ *@class Mp4Player
+ *@constructor
+ */
 export default {
     components: {
         ProgressBar
@@ -49,8 +60,12 @@ export default {
             currentTime: 'getCurrentTime',
             totalTime: 'getTotalTime'
         }),
+        /**
+         *获取视频路径
+         *@method getVideoSrc
+         *@return {String} 由房间创建时间和房间id组合生成的视频路径
+         */
         getVideoSrc () {
-            console.log('gyg' + getFormatDate(this.CREATETIME))
             return 'static/record/' + getFormatDate(this.CREATETIME) + '/' + this.ROOMID + '/' + this.ROOMID + '.mp4'
         }
     },
@@ -60,19 +75,29 @@ export default {
             'setCurrentTime',
             'setTotalTime'
         ]),
+        /**
+         *初始化视频总时长
+         *@event initPlay
+         */
         initPlay () {
             this.setTotalTime(this.$refs['video'].duration)
         },
+        /**
+         *随视频进度更改当前播放时间
+         *@event changeTime
+         */
         changeTime () {
-            this.setCurrentTime(this.$refs['video'].currentTime) // 当前播放时间
+            this.setCurrentTime(this.$refs['video'].currentTime)
         },
-        // 播放完毕还原设置
+        /**
+         *播放完毕还原设置
+         *
+         *切换播放按钮状态，还原当前播放时间并将视频恢复到播放开始状态
+         *@event restore
+         */
         restore () {
-            // 切换播放按钮状态
             this.setPlayState(false)
-            // 还原当前播放时间
             this.setCurrentTime(0)
-            // 视频恢复到播放开始状态
             this.$refs['video'].currentTime = 0
         }
     },
@@ -94,7 +119,3 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-
-</style>

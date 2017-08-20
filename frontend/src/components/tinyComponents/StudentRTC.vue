@@ -18,8 +18,19 @@
 </template>
 
 <script>
+/**
+ *Module TinyComponents
+ *
+ *@module TinyComponents
+ *@requires Utils
+ */
 import { mapGetters } from 'vuex'
 
+/**
+ *学生端直播组件
+ *@class StudentRTC
+ *@constructor
+ */
 export default {
     props: {
         WIDTH: {
@@ -68,12 +79,24 @@ export default {
         })
     },
     methods: {
+        /**
+         *显示工具栏
+         *@event showToolBar
+         */
         showToolBar () {
             this.isBarShown = true
         },
+        /**
+         *隐藏工具栏
+         *@event hideToolBar
+         */
         hideToolBar () {
             this.isBarShown = false
         },
+        /**
+         *学生加入房间
+         *@event join
+         */
         join () {
             this.isJoin = true
             let dynamicKey = null
@@ -98,10 +121,19 @@ export default {
             this.client.on('stream-removed', function (evt) { that.onRemove(evt) })
             this.client.on('peer-leave', function (evt) { that.onLeave(evt) })
         },
+        /**
+         *声网报错回调事件,控制台输出错误原因
+         *@event onError
+         *@param {Object} err
+         */
         onError (err) {
             console.log('Got error msg:', err.reason)
         },
-        // 远程音视频流已添加回调事件
+        /**
+         *远程音视频流已添加回调事件,订阅远端视频流
+         *@event onAdd
+         *@param {Object} evt
+         */
         onAdd (evt) {
             let stream = evt.stream
             console.log('New stream added: ' + stream.getId())
@@ -111,7 +143,11 @@ export default {
                 console.log('Subscribe stream failed', err)
             })
         },
-        // 远程音视频流已订阅回调事件
+        /**
+         *远程音视频流已订阅回调事件,播放远端视频流
+         *@event onSubscribe
+         *@param {Object} evt
+         */
         onSubscribe (evt) {
             let stream = evt.stream
             console.log('Subscribe remote stream successfully: ' + stream.getId())
@@ -121,7 +157,11 @@ export default {
             this.remoteStream = stream
             stream.play('agora_remote')
         },
-        // 远程音视频流已删除回调事件
+        /**
+         *远程音视频流已删除回调事件,即远端暂停推流
+         *@event onRemove
+         *@param {Object} evt
+         */
         onRemove (evt) {
             let stream = evt.stream
             stream.stop()
@@ -129,7 +169,11 @@ export default {
             this.screen = false
             console.log('Remote stream is removed ' + stream.getId())
         },
-        // 对方调用了client.leave()结束直播
+        /**
+         *老师结束直播回调事件
+         *@event onLeave
+         *@param {Object} evt
+         */
         onLeave (evt) {
             let stream = evt.stream
             if (stream) {
@@ -139,6 +183,10 @@ export default {
                 console.log(evt.uid + ' leaved from this channel')
             }
         },
+        /**
+         *学生退出房间
+         *@event leave
+         */
         leave () {
             this.isJoin = false
             this.screen = false
@@ -164,6 +212,10 @@ export default {
                 }
             }) */
         },
+        /**
+         *学生重启视频教学
+         *@event enableVideo
+         */
         enableVideo () {
             if (this.isLiveStart) {
                 this.$Modal.info({
@@ -179,6 +231,10 @@ export default {
                 })
             }
         },
+        /**
+         *学生暂停视频教学
+         *@event disableVideo
+         */
         disableVideo () {
             if (this.isLiveStart) {
                 this.$Modal.info({
@@ -194,12 +250,20 @@ export default {
                 })
             }
         },
+        /**
+         *学生开启声音
+         *@event enableAudio
+         */
         enableAudio () {
             if (isLiveStart) {
                 this.hasAudio = true
                 this.remoteStream.enableAudio()
             }
         },
+        /**
+         *学生静音
+         *@event disableAudio
+         */
         disableAudio () {
             if (isLiveStart) {
                 this.hasAudio = false

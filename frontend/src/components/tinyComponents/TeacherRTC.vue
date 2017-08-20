@@ -18,8 +18,19 @@
 </template>
 
 <script>
+/**
+ *Module TinyComponents
+ *
+ *@module TinyComponents
+ *@requires Utils
+ */
 import { mapGetters } from 'vuex'
 
+/**
+ *教师端直播组件
+ *@class TeacherRTC
+ *@constructor
+ */
 export default {
     props: {
         WIDTH: {
@@ -78,12 +89,24 @@ export default {
         }
     },
     methods: {
+        /**
+         *显示工具栏
+         *@event showToolBar
+         */
         showToolBar () {
             this.isBarShown = true
         },
+        /**
+         *隐藏工具栏
+         *@event hideToolBar
+         */
         hideToolBar () {
             this.isBarShown = false
         },
+        /**
+         *教师加入房间
+         *@event join
+         */
         join () {
             this.isJoin = true
             let dynamicKey = null
@@ -92,15 +115,10 @@ export default {
             let that = this
             // 初始化客户端
             this.client.init(this.appKey, function () {
-                console.log('AgoraRTC client initialized')
                 // 加入频道，uid由系统返还
                 that.client.join(dynamicKey, that.ROOM, null, function (uid) {
-                    console.log('User ' + uid + ' join channel successfully')
                     // 创建本地音视频流
-                    that.localStream = AgoraRTC.createStream({streamID: uid,
-                        audio: true,
-                        video: true,
-                        screen: false})
+                    that.localStream = AgoraRTC.createStream({streamID: uid, audio: true, video: true, screen: false})
                     that.localStream.setVideoProfile('720p_3')
                     that.localStream.init(function () {
                         console.log('getUserMedia successfully')
@@ -127,6 +145,10 @@ export default {
                 console.log('Got error msg:', err.reason)
             })
         },
+        /**
+         *教师退出房间
+         *@event leave
+         */
         leave () {
             let that = this
             this.isJoin = false
@@ -156,6 +178,10 @@ export default {
                 }
             }) */
         },
+        /**
+         *教师重启视频教学
+         *@event enableVideo
+         */
         enableVideo () {
             if (this.isLiveStart) {
                 this.$Modal.info({
@@ -171,6 +197,10 @@ export default {
                 })
             }
         },
+        /**
+         *教师暂停视频教学
+         *@event disableVideo
+         */
         disableVideo () {
             if (this.isLiveStart) {
                 this.$Modal.info({
@@ -186,12 +216,20 @@ export default {
                 })
             }
         },
+        /**
+         *教师开启声音
+         *@event enableAudio
+         */
         enableAudio () {
             if (this.isLiveStart) {
                 this.hasAudio = true
                 this.localStream.enableAudio()
             }
         },
+        /**
+         *教师静音
+         *@event disableAudio
+         */
         disableAudio () {
             if (this.isLiveStart) {
                 this.hasAudio = false

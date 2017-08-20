@@ -1,5 +1,11 @@
-// this is for vuex and it is main file in vuex
-// you can find greater examples and explanations in https://vuex.vuejs.org/zh-cn/
+/**
+ *Module Store
+ *
+ *@module Store
+ *@requires Utils
+ *@class Index
+ *@constructor
+ */
 import Vue from 'vue'
 import Vuex from 'vuex'
 import * as actions from './actions'
@@ -16,10 +22,20 @@ import room from './modules/room'
 Vue.use(Vuex)
 
 const state = {
+    /**
+     *@property session
+     *@type {Object}
+     *@default {hasSession: false, sessionKey: null}
+     */
     session: {
         hasSession: false,
         sessionKey: null
     },
+    /**
+     *用户信息，包括userid、username、nickname、avatar、gender、isLogin、role
+     *@property user
+     *@type {Object}
+     */
     user: {
         userid: null,
         username: null,

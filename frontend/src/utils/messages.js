@@ -1,15 +1,15 @@
-// type can be 'pen' line' 'rect' 'circle' 'text' 'clear' ''
 /**
- * Module canvasInfo
+ * Module Utils
  *
- * @module canvasInfo
- * @class canvasInfo
+ * @module Utils
+ * @class CanvasInfo
  * @constructor
  */
 const canvasInfo = {
     /**
+     *type can be 'pen' line' 'rect' 'circle' 'text' 'clear' ''
      *@property type
-     *@type type
+     *@type string
      */
     type: null,
     /**
@@ -55,10 +55,10 @@ const canvasInfo = {
 }
 
 /**
- *获取canvas（画板）的信息
+ *生成canvas（画板）的信息
  *@method makeCanvasInfo
- *@param {object} canvasinfo 有type，ox,oy,ex,ey,width,fontSize,text,color,isFill,canvas等属性
- *@return {object} 返回更新的canvasinfo信息
+ *@param {Object} 有type，ox,oy,ex,ey,width,fontSize,text,color,isFill,canvas等属性
+ *@return {Object} 返回生成的canvasinfo信息
  */
 export const makeCanvasInfo = ({
     type,

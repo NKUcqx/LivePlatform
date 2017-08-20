@@ -2,10 +2,11 @@ import Vue from 'vue'
 import { getListFromDB } from '../../utils/utils'
 
 /**
- * Module ROOMfuction
+ * Module Store
  *
- * @module ROOMfuction
- * @class ROOMfuction
+ * @module Store
+ * @requires Utils
+ * @class Home
  * @constructor
  */
 const state = {
@@ -43,10 +44,10 @@ const getters = {
     /**
      *获取直播房间
      *@method getLiveRooms
-     *@param {object} state
      *@return {list} 返回现有的直播房间
      *@example
      * // room为[room1,room2]
+     *
      * var room = getLiveRooms({liveRooms:[room1,room2]})
      */
     getLiveRooms: (state) => {
@@ -55,10 +56,10 @@ const getters = {
     /**
      *获取录播房间
      *@method getVideoRooms
-     *@param {object} state
      *@return {list} 返回现有的录播房间
      *@example
      * // room为[room1,room2]
+     *
      * var room = getVideoRooms({videoRooms:[room1,room2]})
      */
     getVideoRooms: (state) => {
@@ -67,10 +68,10 @@ const getters = {
     /**
      *获取房间数量
      *@method getRoomAmount
-     *@param {object} state
      *@return {Number} 返回房间数量
      *@example
      * // roomamount为8
+     *
      * var roomamount = getVideoRooms({roomAmount:8})
      */
     getRoomAmount: (state) => {
@@ -79,10 +80,10 @@ const getters = {
     /**
      *获取每一页的房间数
      *@method getPageSize
-     *@param {object} state
      *@return {Number} 返回每一页的房间数
      *@example
      * // roomamount为8
+     *
      * var roomamount = getVideoRooms({showNum: 8)
      */
     getPageSize: (state) => {
@@ -91,10 +92,10 @@ const getters = {
     /**
      *获取最受欢迎的四个直播
      *@method getMostPopular
-     *@param {object} state
      *@return {list} 返回最受欢迎的四个直播
      *@example
      * // popularroom为[room3,room2,room1,room4]
+     *
      * var popularroom = getMostPopular({mostPopular: [room3,room2,room1,room4])
      */
     getMostPopular: (state) => {
@@ -106,10 +107,10 @@ const mutations = {
     /**
      *增加一个直播房间
      *@event addLiveRoom
-     *@param {object} state
      *@param {object} newRoom
      *@example
      * // state.liveRooms原先为[],执行后state.liveRooms为[room1]
+     *
      * getMostPopular(state,room1)
      */
     addLiveRoom: (state, newRoom) => {
@@ -118,10 +119,10 @@ const mutations = {
     /**
      *关闭一个直播房间
      *@event addLiveRoom
-     *@param {object} state
      *@param {Number} index
      *@example
      * // state.liveRooms原先为[room1,room2,room3],执行后state.liveRooms为[room1,room3]
+     *
      * closeLiveRoom(state,1)
      */
     closeLiveRoom: (state, index) => {
@@ -130,14 +131,19 @@ const mutations = {
     /**
      *更新最受欢迎的四个房间
      *@event addMostPopular
-     *@param {object} state
      *@example
      * // state.liveRooms为[room1,room2,room3,room5,room4],执行后state.mostPopular为[room1,room2,room3,room5]
+     *
      * addMostPopular(state)
      */
     addMostPopular: (state) => {
         state.mostPopular = state.liveRooms.slice(0, 4)
     },
+    /**
+     *设置显示页数
+     *@event setPageSize
+     *@param {Number} num
+     */
     setPageSize: (state, num) => {
         state.showNum = num
     }
@@ -147,7 +153,6 @@ const actions = {
     /**
      *从数据库获取房间信息(包括直播和录播的信息，分别放到state.liveRooms和state.videoRooms里)
      *@event getRoomsFromDB
-     *@param {object} {state,commit}
      *@param {object} {isLive,[start = 0]}
      */
     getRoomsFromDB: ({ state, commit }, { isLive, start = 0 }) => {
@@ -172,7 +177,6 @@ const actions = {
     /**
      *从数据库获取直播和录播各有多少房间
      *@event getRoomAmountFromDB
-     *@param {object} {state}
      */
     getRoomAmountFromDB: ({ state }) => {
         Vue.http({

@@ -1,8 +1,8 @@
 /**
- * Module CONST
+ * Module Utils
  *
- * @module CONST
- * @class CONST
+ * @module Utils
+ * @class Const
  * @constructor
  */
 export const CONST = {
@@ -42,7 +42,10 @@ export const CONST = {
      *@type string 'Permission Denied'
      */
     permission: 'Permission Denied',
-
+    /**
+     *@property codeDrawing
+     *@type string
+     */
     codeDrawing: "\
               　  へ　　　　　／|      \n\
             　　 /＼7　　　 ∠＿/     \n\
