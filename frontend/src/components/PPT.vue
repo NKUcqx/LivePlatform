@@ -1,5 +1,6 @@
 <template>
-    <div id="slide">
+<div>
+    <div id="slide" v-if="!LOADING">
         <Carousel v-model="index" :autoplay="setautoplay" :autoplay-speed="autoplayspeed" :dots='setdots' trigger="click" :arrow="(AUTHORITY)?'hover':'never'" @on-change='changeppt'> 
             <Carousel-item v-for='img of imgs'>
                 <img :src='img' :style="position" class="images">
@@ -30,6 +31,18 @@
             </div>
         </div>
     </div>
+    <div id="spin" :style="position" v-else>
+        <div id="loading-text">
+            <div id="content">{{ 'Converting\n' + '....'.slice(0,stepCurrent+1) }}</div>
+        </div>
+        <Steps :current="stepCurrent" id="steps">
+            <Step title="First" :content="(stepCurrent===0)?'Start Live':''"></Step>
+            <Step title="Second" :content="(stepCurrent===1)?'Open Camara':''"></Step>
+            <Step title="Third" :content="(stepCurrent===2)?'Test Sound':''"></Step>
+            <Step title="Forth" :content="(stepCurrent===3)?'Lets Beigin':''"></Step>
+        </Steps>
+    </div>
+</div>
 </template>
 <script>
     import { mapGetters } from 'vuex'
@@ -45,6 +58,10 @@
                 default: 260
             },
             AUTHORITY: {
+                type: Boolean,
+                default: false
+            },
+            LOADING: {
                 type: Boolean,
                 default: false
             }
@@ -63,7 +80,8 @@
                 position: {
                     width: '400px',
                     height: '260px'
-                }
+                },
+                stepCurrent: 0
             }
         },
         computed: {
@@ -83,6 +101,15 @@
             },
             HEIGHT: function () {
                 this.position.height = this.HEIGHT.toString() + 'px'
+            },
+            LOADING: function () {
+                let that = this
+                if (this.LOADING) {
+                    window.setInterval(function () {
+                        console.log('yes')
+                        that.stepCurrent = (that.stepCurrent < 3) ? that.stepCurrent + 1 : 0
+                    }, 2000)
+                }
             }
         },
         mounted () {
@@ -191,5 +218,35 @@
 
 #slide #showbar:hover #bottom-toolbar {
     display: block;
+}
+
+#spin {
+    text-align: center;
+}
+
+#spin #loading-text {
+    width: 100%;
+    height: 31%;
+    margin-top: 10%;
+    text-align: center;
+}
+
+#spin #loading-text #content{
+    display: inline-block;
+    height: 100%;
+    width: 21%;
+    font-size: 1.3em;
+    color: #5cadff;
+    border: 2px #5cadff solid;
+    border-radius: 50%;
+    padding: 8% 0px;
+    -moz-box-shadow:1px 1px 6px #5cadff;
+    -webkit-box-shadow:1px 1px 6px #5cadff; 
+    box-shadow: 1px 1px 6px #5cadff;
+    text-shadow:2px 2px 2px rgb(180,240,180);
+}
+
+#spin #steps {
+    margin-top: 20%;
 }
 </style>

@@ -6,6 +6,7 @@
         }"
         :name="chooseName"
         type="drag"
+        :before-upload="ONBEFORE"
         :on-success="ONSUCCESS"
         :on-format-error="onFormatError"
         :on-exceeded-size="onExceededSize"
@@ -27,6 +28,7 @@ import { beforePost, getCookie } from '../../utils/utils'
 export default {
     props: {
         UPLOADTYPE: String,
+        ONBEFORE: Function,
         ONSUCCESS: Function,
         IMGSRC: {
             type: String,
