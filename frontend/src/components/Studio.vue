@@ -3,7 +3,7 @@
         <topbar TYPE="studio" id="topbar" ref="topBar" :AUTHORITY="authority"></topbar>
         <Modal v-model="uploadModal" id="upload-modal">
             <upload-button UPLOADTYPE="thumbnail" :ONSUCCESS="changeThumbnail" :IMGSRC="roomInfo.img"></upload-button>
-            <upload-button UPLOADTYPE="slide" :ONSUCCESS="uploadSlide" :ONBEFORE="startLoading"></upload-button>
+            <upload-button UPLOADTYPE="slide" :ONSUCCESS="uploadSlide" :ONERROR="uploadSlideTimeout" :ONBEFORE="startLoading"></upload-button>
             <div slot="footer" id="modal-footer">
                 <Button type="primary" @click="readyForLive()">Ready</Button>
             </div>
@@ -27,9 +27,12 @@
             </div>
             <div :class="vedioClass" v-show="isVedioShow">
                 <close-button class="close-button" @close="closeVideo()" :isWork="false"></close-button>
-                <keep-alive>
+                <keep-alive v-if="this.roomInfo.is_living">
                     <teacher-rtc :WIDTH="vedioSize.width" :HEIGHT="vedioSize.height" :ROOM="roomInfo.id+''" v-if="authority" @endroom='endRoom'></teacher-rtc>
                     <student-rtc :WIDTH="vedioSize.width" :HEIGHT="vedioSize.height" :ROOM="roomInfo.id+''" v-else></student-rtc>
+                </keep-alive>
+                <keep-alive v-else>
+                    <mp4player :WIDTH="vedioSize.width" :HEIGHT="vedioSize.height"></mp4player>
                 </keep-alive>
             </div>
             <div :class="workClass" v-show="isWorkShow">
@@ -56,6 +59,7 @@ import MyCanvas from './tinyComponents/Canvas'
 import CloseButton from './tinyComponents/CloseButton'
 import TeacherRtc from './tinyComponents/TeacherRTC'
 import StudentRtc from './tinyComponents/StudentRTC'
+import Mp4player from './tinyComponents/Mp4player'
 import UploadButton from './tinyComponents/UploadButton'
 import Codedemo from './Codedemo'
 import Ppt from './PPT'
@@ -91,7 +95,8 @@ export default {
         Ppt,
         TeacherRtc,
         StudentRtc,
-        UploadButton
+        UploadButton,
+        Mp4player
     },
     data () {
         return {
@@ -338,6 +343,10 @@ export default {
             this.loading = false
             this.setRoomInfo({ slide_path: res.room.slide_path })
             this.$Message.success(CONST.success('Upload Slide'))
+        },
+        uploadSlideTimeout (e, file, fileList) {
+            this.loading = false
+            alert(CONST.failure('Upload Slide') + 'Please upload smaller slide.')
         },
         readyForLive () {
             this.uploadModal = false

@@ -8,6 +8,7 @@
         type="drag"
         :before-upload="ONBEFORE"
         :on-success="ONSUCCESS"
+        :on-error="ONERROR"
         :on-format-error="onFormatError"
         :on-exceeded-size="onExceededSize"
         :show-upload-list="showList"
@@ -30,6 +31,7 @@
  *@requires Utils
  */
 import { beforePost, getCookie } from '../../utils/utils'
+import { CONST } from '../../utils/const'
 
 /**
  *上传按钮
@@ -41,6 +43,12 @@ export default {
         UPLOADTYPE: String,
         ONBEFORE: Function,
         ONSUCCESS: Function,
+        ONERROR: {
+            type: Function,
+            default: () => {
+                alert(CONST.failure('Upload file'))
+            }
+        },
         IMGSRC: {
             type: String,
             default: '../../../static/img/PPT.png'

@@ -40,10 +40,6 @@ export default {
         HEIGHT: {
             type: Number,
             default: 182
-        },
-        ROOM: {
-            type: String,
-            default: '1000'
         }
     },
     watch: {
@@ -75,7 +71,8 @@ export default {
     },
     computed: {
         ...mapGetters({
-            isLiveStart: 'isLiveStart'
+            isLiveStart: 'isLiveStart',
+            roomId: 'getRoomId'
         })
     },
     methods: {
@@ -107,7 +104,7 @@ export default {
             this.client.init(this.appKey, function () {
                 console.log('AgoraRTC client initialized')
                 // 加入频道，uid由系统返还
-                that.client.join(dynamicKey, that.ROOM, null, function (uid) {
+                that.client.join(dynamicKey, that.roomId, null, function (uid) {
                     console.log('User ' + uid + ' join channel successfully')
                 }, function (err) {
                     console.log('Join channel failed', err)
@@ -273,7 +270,7 @@ export default {
     },
     mounted () {
         this.join()
-        console.log(this.ROOM)
+        console.log(this.roomId)
     },
     beforeDestroy () {
         this.leave()
