@@ -23,8 +23,19 @@
 </template>
 
 <script>
+/**
+ *Module TinyComponents
+ *
+ *@module TinyComponents
+ *@requires Utils
+ */
 import { beforePost, getCookie } from '../../utils/utils'
 
+/**
+ *上传按钮
+ *@class UploadButton
+ *@constructor
+ */
 export default {
     props: {
         UPLOADTYPE: String,
@@ -36,9 +47,19 @@ export default {
         }
     },
     computed: {
+        /**
+         *选择上传按钮名称
+         *@method chooseName
+         *@return {String} 返回父组件传入的上传按钮名称
+         */
         chooseName () {
             return this.UPLOADTYPE
         },
+        /**
+         *选择格式错误回调函数
+         *@method onFormatError
+         *@return {Function} 返回父组件指定类型上传按钮的格式错误回调函数
+         */
         onFormatError () {
             if (this.UPLOADTYPE === 'thumbnail' || this.UPLOADTYPE === 'avatar') {
                 return this.imageTypeError
@@ -46,6 +67,11 @@ export default {
                 return this.slideTypeError
             }
         },
+        /**
+         *选择文件大小错误回调函数
+         *@method onExceededSize
+         *@return {Function} 返回父组件指定类型上传按钮的文件大小错误回调函数
+         */
         onExceededSize () {
             if (this.UPLOADTYPE === 'thumbnail') {
                 return this.thumbnailSizeError
@@ -55,6 +81,11 @@ export default {
                 return this.avatarSizeError
             }
         },
+        /**
+         *选择是否显示上传文件列表
+         *@method showList
+         *@return {Boolean} 返回父组件指定类型上传按钮是否显示上传列表
+         */
         showList () {
             if (this.UPLOADTYPE === 'thumbnail') {
                 return false
@@ -64,6 +95,11 @@ export default {
                 return false
             }
         },
+        /**
+         *选择上传文件类型
+         *@method chooseFormat
+         *@return {Object} 返回父组件指定类型上传按钮的上传文件类型（字符串数组）
+         */
         chooseFormat () {
             if (this.UPLOADTYPE === 'thumbnail' || this.UPLOADTYPE === 'avatar') {
                 return ['jpg', 'jpeg', 'png', 'gif', 'bmp']
@@ -71,6 +107,11 @@ export default {
                 return ['ppt', 'pptx', 'key']
             }
         },
+        /**
+         *选择上传文件大小限制
+         *@method chooseMaxSize
+         *@return {Number} 返回父组件指定类型上传按钮的上传文件大小限制
+         */
         chooseMaxSize () {
             if (this.UPLOADTYPE === 'thumbnail') {
                 return 300
@@ -80,6 +121,11 @@ export default {
                 return 200
             }
         },
+        /**
+         *选择上传文件地址
+         *@method chooseAction
+         *@return {String} 返回父组件指定类型上传按钮的上传文件地址
+         */
         chooseAction () {
             if (this.UPLOADTYPE === 'thumbnail') {
                 return '/setthumbnail/'
@@ -89,6 +135,11 @@ export default {
                 return '/changeavatar/'
             }
         },
+        /**
+         *选择图标id
+         *@method chooseId
+         *@return {String} 返回父组件指定类型上传按钮的图标id
+         */
         chooseId () {
             if (this.UPLOADTYPE === 'thumbnail') {
                 return 'show-thumbnail'
@@ -98,6 +149,11 @@ export default {
                 return 'show-avatar'
             }
         },
+        /**
+         *选择提示信息
+         *@method chooseMessage
+         *@return {String} 返回父组件指定类型上传按钮的提示信息
+         */
         chooseMessage () {
             if (this.UPLOADTYPE === 'thumbnail') {
                 return 'click image or drag to update your thumbnail of live'
@@ -112,18 +168,38 @@ export default {
         getCookie () {
             return getCookie('csrftoken')
         },
+        /**
+         *上传图片类型错误回调函数
+         *@event imageTypeError
+         */
         imageTypeError (file, fileList) {
             this.$Message.error('Image must be jpg jpeg png gif bmp')
         },
+        /**
+         *上传PPT类型错误回调函数
+         *@event slideTypeError
+         */
         slideTypeError (file, fileList) {
             this.$Message.error('slide must be ppt pptx key')
         },
+        /**
+         *上传房间缩略图超过大小限制回调函数
+         *@event thumbnailSizeError
+         */
         thumbnailSizeError (file, fileList) {
             this.$Message.error('thumbnail must under 300K')
         },
+        /**
+         *上传PPT超过大小限制回调函数
+         *@event slideSizeError
+         */
         slideSizeError (file, fileList) {
             this.$Message.error('slide must under 5M')
         },
+        /**
+         *上传头像超过大小限制回调函数
+         *@event avatarSizeError
+         */
         avatarSizeError (file, fileList) {
             this.$Message.error('Image size must be under 200K')
         }

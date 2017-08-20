@@ -1,5 +1,19 @@
+/**
+ *Module Store
+ *
+ *@module Store
+ *@requires Utils
+ *@class Getters
+ *@constructor
+ */
 import Vue from 'vue'
 
+/**
+ *设置session并将sessionKey存入localStorage
+ *@event setSessionState
+ *@param {Object} user 包括id、username、gender、avatar、nickname、role
+ *@param {String} sessionKey
+ */
 export const setSessionState = (state, {
     id, username, gender, avatar, nickname, role
 }, sessionKey) => {
@@ -15,6 +29,11 @@ export const setSessionState = (state, {
     Vue.localStorage.set('session_key', sessionKey)
 }
 
+/**
+ *设置用户信息
+ *@event setUserState
+ *@param {Object} user 包括id、username、gender、avatar、nickname、role
+ */
 export const setUserState = (state, {
     id, username, gender, avatar, nickname, role
 }) => {
@@ -27,6 +46,10 @@ export const setUserState = (state, {
     state.user.role = role
 }
 
+/**
+ *清空用户信息并将localStorage中的session_key置为null
+ *@event emptyUser
+ */
 export const emptyUser = (state) => {
     state.user.userid = ''
     state.user.username = ''
@@ -40,6 +63,11 @@ export const emptyUser = (state) => {
     Vue.localStorage.set('session_key', null)
 }
 
+/**
+ *设置头像路径
+ *@event setAvatar
+ *@param {String} url
+ */
 export const setAvatar = (state, url) => {
     if (state.user.isLogin) {
         state.user.avatar = url

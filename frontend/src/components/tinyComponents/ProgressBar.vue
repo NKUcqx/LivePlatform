@@ -15,9 +15,20 @@
 </template>
 
 <script>
+/**
+ *Module TinyComponents
+ *
+ *@module TinyComponents
+ *@requires Utils
+ */
 import { mapGetters, mapMutations } from 'vuex'
 import { getFormatTime } from '../../utils/utils'
 
+/**
+ *进度条
+ *@class ProgressBar
+ *@constructor
+ */
 export default {
     props: {
 
@@ -41,13 +52,25 @@ export default {
             'setCurrentTime',
             'setTotalTime'
         ]),
+        /**
+         *更改录播状态为播放
+         *@event play
+         */
         play () {
             this.setPlayState(true)
         },
+        /**
+         *更改录播状态为暂停
+         *@event pause
+         */
         pause () {
             this.setPlayState(false)
         },
-        // 跳跃播放
+        /**
+         *响应用户点击跳跃播放
+         *@event skipTime
+         *@param {Object} inEvent 用户点击事件
+         */
         skipTime (inEvent) {
             let event = inEvent || window.event
             this.setCurrentTime((event.offsetX / this.$refs['progress'].offsetWidth) * this.totalTime)
@@ -84,7 +107,7 @@ export default {
 .controlButton {
     display: 'inline-block';
 }
-/*进度条*/
+
 .progress {
     width: 430px;
     height: 10px;
@@ -97,14 +120,13 @@ export default {
     left: 45px;
 }
 
-/*下载进度*/
+/*已播放进度*/
 .progress .loaded {
     width: 0;
     height: 100%;
     background-color: blue;
 }
 
-/*播放进度*/
 .progress .line {
     width: 0;
     height: 100%;
@@ -114,7 +136,6 @@ export default {
     left: 0;
 }
 
-/**/
 .progress .bar {
     width: 100%;
     height: 100%;
@@ -125,7 +146,6 @@ export default {
     z-index: 1;
 }
 
-/*时间*/
 .timer {
     height: 20px;
     line-height: 20px;
