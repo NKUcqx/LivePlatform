@@ -35,6 +35,7 @@ module.exports = {
     'no-undef': 0,
     'valid-typeof': 0,
     'eqeqeq': 0,
+    'camelcase': 0,
     'no-new-wrappers': 0
   }
 }
