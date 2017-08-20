@@ -53,18 +53,17 @@ def upload_thumbnail(room_id, thumbnail):
     room.save()
     return room
 
-
 def upload_slide(room_id, slide):
-    room = LiveRoom.objects.get(pk=room_id)
+    room = LiveRoom.objects.get(pk = room_id)
     room.slide_path = slide
-    room.save()  # save the .ppt
+    room.save() # save the .ppt
     # upload the slide and download the conversion to room.filename
-    converted_file = convert_file(room.slide_path.name, room.id,
-                                  room.file_name)
+    converted_file = convert_file(room.slide_path.name, room.id, room.file_name)
     unziped_file = un_zip(converted_file)
     room.slide_path = unziped_file
     room.save()
-    return room
+    count = sum([len(c) for a, b, c in os.walk(room.slide_path.path)])
+    return room, count
 
 
 def check_convert_status(process_id):  # i.e. upload_to
@@ -192,13 +191,13 @@ def uploadSlide(request):
             slide = request.FILES.get('slide', None)
             if (slide is not None):
                 slide_type = os.path.splitext(slide.name)[1]
-                # must add dot ! otherwise user could upload file like
-                # "somepdf" instead of "some.pdf"  #any type else ?
                 if (slide_type in SLIDE_LIST):
-                    print('start uploading file: %s', slide.name)
-                    room = upload_slide(room['id'], slide)
+                    print('start uploading file: %s' % slide.name)
+                    room, count = upload_slide(room['id'], slide)
                     print('finish uploading .')
-                    return JsonResponse({'room': wrap_room(room)})
+                    room_dict = wrap_room(room)
+                    room_dict['file_count'] = count
+                    return JsonResponse({'room': room_dict})
                 else:
                     return HttpResponse(content=CODE['20'], status=415)
             return HttpResponse(content=CODE[
