@@ -25,11 +25,10 @@
 <script>
 import { mapGetters } from 'vuex'
 /**
- * Module codemirror
+ *Module TinyComponents
  *
- * @module codemirror
- * @class codemirror
- * @constructor
+ *@module TinyComponents
+ *@requires Utils
  */
 var CodeMirror = require('../../node_modules/codemirror/lib/codemirror.js')
 require('../../node_modules/codemirror/lib/codemirror.css')
@@ -55,7 +54,11 @@ require('../../node_modules/codemirror/addon/hint/sql-hint.js')
 require('../../node_modules/codemirror/addon/hint/xml-hint.js')
 
 require('../../node_modules/codemirror/theme/neo.css')
-
+/**
+ *代码编辑器
+ *@class CodeMirror
+ *@constructor
+ */
 export default {
     props: {
         /**
@@ -123,42 +126,42 @@ export default {
         return {
             /**
              *@property editor
-             *@type object
+             *@type Object
              *@default null
              */
             editor: null,
             /**
              *@property mode
-             *@type string
+             *@type String
              *@default 'javascript'
              */
             mode: 'javascript',
             /**
              *@property socket
-             *@type object
+             *@type Object
              *@defult ''
              */
             socket: '',
             /**
              *@property skipNextChangeEvent
-             *@type boolean
+             *@type Boolean
              *@default false
              */
             skipNextChangeEvent: false,
             /**
              *@property value
-             *@type type
+             *@type Type
              *@default String
              */
             value: String,
             /**
              *@property options
-             *@type object
+             *@type Object
              */
             options: {
                 /**
                  *@attribute mode
-                 *@type string
+                 *@type String
                  *@default 'text/javascript'
                  */
                 mode: 'text/javascript',
@@ -170,30 +173,30 @@ export default {
                 tabSize: 4,
                 /**
                  *@attribute lineNumbers
-                 *@type boolean
+                 *@type Boolean
                  *@default true
                  */
                 lineNumbers: true,
                 /**
                  *@attribute lineWrapping
-                 *@type boolean
+                 *@type Boolean
                  *@default true
                  */
                 lineWrapping: true,
                 /**
                  *@attribute extraKeys
-                 *@type dictionary
+                 *@type Dictionary
                  *@default true
                  */
                 extraKeys: {'Ctrl': 'autocomplete'},
                 /**
                  *@attribute readOnly
-                 *@type boolean
+                 *@type Boolean
                  */
                 readOnly: (this.AUTHORITY) ? false : true,
                 /**
                  *@attribute theme
-                 *@type string
+                 *@type String
                  */
                 theme: 'neo'
             }
@@ -254,7 +257,7 @@ export default {
         /**
          *获取codemirror文本框里的值
          *@method getHistory
-         *@return {object} 返回type为'code'以及取到的值
+         *@return {Object} 返回type为'code'以及取到的值
          */
         getHistory: function () {
             return {
@@ -265,7 +268,7 @@ export default {
         /**
          *发送codemirror文本框里的值
          *@method reloadClear
-         *@return {object} 返回type为'code'以及取到的值
+         *@return {Object} 返回type为'code'以及取到的值
          */
         reloadClear () {
             this.send({
@@ -314,7 +317,7 @@ export default {
         /**
          *发送消息，判断用户是否有权限发送信息，有就发送成功，没有就发送失败
          *@event send
-         *@param {object} data（想要发送的信息）
+         *@param {Object} data（想要发送的信息）
          */
         send (data) {
             console.log('userid是' + this.user.userid)
@@ -328,7 +331,7 @@ export default {
         /**
          *接收消息，并按照消息的type属性进行分类处理
          *@event receive
-         *@param {object} data（接受的信息）
+         *@param {Object} data（接受的信息）
          */
         receive (data) {
             // code(data.data)
@@ -353,9 +356,9 @@ export default {
     watch: {
         /**
          *实现文档的滚动处理（如果行数太多，控制将文档滚动到适当位置）
-         *@event value
-         *@param {string} newVal
-         *@param {string} oldVal
+         *@event watchvalue
+         *@param {String} newVal
+         *@param {String} oldVal
          */
         value: function (newVal, oldVal) {
             var editorValue = this.editor.getValue()
@@ -368,9 +371,9 @@ export default {
         },
         /**
          *实现codemirror文本框内的语言转换
-         *@event options
-         *@param {object} newOptions
-         *@param {string} oldVal
+         *@event watchoptions
+         *@param {Object} newOptions
+         *@param {String} oldVal
          */
         options: function (newOptions, oldVal) {
             if (typeof newOptions === 'object') {
@@ -383,9 +386,9 @@ export default {
         },
         /**
          *实现codemirror文本框长宽调节
-         *@event HEIGHT
-         *@param {string} newVal
-         *@param {string} oldVal
+         *@event watchHEIGHT
+         *@param {String} newVal
+         *@param {String} oldVal
          */
         HEIGHT: function (newVal, oldVal) {
             this.editor.setSize(this.WIDTH, this.HEIGHT)
