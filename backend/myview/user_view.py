@@ -229,7 +229,6 @@ def changePassword(request):
     else:
         return HttpResponse(content=CODE['13'], status=401)
 
-
 @require_GET
 def getUserFromSession(request):
     session_key = request.GET.get('session_key', None)
@@ -239,9 +238,6 @@ def getUserFromSession(request):
             uid = session.get_decoded().get('_auth_user_id')
             user = User.objects.get(pk=uid)
             user_json = wrap_user(user)
-            user_avatar = user_json['avatar'].split('/')
-            user_json['avatar'] = '/' + \
-                '/'.join(user_avatar[user_avatar.index('frontend') + 1:])
             return JsonResponse({'user': user_json})
         except BaseException:
             return HttpResponse(content=CODE['12'], status=401)
