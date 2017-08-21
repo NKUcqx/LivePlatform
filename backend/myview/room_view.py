@@ -15,6 +15,8 @@ import time
 
 CODE = toolkits.CODE  # assign to local name to reduce the usage of its long prefix
 bi2obj = toolkits.bi2obj
+change_prefix = toolkits.change_prefix
+get_file_amount = toolkits.get_file_amount
 # change ImageFieldFile or some other field type into str for JsonResponse
 model_to_json = toolkits.model_to_json
 API_key = [ # to get more free conversion chances ..
@@ -62,14 +64,7 @@ def upload_slide(room_id, slide):
     unziped_file = un_zip(converted_file)
     room.slide_path = unziped_file
     room.save()
-    count = sum([len(c) for a, b, c in os.walk(room.slide_path.path)])
-    return room, count
-
-def check_convert_status(process_id):  # i.e. upload_to
-    process = processes[process_id]
-    process.refresh()
-    process.wait()
-    return process['message']
+    return room
 
 
 def convert_file(file, process_id, upload_to):
@@ -104,17 +99,6 @@ def un_zip(file_name):
     return split_str
 
 
-def change_prefix(long_path, add=False, target='static'):
-    if (add):
-        return '/' + os.path.join(target, long_path)
-    try:
-        path_arr = long_path.split('/')
-        path = '/' + '/'.join(path_arr[path_arr.index(target):])
-    except ValueError:
-        return long_path
-    return path
-
-
 def wrap_room(room):  # room instance
     room = model_to_json(room)
     room['creator_id'] = room.get('creator', room.get('creator_id', None))
@@ -124,6 +108,7 @@ def wrap_room(room):  # room instance
     #room['end_time'] = room['end_time'].strftime('%Y-%-m-%d %H:%m:%S') if room.get('end_time', None) is not None else ''
     room['file_name'] = change_prefix(room['file_name'])
     room['thumbnail_path'] = change_prefix(room['thumbnail_path'])
+    room['file_amount'],_ = get_file_amount(room['slide_path']) # just need file amount
     room['slide_path'] = change_prefix(room['slide_path'])
     return room
 
@@ -192,10 +177,9 @@ def uploadSlide(request):
                 slide_type = os.path.splitext(slide.name)[1]
                 if (slide_type in SLIDE_LIST):
                     print('start uploading file: %s' % slide.name)
-                    room, count = upload_slide(room['id'], slide)
+                    room = upload_slide(room['id'], slide)
                     print('finish uploading .')
                     room_dict = wrap_room(room)
-                    room_dict['file_count'] = count
                     return JsonResponse({'room': room_dict})
                 else:
                     return HttpResponse(content=CODE['20'], status=415)
@@ -235,8 +219,6 @@ def createRoom(request):
         creator_id = request.user.id
         thumbnail = request.FILES.get('thumbnail', None)
         name = request.POST.get('name')
-        is_silence = True if request.POST.get('is_silence',
-                                              None) is not None else False
         is_living = False if request.POST.get('is_living',
                                               None) is not None else True
         file_name = generate_room_path()
@@ -306,7 +288,7 @@ def endRoom(request):
     else:
         return HttpResponse(content=CODE['24'], status=404)
 
-
+'''
 @login_required
 @require_POST
 def silenceRoom(request):
@@ -320,4 +302,4 @@ def silenceRoom(request):
         room_db.save()
         return JsonResponse(content=wrap_room(room_db))
     else:
-        return HttpResponse(content=CODE['12'], status=401)
+        return HttpResponse(content=CODE['12'], status=401)'''

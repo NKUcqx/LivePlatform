@@ -18,7 +18,7 @@ import os
 CODE = toolkits.CODE
 bi2obj = toolkits.bi2obj
 model_to_json = toolkits.model_to_json
-
+change_prefix = toolkits.change_prefix
 # 生成随机字段
 
 
@@ -50,9 +50,9 @@ def test_phone(phone):
 
 
 def create_user_folder(username):
-    if (os.path.exists(os.path.join('frontend/static/users/', username))):
+    if (os.path.exists(os.path.join('frontend', 'static', 'users', username))):
         return False
-    os.makedirs(os.path.join('frontend/static/users/', username))
+    os.makedirs(os.path.join('frontend', 'static', 'users', username))
     return True
 
 
@@ -61,6 +61,10 @@ def get_session_key(request):
         request.session.save()
     return request.session.session_key
 
+def wrap_user(user):
+    user = model_to_json(user)
+    user['avatar'] = change_prefix(user['avatar'])
+    return user
 
 @require_GET
 def getUser(request):
@@ -68,7 +72,7 @@ def getUser(request):
     if (user_id):
         try:
             user = User.objects.get(pk=user_id)
-            return JsonResponse({'user': model_to_json(user)})
+            return JsonResponse({'user': wrap_user(user)})
         except BaseException:
             return HttpResponse(content=CODE['12'], status=401)
     else:
@@ -121,9 +125,10 @@ def signupSubmit(request):
                 if test_phone(instance.username) else None)
             form.save(commit=False)
             user.save()
+            auth.login(request, user)
             session_key = get_session_key(request)
             return JsonResponse({
-                'user': model_to_json(user),
+                'user': wrap_user(user),
                 'session_key': session_key
             })
         else:
@@ -144,7 +149,7 @@ def loginSubmit(request):
         auth.login(request, user)
         session_key = get_session_key(request)
         return JsonResponse({
-            'user': model_to_json(user),
+            'user': wrap_user(user),
             'session_key': session_key
         })
     else:
@@ -176,8 +181,9 @@ def changeAvatar(request):
     avatar = request.FILES.get('avatar', None)
     if (avatar is not None):
         user.avatar = avatar
+        auth.login(request, user)
         user.save()
-        return JsonResponse({'user': model_to_json(user)})
+        return JsonResponse({'user': wrap_user(user)})
     else:
         return HttpResponse(content=CODE['25'], status=415)
 
@@ -194,7 +200,8 @@ def changeGenderAndNickname(request):
     if (user.nickname != nickname and nickname is not None and nickname != ''):
         user.nickname = nickname
         user.save()
-    return JsonResponse({'user': model_to_json(user)})
+    auth.login(request, user)
+    return JsonResponse({'user': wrap_user(user)})
 
 
 @require_POST
@@ -207,8 +214,8 @@ def changePassword(request):
     res_pack = {}
     if (username is None or new_password is None):
         return HttpResponse(content=CODE['4'], status=401)
-    if (forget_pw is
-            None):  # means he just wants to reset pw, which need verify his status
+    if (forget_pw is None):
+        # means he just wants to reset pw, which need verify his status
         user = auth.authenticate(username=username, password=password)
     else:  # means this poor guy has forget his pw, reset directly
         user = User.objects.get(username=username)
@@ -216,7 +223,8 @@ def changePassword(request):
     if (user is not None):
         user.set_password(new_password)
         user.save()
-        res_pack['user'] = model_to_json(user)
+        auth.login(request, user)
+        res_pack['user'] = wrap_user(user)
         return JsonResponse(res_pack)
     else:
         return HttpResponse(content=CODE['13'], status=401)
@@ -230,7 +238,7 @@ def getUserFromSession(request):
             session = Session.objects.get(session_key=session_key)
             uid = session.get_decoded().get('_auth_user_id')
             user = User.objects.get(pk=uid)
-            user_json = model_to_json(user)
+            user_json = wrap_user(user)
             user_avatar = user_json['avatar'].split('/')
             user_json['avatar'] = '/' + \
                 '/'.join(user_avatar[user_avatar.index('frontend') + 1:])

@@ -173,7 +173,6 @@ class RoomViewTestCase(TestCase):
         room = {"name": "test_room3"}
         res = self.c.post('/createroom/', room)
         room = LiveRoom.objects.get(name="test_room3")
-        self.assertFalse(room.is_silence)
         self.assertTrue(room.end_time is None)
 
         req = {'audience_amount': '999'}
@@ -229,10 +228,6 @@ class RoomViewTestCase(TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(content['living_amount'], 1)
         self.assertEqual(content['end_amount'], 2)
-
-    def test_change_prefix(self):
-        self.assertEqual(room_view.change_prefix('1/2/3', True, '0'), '/0/1/2/3')
-        self.assertEqual(room_view.change_prefix('1/2/3', False, '2'), '/2/3')
         
     def tearDown(self):
         pass
@@ -253,6 +248,15 @@ class ToolkitsTestCase(TestCase):
         result = toolkits.encode_json(True)
         self.assertTrue(result)
 
+    def test_change_prefix(self):
+        self.assertEqual(toolkits.change_prefix('1/2/3'), '1/2/3')
+        self.assertEqual(toolkits.change_prefix('1/2/static/3', False), '/static/3')
+        self.assertEqual(toolkits.change_prefix('1/2/3', True, '0'), '/0/1/2/3')
+        self.assertEqual(toolkits.change_prefix('1/2/3', False, '2'), '/2/3')
+    def test_get_file_amount(self):
+        self.assertEqual(toolkits.get_file_amount('frontend/src', False), (2,5))
+        self.assertEqual(toolkits.get_file_amount('frontend/src', True), (55,7))
+        self.assertEqual(toolkits.get_file_amount('frontend/src'), (55,7))
     '''def test_bi2obj(self):
         json_data = json.dumps({'bool': True, 'integer': 1, 'NoneType': None, 'Null': 'null', 'undefiend': 'undefiend'})
         request = json.dumps({body:json_data})
