@@ -45,6 +45,18 @@ describe('isJSON()', function () {
     })
 })
 
+describe('Obj2JSON()', function () {
+    it('{"a":"Hello","b":"World"}', function () {
+        assert.equal('{"a":"Hello","b":"World"}', utils.Obj2JSON({a: 'Hello', b: 'World'}))
+    })
+    it('Hello World', function () {
+        assert.equal(false, utils.Obj2JSON('Hello World'))
+    })
+    it('null', function () {
+        assert.equal('null', utils.Obj2JSON(null))
+    })
+})
+
 describe('getFormatTime()', function () {
     it('不传入参数', function () {
         assert.equal('00:00:00', utils.getFormatTime())
