@@ -4,11 +4,14 @@ let server = require('http').Server(app)
 let io = require('socket.io')(server)
 let path = require('path')
 let fs = require('fs')
+let redis = require('redis')
 
 // max message list length threshold, write into file when archive this
 const MESSAGE_THRESHOLD = 400
+const LOAD_THRESHOLD = 0.2 // push new msg when length < 0.1 * threshold
 const ERROR_MESSAGE = ['Format Invalid', 'Miss ', 'Must Join this room first', 'Unsupported Type, Choose between 0~3', 'Room not exists', 'Permission Denied']
-const TIME_DELAY = 4 // consider of recursion invoke or other complex stuff
+//const TIME_DELAY = 4 // consider of recursion invoke or other complex stuff
+const client = redis.createClient() // may error in vm
 
 // buffer area, msg queue, will load into log.txt
 let room_msg_list = {}
@@ -19,8 +22,8 @@ let room_past_audience_list = {} // save his socket
 // signals server will fire
 let fire_signals = ['Error', 'updateMessage', 'loadHistory', 'getAudience'] // wtf? whether space needed at the head of bracket or not!?
 // signals server will listening
-let listening_signals = ['connection', 'disconnecting', 'liveJoin', 'sendMessage', 'getAudience', 'kickout', 'endRoom', 'pastJoin']
-
+let listening_signals = ['connection', 'disconnecting', 'liveJoin', 'sendMessage', 'getAudience', 'kickout', 'endRoom', 'pastJoin', 'rejustProcess']
+/*
 function readFile (room_name, id) {
     const readStream = fs.createReadStream(path.join('.', room_name, 'log.txt'))
     readStream.on('data', (data) => {
@@ -35,7 +38,7 @@ function readFile (room_name, id) {
        //console.log('............'+room_past_audience_list[id]['msg_queue'].shift())
        sendNextMessage(id, JSON.parse(room_past_audience_list[id]['msg_queue'].shift()))
     })
-}
+}*/
 
 function writeFile (room_name, clear = false) {
     let file_name = path.join('.', room_name, 'log.txt')
@@ -47,7 +50,7 @@ function writeFile (room_name, clear = false) {
                 throw err
             }
             for (let i in room_msg_list[room_name]) {
-                fs.writeSync(fd, room_msg_list[room_name][i] + '\r\n')
+                fs.writeSync(fd, JSON.stringify(room_msg_list[room_name][i]) + '\r\n')
             }
             fs.close(fd, (err) => {
                 if (err) {
@@ -64,6 +67,26 @@ function writeFile (room_name, clear = false) {
         })
     } else {
         console.log('file not exists')
+    }
+}
+
+function readDB (room_name, id, start = 0, end = -1, start_send = false, reset_queue = false) { // default is from -infinity to +infinity
+    let queue = room_past_audience_list[id]
+    client.zrange(room_name, start, end, (err, reply) => {
+        if (err) throw err
+        queue['msg_queue'] = reset_queue ? reply : queue['msg_queue'].concat(reply)
+        queue['msg_start'] = end
+        if (start_send) { // cuz only the first msg in the queue need to be send manully
+            const msg = queue['msg_queue'].shift()
+            sendNextMessage(id, JSON.parse(msg))
+        }
+    })
+}
+
+function writeDB (room_name) {
+    for (let i in room_msg_list[room_name]) {
+        // use room_name as hash key, time as field, obj as value
+        client.zadd(room_name, room_msg_list[room_name][i]['time'], JSON.stringify(room_msg_list[room_name][i]))
     }
 }
 
@@ -111,31 +134,33 @@ function isValid (content, type = 'string') {
 
 function logMessage (room_name, content, type, signal = 'sendMessage') {
     const DATE = new Date()
-    let json_data = JSON.stringify({
+    let json_data = {
         // TODO user id later
         'room_name': room_name,
         'content': content,
         'type': type,
         'signal': isValid(signal) ? signal : signal,
         'time': DATE.getTime() // get mileseconds from 1970.1.1 to now
-    })
+    }
     room_msg_list[room_name].push(json_data)
     if (room_msg_list[room_name].length > MESSAGE_THRESHOLD) { // if it is filled, dump into log.txt
         writeFile(room_name)
+        writeDB(room_name)
     }
 }
 
 function sendNextMessage (id, old_msg) {
+    console.log(old_msg['time'])
     let list = room_past_audience_list[id]
     if (list['msg_queue'].length <= 0) {
-        console.log('Recording Finished')
+        console.log('record finish')
         return
     }
-    /*if (queue.length < MESSAGE_THRESHOLD * 0.1) { // fill the queue when less than that amount
-        queue.concat(readFile(queue['room_name']))
-    }*/
+    if (list['msg_queue'].length <= LOAD_THRESHOLD * MESSAGE_THRESHOLD) {
+        readDB(list['room_name'], id, list['msg_start'], list['msg_start'] + MESSAGE_THRESHOLD)
+    }
     let msg = JSON.parse(list['msg_queue'].shift())
-    const time_slot = isValid(old_msg, 'object') ? msg['time'] - old_msg['time'] - TIME_DELAY : 100
+    const time_slot = isValid(old_msg, 'object') ? msg['time'] - old_msg['time'] : 100
     sendMessage(list['socket'], msg['signal'], msg['content'], 0)
     setTimeout(() => {sendNextMessage(id, msg)}, time_slot)
 }
@@ -224,9 +249,11 @@ function listenPastJoin (socket) {
             room_past_audience_list[data.id] = {
                 'socket': socket,
                 'room_name': data.room_name,
+                'msg_start': 0,
                 'msg_queue': []
             }
-            readFile(data.room_name, data.id)
+            //readFile(data.room_name, data.id)
+            readDB(data.room_name, data.id, 0, MESSAGE_THRESHOLD, true)
         }
     })
 }
@@ -244,6 +271,18 @@ function listenSendMessage (socket) {
             }
         } else {
             sendMessage(socket, fire_signals[0], ERROR_MESSAGE[0])
+        }
+    })
+}
+
+function listenRejustProcess (socket) {
+    // on rejust
+    listenSignal(socket, 8, (data) => {
+        // update audience amount(or list)
+        if (isPackValid(data) && isValid(data.start)) {
+            readDB(data.room_name, data.id, data.start, data.start + MESSAGE_THRESHOLD, true, true)
+        } else {
+            sendMessage(socket, fire_signals[0], ERROR_MESSAGE[1])
         }
     })
 }
@@ -296,4 +335,8 @@ io.on(listening_signals[0], (socket) => {
 
 server.listen(8002, () => {
     console.log('listening : 8002')
+})
+
+client.on('ready', () => {
+    console.log('Redis is ready')
 })
