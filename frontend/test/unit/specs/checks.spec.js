@@ -47,6 +47,9 @@ describe('checkEmail()', function () {
     it('无@返回false', function () {
         assert.equal(false, checks.checkEmail('gyg128o126.com'))
     })
+    it('多个@返回false', function () {
+        assert.equal(false, checks.checkEmail('gyg128@126@.com'))
+    })
     it('无.返回false', function () {
         assert.equal(false, checks.checkEmail('gyg128@126com'))
     })

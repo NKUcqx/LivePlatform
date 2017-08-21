@@ -40,10 +40,10 @@ describe('画板工具栏', function () {
 
 describe('画板', function () {
     let canvasVm = getPropsVm(Canvas, {WIDTH: 500, HEIGHT: 500})
-    let myCanvas = canvasVm.$el.querySelector('#board')
+    let testCanvas = canvasVm.$el.querySelector('#board')
     it('props传值加载', function () {
-        assert.equal(500, myCanvas.width)
-        assert.equal(500, myCanvas.height)
+        assert.equal(500, testCanvas.width)
+        assert.equal(500, testCanvas.height)
     })
 })
 
