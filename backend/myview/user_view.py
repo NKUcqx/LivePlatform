@@ -161,7 +161,6 @@ def logoutSubmit(request):
     auth.logout(request)
     return HttpResponse(content=CODE['0'], status=200)
 
-
 # check the username exists
 
 
@@ -232,6 +231,7 @@ def changePassword(request):
 @require_GET
 def getUserFromSession(request):
     session_key = request.GET.get('session_key', None)
+    print(session_key)
     if (session_key):
         try:
             session = Session.objects.get(session_key=session_key)
