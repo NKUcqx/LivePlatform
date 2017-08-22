@@ -44,7 +44,8 @@ const state = {
         gender: '',
         isLogin: false,
         role: 'S'
-    }
+    },
+    socket: null
 }
 
 export default new Vuex.Store({

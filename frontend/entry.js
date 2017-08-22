@@ -237,7 +237,7 @@ function listenPastJoin (socket) {
                 'socket': socket,
                 'room_name': data.room_name,
                 'msg_start': 0,
-                'msg_play': true,
+                'msg_play': false,
                 'msg_queue': []
             }
             //readFile(data.room_name, data.id)

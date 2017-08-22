@@ -104,3 +104,7 @@ export const getSessionKey = (state) => {
 export const hasSession = (state) => {
     return state.session.hasSession
 }
+
+export const getSocket = (state) => {
+    return state.socket
+}
