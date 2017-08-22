@@ -22,23 +22,7 @@ let room_past_audience_list = {} // save his socket
 // signals server will fire
 let fire_signals = ['Error', 'updateMessage', 'loadHistory', 'getAudience'] // wtf? whether space needed at the head of bracket or not!?
 // signals server will listening
-let listening_signals = ['connection', 'disconnecting', 'liveJoin', 'sendMessage', 'getAudience', 'kickout', 'endRoom', 'pastJoin', 'rejustProcess']
-/*
-function readFile (room_name, id) {
-    const readStream = fs.createReadStream(path.join('.', room_name, 'log.txt'))
-    readStream.on('data', (data) => {
-        let info = '' + data
-        let index = info.indexOf('\n')
-        while (index > -1) {
-            const line = info.substring(0, index)
-            info = info.substring(index + 1)
-            index = info.indexOf('\n')
-            room_past_audience_list[id]['msg_queue'].push(line)
-        }
-       //console.log('............'+room_past_audience_list[id]['msg_queue'].shift())
-       sendNextMessage(id, JSON.parse(room_past_audience_list[id]['msg_queue'].shift()))
-    })
-}*/
+let listening_signals = ['connection', 'disconnecting', 'liveJoin', 'sendMessage', 'getAudience', 'kickout', 'endRoom', 'pastJoin', 'pause']
 
 function writeFile (room_name, clear = false) {
     let file_name = path.join('.', room_name, 'log.txt')
@@ -74,9 +58,6 @@ function readDB (room_name, id, start = 0, end = -1, start_send = false, reset_q
     let queue = room_past_audience_list[id]
     client.zrange(room_name, start, end, (err, reply) => {
         if (err) throw err
-        console.log(room_name, id, start, end)
-        console.log(reply)
-        console.log(queue['msg_queue'])
         queue['msg_queue'] = reset_queue ? reply : queue['msg_queue'].concat(reply)
         queue['msg_start'] = end
         if (start_send && queue['msg_queue'].length > 0) { // cuz only the first msg in the queue need to be send manully
@@ -166,7 +147,9 @@ function sendNextMessage (id, old_msg) {
     let msg = JSON.parse(list['msg_queue'].shift())
     const time_slot = isValid(old_msg, 'object') ? msg['time'] - old_msg['time'] : 100
     sendMessage(list['socket'], msg['signal'], msg['content'], 0)
-    setTimeout(() => {sendNextMessage(id, msg)}, time_slot)
+    if (list['msg_play']) {
+        setTimeout(() => { sendNextMessage(id, msg) }, time_slot)
+    }
 }
 
 // TODO: omit room_name param, get it from socket
@@ -254,10 +237,12 @@ function listenPastJoin (socket) {
                 'socket': socket,
                 'room_name': data.room_name,
                 'msg_start': 0,
+                'msg_play': true,
                 'msg_queue': []
             }
             //readFile(data.room_name, data.id)
             readDB(data.room_name, data.id, 0, MESSAGE_THRESHOLD, true)
+            listenPause(socket)
         }
     })
 }
@@ -279,12 +264,19 @@ function listenSendMessage (socket) {
     })
 }
 
-function listenRejustProcess (socket) {
+function listenPause (socket) {
     // on rejust
+    console.log('out')
     listenSignal(socket, 8, (data) => {
         // update audience amount(or list)
-        if (isPackValid(data) && isValid(data.start)) {
-            readDB(data.room_name, data.id, data.start, data.start + MESSAGE_THRESHOLD, true, true)
+        console.log('in pause')
+        if (isValid(data.room_name) && isValid(data.id)) {
+            let list = room_past_audience_list[data.id]
+            list['msg_play'] = !list['msg_play']
+            if (list['msg_play'] && list['msg_queue'].length > 0) {
+                console.log('restart')
+                sendNextMessage(data.id, JSON.parse(list['msg_queue'].shift()))
+            }
         } else {
             sendMessage(socket, fire_signals[0], ERROR_MESSAGE[1])
         }
