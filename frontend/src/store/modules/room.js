@@ -125,6 +125,7 @@ const mutations = {
         is_living,
         thumbnail_path,
         slide_path,
+        slide_num,
         file_name,
         create_time }) {
         (isNotNull(id)) ? state.roomInfo.id = id : '';
@@ -135,6 +136,7 @@ const mutations = {
         (isNotNull(is_living)) ? state.roomInfo.is_living = is_living : '';
         (isNotNull(thumbnail_path)) ? state.roomInfo.img = thumbnail_path : '';
         (isNotNull(slide_path)) ? state.roomInfo.slide = slide_path : '';
+        (isNotNull(slide_num)) ? state.roomInfo.slide_num = slide_num : '';
         (isNotNull(file_name)) ? state.roomInfo.room_name = file_name : '';
         (isNotNull(create_time)) ? state.roomInfo.create_time = create_time : ''
         console.log(state.roomInfo)
