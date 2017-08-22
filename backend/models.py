@@ -47,10 +47,7 @@ def gen_user_avatar():
 def gen_room_thumbnail():
     return os.path.join('frontend', 'static', 'rooms', 'default_thumbnail', 'default_thumbnail-' + str(random.randint(1,7)) + '.jpg')
 
-def gen_room_thumbnail():
-    return os.path.join('frontend', 'static', 'rooms', 'default_thumbnail', 'default_thumbnail_' + str(random.randint(1,7)) + '.jpg')
-
-def gen_room_slide():'frontend/static/rooms/default_slide'
+def gen_room_slide():
     return os.path.join('frontend', 'static', 'rooms', 'default_slide')
 
 class Test(models.Model):
