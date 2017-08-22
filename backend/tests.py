@@ -254,9 +254,9 @@ class ToolkitsTestCase(TestCase):
         self.assertEqual(toolkits.change_prefix('1/2/3', True, '0'), '/0/1/2/3')
         self.assertEqual(toolkits.change_prefix('1/2/3', False, '2'), '/2/3')
     def test_get_file_amount(self):
-        self.assertEqual(toolkits.get_file_amount('frontend/test', False), (0,2))
-        self.assertEqual(toolkits.get_file_amount('frontend/test', True), (22,5))
-        self.assertEqual(toolkits.get_file_amount('frontend/test'), (22,5))
+        self.assertEqual(toolkits.get_file_amount('frontend/static/users/default_avatar', False), (10,0))
+        self.assertEqual(toolkits.get_file_amount('frontend/static/users/default_avatar', True), (10,0))
+        self.assertEqual(toolkits.get_file_amount('frontend/static/users/default_avatar'), (10,0))
     '''def test_bi2obj(self):
         json_data = json.dumps({'bool': True, 'integer': 1, 'NoneType': None, 'Null': 'null', 'undefiend': 'undefiend'})
         request = json.dumps({body:json_data})

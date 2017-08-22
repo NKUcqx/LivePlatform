@@ -44,6 +44,9 @@ def gen_user_nickname():
 def gen_user_avatar():
     return os.path.join('frontend', 'static', 'users', 'default_avatar', 'avatar' + str(random.randint(1,10)) + '.jpg')
 
+def gen_room_thumbnail():
+    return os.path.join('frontend', 'static', 'rooms', 'default_thumbnail', 'default_thumbnail_' + str(random.randint(1,7)) + '.jpg')
+
 class Test(models.Model):
     content = models.TextField()
 
@@ -131,10 +134,10 @@ class LiveRoom(models.Model):
     )  # identified whether it's A Live or not by whether end_time is null
     file_name = models.CharField(max_length=500, default=get_dir_path)
     slide_path = models.FileField(
-        upload_to=get_file_path, default='frontend/static/rooms/default.jpg')
+        upload_to=get_file_path, default='frontend/static/rooms/default_slide')
     thumbnail_path = models.ImageField(
         upload_to=get_file_path,
-        default='frontend/static/rooms/default_thumbnail.jpg')
+        default=gen_room_thumbnail)
     objects = LiveRoomManager()
     def save(self, *args, **kwargs):
         ''' On save, create timestamps '''
