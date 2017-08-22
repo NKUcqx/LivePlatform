@@ -161,7 +161,6 @@ def logoutSubmit(request):
     auth.logout(request)
     return HttpResponse(content=CODE['0'], status=200)
 
-
 # check the username exists
 
 
@@ -233,15 +232,13 @@ def changePassword(request):
 @require_GET
 def getUserFromSession(request):
     session_key = request.GET.get('session_key', None)
+    print(session_key)
     if (session_key):
         try:
             session = Session.objects.get(session_key=session_key)
             uid = session.get_decoded().get('_auth_user_id')
             user = User.objects.get(pk=uid)
             user_json = wrap_user(user)
-            user_avatar = user_json['avatar'].split('/')
-            user_json['avatar'] = '/' + \
-                '/'.join(user_avatar[user_avatar.index('frontend') + 1:])
             return JsonResponse({'user': user_json})
         except BaseException:
             return HttpResponse(content=CODE['12'], status=401)
