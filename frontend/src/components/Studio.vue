@@ -282,7 +282,7 @@ export default {
                     console.log('updateMessage:', data)
                     this.$refs[data.dataType].receive(data)
                 })
-                this.emit(this.user.id, null, '', 0, 'join')
+                this.emit(this.user.id, null, '', 0, 'liveJoin')
             })
         },
         emitCanvas (data) {

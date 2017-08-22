@@ -42,7 +42,10 @@ def gen_user_nickname():
     return "User_Nick_" + str(random.randint(0, 99999))
 
 def gen_user_avatar():
-    return os.path.join('frontend', 'static', 'users', 'default_avatar', 'avatar' + str(random.randint(1,10)) + '.jpg')
+    return os.path.join('frontend', 'static', 'users', 'default_avatar', 'avatar-' + str(random.randint(1,10)) + '.jpg')
+
+def gen_room_thumbnail():
+    return os.path.join('frontend', 'static', 'rooms', 'default_thumbnail', 'default_thumbnail-' + str(random.randint(1,7)) + '.jpg')
 
 class Test(models.Model):
     content = models.TextField()
