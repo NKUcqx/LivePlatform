@@ -74,9 +74,12 @@ function readDB (room_name, id, start = 0, end = -1, start_send = false, reset_q
     let queue = room_past_audience_list[id]
     client.zrange(room_name, start, end, (err, reply) => {
         if (err) throw err
+        console.log(room_name, id, start, end)
+        console.log(reply)
+        console.log(queue['msg_queue'])
         queue['msg_queue'] = reset_queue ? reply : queue['msg_queue'].concat(reply)
         queue['msg_start'] = end
-        if (start_send) { // cuz only the first msg in the queue need to be send manully
+        if (start_send && queue['msg_queue'].length > 0) { // cuz only the first msg in the queue need to be send manully
             const msg = queue['msg_queue'].shift()
             sendNextMessage(id, JSON.parse(msg))
         }
@@ -88,6 +91,7 @@ function writeDB (room_name) {
         // use room_name as hash key, time as field, obj as value
         client.zadd(room_name, room_msg_list[room_name][i]['time'], JSON.stringify(room_msg_list[room_name][i]))
     }
+    console.log('finish write db, keys: ', room_name)
 }
 
 function getRoomName (socket) {
@@ -320,6 +324,7 @@ function listenDisConnecting (socket) {
         let room_name = Object.keys(socket.rooms)[1]
         if (room_creator_list[room_name] && room_creator_list[room_name].id === socket.id) { // if creator is leaving, flush the msg list, kick out audiences, delete all data lists
             writeFile(room_name, true) // TODO: what if remaining data less than threshold ?
+            writeDB(room_name)
         } else { // if uesr leaving, just clear him in audience_list
             kickoutUser(room_name, socket)
         }
