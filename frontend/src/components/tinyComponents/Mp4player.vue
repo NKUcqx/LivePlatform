@@ -1,8 +1,8 @@
 <template>
 <div class="player">
-    <video ref="video" :src="getVideoSrc" :style="position" 
-        @canplay="initPlay" @timeupdate="changeTime" @ended="restore"></video>
-    <progress-bar></progress-bar>
+    <video ref="video" :src="getVideoSrc" :style="position" autoplay="autoplay" 
+        @canplay="initPlay" @timeupdate="changeTime" @ended="restore" id="video"></video>
+    <!--progress-bar></progress-bar-->
 </div>
 </template>
 
@@ -30,19 +30,11 @@ export default {
     props: {
         WIDTH: {
             type: Number,
-            default: 600
+            default: 280
         },
         HEIGHT: {
             type: Number,
-            default: 400
-        },
-        CREATETIME: {
-            type: String,
-            default: ''
-        },
-        ROOMID: {
-            type: Number,
-            default: 1
+            default: 182
         }
     },
     data () {
@@ -58,7 +50,8 @@ export default {
         ...mapGetters({
             isPlay: 'getPlayState',
             currentTime: 'getCurrentTime',
-            totalTime: 'getTotalTime'
+            totalTime: 'getTotalTime',
+            playerInfo: 'getPlayerInfo'
         }),
         /**
          *获取视频路径
@@ -66,7 +59,8 @@ export default {
          *@return {String} 由房间创建时间和房间id组合生成的视频路径
          */
         getVideoSrc () {
-            return 'static/record/' + getFormatDate(this.CREATETIME) + '/' + this.ROOMID + '/' + this.ROOMID + '.mp4'
+            console.log('gyg' + getFormatDate(this.playerInfo.create_time))
+            return 'static/record/' + getFormatDate(this.playerInfo.create_time) + '/' + this.playerInfo.id + '/' + this.playerInfo.id + '.mp4'
         }
     },
     methods: {
@@ -116,6 +110,12 @@ export default {
         currentTime: function (newVal, oldVal) {
             this.$refs['video'].currentTime = newVal
         }
+    },
+    mounted () {
+        // this.setPlayState(true)
     }
 }
 </script>
+
+<style scoped>
+</style>

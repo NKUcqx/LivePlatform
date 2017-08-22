@@ -89,6 +89,17 @@ const getters = {
         }
     },
     /**
+     *获取MediaPlayer信息
+     *@method getPlayerInfo
+     *@return {Object} 返回的对象中包括create_time和id
+     */
+    getPlayerInfo: (state) => {
+        return {
+            create_time: state.roomInfo.create_time,
+            id: state.roomInfo.id
+        }
+    },
+    /**
      *获取房间id
      *@method getRoomId
      *@return {Number} roomInfo.id

@@ -40,16 +40,13 @@ export default {
         HEIGHT: {
             type: Number,
             default: 182
-        },
-        ROOM: {
-            type: String,
-            default: '1000'
         }
     },
     computed: {
         ...mapGetters({
             user: 'getUser',
-            isLiveStart: 'isLiveStart'
+            isLiveStart: 'isLiveStart',
+            roomId: 'getRoomId'
         })
     },
     watch: {
@@ -116,7 +113,8 @@ export default {
             // 初始化客户端
             this.client.init(this.appKey, function () {
                 // 加入频道，uid由系统返还
-                that.client.join(dynamicKey, that.ROOM, null, function (uid) {
+                that.client.join(dynamicKey, that.roomId, null, function (uid) {
+                    console.log('User ' + uid + ' join channel successfully')
                     // 创建本地音视频流
                     that.localStream = AgoraRTC.createStream({streamID: uid, audio: true, video: true, screen: false})
                     that.localStream.setVideoProfile('720p_3')
@@ -238,7 +236,7 @@ export default {
         }
     },
     mounted () {
-        console.log(this.ROOM)
+        console.log(this.roomId)
     }
 }
 </script>
