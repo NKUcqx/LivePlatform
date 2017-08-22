@@ -2,14 +2,8 @@
     <div class="dialog" id='test' :style="position">
         <div class="head">
             <h1>
-                <Icon class="icon" type="chevron-up" id="lefticon" @click.native="up"></Icon>
-            </h1>
-            <h1>
                 <Icon type="android-notifications" v-if='allspeak' class='icon' id='midicon' @click.native='banspeakpublic'></Icon>
                 <Icon type="android-notifications-off" v-if='allsilence' class='icon' id='midicon' @click.native='canspeakpublic'></Icon>
-            </h1>
-            <h1>
-                <Icon class="icon" type="chevron-down" id="righticon" @click.native="down"></Icon>
             </h1>
         </div>
         <div class="historymessage">
@@ -43,7 +37,7 @@
             </ul>
         </div>
         <div class="input">
-            <Input class="messageInput" v-model="message" placeholder='please enter' :disabled='silence' @on-enter='sendmsg'>
+            <Input class="messageInput" v-model="message" placeholder='please enter' :disabled='silence ||!isLiveStart ' @on-enter='sendmsg'>
             <Button id="sendBtn" type="primary" slot="append" @click='sendmsg' :disabled="message.trim()==''">Send</Button>
             </Input>
         </div>
@@ -126,8 +120,8 @@
             },
             'roomid': function () {
                 const that = this
-                console.log('MOUNTED :', this.roomid)
-                if (this.isLiveStart) {
+                if (isLiveStart) {
+                    console.log('MOUNTED :', this.roomid)
                     this.$http({
                         url: '/echo/',
                         method: 'GET',
@@ -152,12 +146,8 @@
                     }, function () {
                         alert('ajax failure')
                     })
-                } else {
-                    this.silence = true
-                    this.speak = false
-                    this.allsilence = false
-                    this.allspeak = true
                 }
+                console.log(this.isLiveStart)
             }
         },
         mounted () {
@@ -165,12 +155,7 @@
             this.position.width = this.WIDTH.toString() + 'px'
             this.position.height = (this.HEIGHT).toString() + 'px'
             this.position.border = this.BORDER + 'px'
-            if (!this.isLiveStart) {
-                this.silence = true
-                this.speak = false
-                this.allspeak = true
-                this.allsilence = false
-            }
+            console.log(this.isLiveStart)
         },
         methods: {
             /**
@@ -211,20 +196,6 @@
                         document.getElementById('history').scrollTop = document.getElementById('history').scrollHeight
                     }
                 }
-            },
-            /**
-             *设置对象的最顶部即为对象在当前窗口显示的范围内的顶边，即滚动条在最顶端
-             *@event up
-             */
-            up: function () {
-                document.getElementById('history').scrollTop = 0
-            },
-            /**
-             *设置对象的最顶部距离对象在当前窗口显示的范围内的顶边为网页内容高度，即滚动条在最底端
-             *@event down
-             */
-            down: function () {
-                document.getElementById('history').scrollTop = document.getElementById('history').scrollHeight
             },
             /**
              *设置用户被禁言、踢出、解除禁言
@@ -614,13 +585,9 @@
     .student {
         color: black;
     }
-    #lefticon {
+    #midicon {
         margin-left: 5px;
         float: left;
-    }
-    #righticon {
-        margin-right: 5px;
-        float: right;
     }
     #sendBtn {
         background-color: #5cadff;
