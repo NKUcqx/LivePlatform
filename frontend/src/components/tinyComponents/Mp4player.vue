@@ -119,4 +119,3 @@ export default {
 
 <style scoped>
 </style>
->>>>>>> Add video in video room. refs #159
