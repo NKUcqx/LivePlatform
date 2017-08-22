@@ -64,6 +64,12 @@
 </template>
 
 <script>
+/**
+ *Module TinyComponents
+ *
+ *@module TinyComponents
+ *@requires Utils
+ */
 import { Sketch } from 'vue-color'
 import { wsConnect, wsSend, wsClose } from '../../utils/websockets'
 import { makeCanvasInfo } from '../../utils/messages'
@@ -75,6 +81,11 @@ const defaultProps = {
     a: 1
 }
 
+/**
+ *聊天室
+ *@class Chat
+ *@constructor
+ */
 export default {
     components: {
         'color-picker': Sketch
@@ -144,73 +155,171 @@ export default {
         }
     },
     computed: {
+        /**
+         *获得此时画布的宽度
+         *@method getWidth
+         *@return {String} 'width: ' + 画布的宽度
+         */
         getWidth () {
             return 'width: ' + this.canvas.width.toString()
         },
+        /**
+         *获得此时字体的大小
+         *@method getFontSize
+         *@return {String} 'fontSize: ' + 字体的大小
+         */
         getFontSize () {
             return 'fontSize: ' + this.canvas.fontSize.toString()
         },
+        /**
+         *获得此时是否要把图形的中心填满的参数
+         *@method getFill
+         *@return {String} 如果现在isFill的值为true，就返回'fill',否则返回'stroke'
+         */
         getFill () {
             return (this.canvas.isFill) ? 'fill' : 'stroke'
         }
     },
     methods: {
+        /**
+         *获得过去的操作生成的现在的图像
+         *@method getHistory
+         *@return {Object} 返回一个canvasInfo对象，更新属性type和canvas
+         */
         getHistory () {
             return makeCanvasInfo({
                 type: 'history',
                 canvas: this.$refs.board.toDataURL('image/png')
             })
         },
+        /**
+         *发送清空画板的消息，发送的消息为一个canvasInfo对象，属性type为'clear'
+         *@event reloadClear
+         */
         reloadClear () {
             this.send(makeCanvasInfo({
                 type: 'clear'
             }))
         },
+        /**
+         *显示工具栏
+         *@event showToolBar
+         */
         showToolBar () {
             this.toolBar = true
         },
+        /**
+         *隐藏工具栏
+         *@event hideToolBar
+         */
         hideToolBar () {
             this.toolBar = false
         },
+        /**
+         *返回值对应的宽度的像素值
+         *@method widthSliderFomat
+         *@param val
+         *@return {Object} 'width: ' + val + 'px'
+         */
         widthSliderFomat (val) {
             return 'width: ' + val + 'px'
         },
+        /**
+         *返回值对应的字体大小的像素值
+         *@method fontSliderFomat
+         *@param val
+         *@return {Object} 'font: ' + val + 'px'
+         */
         fontSliderFomat (val) {
             return 'font: ' + val + 'px'
         },
+        /**
+         *显示颜色选择器
+         *@event colorPicker
+         */
         colorPicker () {
             this.showColorPicker = true
         },
+        /**
+         *检查现在的type和实际的type是否符合
+         *@method checkType
+         *@param type
+         *@return {String} 返回代表相符合和不符合的两个字符串
+         */
         checkType (type) {
             return (this.type === type) ? 'primary' : 'ghost'
         },
+        /**
+         *改变现在记录的type值
+         *@event changeType
+         *@param type
+         */
         changeType (type) {
             this.type = type
         },
+        /**
+         *检查现在的isFill是否为真，及画的图形是否填充
+         *@method checkFill
+         *@return {String} 返回代表填充和不填充的两个字符串
+         */
         checkFill () {
             return (this.canvas.isFill) ? 'primary' : 'ghost'
         },
+        /**
+         *修改现在的isFill值，如果现在为true，则赋值false;如果现在是false,那么赋值true
+         *@event changeFill
+         */
         changeFill () {
             this.canvas.isFill = !(this.canvas.isFill)
         },
+        /**
+         *笔触增大
+         *@event addWidth
+         */
         addWidth () {
             (this.canvas.width < 24) ? (this.canvas.width++) : ''
         },
+        /**
+         *笔触减小
+         *@event minusWidth
+         */
         minusWidth () {
             (this.canvas.width > 1) ? (this.canvas.width--) : ''
         },
+        /**
+         *字体增大
+         *@event addFontSize
+         */
         addFontSize () {
             (this.canvas.fontSize < 35) ? (this.canvas.fontSize++) : ''
         },
+        /**
+         *字体减小
+         *@event minusFontSize
+         */
         minusFontSize () {
             (this.canvas.fontSize > 15) ? (this.canvas.fontSize--) : ''
         },
+        /**
+         *发送信息
+         *@event send
+         *@param {Object} data
+         */
         send (data) {
             this.$emit('send', data)
         },
+        /**
+         *接收信息,依据收到的消息对画板进行操作
+         *@event receive
+         *@param {Object} data
+         */
         receive (data) {
             this.draw(data.data)
         },
+        /**
+         *如果'\n'的位置大于等于0，那么就调用函数putText
+         *@event testText
+         */
         testText () {
             if (this.canvas.text.indexOf('\n') >= 0) {
                 try {
@@ -220,6 +329,14 @@ export default {
                 }
             }
         },
+        /**
+         *画直线
+         *@event drawLine
+         *@param {Number} ox，开始的x轴坐标
+         *@param {Number} oy，开始的y轴坐标
+         *@param {Number} ex，结束的x轴坐标
+         *@param {Number} ey，结束的y轴坐标
+         */
         drawLine (ox, oy, ex, ey) {
             const context = this.context
             context.beginPath()
@@ -228,6 +345,15 @@ export default {
             context.stroke()
             context.closePath()
         },
+        /**
+         *画圆
+         *@event drawCircle
+         *@param {Number} ox，开始的x轴坐标
+         *@param {Number} oy，开始的y轴坐标
+         *@param {Number} ex，结束的x轴坐标
+         *@param {Number} ey，结束的y轴坐标
+         *@param {Boolean} isFill,是否填充
+         */
         drawCircle (ox, oy, ex, ey, isFill = false) {
             const context = this.context
             const [ dx, dy ] = [ ex - ox, ey - oy ]
@@ -238,6 +364,15 @@ export default {
             (isFill) ? context.fill() : context.stroke()
             context.closePath()
         },
+        /**
+         *画矩形
+         *@event drawRect
+         *@param {Number} ox，开始的x轴坐标
+         *@param {Number} oy，开始的y轴坐标
+         *@param {Number} ex，结束的x轴坐标
+         *@param {Number} ey，结束的y轴坐标
+         *@param {Boolean} isFill,是否填充
+         */
         drawRect (ox, oy, ex, ey, isFill = false) {
             const context = this.context
             const [ dx, dy ] = [ ex - ox, ey - oy ]
@@ -246,13 +381,33 @@ export default {
             (isFill) ? context.fill() : context.stroke()
             context.closePath()
         },
+        /**
+         *在画板上显示输入的text
+         *@event drawText
+         *@param {Number} ox，开始的x轴坐标
+         *@param {Number} oy，开始的y轴坐标
+         *@param {Number} fontSize，字体大小
+         *@param {String} text，输入的text
+         *@param {Boolean} isFill,是否填充
+         */
         drawText (ox, oy, fontSize, text, isFill = false) {
             this.context.font = fontSize.toString() + 'px Georgia';
             (isFill) ? this.context.fillText(text, ox, oy) : this.context.strokeText(text, ox, oy)
         },
+        /**
+         *操作清空画板
+         *@event drawClear
+         */
         drawClear () {
             this.context.clearRect(0, 0, this.WIDTH, this.HEIGHT)
         },
+        /**
+         *设置属性
+         *@event setProperty
+         *@param {Number} width
+         *@param {String} color
+         *@param {Number} alpha
+         */
         setProperty (width, color, alpha) {
             const context = this.context
             context.strokeStyle = color
@@ -260,6 +415,10 @@ export default {
             context.lineWidth = width
             context.globalAlpha = alpha
         },
+        /**
+         *初始化画笔的属性
+         *@event initPenProperty
+         */
         initPenProperty () {
             const context = this.context
             context.lineCap = 'round'
@@ -270,6 +429,12 @@ export default {
                 this.canvas.isInput = false
             }
         },
+        /**
+         *实施画笔的操作
+         *@event commandpen
+         *@param {String} action，操作的名称，'mousemove', 'mousedown', 'mouseup'
+         *@param {Object} { x, y, buttons }
+         */
         commandpen (action, { x, y, buttons }) {
             this.initPenProperty()
             const canvas = this.canvas
@@ -300,7 +465,12 @@ export default {
                     break
             }
         },
-
+        /**
+         *实施画直线的操作
+         *@event commandline
+         *@param {String} action，操作的名称，'mousemove', 'mousedown', 'mouseup'
+         *@param {Object} { x, y, buttons }
+         */
         commandline (action, { x, y, buttons }) {
             this.initPenProperty()
             const canvas = this.canvas
@@ -333,7 +503,12 @@ export default {
                     break
             }
         },
-
+        /**
+         *实施画圆的操作
+         *@event commandcircle
+         *@param {String} action，操作的名称，'mousemove', 'mousedown', 'mouseup'
+         *@param {Object} { x, y, buttons }
+         */
         commandcircle (action, { x, y, buttons }) {
             this.initPenProperty()
             const canvas = this.canvas
@@ -367,7 +542,12 @@ export default {
                     break
             }
         },
-
+        /**
+         *实施画矩形的操作
+         *@event commandrect
+         *@param {String} action，操作的名称，'mousemove', 'mousedown', 'mouseup'
+         *@param {Object} { x, y, buttons }
+         */
         commandrect (action, { x, y, buttons }) {
             this.initPenProperty()
             const canvas = this.canvas
@@ -401,7 +581,12 @@ export default {
                     break
             }
         },
-
+        /**
+         *实施橡皮擦的操作
+         *@event commandrubber
+         *@param {String} action，操作的名称，'mousemove', 'mousedown', 'mouseup'
+         *@param {Object} { x, y, buttons }
+         */
         commandrubber (action, { x, y, buttons }) {
             this.initPenProperty()
             const canvas = this.canvas
@@ -431,7 +616,12 @@ export default {
                     break
             }
         },
-
+        /**
+         *实施文本框的操作
+         *@event commandtext
+         *@param {String} action，操作的名称，'mousemove', 'mousedown', 'mouseup'
+         *@param {Object} event
+         */
         commandtext (action, event) {
             this.initPenProperty()
             const canvas = this.canvas
@@ -450,7 +640,10 @@ export default {
                     break
             }
         },
-
+        /**
+         *调用drawText函数，并且发送makeCanvasInfo消息
+         *@event putText
+         */
         putText () {
             const canvas = this.canvas
             if (canvas.isInput) {
@@ -471,6 +664,10 @@ export default {
             }
         },
 
+        /**
+         *调用drawClear函数，并且发送makeCanvasInfo消息（type为'clear'）
+         *@event clearBoard
+         */
         clearBoard () {
             this.drawClear()
             this.send(makeCanvasInfo({
@@ -478,6 +675,11 @@ export default {
             }))
         },
 
+        /**
+         *画图，处理'pen','line','circle','rect'等信息
+         *@event draw
+         *@param {Object} canvasInfo，画板的相关信息
+         */
         draw (canvasInfo) {
             switch (canvasInfo.type) {
                 case 'pen':
