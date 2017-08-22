@@ -121,6 +121,4 @@ yarn.lock
 
 *.pyc
 migrations/
-rooms/
-users/
 coverage/
