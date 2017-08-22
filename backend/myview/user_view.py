@@ -228,7 +228,6 @@ def changePassword(request):
     else:
         return HttpResponse(content=CODE['13'], status=401)
 
-
 @require_GET
 def getUserFromSession(request):
     session_key = request.GET.get('session_key', None)
