@@ -345,7 +345,7 @@ export default {
         uploadSlide (res, file) {
             console.log(res.room.slide_path)
             this.loading = false
-            this.setRoomInfo({ slide_path: res.room.slide_path })
+            this.setRoomInfo({ slide_path: res.room.slide_path, slide_num: res.room.file_amount })
             this.$Message.success(CONST.success('Upload Slide'))
         },
         uploadSlideTimeout (e, file, fileList) {

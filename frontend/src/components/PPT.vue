@@ -121,7 +121,7 @@
         },
         created () {
             // ***********NEED MODIFY***********
-            for (let i = 1; i <= 7; i++) {
+            for (let i = 1; i <= parseInt(this.slideInfo.slide_num); i++) {
                 this.imgs.push(this.binpath + '/rooms/room1/' + 'bg' + i + '.jpg')
             }
             this.updateSlide()
@@ -130,7 +130,7 @@
             updateSlide () {
                 // *************** NEED MODIFY ***************  this.slideInfo.slide_num
                 this.imgs = []
-                for (let i = 1; i <= 10; i++) {
+                for (let i = 1; i <= parseInt(this.slideInfo.slide_num); i++) {
                     console.log(this.slideInfo.slide_path + '/' + getFileNameFromPath(this.slideInfo.slide_path) + '-' + i + '.jpg')
                     this.imgs.push(this.slideInfo.slide_path + '/' + getFileNameFromPath(this.slideInfo.slide_path) + '-' + i + '.jpg')
                 }
