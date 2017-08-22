@@ -4,51 +4,53 @@ let server = require('http').Server(app)
 let io = require('socket.io')(server)
 let path = require('path')
 let fs = require('fs')
+let redis = require('redis')
 
 // max message list length threshold, write into file when archive this
 const MESSAGE_THRESHOLD = 400
+const LOAD_THRESHOLD = 0.2 // push new msg when length < 0.1 * threshold
 const ERROR_MESSAGE = ['Format Invalid', 'Miss ', 'Must Join this room first', 'Unsupported Type, Choose between 0~3', 'Room not exists', 'Permission Denied']
+//const TIME_DELAY = 4 // consider of recursion invoke or other complex stuff
+const client = redis.createClient() // may error in vm
 
 // buffer area, msg queue, will load into log.txt
 let room_msg_list = {}
-let room_creater_list = {}
+let room_creator_list = {}
 // buffer area, live user in a room, for now , just the amount not user list
 let room_audience_list = {}
+let room_past_audience_list = {} // save his socket
 // signals server will fire
 let fire_signals = ['Error', 'updateMessage', 'loadHistory', 'getAudience'] // wtf? whether space needed at the head of bracket or not!?
 // signals server will listening
-let listening_signals = ['connection', 'disconnecting', 'join', 'sendMessage', 'getAudience', 'kickout', 'endRoom']
-
-function readFile (roomname, limit = MESSAGE_THRESHOLD) {
-    let list = []
-    const readStream = fs.createReadStream(path.join('static', 'rooms', roomname, 'log.txt'))
+let listening_signals = ['connection', 'disconnecting', 'liveJoin', 'sendMessage', 'getAudience', 'kickout', 'endRoom', 'pastJoin', 'rejustProcess']
+/*
+function readFile (room_name, id) {
+    const readStream = fs.createReadStream(path.join('.', room_name, 'log.txt'))
     readStream.on('data', (data) => {
-        let info = ''
-        let amount = 0
-        info = info + data
-        let index = info.indexof('\n')
-        while (index > -1 && amount < limit) {
-            amount++
+        let info = '' + data
+        let index = info.indexOf('\n')
+        while (index > -1) {
             const line = info.substring(0, index)
             info = info.substring(index + 1)
             index = info.indexOf('\n')
-            // list.push(line);
-            list.push(line)// contain time & msg , msg need to convert to json obj
+            room_past_audience_list[id]['msg_queue'].push(line)
         }
+       //console.log('............'+room_past_audience_list[id]['msg_queue'].shift())
+       sendNextMessage(id, JSON.parse(room_past_audience_list[id]['msg_queue'].shift()))
     })
-    return list
-}
+}*/
 
 function writeFile (room_name, clear = false) {
-    file_name = path.join('.', room_name, 'log.txt')
+    let file_name = path.join('.', room_name, 'log.txt')
+    console.log(room_name)
     if (fs.existsSync(file_name)) {
         fs.open(file_name, 'a', (err, fd) => {
             console.log('start')
             if (err) {
                 throw err
             }
-            for (let i = 0; i <  MESSAGE_THRESHOLD; i++) {
-                fs.writeSync(fd, room_msg_list[room_name][i] + '\r\n')
+            for (let i in room_msg_list[room_name]) {
+                fs.writeSync(fd, JSON.stringify(room_msg_list[room_name][i]) + '\r\n')
             }
             fs.close(fd, (err) => {
                 if (err) {
@@ -58,13 +60,42 @@ function writeFile (room_name, clear = false) {
             if (clear === true) {
                 clearRoom(room_name)
             } else {
-                room_msg_list[room_name] = room_msg_list[room_name].slice(MESSAGE_THRESHOLD)
+                room_msg_list[room_name].splice(0, MESSAGE_THRESHOLD)
+                // room_msg_list[room_name] = room_msg_list[room_name].slice(MESSAGE_THRESHOLD)
             }
             console.log('finish')
         })
     } else {
-        throw Error('file not exists')
+        console.log('file not exists')
     }
+}
+
+function readDB (room_name, id, start = 0, end = -1, start_send = false, reset_queue = false) { // default is from -infinity to +infinity
+    let queue = room_past_audience_list[id]
+    client.zrange(room_name, start, end, (err, reply) => {
+        if (err) throw err
+        console.log(room_name, id, start, end)
+        console.log(reply)
+        console.log(queue['msg_queue'])
+        queue['msg_queue'] = reset_queue ? reply : queue['msg_queue'].concat(reply)
+        queue['msg_start'] = end
+        if (start_send && queue['msg_queue'].length > 0) { // cuz only the first msg in the queue need to be send manully
+            const msg = queue['msg_queue'].shift()
+            sendNextMessage(id, JSON.parse(msg))
+        }
+    })
+}
+
+function writeDB (room_name) {
+    for (let i in room_msg_list[room_name]) {
+        // use room_name as hash key, time as field, obj as value
+        client.zadd(room_name, room_msg_list[room_name][i]['time'], JSON.stringify(room_msg_list[room_name][i]))
+    }
+    console.log('finish write db, keys: ', room_name)
+}
+
+function getRoomName (socket) {
+    return Object.keys(socket.rooms)[1]
 }
 
 function clearRoom (room_name) {
@@ -72,7 +103,7 @@ function clearRoom (room_name) {
         kickoutUser(room_name, user)
     }
     delete room_audience_list[room_name]
-    delete room_creater_list[room_name]
+    delete room_creator_list[room_name]
     delete room_msg_list[room_name]
 }
 
@@ -86,21 +117,14 @@ function kickoutUser (room_name, user) {
         } else if (type === 'object') { // using raw socket instance
             console.log('user.id : %s', user.id)
             for (let item in room_audience_list[room_name]) {
-                console.log('here we get ' + item + '<<<<<<')
-                console.log('socket id : ' + room_audience_list[room_name][item].id)
-                if (room_audience_list[room_name][item].id === user.id) {
-                    console.log('ming zhong %s', item)
-                    kickoutUser(room_name, item)
-                    break
-                } else {
-                    console.log('miss' + item)
-                }
+                kickoutUser(room_name, item)
+                break
             }
         }
     }
 }
 
-
+// TODO: no need to check room_name anymore since i can get it from socket
 function isPackValid (data) {
     return isValid(data.room_name) &&
             isValid(data.content, 'object') &&
@@ -114,22 +138,41 @@ function isValid (content, type = 'string') {
 
 function logMessage (room_name, content, type, signal = 'sendMessage') {
     const DATE = new Date()
-    let json_data = JSON.stringify({
+    let json_data = {
         // TODO user id later
         'room_name': room_name,
         'content': content,
         'type': type,
         'signal': isValid(signal) ? signal : signal,
         'time': DATE.getTime() // get mileseconds from 1970.1.1 to now
-    })
+    }
     room_msg_list[room_name].push(json_data)
     if (room_msg_list[room_name].length > MESSAGE_THRESHOLD) { // if it is filled, dump into log.txt
         writeFile(room_name)
+        writeDB(room_name)
     }
 }
-// TODO: param log's order
+
+function sendNextMessage (id, old_msg) {
+    console.log(old_msg['time'])
+    let list = room_past_audience_list[id]
+    if (list['msg_queue'].length <= 0) {
+        console.log('record finish')
+        return
+    }
+    if (list['msg_queue'].length <= LOAD_THRESHOLD * MESSAGE_THRESHOLD) {
+        readDB(list['room_name'], id, list['msg_start'], list['msg_start'] + MESSAGE_THRESHOLD)
+    }
+    let msg = JSON.parse(list['msg_queue'].shift())
+    const time_slot = isValid(old_msg, 'object') ? msg['time'] - old_msg['time'] : 100
+    sendMessage(list['socket'], msg['signal'], msg['content'], 0)
+    setTimeout(() => {sendNextMessage(id, msg)}, time_slot)
+}
+
+// TODO: omit room_name param, get it from socket
 function sendMessage (socket, signal, content, type = 0, room_name = '', log = false) {
     let error = false
+    //let room_name = getRoomName(socket)
     switch (type) {
         case 0: // send to himself
             socket.emit(signal, content)
@@ -153,7 +196,6 @@ function sendMessage (socket, signal, content, type = 0, room_name = '', log = f
         case 3: // send to everyone connected to server
             io.sockets.emit(signal, content)
             break
-        // TODO: add a case: send to THE user (silence) (get socket from his id)
         default:
             error = true
             socket.emit(fire_signals[0], ERROR_MESSAGE[2])
@@ -167,75 +209,139 @@ function sendMessage (socket, signal, content, type = 0, room_name = '', log = f
     }
 }
 
-// on connect
-io.on(listening_signals[0], (socket) => {
-    // on join
-    socket.on(listening_signals[2], (data) => {
+function initRoom (room_name, creator) {
+    room_creator_list[room_name] = creator // save the creator to ask for history
+    room_audience_list[room_name] = []
+    room_msg_list[room_name] = []
+}
+
+function listenSignal (socket, signal_type, callback) {
+    socket.on(listening_signals[signal_type], callback)
+}
+
+function listenLiveJoin (socket) {
+    // on LiveJoin
+    listenSignal(socket, 2, (data) => {
+        console.log(socket.id + '>>>>>>>>LIVE>>>>>>>>>')
         if (isValid(data.room_name) && isValid(data.id)) {
-            if (!room_creater_list[data.room_name]) {
-                room_creater_list[data.room_name] = socket // save the creater to ask for history
-                room_audience_list[data.room_name] = []
-                room_msg_list[data.room_name] = []
+            if (!room_creator_list[data.room_name]) {
+                initRoom(data.room_name, socket)
                 console.log('create room: %s by %s', data.room_name, data.id)
             }
             socket.join(data.room_name, () => {
                 console.log(data.id + ' has joined : ' + data.room_name + 'socket : ' + socket.id)
                 // push this socket into audience list via its id
                 room_audience_list[data.room_name][data.id] = socket
-                // ask for history from creater
-                sendMessage(room_creater_list[data.room_name], fire_signals[2], data.id)
+                // ask for history from creator
+                sendMessage(room_creator_list[data.room_name], fire_signals[2], data.id)
             })
-            // on sendMessage
-            socket.on(listening_signals[3], (data) => {
-                console.log('sendMessage')
-                // TODO: is it necessary to check all of them ?
-                if (isPackValid(data)) {
-                    if (isValid(data.to)) {
-                        const sock = room_audience_list[data.room_name][data.to]
-                        sendMessage(sock, fire_signals[1], data.content, 0, data.room_name)
-                    } else {
-                        sendMessage(socket, fire_signals[1], data.content, data.type, data.room_name, true)
-                    }
-                } else {
-                    sendMessage(socket, fire_signals[0], ERROR_MESSAGE[0])
-                }
-            })
-            // on getAudience
-            socket.on(listening_signals[4], (data) => {
-                // update audience amount(or list)
-                if (isValid(data.room_name)) {
-                    let amount = 0
-                    for (let i in room_audience_list[data.room_name]) {
-                        amount++
-                    }
-                    console.log(amount)
-                    sendMessage(socket, fire_signals[3], amount, 2, data.room_name)
-                } else {
-                    sendMessage(socket, fire_signals[0], ERROR_MESSAGE[1])
-                }
-            })
-            // on kickout
-            socket.on(listening_signals[5], (data) => {
-                if (isPackValid(data) && isValid(data.to)) {
-                    kickoutUser(data.room_name, data.to)
-                }
-            })
+            listenSendMessage(socket)
+            listenGetAudience(socket)
+            listenKickOut(socket)
         } else {
             sendMessage(socket, fire_signals[0], ERROR_MESSAGE[1])
         }
     })
+}
+
+function listenPastJoin (socket) {
+    // on pastJoin
+    listenSignal(socket, 7, (data) => {
+        console.log(socket.id + '<<<<<<<PAST<<<<<<<<<')
+        if (isValid(data.room_name) && isValid(data.id)) {
+            socket.join(data.room_name, () => {})
+            room_past_audience_list[data.id] = {
+                'socket': socket,
+                'room_name': data.room_name,
+                'msg_start': 0,
+                'msg_queue': []
+            }
+            //readFile(data.room_name, data.id)
+            readDB(data.room_name, data.id, 0, MESSAGE_THRESHOLD, true)
+        }
+    })
+}
+
+function listenSendMessage (socket) {
+    // on sendMessage
+    listenSignal(socket, 3, (data) => {
+        console.log('send_message %s', data.type)
+        if (isPackValid(data)) {
+            if (isValid(data.to)) {
+                const sock = room_audience_list[data.room_name][data.to]
+                sendMessage(sock, fire_signals[1], data.content, 0, data.room_name)
+            } else {
+                sendMessage(socket, fire_signals[1], data.content, data.type, data.room_name, true)
+            }
+        } else {
+            sendMessage(socket, fire_signals[0], ERROR_MESSAGE[0])
+        }
+    })
+}
+
+function listenRejustProcess (socket) {
+    // on rejust
+    listenSignal(socket, 8, (data) => {
+        // update audience amount(or list)
+        if (isPackValid(data) && isValid(data.start)) {
+            readDB(data.room_name, data.id, data.start, data.start + MESSAGE_THRESHOLD, true, true)
+        } else {
+            sendMessage(socket, fire_signals[0], ERROR_MESSAGE[1])
+        }
+    })
+}
+
+function listenGetAudience (socket) {
+    // on getAudience
+    listenSignal(socket, 4, (data) => {
+        // update audience amount(or list)
+        if (isValid(data.room_name)) {
+            let amount = 0
+            for (let i in room_audience_list[data.room_name]) {
+                amount++
+            }
+            console.log(amount)
+            sendMessage(socket, fire_signals[3], amount, 2, data.room_name)
+        } else {
+            sendMessage(socket, fire_signals[0], ERROR_MESSAGE[1])
+        }
+    })
+}
+
+function listenKickOut (socket) {
+    // on kickout
+    listenSignal(socket, 5, (data) => {
+        if (isPackValid(data) && isValid(data.to)) {
+            kickoutUser(data.room_name, data.to)
+        }
+    })
+}
+
+function listenDisConnecting (socket) {
     // on disconnecting
-    socket.on(listening_signals[1], (reason) => {
+    listenSignal(socket, 1, (reason) => {
         console.log(reason)
         let room_name = Object.keys(socket.rooms)[1]
-        if (room_creater_list[room_name] && room_creater_list[room_name].id === socket.id) { // if creater is leaving, flush the msg list, kick out audiences, delete all data lists
+        if (room_creator_list[room_name] && room_creator_list[room_name].id === socket.id) { // if creator is leaving, flush the msg list, kick out audiences, delete all data lists
             writeFile(room_name, true) // TODO: what if remaining data less than threshold ?
+            writeDB(room_name)
         } else { // if uesr leaving, just clear him in audience_list
             kickoutUser(room_name, socket)
         }
     })
+}
+
+// on connect
+io.on(listening_signals[0], (socket) => {
+    listenLiveJoin(socket)
+    listenPastJoin(socket)
+    listenDisConnecting(socket)
 })
 
 server.listen(8002, () => {
     console.log('listening : 8002')
+})
+
+client.on('ready', () => {
+    console.log('Redis is ready')
 })

@@ -15,6 +15,8 @@ import time
 
 CODE = toolkits.CODE  # assign to local name to reduce the usage of its long prefix
 bi2obj = toolkits.bi2obj
+change_prefix = toolkits.change_prefix
+get_file_amount = toolkits.get_file_amount
 # change ImageFieldFile or some other field type into str for JsonResponse
 model_to_json = toolkits.model_to_json
 API_key = [ # to get more free conversion chances ..
@@ -62,15 +64,7 @@ def upload_slide(room_id, slide):
     unziped_file = un_zip(converted_file)
     room.slide_path = unziped_file
     room.save()
-    count = sum([len(c) for a, b, c in os.walk(room.slide_path.path)])
-    return room, count
-
-
-def check_convert_status(process_id):  # i.e. upload_to
-    process = processes[process_id]
-    process.refresh()
-    process.wait()
-    return process['message']
+    return room
 
 
 def convert_file(file, process_id, upload_to):
@@ -105,17 +99,6 @@ def un_zip(file_name):
     return split_str
 
 
-def change_prefix(long_path, add=False, target='static'):
-    if (add):
-        return '/' + os.path.join(target, long_path)
-    try:
-        path_arr = long_path.split('/')
-        path = '/' + '/'.join(path_arr[path_arr.index(target):])
-    except ValueError:
-        return long_path
-    return path
-
-
 def wrap_room(room):  # room instance
     room = model_to_json(room)
     room['creator_id'] = room.get('creator', room.get('creator_id', None))
@@ -125,6 +108,7 @@ def wrap_room(room):  # room instance
     #room['end_time'] = room['end_time'].strftime('%Y-%-m-%d %H:%m:%S') if room.get('end_time', None) is not None else ''
     room['file_name'] = change_prefix(room['file_name'])
     room['thumbnail_path'] = change_prefix(room['thumbnail_path'])
+    room['file_amount'],_ = get_file_amount(room['slide_path']) # just need file amount
     room['slide_path'] = change_prefix(room['slide_path'])
     return room
 
@@ -171,14 +155,17 @@ def uploadThumbnail(request):
         if (str(request.user.id) == room['creator_id']):
             thumbnail = request.FILES.get('thumbnail')
             thumbnail_type = os.path.splitext(thumbnail.name)[1]
+            print('type: ', thumbnail_type)
             if (thumbnail_type in IMG_LIST):
                 room = upload_thumbnail(room['id'], thumbnail)
                 return JsonResponse({'room': wrap_room(room)})
             else:
+                print(' not in the list')
                 return HttpResponse(content=CODE['20'], status=415)
         else:
             return HttpResponse(content=CODE['12'], status=401)
     else:
+        print('no')
         return HttpResponse(content=CODE['24'], status=400)
 
 
@@ -193,10 +180,9 @@ def uploadSlide(request):
                 slide_type = os.path.splitext(slide.name)[1]
                 if (slide_type in SLIDE_LIST):
                     print('start uploading file: %s' % slide.name)
-                    room, count = upload_slide(room['id'], slide)
+                    room = upload_slide(room['id'], slide)
                     print('finish uploading .')
                     room_dict = wrap_room(room)
-                    room_dict['file_count'] = count
                     return JsonResponse({'room': room_dict})
                 else:
                     return HttpResponse(content=CODE['20'], status=415)
@@ -208,57 +194,46 @@ def uploadSlide(request):
     else:
         return HttpResponse(content=CODE['24'], status=400)
 
+def get_root_path():
+    return os.path.join('frontend', 'static', 'record')
 
-@login_required
-@require_GET
-def getConvertStatus(request):
-    if ('room' in request.session):
-        room = request.session['room']
-        message = check_convert_status(room['id'])
-        return JsonResponse({'message': message})
-    else:
-        return HttpResponse(content=CODE['24'], status=400)
-
-
-def videothread(roomid,roomname):
+def video_thread(roomid,roomname):
     print('video start')
     createtime=time.strftime('%Y%m%d', time.localtime(time.time()))
-    os.system('backend/record/Recorder_local --appId "0c6a0a8f844c49d78a9aac0907dfc1d8" --uid 0 --channel '+ str(roomid) +' --appliteDir "backend/record/bin/" --channelProfile 1 --idle 120 --recordFileRootDir '+ 'frontend/static/record')
+    os.system('backend/record/Recorder_local --appId "0c6a0a8f844c49d78a9aac0907dfc1d8" --uid 0 --channel '+ str(roomid) +' --appliteDir "backend/record/bin/" --channelProfile 1 --idle 120 --recordFileRootDir '+ get_root_path())
     print('video convert')
-    os.system('python3.6 backend/record/video_convert.py '+ 'frontend/static/record/'+createtime+ '/' + str(roomid) + '*')
-    os.system('mv frontend/static/record/'+createtime+'/'+str(roomid)+'* frontend/static/record/'+createtime+'/'+str(roomid))
-    os.system('mv frontend/static/record/'+createtime+'/'+str(roomid)+'/*.mp4 frontend/static/record/'+createtime+'/'+str(roomid)+'/'+str(roomid)+'.mp4')
+    os.system('python3.6 backend/record/video_convert.py '+ os.path.join(get_root_path(), createtime, str(roomid) + '*'))
+    os.system('mv ' + os.path.join(get_root_path(), createtime, str(roomid) + '* ' + os.path.join(get_root_path(), createtime, str(roomid))))
+    os.system('mv ' + os.path.join(get_root_path(), createtime, str(roomid), '*.mp4') + ' ' + os.path.join(get_root_path(), createtime, str(roomid), str(roomid) + '.mp4'))
+
+def start_thread(id, file_name):
+    threads = []    # TODO: what is this for ? A global list ?
+    print('thread--start')
+    t = threading.Thread(target=video_thread,args=(id, file_name))
+    threads.append(t)
+    t.start()
+    print('thread--real')
+
 @login_required
 @require_POST
 def createRoom(request):
-    # can check log in status because of comments above
     if (request.user.role == 'T' and 'room' not in request.session):
         creator_id = request.user.id
-        thumbnail = request.FILES.get('thumbnail', None)
         name = request.POST.get('name')
-        is_silence = True if request.POST.get('is_silence',
-                                              None) is not None else False
         is_living = False if request.POST.get('is_living',
                                               None) is not None else True
         file_name = generate_room_path()
-        threads = []
         if (create_folder(file_name)):
             room = LiveRoom(
                 name=name,
                 creator_id=creator_id,
                 file_name=file_name,
-                is_silence=is_silence,
+                #is_silence=is_silence,
                 is_living=is_living)
             room.save()
-            roomid=room.id
-            room = wrap_room(room)
-            print('thread--start')
-            t = threading.Thread(target=videothread,args=(roomid,room['file_name'],))
-            threads.append(t)
-            t.start()
-            print('thread--real')
-            request.session['room'] = room
-            return JsonResponse({'room': room})  # return the new room's id
+            start_thread(room.id, room.file_name)
+            request.session['room'] = wrap_room(room)
+            return JsonResponse({'room': wrap_room(room)})  # return the new room's id
         else:
             return HttpResponse(content=CODE['6'], status=500)
     elif ('room' in request.session):
@@ -297,9 +272,7 @@ def endRoom(request):
     room = request.session.get('room', None)
     if (room):
         if (user and str(user.id) == room['creator_id']):
-            room_db = LiveRoom.objects.get(pk=int(room['id']))
-            room_db.is_living = False  # will set end_time automatically by db
-            room_db.save()
+            LiveRoom.objects.filter(pk=int(room['id'])).update(is_living = False)
             del request.session['room']
             return HttpResponse(CODE['0'])
         else:
@@ -307,7 +280,7 @@ def endRoom(request):
     else:
         return HttpResponse(content=CODE['24'], status=404)
 
-
+'''
 @login_required
 @require_POST
 def silenceRoom(request):
@@ -321,4 +294,4 @@ def silenceRoom(request):
         room_db.save()
         return JsonResponse(content=wrap_room(room_db))
     else:
-        return HttpResponse(content=CODE['12'], status=401)
+        return HttpResponse(content=CODE['12'], status=401)'''

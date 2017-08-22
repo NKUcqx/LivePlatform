@@ -41,6 +41,11 @@ def get_dir_path(instance=None):
 def gen_user_nickname():
     return "User_Nick_" + str(random.randint(0, 99999))
 
+def gen_user_avatar():
+    return os.path.join('frontend', 'static', 'users', 'default_avatar', 'avatar' + str(random.randint(1,10)) + '.jpg')
+
+def gen_room_thumbnail():
+    return os.path.join('frontend', 'static', 'rooms', 'default_thumbnail', 'default_thumbnail_' + str(random.randint(1,7)) + '.jpg')
 
 class Test(models.Model):
     content = models.TextField()
@@ -54,13 +59,13 @@ class User(AbstractUser):
         auto_now_add=True, verbose_name='date joined')
     gender = models.BooleanField(default=True)
     avatar = models.FileField(
-        upload_to=get_user_path, default='frontend/static/users/avatar.jpg'
+        upload_to=get_user_path, default=gen_user_avatar
     )  # create a personal folder to hold resources later by DB or Django
     role_choices = (('T', 'teacher'), ('S', 'student'))
     role = models.CharField(max_length=7, choices=role_choices, default='S')
 
     def __unicode__(self):
-        return "ID : {}, UserName: {}".format(self.ID, self.username)
+        return 'ID : {}, UserName: {}'.format(self.ID, self.username)
 
 
 # clean the liveroom hold by the leaving user
@@ -120,19 +125,19 @@ class LiveRoom(models.Model):
         default=get_User)  # no need to CASCADE when user get deleted ,right?
     audience_amount = models.PositiveIntegerField(
         default=0
-    )  # present live audience amount if is_living = True else total amount
+    )  # present total audience amount
     is_living = models.BooleanField(default=True)
-    is_silence = models.BooleanField(default=False)
+    #is_silence = models.BooleanField(default=False)
     create_time = models.DateTimeField()
     end_time = models.DateTimeField(
         null=True, blank=True
     )  # identified whether it's A Live or not by whether end_time is null
     file_name = models.CharField(max_length=500, default=get_dir_path)
     slide_path = models.FileField(
-        upload_to=get_file_path, default='frontend/static/rooms/default.jpg')
+        upload_to=get_file_path, default='frontend/static/rooms/default_slide')
     thumbnail_path = models.ImageField(
         upload_to=get_file_path,
-        default='frontend/static/rooms/default_thumbnail.jpg')
+        default=gen_room_thumbnail)
     objects = LiveRoomManager()
     def save(self, *args, **kwargs):
         ''' On save, create timestamps '''
@@ -150,7 +155,7 @@ def checkEndAndLiving(sender, instance, **kwargs):
     if (instance.is_living and instance.end_time is not None):
         raise TypeError("Living Room can't have property end_time")
     if (instance.is_living == False):
-        instance.is_silence = True
+        #instance.is_silence = True
         instance.end_time = timezone.now()
 
 

@@ -1,4 +1,5 @@
 import json
+import os
 import datetime
 from django.db.models.fields.files import ImageFieldFile, FieldFile
 from django.forms.models import model_to_dict
@@ -53,6 +54,24 @@ def bi2obj(request):# in binary form
     body = json.loads(body_unicode)
     return body
 
-
 def Log(msg, title = "Default Title"):
     print(title +" : " + msg)
+
+def change_prefix(long_path, add=False, target='static'):
+    if (add):
+        return '/' + os.path.join(target, long_path)
+    try:
+        path_arr = long_path.split('/')
+        path = '/' + '/'.join(path_arr[path_arr.index(target):])
+    except:
+        return long_path
+    return path
+
+def get_file_amount(path, recursive = True):
+    file_amount, folder_amount = 0, 0
+    for rt, dirs, files in os.walk(path):
+        file_amount += len(files)
+        folder_amount += len(dirs)
+        if(not recursive):
+            break
+    return file_amount, folder_amount
