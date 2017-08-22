@@ -64,7 +64,6 @@ import UploadButton from './tinyComponents/UploadButton'
 import Codedemo from './Codedemo'
 import Ppt from './PPT'
 import Chatdemo from './Chat'
-import io from 'socket.io-client'
 import { mapGetters, mapActions, mapMutations } from 'vuex'
 import { isValid } from '../utils/checks'
 import { beforePost, getCookie } from '../utils/utils'
@@ -117,8 +116,7 @@ export default {
                 size: 50
             },
             isEnd: false,
-            isFirtCodeMirror: true,
-            socket: null
+            isFirtCodeMirror: true
         }
     },
     watch: {
@@ -151,7 +149,8 @@ export default {
     computed: {
         ...mapGetters({
             user: 'getUser',
-            roomInfo: 'getRoomInfo'
+            roomInfo: 'getRoomInfo',
+            socket: 'getSocket'
         }),
         workClass () {
             return (this.style < 3) ? 'main-section left-part' : 'minor-section right-part studio-relative'
@@ -203,7 +202,8 @@ export default {
         }),
         ...mapMutations({
             emptyRoomInfo: 'emptyRoomInfo',
-            setRoomInfo: 'setRoomInfo'
+            setRoomInfo: 'setRoomInfo',
+            setSocket: 'setSocket'
         }),
         getCookie () {
             return getCookie('csrftoken')
@@ -273,7 +273,7 @@ export default {
         },
         buildConnect () {
             let that = this
-            this.socket = io('http://localhost:8002', {transports: ['websocket'], upgrade: false})
+            this.setSocket()
             this.listen('connect', () => {
                 this.listen('loadHistory', (data) => {
                     const toWhom = data

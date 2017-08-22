@@ -43,7 +43,10 @@ export default {
         ...mapGetters({
             isPlay: 'getPlayState',
             currentTime: 'getCurrentTime',
-            totalTime: 'getTotalTime'
+            totalTime: 'getTotalTime',
+            user: 'getUser',
+            roomInfo: 'getRoomInfo',
+            socket: 'getSocket'
         })
     },
     methods: {
@@ -52,12 +55,29 @@ export default {
             'setCurrentTime',
             'setTotalTime'
         ]),
+        emit (signal = 'pause') {
+            const pack = {
+                id: this.user.userid,
+                room_name: this.roomInfo.room_name,
+                content: {
+                    id: this.user.userid,
+                    nickname: this.user.nickname,
+                    data: '',
+                    dataType: ''
+                },
+                type: '',
+                signal: '',
+                to: ''
+            }
+            this.socket.emit(signal, pack)
+        },
         /**
          *更改录播状态为播放
          *@event play
          */
         play () {
             this.setPlayState(true)
+            this.emit()
         },
         /**
          *更改录播状态为暂停
@@ -65,6 +85,7 @@ export default {
          */
         pause () {
             this.setPlayState(false)
+            this.emit()
         },
         /**
          *响应用户点击跳跃播放

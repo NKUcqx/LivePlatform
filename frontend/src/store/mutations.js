@@ -7,6 +7,7 @@
  *@constructor
  */
 import Vue from 'vue'
+import io from 'socket.io-client'
 
 /**
  *设置session并将sessionKey存入localStorage
@@ -72,4 +73,8 @@ export const setAvatar = (state, url) => {
     if (state.user.isLogin) {
         state.user.avatar = url
     }
+}
+
+export const setSocket = (state) => {
+    state.socket = io('http://localhost:8002', {transports: ['websocket'], upgrade: false})
 }
