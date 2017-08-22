@@ -62,12 +62,12 @@ export default {
                 content: {
                     id: this.user.userid,
                     nickname: this.user.nickname,
-                    data: data,
-                    dataType: dataType
+                    data: '',
+                    dataType: ''
                 },
-                type: type,
-                signal: signal,
-                to: to
+                type: '',
+                signal: '',
+                to: ''
             }
             this.socket.emit(signal, pack)
         },
