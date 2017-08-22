@@ -287,7 +287,11 @@ export default {
                     console.log('updateMessage:', data)
                     this.$refs[data.dataType].receive(data)
                 })
-                this.emit(this.user.id, null, '', 0, 'liveJoin')
+                if (this.roomInfo.is_living) {
+                    this.emit(this.user.id, null, '', 0, 'liveJoin')
+                } else {
+                    this.emit(this.user.id, null, '', 0, 'pastJoin')
+                }
             })
         },
         emitCanvas (data) {

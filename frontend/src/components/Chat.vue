@@ -127,30 +127,37 @@
             'roomid': function () {
                 const that = this
                 console.log('MOUNTED :', this.roomid)
-                this.$http({
-                    url: '/echo/',
-                    method: 'GET',
-                    params: {
-                        username: this.user.userid,
-                        roomid: this.roomid
-                    }
-                }).then(function (res) {
-                    var k = res.body
-                    console.log(k)
-                    if (k === 'allslience') {
-                        this.allsilence = true
-                        this.allspeak = false
-                        if (!this.AUTHORITY) {
+                if (this.isLiveStart) {
+                    this.$http({
+                        url: '/echo/',
+                        method: 'GET',
+                        params: {
+                            username: this.user.userid,
+                            roomid: this.roomid
+                        }
+                    }).then(function (res) {
+                        var k = res.body
+                        console.log(k)
+                        if (k === 'allslience') {
+                            this.allsilence = true
+                            this.allspeak = false
+                            if (!this.AUTHORITY) {
+                                this.speak = false
+                                this.silence = true
+                            }
+                        } else if (k === 'banone') {
                             this.speak = false
                             this.silence = true
                         }
-                    } else if (k === 'banone') {
-                        this.speak = false
-                        this.silence = true
-                    }
-                }, function () {
-                    alert('ajax failure')
-                })
+                    }, function () {
+                        alert('ajax failure')
+                    })
+                } else {
+                    this.silence = true
+                    this.speak = false
+                    this.allsilence = false
+                    this.allspeak = true
+                }
             }
         },
         mounted () {
@@ -158,6 +165,12 @@
             this.position.width = this.WIDTH.toString() + 'px'
             this.position.height = (this.HEIGHT).toString() + 'px'
             this.position.border = this.BORDER + 'px'
+            if (!this.isLiveStart) {
+                this.silence = true
+                this.speak = false
+                this.allspeak = true
+                this.allsilence = false
+            }
         },
         methods: {
             /**
@@ -467,8 +480,6 @@
             allspeaksolve (data) {
                 this.allsilence = false
                 this.allspeak = true
-                this.silence = false
-                this.speak = true
                 if (this.AUTHORITY === false) {
                     this.$Message.info('全局解禁')
                 }
@@ -491,7 +502,7 @@
                     }
                     console.log(this.bans.length)
                 }
-                if (data.data.userid === this.user.userid) {
+                if (data.data.userid === this.user.userid && this.isLiveStart) {
                     this.silence = false
                     this.speak = true
                     this.$Message.info('您被解除禁言')
