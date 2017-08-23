@@ -54,12 +54,22 @@
 </template>
 
 <script>
+    /**
+     *Module TinyComponents
+     *
+     *@module TinyComponents
+     *@requires Utils
+     */
     import Verification from './tinyComponents/Verification'
     import { checkPassword, checkRePassword, checkVerification, checkForm, checkPhone, checkEmail, checkUsername } from '../utils/checks'
     import { beforePost } from '../utils/utils'
     import { CONST } from '../utils/const'
     import { mapGetters, mapMutations, mapActions } from 'vuex'
-
+    /**
+     *SignUp
+     *@class SignUp
+     *@constructor
+     */
     export default {
         components: {
             Verification
@@ -148,9 +158,17 @@
             ...mapActions({
                 signupSummit: 'signup'
             }),
+            /**
+             *更改注册方式（是手机还是邮箱注册）
+             *@event changeType
+             */
             changeType () {
                 this.type = (this.type === 0) ? 1 : 0
             },
+            /**
+             *注册函数（注册有效的话，激活表单，并让用户进入主页）
+             *@event signup
+             */
             signup () {
                 const that = this
                 checkForm(this, this.$refs['signinfo'], () => {

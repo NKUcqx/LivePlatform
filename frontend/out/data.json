@@ -1,0 +1,4903 @@
+{
+    "project": {},
+    "files": {
+        "src/components/tinyComponents/Canvas.js": {
+            "name": "src/components/tinyComponents/Canvas.js",
+            "modules": {
+                "TinyComponents": 1
+            },
+            "classes": {
+                "Canvas": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/components/tinyComponents/CloseButton.js": {
+            "name": "src/components/tinyComponents/CloseButton.js",
+            "modules": {},
+            "classes": {
+                "CloseButton": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/components/tinyComponents/Mp4player.js": {
+            "name": "src/components/tinyComponents/Mp4player.js",
+            "modules": {},
+            "classes": {
+                "Mp4Player": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/components/tinyComponents/ProgressBar.js": {
+            "name": "src/components/tinyComponents/ProgressBar.js",
+            "modules": {},
+            "classes": {
+                "ProgressBar": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/components/tinyComponents/Room.js": {
+            "name": "src/components/tinyComponents/Room.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/components/tinyComponents/StudentRTC.js": {
+            "name": "src/components/tinyComponents/StudentRTC.js",
+            "modules": {},
+            "classes": {
+                "StudentRTC": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/components/tinyComponents/TeacherRTC.js": {
+            "name": "src/components/tinyComponents/TeacherRTC.js",
+            "modules": {},
+            "classes": {
+                "TeacherRTC": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/components/tinyComponents/Topbar.js": {
+            "name": "src/components/tinyComponents/Topbar.js",
+            "modules": {},
+            "classes": {
+                "Topbar": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/components/tinyComponents/UploadButton.js": {
+            "name": "src/components/tinyComponents/UploadButton.js",
+            "modules": {},
+            "classes": {
+                "UploadButton": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/components/tinyComponents/Verification.js": {
+            "name": "src/components/tinyComponents/Verification.js",
+            "modules": {},
+            "classes": {
+                "Verification": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/components/Chat.js": {
+            "name": "src/components/Chat.js",
+            "modules": {},
+            "classes": {
+                "Chat": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/components/Codedemo.js": {
+            "name": "src/components/Codedemo.js",
+            "modules": {},
+            "classes": {
+                "CodeMirror": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/components/Home.js": {
+            "name": "src/components/Home.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/components/Login.js": {
+            "name": "src/components/Login.js",
+            "modules": {},
+            "classes": {
+                "LogIn": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/components/PPT.js": {
+            "name": "src/components/PPT.js",
+            "modules": {},
+            "classes": {
+                "PPT": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/components/Signup.js": {
+            "name": "src/components/Signup.js",
+            "modules": {},
+            "classes": {
+                "SignUp": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/components/Studio.js": {
+            "name": "src/components/Studio.js",
+            "modules": {},
+            "classes": {
+                "Studio": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/components/Welcome.js": {
+            "name": "src/components/Welcome.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/store/modules/home.js": {
+            "name": "src/store/modules/home.js",
+            "modules": {
+                "Store": 1
+            },
+            "classes": {
+                "Home": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/store/modules/live.js": {
+            "name": "src/store/modules/live.js",
+            "modules": {},
+            "classes": {
+                "Live": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/store/modules/progress.js": {
+            "name": "src/store/modules/progress.js",
+            "modules": {},
+            "classes": {
+                "Progress": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/store/modules/room.js": {
+            "name": "src/store/modules/room.js",
+            "modules": {},
+            "classes": {
+                "Room": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/store/modules/welcome.js": {
+            "name": "src/store/modules/welcome.js",
+            "modules": {},
+            "classes": {
+                "Welcome": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/store/actions.js": {
+            "name": "src/store/actions.js",
+            "modules": {},
+            "classes": {
+                "Actions": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/store/getters.js": {
+            "name": "src/store/getters.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/store/index.js": {
+            "name": "src/store/index.js",
+            "modules": {},
+            "classes": {
+                "Index": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/store/mutations.js": {
+            "name": "src/store/mutations.js",
+            "modules": {},
+            "classes": {
+                "Getters": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/utils/checks.js": {
+            "name": "src/utils/checks.js",
+            "modules": {
+                "Utils": 1
+            },
+            "classes": {
+                "Checks": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/utils/const.js": {
+            "name": "src/utils/const.js",
+            "modules": {},
+            "classes": {
+                "Const": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/utils/messages.js": {
+            "name": "src/utils/messages.js",
+            "modules": {},
+            "classes": {
+                "CanvasInfo": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/utils/utils.js": {
+            "name": "src/utils/utils.js",
+            "modules": {},
+            "classes": {
+                "Utils": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        }
+    },
+    "modules": {
+        "TinyComponents": {
+            "name": "TinyComponents",
+            "submodules": {},
+            "elements": {
+                "WIDTH": 1,
+                "HEIGHT": 1,
+                "CREATORID": 1
+            },
+            "classes": {
+                "Canvas": 1,
+                "CloseButton": 1,
+                "Mp4Player": 1,
+                "ProgressBar": 1,
+                "StudentRTC": 1,
+                "TeacherRTC": 1,
+                "Topbar": 1,
+                "UploadButton": 1,
+                "Verification": 1,
+                "Chat": 1,
+                "CodeMirror": 1,
+                "LogIn": 1,
+                "PPT": 1,
+                "SignUp": 1,
+                "Studio": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "src/components/Studio.js",
+            "line": 92,
+            "description": "Module TinyComponents",
+            "requires": [
+                "Utils"
+            ]
+        },
+        "Store": {
+            "name": "Store",
+            "submodules": {},
+            "elements": {},
+            "classes": {
+                "Room": 1,
+                "Home": 1,
+                "Welcome": 1,
+                "Live": 1,
+                "Progress": 1,
+                "Actions": 1,
+                "Getters": 1,
+                "Index": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "src/store/index.js",
+            "line": 1,
+            "description": "Module Store",
+            "requires": [
+                "Utils"
+            ],
+            "is_constructor": 1
+        },
+        "Utils": {
+            "name": "Utils",
+            "submodules": {},
+            "elements": {},
+            "classes": {
+                "Checks": 1,
+                "Const": 1,
+                "CanvasInfo": 1,
+                "Utils": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "src/utils/utils.js",
+            "line": 4,
+            "description": "Module Utils",
+            "is_constructor": 1
+        }
+    },
+    "classes": {
+        "Canvas": {
+            "name": "Canvas",
+            "shortname": "Canvas",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "TinyComponents",
+            "namespace": "",
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 84,
+            "description": "画板",
+            "is_constructor": 1
+        },
+        "CloseButton": {
+            "name": "CloseButton",
+            "shortname": "CloseButton",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "TinyComponents",
+            "namespace": "",
+            "file": "src/components/tinyComponents/CloseButton.js",
+            "line": 32,
+            "description": "关闭按钮",
+            "is_constructor": 1
+        },
+        "Mp4Player": {
+            "name": "Mp4Player",
+            "shortname": "Mp4Player",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "TinyComponents",
+            "namespace": "",
+            "file": "src/components/tinyComponents/Mp4player.js",
+            "line": 21,
+            "description": "Mp4播放器",
+            "is_constructor": 1
+        },
+        "ProgressBar": {
+            "name": "ProgressBar",
+            "shortname": "ProgressBar",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "TinyComponents",
+            "namespace": "",
+            "file": "src/components/tinyComponents/ProgressBar.js",
+            "line": 27,
+            "description": "进度条",
+            "is_constructor": 1
+        },
+        "Room": {
+            "name": "Room",
+            "shortname": "Room",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "Store",
+            "namespace": "",
+            "file": "src/store/modules/room.js",
+            "line": 1,
+            "description": "Module Store",
+            "is_constructor": 1,
+            "requires": [
+                "Utils"
+            ]
+        },
+        "StudentRTC": {
+            "name": "StudentRTC",
+            "shortname": "StudentRTC",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "TinyComponents",
+            "namespace": "",
+            "file": "src/components/tinyComponents/StudentRTC.js",
+            "line": 29,
+            "description": "学生端直播组件",
+            "is_constructor": 1
+        },
+        "TeacherRTC": {
+            "name": "TeacherRTC",
+            "shortname": "TeacherRTC",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "TinyComponents",
+            "namespace": "",
+            "file": "src/components/tinyComponents/TeacherRTC.js",
+            "line": 29,
+            "description": "教师端直播组件",
+            "is_constructor": 1
+        },
+        "Topbar": {
+            "name": "Topbar",
+            "shortname": "Topbar",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "TinyComponents",
+            "namespace": "",
+            "file": "src/components/tinyComponents/Topbar.js",
+            "line": 99,
+            "description": "顶栏",
+            "is_constructor": 1
+        },
+        "UploadButton": {
+            "name": "UploadButton",
+            "shortname": "UploadButton",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "TinyComponents",
+            "namespace": "",
+            "file": "src/components/tinyComponents/UploadButton.js",
+            "line": 36,
+            "description": "上传按钮",
+            "is_constructor": 1
+        },
+        "Verification": {
+            "name": "Verification",
+            "shortname": "Verification",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "TinyComponents",
+            "namespace": "",
+            "file": "src/components/tinyComponents/Verification.js",
+            "line": 30,
+            "description": "验证码",
+            "is_constructor": 1
+        },
+        "Chat": {
+            "name": "Chat",
+            "shortname": "Chat",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "TinyComponents",
+            "namespace": "",
+            "file": "src/components/Chat.js",
+            "line": 64,
+            "description": "聊天室",
+            "is_constructor": 1
+        },
+        "CodeMirror": {
+            "name": "CodeMirror",
+            "shortname": "CodeMirror",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "TinyComponents",
+            "namespace": "",
+            "file": "src/components/Codedemo.js",
+            "line": 57,
+            "description": "代码编辑器",
+            "is_constructor": 1
+        },
+        "Home": {
+            "name": "Home",
+            "shortname": "Home",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "Store",
+            "namespace": "",
+            "file": "src/store/modules/home.js",
+            "line": 4,
+            "description": "Module Store",
+            "is_constructor": 1,
+            "requires": [
+                "Utils"
+            ]
+        },
+        "LogIn": {
+            "name": "LogIn",
+            "shortname": "LogIn",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "TinyComponents",
+            "namespace": "",
+            "file": "src/components/Login.js",
+            "line": 95,
+            "description": "登录页",
+            "is_constructor": 1
+        },
+        "PPT": {
+            "name": "PPT",
+            "shortname": "PPT",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "TinyComponents",
+            "namespace": "",
+            "file": "src/components/PPT.js",
+            "line": 56,
+            "description": "PPT",
+            "is_constructor": 1
+        },
+        "SignUp": {
+            "name": "SignUp",
+            "shortname": "SignUp",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "TinyComponents",
+            "namespace": "",
+            "file": "src/components/Signup.js",
+            "line": 68,
+            "description": "SignUp",
+            "is_constructor": 1
+        },
+        "Studio": {
+            "name": "Studio",
+            "shortname": "Studio",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "TinyComponents",
+            "namespace": "",
+            "file": "src/components/Studio.js",
+            "line": 92,
+            "description": "直播页",
+            "is_constructor": 1
+        },
+        "Welcome": {
+            "name": "Welcome",
+            "shortname": "Welcome",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "Store",
+            "namespace": "",
+            "file": "src/store/modules/welcome.js",
+            "line": 1,
+            "description": "Module Store",
+            "is_constructor": 1,
+            "requires": [
+                "Utils"
+            ]
+        },
+        "Live": {
+            "name": "Live",
+            "shortname": "Live",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "Store",
+            "namespace": "",
+            "file": "src/store/modules/live.js",
+            "line": 1,
+            "description": "Module Store",
+            "requires": [
+                "Utils"
+            ]
+        },
+        "Progress": {
+            "name": "Progress",
+            "shortname": "Progress",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "Store",
+            "namespace": "",
+            "file": "src/store/modules/progress.js",
+            "line": 1,
+            "description": "Module Store",
+            "requires": [
+                "Utils"
+            ]
+        },
+        "Actions": {
+            "name": "Actions",
+            "shortname": "Actions",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "Store",
+            "namespace": "",
+            "file": "src/store/actions.js",
+            "line": 1,
+            "description": "Module Store",
+            "requires": [
+                "Utils"
+            ]
+        },
+        "Getters": {
+            "name": "Getters",
+            "shortname": "Getters",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "Store",
+            "namespace": "",
+            "file": "src/store/mutations.js",
+            "line": 1,
+            "description": "Module Store",
+            "requires": [
+                "Utils"
+            ]
+        },
+        "Index": {
+            "name": "Index",
+            "shortname": "Index",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "Store",
+            "namespace": "",
+            "file": "src/store/index.js",
+            "line": 1,
+            "description": "Module Store",
+            "requires": [
+                "Utils"
+            ]
+        },
+        "Checks": {
+            "name": "Checks",
+            "shortname": "Checks",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "Utils",
+            "namespace": "",
+            "file": "src/utils/checks.js",
+            "line": 8,
+            "description": "检测类",
+            "is_constructor": 1
+        },
+        "Const": {
+            "name": "Const",
+            "shortname": "Const",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "Utils",
+            "namespace": "",
+            "file": "src/utils/const.js",
+            "line": 1,
+            "description": "Module Utils"
+        },
+        "CanvasInfo": {
+            "name": "CanvasInfo",
+            "shortname": "CanvasInfo",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "Utils",
+            "namespace": "",
+            "file": "src/utils/messages.js",
+            "line": 1,
+            "description": "Module Utils"
+        },
+        "Utils": {
+            "name": "Utils",
+            "shortname": "Utils",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "Utils",
+            "namespace": "",
+            "file": "src/utils/utils.js",
+            "line": 4,
+            "description": "Module Utils"
+        }
+    },
+    "elements": {
+        "WIDTH": {
+            "name": "WIDTH",
+            "attributes": [
+                {
+                    "name": "type",
+                    "description": ""
+                },
+                {
+                    "name": "default",
+                    "description": ""
+                }
+            ],
+            "module": "TinyComponents",
+            "file": "src/components/Codedemo.js",
+            "line": 64
+        },
+        "HEIGHT": {
+            "name": "HEIGHT",
+            "attributes": [
+                {
+                    "name": "type",
+                    "description": ""
+                },
+                {
+                    "name": "default",
+                    "description": ""
+                }
+            ],
+            "module": "TinyComponents",
+            "file": "src/components/Codedemo.js",
+            "line": 79
+        },
+        "CREATORID": {
+            "name": "CREATORID",
+            "attributes": [
+                {
+                    "name": "type",
+                    "description": ""
+                },
+                {
+                    "name": "default",
+                    "description": ""
+                },
+                {
+                    "name": "type",
+                    "description": ""
+                },
+                {
+                    "name": "default",
+                    "description": ""
+                },
+                {
+                    "name": "mode",
+                    "description": ""
+                },
+                {
+                    "name": "tabSize",
+                    "description": ""
+                },
+                {
+                    "name": "lineNumbers",
+                    "description": ""
+                },
+                {
+                    "name": "lineWrapping",
+                    "description": ""
+                },
+                {
+                    "name": "extraKeys",
+                    "description": ""
+                },
+                {
+                    "name": "readOnly",
+                    "description": ""
+                },
+                {
+                    "name": "theme",
+                    "description": ""
+                }
+            ],
+            "module": "TinyComponents",
+            "file": "src/components/Codedemo.js",
+            "line": 94
+        }
+    },
+    "classitems": [
+        {
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 158,
+            "description": "获得此时画布的宽度",
+            "itemtype": "method",
+            "name": "getWidth",
+            "return": {
+                "description": "'width: ' + 画布的宽度",
+                "type": "String"
+            },
+            "class": "Canvas",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 166,
+            "description": "获得此时字体的大小",
+            "itemtype": "method",
+            "name": "getFontSize",
+            "return": {
+                "description": "'fontSize: ' + 字体的大小",
+                "type": "String"
+            },
+            "class": "Canvas",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 174,
+            "description": "获得此时是否要把图形的中心填满的参数",
+            "itemtype": "method",
+            "name": "getFill",
+            "return": {
+                "description": "如果现在isFill的值为true，就返回'fill',否则返回'stroke'",
+                "type": "String"
+            },
+            "class": "Canvas",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 184,
+            "description": "获得过去的操作生成的现在的图像",
+            "itemtype": "method",
+            "name": "getHistory",
+            "return": {
+                "description": "返回一个canvasInfo对象，更新属性type和canvas",
+                "type": "Object"
+            },
+            "class": "Canvas",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 195,
+            "description": "发送清空画板的消息，发送的消息为一个canvasInfo对象，属性type为'clear'",
+            "itemtype": "event",
+            "name": "reloadClear",
+            "class": "Canvas",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 204,
+            "description": "显示工具栏",
+            "itemtype": "event",
+            "name": "showToolBar",
+            "class": "Canvas",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 211,
+            "description": "隐藏工具栏",
+            "itemtype": "event",
+            "name": "hideToolBar",
+            "class": "Canvas",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 218,
+            "description": "返回值对应的宽度的像素值",
+            "itemtype": "method",
+            "name": "widthSliderFomat",
+            "params": [
+                {
+                    "name": "val",
+                    "description": ""
+                }
+            ],
+            "return": {
+                "description": "'width: ' + val + 'px'",
+                "type": "Object"
+            },
+            "class": "Canvas",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 227,
+            "description": "返回值对应的字体大小的像素值",
+            "itemtype": "method",
+            "name": "fontSliderFomat",
+            "params": [
+                {
+                    "name": "val",
+                    "description": ""
+                }
+            ],
+            "return": {
+                "description": "'font: ' + val + 'px'",
+                "type": "Object"
+            },
+            "class": "Canvas",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 236,
+            "description": "显示颜色选择器",
+            "itemtype": "event",
+            "name": "colorPicker",
+            "class": "Canvas",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 243,
+            "description": "检查现在的type和实际的type是否符合",
+            "itemtype": "method",
+            "name": "checkType",
+            "params": [
+                {
+                    "name": "type",
+                    "description": ""
+                }
+            ],
+            "return": {
+                "description": "返回代表相符合和不符合的两个字符串",
+                "type": "String"
+            },
+            "class": "Canvas",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 252,
+            "description": "改变现在记录的type值",
+            "itemtype": "event",
+            "name": "changeType",
+            "params": [
+                {
+                    "name": "type",
+                    "description": ""
+                }
+            ],
+            "class": "Canvas",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 260,
+            "description": "检查现在的isFill是否为真，及画的图形是否填充",
+            "itemtype": "method",
+            "name": "checkFill",
+            "return": {
+                "description": "返回代表填充和不填充的两个字符串",
+                "type": "String"
+            },
+            "class": "Canvas",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 268,
+            "description": "修改现在的isFill值，如果现在为true，则赋值false;如果现在是false,那么赋值true",
+            "itemtype": "event",
+            "name": "changeFill",
+            "class": "Canvas",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 275,
+            "description": "笔触增大",
+            "itemtype": "event",
+            "name": "addWidth",
+            "class": "Canvas",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 282,
+            "description": "笔触减小",
+            "itemtype": "event",
+            "name": "minusWidth",
+            "class": "Canvas",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 289,
+            "description": "字体增大",
+            "itemtype": "event",
+            "name": "addFontSize",
+            "class": "Canvas",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 296,
+            "description": "字体减小",
+            "itemtype": "event",
+            "name": "minusFontSize",
+            "class": "Canvas",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 303,
+            "description": "发送信息",
+            "itemtype": "event",
+            "name": "send",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "Canvas",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 311,
+            "description": "接收信息,依据收到的消息对画板进行操作",
+            "itemtype": "event",
+            "name": "receive",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "Canvas",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 319,
+            "description": "如果'\\n'的位置大于等于0，那么就调用函数putText",
+            "itemtype": "event",
+            "name": "testText",
+            "class": "Canvas",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 332,
+            "description": "画直线",
+            "itemtype": "event",
+            "name": "drawLine",
+            "params": [
+                {
+                    "name": "ox，开始的x轴坐标",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "oy，开始的y轴坐标",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "ex，结束的x轴坐标",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "ey，结束的y轴坐标",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": "Canvas",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 348,
+            "description": "画圆",
+            "itemtype": "event",
+            "name": "drawCircle",
+            "params": [
+                {
+                    "name": "ox，开始的x轴坐标",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "oy，开始的y轴坐标",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "ex，结束的x轴坐标",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "ey，结束的y轴坐标",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "isFill,是否填充",
+                    "description": "",
+                    "type": "Boolean"
+                }
+            ],
+            "class": "Canvas",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 367,
+            "description": "画矩形",
+            "itemtype": "event",
+            "name": "drawRect",
+            "params": [
+                {
+                    "name": "ox，开始的x轴坐标",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "oy，开始的y轴坐标",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "ex，结束的x轴坐标",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "ey，结束的y轴坐标",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "isFill,是否填充",
+                    "description": "",
+                    "type": "Boolean"
+                }
+            ],
+            "class": "Canvas",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 384,
+            "description": "在画板上显示输入的text",
+            "itemtype": "event",
+            "name": "drawText",
+            "params": [
+                {
+                    "name": "ox，开始的x轴坐标",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "oy，开始的y轴坐标",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "fontSize，字体大小",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "text，输入的text",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "isFill,是否填充",
+                    "description": "",
+                    "type": "Boolean"
+                }
+            ],
+            "class": "Canvas",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 397,
+            "description": "操作清空画板",
+            "itemtype": "event",
+            "name": "drawClear",
+            "class": "Canvas",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 404,
+            "description": "设置属性",
+            "itemtype": "event",
+            "name": "setProperty",
+            "params": [
+                {
+                    "name": "width",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "color",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "alpha",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": "Canvas",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 418,
+            "description": "初始化画笔的属性",
+            "itemtype": "event",
+            "name": "initPenProperty",
+            "class": "Canvas",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 432,
+            "description": "实施画笔的操作",
+            "itemtype": "event",
+            "name": "commandpen",
+            "params": [
+                {
+                    "name": "action，操作的名称，'mousemove',",
+                    "description": "'mousedown', 'mouseup'",
+                    "type": "String"
+                },
+                {
+                    "name": "{",
+                    "description": "x, y, buttons }",
+                    "type": "Object"
+                }
+            ],
+            "class": "Canvas",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 468,
+            "description": "实施画直线的操作",
+            "itemtype": "event",
+            "name": "commandline",
+            "params": [
+                {
+                    "name": "action，操作的名称，'mousemove',",
+                    "description": "'mousedown', 'mouseup'",
+                    "type": "String"
+                },
+                {
+                    "name": "{",
+                    "description": "x, y, buttons }",
+                    "type": "Object"
+                }
+            ],
+            "class": "Canvas",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 506,
+            "description": "实施画圆的操作",
+            "itemtype": "event",
+            "name": "commandcircle",
+            "params": [
+                {
+                    "name": "action，操作的名称，'mousemove',",
+                    "description": "'mousedown', 'mouseup'",
+                    "type": "String"
+                },
+                {
+                    "name": "{",
+                    "description": "x, y, buttons }",
+                    "type": "Object"
+                }
+            ],
+            "class": "Canvas",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 545,
+            "description": "实施画矩形的操作",
+            "itemtype": "event",
+            "name": "commandrect",
+            "params": [
+                {
+                    "name": "action，操作的名称，'mousemove',",
+                    "description": "'mousedown', 'mouseup'",
+                    "type": "String"
+                },
+                {
+                    "name": "{",
+                    "description": "x, y, buttons }",
+                    "type": "Object"
+                }
+            ],
+            "class": "Canvas",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 584,
+            "description": "实施橡皮擦的操作",
+            "itemtype": "event",
+            "name": "commandrubber",
+            "params": [
+                {
+                    "name": "action，操作的名称，'mousemove',",
+                    "description": "'mousedown', 'mouseup'",
+                    "type": "String"
+                },
+                {
+                    "name": "{",
+                    "description": "x, y, buttons }",
+                    "type": "Object"
+                }
+            ],
+            "class": "Canvas",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 619,
+            "description": "实施文本框的操作",
+            "itemtype": "event",
+            "name": "commandtext",
+            "params": [
+                {
+                    "name": "action，操作的名称，'mousemove',",
+                    "description": "'mousedown', 'mouseup'",
+                    "type": "String"
+                },
+                {
+                    "name": "event",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "Canvas",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 643,
+            "description": "调用drawText函数，并且发送makeCanvasInfo消息",
+            "itemtype": "event",
+            "name": "putText",
+            "class": "Canvas",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 667,
+            "description": "调用drawClear函数，并且发送makeCanvasInfo消息（type为'clear'）",
+            "itemtype": "event",
+            "name": "clearBoard",
+            "class": "Canvas",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Canvas.js",
+            "line": 678,
+            "description": "画图，处理'pen','line','circle','rect'等信息",
+            "itemtype": "event",
+            "name": "draw",
+            "params": [
+                {
+                    "name": "canvasInfo，画板的相关信息",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "Canvas",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/CloseButton.js",
+            "line": 59,
+            "description": "获得现在的状态（是ppt还是代码编辑器还是画板）",
+            "itemtype": "method",
+            "name": "getHistory",
+            "return": {
+                "description": "返回0或1或2，0代表ppt，1代表代码编辑器，2代表白板",
+                "type": "Number"
+            },
+            "class": "CloseButton",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/CloseButton.js",
+            "line": 67,
+            "description": "发送现在的状态",
+            "itemtype": "event",
+            "name": "reloadClear",
+            "class": "CloseButton",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/CloseButton.js",
+            "line": 74,
+            "description": "发送信息",
+            "itemtype": "event",
+            "name": "send",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "CloseButton",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/CloseButton.js",
+            "line": 82,
+            "description": "接收信息",
+            "itemtype": "event",
+            "name": "receive",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "CloseButton",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/CloseButton.js",
+            "line": 91,
+            "description": "现在正在操作的按钮上显示 √",
+            "itemtype": "event",
+            "name": "showIcon",
+            "params": [
+                {
+                    "name": "index",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": "CloseButton",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/CloseButton.js",
+            "line": 102,
+            "description": "关闭面板",
+            "itemtype": "event",
+            "name": "closePanel",
+            "class": "CloseButton",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/CloseButton.js",
+            "line": 109,
+            "description": "切换面板，换一个面板显示",
+            "itemtype": "event",
+            "name": "changePanel",
+            "params": [
+                {
+                    "name": "index",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": "CloseButton",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Mp4player.js",
+            "line": 56,
+            "description": "获取视频路径",
+            "itemtype": "method",
+            "name": "getVideoSrc",
+            "return": {
+                "description": "由房间创建时间和房间id组合生成的视频路径",
+                "type": "String"
+            },
+            "class": "Mp4Player",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Mp4player.js",
+            "line": 72,
+            "description": "初始化视频总时长",
+            "itemtype": "event",
+            "name": "initPlay",
+            "class": "Mp4Player",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Mp4player.js",
+            "line": 79,
+            "description": "随视频进度更改当前播放时间",
+            "itemtype": "event",
+            "name": "changeTime",
+            "class": "Mp4Player",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Mp4player.js",
+            "line": 86,
+            "description": "播放完毕还原设置\n\n切换播放按钮状态，还原当前播放时间并将视频恢复到播放开始状态",
+            "itemtype": "event",
+            "name": "restore",
+            "class": "Mp4Player",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/ProgressBar.js",
+            "line": 74,
+            "description": "更改录播状态为播放",
+            "itemtype": "event",
+            "name": "play",
+            "class": "ProgressBar",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/ProgressBar.js",
+            "line": 82,
+            "description": "更改录播状态为暂停",
+            "itemtype": "event",
+            "name": "pause",
+            "class": "ProgressBar",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/ProgressBar.js",
+            "line": 90,
+            "description": "响应用户点击跳跃播放",
+            "itemtype": "event",
+            "name": "skipTime",
+            "params": [
+                {
+                    "name": "inEvent",
+                    "description": "用户点击事件",
+                    "type": "Object"
+                }
+            ],
+            "class": "ProgressBar",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Room.js",
+            "line": 52,
+            "description": "进入房间",
+            "itemtype": "event",
+            "name": "enterRoom",
+            "class": "Room",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/StudentRTC.js",
+            "line": 79,
+            "description": "显示工具栏",
+            "itemtype": "event",
+            "name": "showToolBar",
+            "class": "StudentRTC",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/StudentRTC.js",
+            "line": 86,
+            "description": "隐藏工具栏",
+            "itemtype": "event",
+            "name": "hideToolBar",
+            "class": "StudentRTC",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/StudentRTC.js",
+            "line": 93,
+            "description": "学生加入房间",
+            "itemtype": "event",
+            "name": "join",
+            "class": "StudentRTC",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/StudentRTC.js",
+            "line": 121,
+            "description": "声网报错回调事件,控制台输出错误原因",
+            "itemtype": "event",
+            "name": "onError",
+            "params": [
+                {
+                    "name": "err",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "StudentRTC",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/StudentRTC.js",
+            "line": 129,
+            "description": "远程音视频流已添加回调事件,订阅远端视频流",
+            "itemtype": "event",
+            "name": "onAdd",
+            "params": [
+                {
+                    "name": "evt",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "StudentRTC",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/StudentRTC.js",
+            "line": 143,
+            "description": "远程音视频流已订阅回调事件,播放远端视频流",
+            "itemtype": "event",
+            "name": "onSubscribe",
+            "params": [
+                {
+                    "name": "evt",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "StudentRTC",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/StudentRTC.js",
+            "line": 157,
+            "description": "远程音视频流已删除回调事件,即远端暂停推流",
+            "itemtype": "event",
+            "name": "onRemove",
+            "params": [
+                {
+                    "name": "evt",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "StudentRTC",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/StudentRTC.js",
+            "line": 169,
+            "description": "老师结束直播回调事件",
+            "itemtype": "event",
+            "name": "onLeave",
+            "params": [
+                {
+                    "name": "evt",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "StudentRTC",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/StudentRTC.js",
+            "line": 183,
+            "description": "学生退出房间",
+            "itemtype": "event",
+            "name": "leave",
+            "class": "StudentRTC",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/StudentRTC.js",
+            "line": 212,
+            "description": "学生重启视频教学",
+            "itemtype": "event",
+            "name": "enableVideo",
+            "class": "StudentRTC",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/StudentRTC.js",
+            "line": 231,
+            "description": "学生暂停视频教学",
+            "itemtype": "event",
+            "name": "disableVideo",
+            "class": "StudentRTC",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/StudentRTC.js",
+            "line": 250,
+            "description": "学生开启声音",
+            "itemtype": "event",
+            "name": "enableAudio",
+            "class": "StudentRTC",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/StudentRTC.js",
+            "line": 260,
+            "description": "学生静音",
+            "itemtype": "event",
+            "name": "disableAudio",
+            "class": "StudentRTC",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/TeacherRTC.js",
+            "line": 89,
+            "description": "显示工具栏",
+            "itemtype": "event",
+            "name": "showToolBar",
+            "class": "TeacherRTC",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/TeacherRTC.js",
+            "line": 96,
+            "description": "隐藏工具栏",
+            "itemtype": "event",
+            "name": "hideToolBar",
+            "class": "TeacherRTC",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/TeacherRTC.js",
+            "line": 103,
+            "description": "教师加入房间",
+            "itemtype": "event",
+            "name": "join",
+            "class": "TeacherRTC",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/TeacherRTC.js",
+            "line": 146,
+            "description": "教师退出房间",
+            "itemtype": "event",
+            "name": "leave",
+            "class": "TeacherRTC",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/TeacherRTC.js",
+            "line": 179,
+            "description": "教师重启视频教学",
+            "itemtype": "event",
+            "name": "enableVideo",
+            "class": "TeacherRTC",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/TeacherRTC.js",
+            "line": 198,
+            "description": "教师暂停视频教学",
+            "itemtype": "event",
+            "name": "disableVideo",
+            "class": "TeacherRTC",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/TeacherRTC.js",
+            "line": 217,
+            "description": "教师开启声音",
+            "itemtype": "event",
+            "name": "enableAudio",
+            "class": "TeacherRTC",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/TeacherRTC.js",
+            "line": 227,
+            "description": "教师静音",
+            "itemtype": "event",
+            "name": "disableAudio",
+            "class": "TeacherRTC",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Topbar.js",
+            "line": 193,
+            "description": "获取cookie",
+            "itemtype": "method",
+            "name": "getCookie",
+            "return": {
+                "description": "coockieValue",
+                "type": "String"
+            },
+            "class": "Topbar",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Topbar.js",
+            "line": 201,
+            "description": "返回首页",
+            "itemtype": "event",
+            "name": "goHome",
+            "class": "Topbar",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Topbar.js",
+            "line": 212,
+            "description": "触发修改个人信息的弹出框",
+            "itemtype": "event",
+            "name": "makeIndoModal",
+            "class": "Topbar",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Topbar.js",
+            "line": 221,
+            "description": "注销账号，登出",
+            "itemtype": "event",
+            "name": "logout",
+            "class": "Topbar",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Topbar.js",
+            "line": 234,
+            "description": "可以修改昵称和性别，也可以不修改",
+            "itemtype": "event",
+            "name": "modifyInfo",
+            "class": "Topbar",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Topbar.js",
+            "line": 252,
+            "description": "修改密码",
+            "itemtype": "event",
+            "name": "modifyPass",
+            "class": "Topbar",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Topbar.js",
+            "line": 270,
+            "description": "创建房间",
+            "itemtype": "event",
+            "name": "createRoom",
+            "class": "Topbar",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Topbar.js",
+            "line": 288,
+            "description": "换头像",
+            "itemtype": "event",
+            "name": "changeAvatar",
+            "class": "Topbar",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Topbar.js",
+            "line": 300,
+            "description": "响应头像太大的错误事件",
+            "itemtype": "event",
+            "name": "avatarSizeError",
+            "class": "Topbar",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Topbar.js",
+            "line": 307,
+            "description": "响应头像的文件格式错误事件",
+            "itemtype": "event",
+            "name": "avatarTypeError",
+            "class": "Topbar",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Topbar.js",
+            "line": 314,
+            "description": "结束直播",
+            "itemtype": "event",
+            "name": "endLive",
+            "class": "Topbar",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/UploadButton.js",
+            "line": 58,
+            "description": "选择上传按钮名称",
+            "itemtype": "method",
+            "name": "chooseName",
+            "return": {
+                "description": "返回父组件传入的上传按钮名称",
+                "type": "String"
+            },
+            "class": "UploadButton",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/UploadButton.js",
+            "line": 66,
+            "description": "选择格式错误回调函数",
+            "itemtype": "method",
+            "name": "onFormatError",
+            "return": {
+                "description": "返回父组件指定类型上传按钮的格式错误回调函数",
+                "type": "Function"
+            },
+            "class": "UploadButton",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/UploadButton.js",
+            "line": 78,
+            "description": "选择文件大小错误回调函数",
+            "itemtype": "method",
+            "name": "onExceededSize",
+            "return": {
+                "description": "返回父组件指定类型上传按钮的文件大小错误回调函数",
+                "type": "Function"
+            },
+            "class": "UploadButton",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/UploadButton.js",
+            "line": 92,
+            "description": "选择是否显示上传文件列表",
+            "itemtype": "method",
+            "name": "showList",
+            "return": {
+                "description": "返回父组件指定类型上传按钮是否显示上传列表",
+                "type": "Boolean"
+            },
+            "class": "UploadButton",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/UploadButton.js",
+            "line": 106,
+            "description": "选择上传文件类型",
+            "itemtype": "method",
+            "name": "chooseFormat",
+            "return": {
+                "description": "返回父组件指定类型上传按钮的上传文件类型（字符串数组）",
+                "type": "Object"
+            },
+            "class": "UploadButton",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/UploadButton.js",
+            "line": 118,
+            "description": "选择上传文件大小限制",
+            "itemtype": "method",
+            "name": "chooseMaxSize",
+            "return": {
+                "description": "返回父组件指定类型上传按钮的上传文件大小限制",
+                "type": "Number"
+            },
+            "class": "UploadButton",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/UploadButton.js",
+            "line": 132,
+            "description": "选择上传文件地址",
+            "itemtype": "method",
+            "name": "chooseAction",
+            "return": {
+                "description": "返回父组件指定类型上传按钮的上传文件地址",
+                "type": "String"
+            },
+            "class": "UploadButton",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/UploadButton.js",
+            "line": 146,
+            "description": "选择图标id",
+            "itemtype": "method",
+            "name": "chooseId",
+            "return": {
+                "description": "返回父组件指定类型上传按钮的图标id",
+                "type": "String"
+            },
+            "class": "UploadButton",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/UploadButton.js",
+            "line": 160,
+            "description": "选择提示信息",
+            "itemtype": "method",
+            "name": "chooseMessage",
+            "return": {
+                "description": "返回父组件指定类型上传按钮的提示信息",
+                "type": "String"
+            },
+            "class": "UploadButton",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/UploadButton.js",
+            "line": 179,
+            "description": "上传图片类型错误回调函数",
+            "itemtype": "event",
+            "name": "imageTypeError",
+            "class": "UploadButton",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/UploadButton.js",
+            "line": 186,
+            "description": "上传PPT类型错误回调函数",
+            "itemtype": "event",
+            "name": "slideTypeError",
+            "class": "UploadButton",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/UploadButton.js",
+            "line": 193,
+            "description": "上传房间缩略图超过大小限制回调函数",
+            "itemtype": "event",
+            "name": "thumbnailSizeError",
+            "class": "UploadButton",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/UploadButton.js",
+            "line": 200,
+            "description": "上传PPT超过大小限制回调函数",
+            "itemtype": "event",
+            "name": "slideSizeError",
+            "class": "UploadButton",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/UploadButton.js",
+            "line": 207,
+            "description": "上传头像超过大小限制回调函数",
+            "itemtype": "event",
+            "name": "avatarSizeError",
+            "class": "UploadButton",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Verification.js",
+            "line": 69,
+            "description": "开始倒计时",
+            "itemtype": "event",
+            "name": "beginCountdown",
+            "class": "Verification",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Verification.js",
+            "line": 84,
+            "description": "获取验证码（发送信息或email，状态变为sent）",
+            "itemtype": "event",
+            "name": "beginCountdown",
+            "class": "Verification",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Verification.js",
+            "line": 100,
+            "description": "测试表单是否正确",
+            "itemtype": "method",
+            "name": "validateForm",
+            "params": [
+                {
+                    "name": "表单正确时的回调函数",
+                    "description": "",
+                    "type": "Fuction"
+                }
+            ],
+            "return": {
+                "description": "checkForm的值",
+                "type": "Object"
+            },
+            "class": "Verification",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Verification.js",
+            "line": 109,
+            "description": "发送邮箱邮件",
+            "itemtype": "event",
+            "name": "sendEmail",
+            "class": "Verification",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Verification.js",
+            "line": 130,
+            "description": "发送手机短信",
+            "itemtype": "event",
+            "name": "sendMessage",
+            "class": "Verification",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/tinyComponents/Verification.js",
+            "line": 156,
+            "description": "测试用户名是否存在",
+            "itemtype": "event",
+            "name": "testUsername",
+            "class": "Verification",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Chat.js",
+            "line": 161,
+            "description": "发送数据（被调用的工具函数）",
+            "itemtype": "event",
+            "name": "send",
+            "params": [
+                {
+                    "name": "data（想要发送的数据）",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "Chat",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Chat.js",
+            "line": 169,
+            "description": "获取被点击的学生的id和昵称",
+            "itemtype": "event",
+            "name": "foucs",
+            "params": [
+                {
+                    "name": "userid",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "nickname",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "class": "Chat",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Chat.js",
+            "line": 181,
+            "description": "发送消息，对消息的内容，聊天室的状态加以判断限制消息的发送",
+            "itemtype": "event",
+            "name": "sendmsg",
+            "class": "Chat",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Chat.js",
+            "line": 200,
+            "description": "设置用户被禁言、踢出、解除禁言",
+            "itemtype": "event",
+            "name": "click",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "class": "Chat",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Chat.js",
+            "line": 212,
+            "description": "设置全局禁言，发送消息全局禁言",
+            "itemtype": "event",
+            "name": "banspeakpublic",
+            "class": "Chat",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Chat.js",
+            "line": 233,
+            "description": "设置全局解禁",
+            "itemtype": "event",
+            "name": "canspeakpublic",
+            "class": "Chat",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Chat.js",
+            "line": 257,
+            "description": "处理解禁时的全选事件",
+            "itemtype": "event",
+            "name": "handleCheckAll",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "Chat",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Chat.js",
+            "line": 273,
+            "description": "处理解禁时的单个解禁按钮被点击的事件（如果每个被禁言的人都被点击解禁，即为全选）",
+            "itemtype": "event",
+            "name": "checkchange",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "Chat",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Chat.js",
+            "line": 296,
+            "description": "处理解禁时的单个解禁的事件，发送被解禁的信息",
+            "itemtype": "event",
+            "name": "canspeak",
+            "class": "Chat",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Chat.js",
+            "line": 325,
+            "description": "如果点击取消的话就什么都不做",
+            "itemtype": "event",
+            "name": "cancel",
+            "class": "Chat",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Chat.js",
+            "line": 330,
+            "description": "处理单个禁言的事件，发送被禁言的人的id和昵称",
+            "itemtype": "event",
+            "name": "banspeakone",
+            "params": [
+                {
+                    "name": "userid",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "nickname",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "class": "Chat",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Chat.js",
+            "line": 368,
+            "description": "处理踢人的事件，发送被踢的人的id",
+            "itemtype": "event",
+            "name": "outone",
+            "params": [
+                {
+                    "name": "userid",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "nickname",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "class": "Chat",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Chat.js",
+            "line": 394,
+            "description": "处理被发送的消息，在历史消息区域传递被发送的消息的相关信息",
+            "itemtype": "event",
+            "name": "messolve",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "Chat",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Chat.js",
+            "line": 407,
+            "description": "处理被踢的事件，如果用户被踢，则自动返回首页",
+            "itemtype": "event",
+            "name": "outsolve",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "Chat",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Chat.js",
+            "line": 417,
+            "description": "处理被禁言的事件，如果用户被禁言，那么不能发送信息且个人的id和昵称被记录",
+            "itemtype": "event",
+            "name": "banonesolve",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "Chat",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Chat.js",
+            "line": 432,
+            "description": "处理被全局禁言的事件，那么所有学生不能发送信息",
+            "itemtype": "event",
+            "name": "banpublicsolve",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "Chat",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Chat.js",
+            "line": 446,
+            "description": "处理被全局解禁的事件，那么所有学生都可以发送信息",
+            "itemtype": "event",
+            "name": "allspeaksolve",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "Chat",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Chat.js",
+            "line": 458,
+            "description": "处理单人被解禁的事件，被解禁后可以发送信息，且关于禁言的记录里信息被移除",
+            "itemtype": "event",
+            "name": "canspeaksolve",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "Chat",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Chat.js",
+            "line": 483,
+            "description": "接收消息，并按照消息的chattype属性进行分类处理",
+            "itemtype": "event",
+            "name": "receive",
+            "params": [
+                {
+                    "name": "data（接受的信息）",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "Chat",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Codedemo.js",
+            "line": 127,
+            "itemtype": "property",
+            "name": "editor",
+            "type": "Object",
+            "default": "null",
+            "class": "CodeMirror",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Codedemo.js",
+            "line": 133,
+            "itemtype": "property",
+            "name": "mode",
+            "type": "String",
+            "default": "'javascript'",
+            "class": "CodeMirror",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Codedemo.js",
+            "line": 139,
+            "itemtype": "property",
+            "name": "socket",
+            "type": "Object",
+            "defult": "''",
+            "class": "CodeMirror",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Codedemo.js",
+            "line": 145,
+            "itemtype": "property",
+            "name": "skipNextChangeEvent",
+            "type": "Boolean",
+            "default": "false",
+            "class": "CodeMirror",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Codedemo.js",
+            "line": 151,
+            "itemtype": "property",
+            "name": "value",
+            "type": "Type",
+            "default": "String",
+            "class": "CodeMirror",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Codedemo.js",
+            "line": 157,
+            "itemtype": "property",
+            "name": "options",
+            "type": "Object",
+            "class": "CodeMirror",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Codedemo.js",
+            "line": 210,
+            "description": "响应codemirror文本区内的事件，并且调整文本区宽高的大小",
+            "itemtype": "event",
+            "name": "mounted",
+            "class": "CodeMirror",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Codedemo.js",
+            "line": 218,
+            "itemtype": "property",
+            "name": "_this",
+            "default": "this",
+            "static": 1,
+            "access": "private",
+            "tagname": "",
+            "class": "CodeMirror",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Codedemo.js",
+            "line": 227,
+            "description": "响应codemirror文本区的内容改变的事件，利用socketio发送信息",
+            "itemtype": "event",
+            "name": "onchange",
+            "bubbles": "editor.on('change')",
+            "class": "CodeMirror",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Codedemo.js",
+            "line": 238,
+            "description": "响应codemirror中光标选中的事件，利用socketio发送信息",
+            "itemtype": "event",
+            "name": "oncursorActivity",
+            "bubbles": "editor.on('cursorActivity')",
+            "class": "CodeMirror",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Codedemo.js",
+            "line": 257,
+            "description": "获取codemirror文本框里的值",
+            "itemtype": "method",
+            "name": "getHistory",
+            "return": {
+                "description": "返回type为'code'以及取到的值",
+                "type": "Object"
+            },
+            "class": "CodeMirror",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Codedemo.js",
+            "line": 268,
+            "description": "发送codemirror文本框里的值",
+            "itemtype": "method",
+            "name": "reloadClear",
+            "return": {
+                "description": "返回type为'code'以及取到的值",
+                "type": "Object"
+            },
+            "class": "CodeMirror",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Codedemo.js",
+            "line": 279,
+            "description": "打印文本框内容已更改且更改后的信息",
+            "itemtype": "event",
+            "name": "change",
+            "class": "CodeMirror",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Codedemo.js",
+            "line": 287,
+            "description": "响应更改语言选择的信息，获取现在所选语言，将codemirror的mode设为这个语言，并用socketio发送消息",
+            "itemtype": "event",
+            "name": "changelan",
+            "class": "CodeMirror",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Codedemo.js",
+            "line": 317,
+            "description": "发送消息，判断用户是否有权限发送信息，有就发送成功，没有就发送失败",
+            "itemtype": "event",
+            "name": "send",
+            "params": [
+                {
+                    "name": "data（想要发送的信息）",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "CodeMirror",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Codedemo.js",
+            "line": 331,
+            "description": "接收消息，并按照消息的type属性进行分类处理",
+            "itemtype": "event",
+            "name": "receive",
+            "params": [
+                {
+                    "name": "data（接受的信息）",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "CodeMirror",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Codedemo.js",
+            "line": 357,
+            "description": "实现文档的滚动处理（如果行数太多，控制将文档滚动到适当位置）",
+            "itemtype": "event",
+            "name": "watchvalue",
+            "params": [
+                {
+                    "name": "newVal",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "oldVal",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "class": "CodeMirror",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Codedemo.js",
+            "line": 372,
+            "description": "实现codemirror文本框内的语言转换",
+            "itemtype": "event",
+            "name": "watchoptions",
+            "params": [
+                {
+                    "name": "newOptions",
+                    "description": "",
+                    "type": "Object"
+                },
+                {
+                    "name": "oldVal",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "class": "CodeMirror",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Codedemo.js",
+            "line": 387,
+            "description": "实现codemirror文本框长宽调节",
+            "itemtype": "event",
+            "name": "watchHEIGHT",
+            "params": [
+                {
+                    "name": "newVal",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "oldVal",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "class": "CodeMirror",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Codedemo.js",
+            "line": 397,
+            "description": "销毁前将现在的数据清空，防止第二次使用",
+            "itemtype": "event",
+            "name": "beforeDestroy",
+            "class": "CodeMirror",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Home.js",
+            "line": 112,
+            "description": "依据index，返回轮播的背景图片",
+            "itemtype": "method",
+            "name": "carouselBackground",
+            "params": [
+                {
+                    "name": "index",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "url(路径)",
+                "type": "String"
+            },
+            "class": "Home",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Home.js",
+            "line": 121,
+            "description": "处理鼠标悬停在轮播的其中一个图片上的事件",
+            "itemtype": "event",
+            "name": "flipOver",
+            "params": [
+                {
+                    "name": "index",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": "Home",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Home.js",
+            "line": 129,
+            "description": "依据index，设置轮播的index为index的图的式样(返回一个对象有高度和背景图属性)",
+            "itemtype": "method",
+            "name": "carouselStyle",
+            "params": [
+                {
+                    "name": "index",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "{height:...px,backgroundImage:url(...)}",
+                "type": "Object"
+            },
+            "class": "Home",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Home.js",
+            "line": 142,
+            "description": "设置轮播的侧栏式样",
+            "itemtype": "method",
+            "name": "asideStyle",
+            "params": [
+                {
+                    "name": "index",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "{height:...px,backgroundImage:url(...),border:...}",
+                "type": "Object"
+            },
+            "class": "Home",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Home.js",
+            "line": 164,
+            "description": "进入房间事件（设置房间信息，进入房间页面）",
+            "itemtype": "event",
+            "name": "enterRoom",
+            "params": [
+                {
+                    "name": "index",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": "Home",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Home.js",
+            "line": 173,
+            "description": "改变录播区域的所处第几页，房间随着页数变化",
+            "itemtype": "event",
+            "name": "changeVideoPage",
+            "params": [
+                {
+                    "name": "page",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": "Home",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Home.js",
+            "line": 184,
+            "description": "改变直播区域的所处第几页，房间随着页数变化",
+            "itemtype": "event",
+            "name": "changeLivePage",
+            "params": [
+                {
+                    "name": "page",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": "Home",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Login.js",
+            "line": 190,
+            "description": "显示登录页的验证码图片",
+            "itemtype": "event",
+            "name": "showPinImg",
+            "class": "LogIn",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Login.js",
+            "line": 200,
+            "description": "处理找回密码/找回密码后返回的state、retrieve.user等的改变",
+            "itemtype": "event",
+            "name": "changeState",
+            "class": "LogIn",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Login.js",
+            "line": 209,
+            "description": "登录函数",
+            "itemtype": "event",
+            "name": "login",
+            "class": "LogIn",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Login.js",
+            "line": 229,
+            "description": "确认修改密码时的表单",
+            "itemtype": "event",
+            "name": "confirm",
+            "class": "LogIn",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/PPT.js",
+            "line": 141,
+            "description": "更新幻灯片，从指定文件夹获取图片地址push到this.imgs里",
+            "itemtype": "event",
+            "name": "updateSlide",
+            "class": "PPT",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/PPT.js",
+            "line": 153,
+            "description": "返回现在是ppt的第几页",
+            "itemtype": "method",
+            "name": "getHistory",
+            "return": {
+                "description": "this.index",
+                "type": "Object"
+            },
+            "class": "PPT",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/PPT.js",
+            "line": 161,
+            "description": "发送现在是ppt的第几页的消息",
+            "itemtype": "event",
+            "name": "reloadClear",
+            "class": "PPT",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/PPT.js",
+            "line": 168,
+            "description": "设置自动播放功能",
+            "itemtype": "event",
+            "name": "changeAuto",
+            "class": "PPT",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/PPT.js",
+            "line": 175,
+            "description": "关闭自动播放功能",
+            "itemtype": "event",
+            "name": "changePause",
+            "class": "PPT",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/PPT.js",
+            "line": 182,
+            "description": "减慢自动播放功能的播放速度",
+            "itemtype": "event",
+            "name": "minusSpeed",
+            "class": "PPT",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/PPT.js",
+            "line": 189,
+            "description": "加快自动播放功能的播放速度",
+            "itemtype": "event",
+            "name": "addSpeed",
+            "class": "PPT",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/PPT.js",
+            "line": 196,
+            "description": "发送消息",
+            "itemtype": "event",
+            "name": "send",
+            "class": "PPT",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/PPT.js",
+            "line": 203,
+            "description": "接收消息（给this.index赋值）",
+            "itemtype": "event",
+            "name": "send",
+            "class": "PPT",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/PPT.js",
+            "line": 210,
+            "description": "对权限进行判断，只有老师才能用socketio发送对ppt进行操作的消息",
+            "itemtype": "event",
+            "name": "changeppt",
+            "class": "PPT",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Signup.js",
+            "line": 161,
+            "description": "更改注册方式（是手机还是邮箱注册）",
+            "itemtype": "event",
+            "name": "changeType",
+            "class": "SignUp",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Signup.js",
+            "line": 168,
+            "description": "注册函数（注册有效的话，激活表单，并让用户进入主页）",
+            "itemtype": "event",
+            "name": "signup",
+            "class": "SignUp",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Studio.js",
+            "line": 218,
+            "description": "获取cookie",
+            "itemtype": "method",
+            "name": "getCookie",
+            "return": {
+                "description": "coockieValue",
+                "type": "String"
+            },
+            "class": "Studio",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Studio.js",
+            "line": 226,
+            "description": "处理上传ppt的加载事件（弹出框区域，不是教学区域）",
+            "itemtype": "method",
+            "name": "startLoading",
+            "return": {
+                "description": "true",
+                "type": "Boolean"
+            },
+            "class": "Studio",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Studio.js",
+            "line": 236,
+            "description": "导出被关闭的教学/视频区域",
+            "itemtype": "event",
+            "name": "openMinor",
+            "class": "Studio",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Studio.js",
+            "line": 243,
+            "description": "关闭教学区域",
+            "itemtype": "event",
+            "name": "closeWork",
+            "class": "Studio",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Studio.js",
+            "line": 255,
+            "description": "关闭视频区域",
+            "itemtype": "event",
+            "name": "closeVideo",
+            "class": "Studio",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Studio.js",
+            "line": 268,
+            "description": "教学区域和视频区域的相关操作",
+            "itemtype": "event",
+            "name": "changeSection",
+            "class": "Studio",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Studio.js",
+            "line": 275,
+            "description": "教学区域切换面板（ppt，画板，代码编辑器）",
+            "itemtype": "event",
+            "name": "changePanel",
+            "class": "Studio",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Studio.js",
+            "line": 282,
+            "description": "结束直播",
+            "itemtype": "event",
+            "name": "endRoom",
+            "class": "Studio",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Studio.js",
+            "line": 299,
+            "description": "加载历史",
+            "itemtype": "event",
+            "name": "loadHistory",
+            "params": [
+                {
+                    "name": "toWhom",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "Studio",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Studio.js",
+            "line": 317,
+            "description": "重载，发送现在的状态",
+            "itemtype": "event",
+            "name": "reloadClear",
+            "class": "Studio",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Studio.js",
+            "line": 327,
+            "description": "和socketio服务端建立连接",
+            "itemtype": "event",
+            "name": "buildConnect",
+            "class": "Studio",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Studio.js",
+            "line": 354,
+            "description": "发出画板相应消息",
+            "itemtype": "event",
+            "name": "emitCanvas",
+            "class": "Studio",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Studio.js",
+            "line": 361,
+            "description": "发出聊天区相应消息",
+            "itemtype": "event",
+            "name": "emitChat",
+            "class": "Studio",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Studio.js",
+            "line": 368,
+            "description": "发出codemirror相应消息",
+            "itemtype": "event",
+            "name": "emitCode",
+            "class": "Studio",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Studio.js",
+            "line": 375,
+            "description": "发出ppt相应消息",
+            "itemtype": "event",
+            "name": "emitCode",
+            "class": "Studio",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Studio.js",
+            "line": 382,
+            "description": "发出改变教学区和视频区的位置经过改变的相应消息",
+            "itemtype": "event",
+            "name": "emitChangeSection",
+            "class": "Studio",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Studio.js",
+            "line": 389,
+            "description": "发送消息",
+            "itemtype": "event",
+            "name": "emit",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "",
+                    "type": "Object"
+                },
+                {
+                    "name": "dataType",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "to ",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true,
+                    "optdefault": " null"
+                },
+                {
+                    "name": "type ",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true,
+                    "optdefault": " 1"
+                },
+                {
+                    "name": "signal ",
+                    "description": "",
+                    "type": "String",
+                    "optional": true,
+                    "optdefault": " 'sendMessage'"
+                }
+            ],
+            "class": "Studio",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Studio.js",
+            "line": 414,
+            "description": "接收消息",
+            "itemtype": "event",
+            "name": "listen",
+            "params": [
+                {
+                    "name": "signal",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "func",
+                    "description": "",
+                    "type": "Function"
+                }
+            ],
+            "class": "Studio",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Studio.js",
+            "line": 429,
+            "description": "更换房间缩略图",
+            "itemtype": "event",
+            "name": "changeThumbnail",
+            "params": [
+                {
+                    "name": "res",
+                    "description": "",
+                    "type": "Result"
+                },
+                {
+                    "name": "file",
+                    "description": "",
+                    "type": "File"
+                }
+            ],
+            "class": "Studio",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Studio.js",
+            "line": 443,
+            "description": "上传ppt",
+            "itemtype": "event",
+            "name": "uploadSlide",
+            "params": [
+                {
+                    "name": "res",
+                    "description": "",
+                    "type": "Result"
+                },
+                {
+                    "name": "file",
+                    "description": "",
+                    "type": "File"
+                }
+            ],
+            "class": "Studio",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Studio.js",
+            "line": 455,
+            "description": "上传ppt过大失败",
+            "itemtype": "event",
+            "name": "uploadSlideTimeout",
+            "params": [
+                {
+                    "name": "e",
+                    "description": "",
+                    "type": "Event"
+                },
+                {
+                    "name": "res",
+                    "description": "",
+                    "type": "Result"
+                },
+                {
+                    "name": "file",
+                    "description": "",
+                    "type": "File"
+                }
+            ],
+            "class": "Studio",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Studio.js",
+            "line": 466,
+            "description": "准备好直播（没有弹出框，信息准备好）",
+            "itemtype": "event",
+            "name": "readyForLive",
+            "class": "Studio",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/components/Studio.js",
+            "line": 478,
+            "description": "显示上传弹出框",
+            "itemtype": "event",
+            "name": "showUploadModal",
+            "class": "Studio",
+            "module": "TinyComponents"
+        },
+        {
+            "file": "src/store/modules/home.js",
+            "line": 13,
+            "itemtype": "property",
+            "name": "liveRooms",
+            "type": "[]",
+            "class": "Home",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/home.js",
+            "line": 18,
+            "itemtype": "property",
+            "name": "videoRooms",
+            "type": "[]",
+            "class": "Home",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/home.js",
+            "line": 23,
+            "itemtype": "property",
+            "name": "mostPopular",
+            "type": "[]",
+            "class": "Home",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/home.js",
+            "line": 28,
+            "itemtype": "property",
+            "name": "roomAmount",
+            "type": "{Number,Number}",
+            "class": "Home",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/home.js",
+            "line": 36,
+            "itemtype": "property",
+            "name": "showNum",
+            "type": "Number",
+            "class": "Home",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/home.js",
+            "line": 44,
+            "description": "获取直播房间",
+            "itemtype": "method",
+            "name": "getLiveRooms",
+            "return": {
+                "description": "返回现有的直播房间",
+                "type": "List"
+            },
+            "example": [
+                "\n // room为[room1,room2]\n\n var room = getLiveRooms({liveRooms:[room1,room2]})"
+            ],
+            "class": "Home",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/home.js",
+            "line": 56,
+            "description": "获取录播房间",
+            "itemtype": "method",
+            "name": "getVideoRooms",
+            "return": {
+                "description": "返回现有的录播房间",
+                "type": "List"
+            },
+            "example": [
+                "\n // room为[room1,room2]\n\n var room = getVideoRooms({videoRooms:[room1,room2]})"
+            ],
+            "class": "Home",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/home.js",
+            "line": 68,
+            "description": "获取房间数量",
+            "itemtype": "method",
+            "name": "getRoomAmount",
+            "return": {
+                "description": "返回房间数量",
+                "type": "Number"
+            },
+            "example": [
+                "\n // roomamount为8\n\n var roomamount = getVideoRooms({roomAmount:8})"
+            ],
+            "class": "Home",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/home.js",
+            "line": 80,
+            "description": "获取每一页的房间数",
+            "itemtype": "method",
+            "name": "getPageSize",
+            "return": {
+                "description": "返回每一页的房间数",
+                "type": "Number"
+            },
+            "example": [
+                "\n // roomamount为8\n\n var roomamount = getVideoRooms({showNum: 8)"
+            ],
+            "class": "Home",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/home.js",
+            "line": 92,
+            "description": "获取最受欢迎的四个直播",
+            "itemtype": "method",
+            "name": "getMostPopular",
+            "return": {
+                "description": "返回最受欢迎的四个直播",
+                "type": "List"
+            },
+            "example": [
+                "\n // popularroom为[room3,room2,room1,room4]\n\n var popularroom = getMostPopular({mostPopular: [room3,room2,room1,room4])"
+            ],
+            "class": "Home",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/home.js",
+            "line": 107,
+            "description": "增加一个直播房间",
+            "itemtype": "event",
+            "name": "addLiveRoom",
+            "params": [
+                {
+                    "name": "newRoom",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "example": [
+                "\n // state.liveRooms原先为[],执行后state.liveRooms为[room1]\n\n getMostPopular(state,room1)"
+            ],
+            "class": "Home",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/home.js",
+            "line": 119,
+            "description": "关闭一个直播房间",
+            "itemtype": "event",
+            "name": "addLiveRoom",
+            "params": [
+                {
+                    "name": "index",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "example": [
+                "\n // state.liveRooms原先为[room1,room2,room3],执行后state.liveRooms为[room1,room3]\n\n closeLiveRoom(state,1)"
+            ],
+            "class": "Home",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/home.js",
+            "line": 131,
+            "description": "更新最受欢迎的四个房间",
+            "itemtype": "event",
+            "name": "addMostPopular",
+            "example": [
+                "\n // state.liveRooms为[room1,room2,room3,room5,room4],执行后state.mostPopular为[room1,room2,room3,room5]\n\n addMostPopular(state)"
+            ],
+            "class": "Home",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/home.js",
+            "line": 142,
+            "description": "设置显示页数",
+            "itemtype": "event",
+            "name": "setPageSize",
+            "params": [
+                {
+                    "name": "num",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": "Home",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/home.js",
+            "line": 153,
+            "description": "从数据库获取房间信息(包括直播和录播的信息，分别放到state.liveRooms和state.videoRooms里)",
+            "itemtype": "event",
+            "name": "getRoomsFromDB",
+            "params": [
+                {
+                    "name": "{isLive,[start",
+                    "description": "= 0]}",
+                    "type": "Object"
+                }
+            ],
+            "class": "Home",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/home.js",
+            "line": 177,
+            "description": "从数据库获取直播和录播各有多少房间",
+            "itemtype": "event",
+            "name": "getRoomAmountFromDB",
+            "class": "Home",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/live.js",
+            "line": 13,
+            "description": "标记直播是否开始",
+            "itemtype": "property",
+            "name": "isStart",
+            "type": "Boolean",
+            "default": "false",
+            "class": "Live",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/live.js",
+            "line": 23,
+            "description": "获取直播是否开始",
+            "itemtype": "method",
+            "name": "isLiveStart",
+            "return": {
+                "description": "返回isStart",
+                "type": "Boolean"
+            },
+            "class": "Live",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/live.js",
+            "line": 34,
+            "description": "设置直播状态为开始直播",
+            "itemtype": "event",
+            "name": "startLive",
+            "class": "Live",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/live.js",
+            "line": 41,
+            "description": "如果已经开始直播则设置直播状态为结束",
+            "itemtype": "event",
+            "name": "endLive",
+            "class": "Live",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/live.js",
+            "line": 52,
+            "description": "创建直播房间",
+            "itemtype": "event",
+            "name": "createLive",
+            "params": [
+                {
+                    "name": "formData",
+                    "description": "房间名",
+                    "type": "Object"
+                }
+            ],
+            "class": "Live",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/live.js",
+            "line": 71,
+            "description": "关闭直播房间",
+            "itemtype": "event",
+            "name": "destroyLive",
+            "class": "Live",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/progress.js",
+            "line": 10,
+            "description": "标记录播状态",
+            "itemtype": "property",
+            "name": "isPlay",
+            "type": "Boolean",
+            "default": "false",
+            "class": "Progress",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/progress.js",
+            "line": 17,
+            "itemtype": "property",
+            "name": "currentTime",
+            "type": "Number",
+            "default": "0",
+            "class": "Progress",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/progress.js",
+            "line": 23,
+            "itemtype": "property",
+            "name": "totalTime",
+            "type": "Number",
+            "default": "0",
+            "class": "Progress",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/progress.js",
+            "line": 32,
+            "description": "获取录播页面状态",
+            "itemtype": "method",
+            "name": "getPlayState",
+            "return": {
+                "description": "返回isPlay",
+                "type": "Boolean"
+            },
+            "class": "Progress",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/progress.js",
+            "line": 40,
+            "description": "获取录播当前时间",
+            "itemtype": "method",
+            "name": "getCurrentTime",
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "class": "Progress",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/progress.js",
+            "line": 48,
+            "description": "获取录播总时长",
+            "itemtype": "method",
+            "name": "getTotalTime",
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "class": "Progress",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/progress.js",
+            "line": 59,
+            "description": "设置录播页面状态",
+            "itemtype": "event",
+            "name": "setPlayState",
+            "params": [
+                {
+                    "name": "newPlayState",
+                    "description": "",
+                    "type": "Boolean"
+                }
+            ],
+            "class": "Progress",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/progress.js",
+            "line": 67,
+            "description": "设置录播当前时间",
+            "itemtype": "event",
+            "name": "setCurrentTime",
+            "params": [
+                {
+                    "name": "newCurrent",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": "Progress",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/progress.js",
+            "line": 75,
+            "description": "设置录播总时长",
+            "itemtype": "event",
+            "name": "setTotalTime",
+            "params": [
+                {
+                    "name": "newTotal",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": "Progress",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/room.js",
+            "line": 12,
+            "description": "将房间信息存入sessionStorage",
+            "itemtype": "event",
+            "name": "setRoomSessionStorage",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "roomInfo",
+                    "type": "Object"
+                }
+            ],
+            "class": "Room",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/room.js",
+            "line": 22,
+            "description": "从sessionStorage中取房间信息",
+            "itemtype": "method",
+            "name": "getRoomSessionStorage",
+            "return": {
+                "description": "从JSON格式转成字符串的roomInfo",
+                "type": "String"
+            },
+            "class": "Room",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/room.js",
+            "line": 32,
+            "description": "判断sessionStorage中是否有房间信息",
+            "itemtype": "method",
+            "name": "isStorage",
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": "Room",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/room.js",
+            "line": 46,
+            "description": "房间信息（id、title、teacher/教师昵称、audience/在线人数、\nroom_name、creator_id、is_living、img/缩略图路径、slide/幻灯片路径、\ncreate_time、slide_num/幻灯片张数",
+            "itemtype": "property",
+            "name": "roomInfo",
+            "type": "Object",
+            "class": "Room",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/room.js",
+            "line": 69,
+            "description": "获取房间信息",
+            "itemtype": "method",
+            "name": "getRoomInfo",
+            "return": {
+                "description": "roomInfo",
+                "type": "Object"
+            },
+            "class": "Room",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/room.js",
+            "line": 80,
+            "description": "获取幻灯片信息",
+            "itemtype": "method",
+            "name": "getSlideInfo",
+            "return": {
+                "description": "返回的对象中包括slide_path和slide_num",
+                "type": "Object"
+            },
+            "class": "Room",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/room.js",
+            "line": 91,
+            "description": "获取MediaPlayer信息",
+            "itemtype": "method",
+            "name": "getPlayerInfo",
+            "return": {
+                "description": "返回的对象中包括create_time和id",
+                "type": "Object"
+            },
+            "class": "Room",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/room.js",
+            "line": 102,
+            "description": "获取房间id",
+            "itemtype": "method",
+            "name": "getRoomId",
+            "return": {
+                "description": "roomInfo.id",
+                "type": "Number"
+            },
+            "class": "Room",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/room.js",
+            "line": 113,
+            "description": "设置房间信息并存入sessionStorage",
+            "itemtype": "event",
+            "name": "setRoomInfo",
+            "params": [
+                {
+                    "name": "包括id、creator_nickname(对应teacher)、audience_amount、\nname(对应title)、creator_id、is_living、thumbnail_path、slide_path、\nfile_name(对应room_name)、create_time",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "Room",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/room.js",
+            "line": 145,
+            "description": "清空房间信息并清空sessionStorage",
+            "itemtype": "event",
+            "name": "emptyRoomInfo",
+            "class": "Room",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/welcome.js",
+            "line": 10,
+            "description": "欢迎界面走马灯页码",
+            "itemtype": "property",
+            "name": "page",
+            "type": "Number",
+            "default": "1",
+            "class": "Welcome",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/welcome.js",
+            "line": 20,
+            "description": "获取欢迎界面走马灯页码",
+            "itemtype": "method",
+            "name": "getPage",
+            "return": {
+                "description": "page",
+                "type": "Number"
+            },
+            "class": "Welcome",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/welcome.js",
+            "line": 31,
+            "description": "欢迎界面走马灯向左切换",
+            "itemtype": "event",
+            "name": "goLeft",
+            "class": "Welcome",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/modules/welcome.js",
+            "line": 38,
+            "description": "欢迎界面走马灯向右切换",
+            "itemtype": "event",
+            "name": "goRight",
+            "class": "Welcome",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/actions.js",
+            "line": 15,
+            "description": "通过向后端请求根据sessionKey初始化用户信息",
+            "itemtype": "method",
+            "name": "initState",
+            "return": {
+                "description": "promise",
+                "type": "Object"
+            },
+            "class": "Actions",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/actions.js",
+            "line": 37,
+            "description": "通过传入的data初始化用户信息",
+            "itemtype": "event",
+            "name": "initUser",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "包括user和session_key",
+                    "type": "Object"
+                }
+            ],
+            "class": "Actions",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/actions.js",
+            "line": 51,
+            "description": "封装好的向后端请求的通用函数",
+            "itemtype": "method",
+            "name": "commitPostRequest",
+            "params": [
+                {
+                    "name": "url",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "data",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "promise",
+                "type": "Object"
+            },
+            "class": "Actions",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/actions.js",
+            "line": 74,
+            "description": "登录请求",
+            "itemtype": "method",
+            "name": "login",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "promise",
+                "type": "Object"
+            },
+            "class": "Actions",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/actions.js",
+            "line": 84,
+            "description": "找回密码请求",
+            "itemtype": "method",
+            "name": "findBackPass",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "promise",
+                "type": "Object"
+            },
+            "class": "Actions",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/actions.js",
+            "line": 94,
+            "description": "注册请求",
+            "itemtype": "method",
+            "name": "signup",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "promise",
+                "type": "Object"
+            },
+            "class": "Actions",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/actions.js",
+            "line": 104,
+            "description": "修改密码请求",
+            "itemtype": "method",
+            "name": "changePass",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "promise",
+                "type": "Object"
+            },
+            "class": "Actions",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/actions.js",
+            "line": 114,
+            "description": "修改个人信息请求",
+            "itemtype": "method",
+            "name": "changeInfo",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "promise",
+                "type": "Object"
+            },
+            "class": "Actions",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/actions.js",
+            "line": 124,
+            "description": "注销请求",
+            "itemtype": "method",
+            "name": "logout",
+            "return": {
+                "description": "promise",
+                "type": "Object"
+            },
+            "class": "Actions",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/actions.js",
+            "line": 133,
+            "description": "检测用户名是否存在",
+            "itemtype": "method",
+            "name": "testUsername",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "promise",
+                "type": "Object"
+            },
+            "class": "Actions",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/getters.js",
+            "line": 11,
+            "description": "获取用户全部信息",
+            "itemtype": "method",
+            "name": "getUser",
+            "return": {
+                "description": "user",
+                "type": "Object"
+            },
+            "class": "Getters",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/getters.js",
+            "line": 20,
+            "description": "获取用户id",
+            "itemtype": "method",
+            "name": "getUserId",
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "class": "Getters",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/getters.js",
+            "line": 29,
+            "description": "获取用户名",
+            "itemtype": "method",
+            "name": "getUserName",
+            "return": {
+                "description": "",
+                "type": "String"
+            },
+            "class": "Getters",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/getters.js",
+            "line": 38,
+            "description": "获取用户性别",
+            "itemtype": "method",
+            "name": "getGender",
+            "return": {
+                "description": "",
+                "type": "String"
+            },
+            "class": "Getters",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/getters.js",
+            "line": 47,
+            "description": "获取用户昵称",
+            "itemtype": "method",
+            "name": "getNickname",
+            "return": {
+                "description": "",
+                "type": "String"
+            },
+            "class": "Getters",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/getters.js",
+            "line": 56,
+            "description": "获取用户头像路径",
+            "itemtype": "method",
+            "name": "getAvatar",
+            "return": {
+                "description": "",
+                "type": "String"
+            },
+            "class": "Getters",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/getters.js",
+            "line": 65,
+            "description": "获取用户权限角色",
+            "itemtype": "method",
+            "name": "getRole",
+            "return": {
+                "description": "'S'/'T'",
+                "type": "String"
+            },
+            "class": "Getters",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/getters.js",
+            "line": 74,
+            "description": "获取用户登录状态",
+            "itemtype": "method",
+            "name": "isLogin",
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": "Getters",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/getters.js",
+            "line": 83,
+            "description": "获取sessionKey",
+            "itemtype": "method",
+            "name": "getSessionKey",
+            "return": {
+                "description": "",
+                "type": "String"
+            },
+            "class": "Getters",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/getters.js",
+            "line": 100,
+            "itemtype": "method",
+            "name": "hasSession",
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": "Getters",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/index.js",
+            "line": 25,
+            "itemtype": "property",
+            "name": "session",
+            "type": "{Object}",
+            "default": "{hasSession: false, sessionKey: null}",
+            "class": "Index",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/index.js",
+            "line": 34,
+            "description": "用户信息，包括userid、username、nickname、avatar、gender、isLogin、role",
+            "itemtype": "property",
+            "name": "user",
+            "type": "{Object}",
+            "class": "Index",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/mutations.js",
+            "line": 12,
+            "description": "设置session并将sessionKey存入localStorage",
+            "itemtype": "event",
+            "name": "setSessionState",
+            "params": [
+                {
+                    "name": "user",
+                    "description": "包括id、username、gender、avatar、nickname、role",
+                    "type": "Object"
+                },
+                {
+                    "name": "sessionKey",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "class": "Getters",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/mutations.js",
+            "line": 33,
+            "description": "设置用户信息",
+            "itemtype": "event",
+            "name": "setUserState",
+            "params": [
+                {
+                    "name": "user",
+                    "description": "包括id、username、gender、avatar、nickname、role",
+                    "type": "Object"
+                }
+            ],
+            "class": "Getters",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/mutations.js",
+            "line": 50,
+            "description": "清空用户信息并将localStorage中的session_key置为null",
+            "itemtype": "event",
+            "name": "emptyUser",
+            "class": "Getters",
+            "module": "Store"
+        },
+        {
+            "file": "src/store/mutations.js",
+            "line": 67,
+            "description": "设置头像路径",
+            "itemtype": "event",
+            "name": "setAvatar",
+            "params": [
+                {
+                    "name": "url",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "class": "Getters",
+            "module": "Store"
+        },
+        {
+            "file": "src/utils/checks.js",
+            "line": 14,
+            "description": "检测一个字符串是否含有特殊字符或为空",
+            "itemtype": "method",
+            "name": "checkSpecialChar",
+            "params": [
+                {
+                    "name": "str",
+                    "description": "字符串",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "传入字符串为空或null或undefined或含特殊字符则返回false,否则返回true",
+                "type": "Boolean"
+            },
+            "example": [
+                "\n  // string1为真\n\n  var string1 = checkSpecialChar('123dfg')\n\n  // string2为假\n\n  var string2 = checkSpecialChar('$145sdf')"
+            ],
+            "class": "Checks",
+            "module": "Utils"
+        },
+        {
+            "file": "src/utils/checks.js",
+            "line": 38,
+            "description": "检测一个字符串是否是一个手机号",
+            "itemtype": "method",
+            "name": "checkPhone",
+            "params": [
+                {
+                    "name": "phone",
+                    "description": "手机号",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "返回这个字符串是否符合手机号规范（位数合法且13/15/18开头）",
+                "type": "Boolean"
+            },
+            "example": [
+                "\n  // phone1为假\n\n  var phone1 = checkPhone('12356667')\n\n  // phone2为真\n\n  var phone2 = checkPhone('18923458765')"
+            ],
+            "class": "Checks",
+            "module": "Utils"
+        },
+        {
+            "file": "src/utils/checks.js",
+            "line": 57,
+            "description": "检测一个字符串是否是一个email",
+            "itemtype": "method",
+            "name": "checkEmail",
+            "params": [
+                {
+                    "name": "email",
+                    "description": "Email账号",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "返回这个字符串是否符合Email账号规范",
+                "type": "Boolean"
+            },
+            "class": "Checks",
+            "module": "Utils"
+        },
+        {
+            "file": "src/utils/checks.js",
+            "line": 68,
+            "description": "检测一个对象中包含的字符串是否含特殊字符",
+            "itemtype": "method",
+            "name": "checkObjLegal",
+            "params": [
+                {
+                    "name": "obj",
+                    "description": "对象名",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "传入对象中包含的字符串为空或含特殊字符则返回false,否则返回true",
+                "type": "Boolean"
+            },
+            "example": [
+                "\n // 对象中字符串合法返回true,obj1为真\n\n var obj1 = checkObjLegal({id: 123, name: 'my123'})\n\n // 对象中字符串含特殊字符返回false,obj2为假\n\n var obj2 = checkObjLegal({id: 123, name: 'my&123'})"
+            ],
+            "class": "Checks",
+            "module": "Utils"
+        },
+        {
+            "file": "src/utils/checks.js",
+            "line": 93,
+            "description": "检测密码",
+            "itemtype": "event",
+            "name": "checkPassword",
+            "params": [
+                {
+                    "name": "rule",
+                    "description": "包含user，password和pin",
+                    "type": "Object"
+                },
+                {
+                    "name": "value",
+                    "description": "输入的值",
+                    "type": "String"
+                },
+                {
+                    "name": "callback",
+                    "description": "回调函数",
+                    "type": "Function"
+                },
+                {
+                    "name": "rePass",
+                    "description": "重设密码的值",
+                    "type": "String"
+                },
+                {
+                    "name": "obj",
+                    "description": "重设密码的对象",
+                    "type": "Object"
+                },
+                {
+                    "name": "rePassProp",
+                    "description": "重设密码的prop验证",
+                    "type": "Object"
+                }
+            ],
+            "class": "Checks",
+            "module": "Utils"
+        },
+        {
+            "file": "src/utils/checks.js",
+            "line": 115,
+            "description": "检测第二次输入密码",
+            "itemtype": "event",
+            "name": "checkRePassword",
+            "params": [
+                {
+                    "name": "rule",
+                    "description": "包含user，password和pin",
+                    "type": "Object"
+                },
+                {
+                    "name": "value",
+                    "description": "输入的值",
+                    "type": "String"
+                },
+                {
+                    "name": "callback",
+                    "description": "回调函数",
+                    "type": "Function"
+                },
+                {
+                    "name": "password",
+                    "description": "第一次输入密码的值",
+                    "type": "String"
+                }
+            ],
+            "class": "Checks",
+            "module": "Utils"
+        },
+        {
+            "file": "src/utils/checks.js",
+            "line": 133,
+            "description": "检测验证码",
+            "itemtype": "event",
+            "name": "checkVerification",
+            "params": [
+                {
+                    "name": "rule",
+                    "description": "包含user，password和pin",
+                    "type": "Object"
+                },
+                {
+                    "name": "value",
+                    "description": "输入的值",
+                    "type": "String"
+                },
+                {
+                    "name": "callback",
+                    "description": "回调函数",
+                    "type": "Function"
+                },
+                {
+                    "name": "code",
+                    "description": "验证码的值",
+                    "type": "String"
+                }
+            ],
+            "class": "Checks",
+            "module": "Utils"
+        },
+        {
+            "file": "src/utils/checks.js",
+            "line": 149,
+            "description": "检测用户名是否已存在（用于注册和登录），如果注册时已存在，显示username does exist!，\n如果登录时不存在，显示username never exists!",
+            "itemtype": "event",
+            "name": "checkUsername",
+            "params": [
+                {
+                    "name": "rule",
+                    "description": "包含user，password和pin",
+                    "type": "Object"
+                },
+                {
+                    "name": "value",
+                    "description": "输入的值",
+                    "type": "String"
+                },
+                {
+                    "name": "callback",
+                    "description": "回调函数",
+                    "type": "Function"
+                },
+                {
+                    "name": "status",
+                    "description": "判断是登陆还是注册",
+                    "type": "String"
+                }
+            ],
+            "class": "Checks",
+            "module": "Utils"
+        },
+        {
+            "file": "src/utils/checks.js",
+            "line": 166,
+            "description": "检测表单正确性",
+            "itemtype": "event",
+            "name": "checkForm",
+            "params": [
+                {
+                    "name": "obj",
+                    "description": "vue实例",
+                    "type": "Object"
+                },
+                {
+                    "name": "formRef",
+                    "description": "DOM中的form元素",
+                    "type": "Object"
+                },
+                {
+                    "name": "todo",
+                    "description": "表单正确时的回调函数",
+                    "type": "Function"
+                }
+            ],
+            "class": "Checks",
+            "module": "Utils"
+        },
+        {
+            "file": "src/utils/checks.js",
+            "line": 184,
+            "description": "检测content类型是否有效（不为null不为undefined不为''）",
+            "itemtype": "method",
+            "name": "isValid",
+            "params": [
+                {
+                    "name": "content",
+                    "description": "需检测的内容",
+                    "type": "Type"
+                },
+                {
+                    "name": "type ",
+                    "description": "",
+                    "type": "String",
+                    "optional": true,
+                    "optdefault": " 'string'"
+                }
+            ],
+            "return": {
+                "description": "返回这个content类型是否有效",
+                "type": "Boolean"
+            },
+            "class": "Checks",
+            "module": "Utils"
+        },
+        {
+            "file": "src/utils/const.js",
+            "line": 9,
+            "itemtype": "property",
+            "name": "success",
+            "type": "function",
+            "class": "Const",
+            "module": "Utils"
+        },
+        {
+            "file": "src/utils/const.js",
+            "line": 13,
+            "description": "代表成功",
+            "itemtype": "method",
+            "name": "success",
+            "params": [
+                {
+                    "name": "str",
+                    "description": "字符串",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "返回str + ' Success'",
+                "type": "String"
+            },
+            "class": "Const",
+            "module": "Utils"
+        },
+        {
+            "file": "src/utils/const.js",
+            "line": 22,
+            "itemtype": "property",
+            "name": "failure",
+            "type": "function",
+            "class": "Const",
+            "module": "Utils"
+        },
+        {
+            "file": "src/utils/const.js",
+            "line": 26,
+            "description": "代表失败",
+            "itemtype": "method",
+            "name": "failure",
+            "params": [
+                {
+                    "name": "str",
+                    "description": "字符串",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "返回str + ' Failure'",
+                "type": "String"
+            },
+            "class": "Const",
+            "module": "Utils"
+        },
+        {
+            "file": "src/utils/const.js",
+            "line": 35,
+            "itemtype": "property",
+            "name": "login",
+            "type": "string 'Please Login First'",
+            "class": "Const",
+            "module": "Utils"
+        },
+        {
+            "file": "src/utils/const.js",
+            "line": 40,
+            "itemtype": "property",
+            "name": "permission",
+            "type": "string 'Permission Denied'",
+            "class": "Const",
+            "module": "Utils"
+        },
+        {
+            "file": "src/utils/const.js",
+            "line": 45,
+            "itemtype": "property",
+            "name": "codeDrawing",
+            "type": "string",
+            "class": "Const",
+            "module": "Utils"
+        },
+        {
+            "file": "src/utils/messages.js",
+            "line": 9,
+            "description": "type can be 'pen' line' 'rect' 'circle' 'text' 'clear' ''",
+            "itemtype": "property",
+            "name": "type",
+            "type": "string",
+            "class": "CanvasInfo",
+            "module": "Utils"
+        },
+        {
+            "file": "src/utils/messages.js",
+            "line": 15,
+            "itemtype": "property",
+            "name": "start",
+            "type": "[Number,Number]",
+            "class": "CanvasInfo",
+            "module": "Utils"
+        },
+        {
+            "file": "src/utils/messages.js",
+            "line": 20,
+            "itemtype": "property",
+            "name": "end",
+            "type": "[Number,Number]",
+            "class": "CanvasInfo",
+            "module": "Utils"
+        },
+        {
+            "file": "src/utils/messages.js",
+            "line": 25,
+            "itemtype": "property",
+            "name": "width",
+            "type": "Number",
+            "class": "CanvasInfo",
+            "module": "Utils"
+        },
+        {
+            "file": "src/utils/messages.js",
+            "line": 30,
+            "itemtype": "property",
+            "name": "fontSize",
+            "type": "Number",
+            "class": "CanvasInfo",
+            "module": "Utils"
+        },
+        {
+            "file": "src/utils/messages.js",
+            "line": 35,
+            "itemtype": "property",
+            "name": "text",
+            "type": "String",
+            "class": "CanvasInfo",
+            "module": "Utils"
+        },
+        {
+            "file": "src/utils/messages.js",
+            "line": 40,
+            "itemtype": "property",
+            "name": "color",
+            "type": "String|rgb()",
+            "class": "CanvasInfo",
+            "module": "Utils"
+        },
+        {
+            "file": "src/utils/messages.js",
+            "line": 45,
+            "itemtype": "property",
+            "name": "isFill",
+            "type": "boolean",
+            "class": "CanvasInfo",
+            "module": "Utils"
+        },
+        {
+            "file": "src/utils/messages.js",
+            "line": 50,
+            "itemtype": "property",
+            "name": "canvas",
+            "type": "object",
+            "class": "CanvasInfo",
+            "module": "Utils"
+        },
+        {
+            "file": "src/utils/messages.js",
+            "line": 57,
+            "description": "生成canvas（画板）的信息",
+            "itemtype": "method",
+            "name": "makeCanvasInfo",
+            "params": [
+                {
+                    "name": "有type，ox,oy,ex,ey,width,fontSize,text,color,isFill,canvas等属性",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "返回生成的canvasinfo信息",
+                "type": "Object"
+            },
+            "class": "CanvasInfo",
+            "module": "Utils"
+        },
+        {
+            "file": "src/utils/utils.js",
+            "line": 12,
+            "description": "获取储存在用户本地终端上的数据，返回cookieValue",
+            "itemtype": "method",
+            "name": "getCookie",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "返回cookieValue,如果不存在就返回null",
+                "type": "String|null"
+            },
+            "example": [
+                "\n  // getcookie1为null\n\n  var getcookie1 = getCookie('csrftoken')\n\n  // getcookie2为null\n\n  var getcookie2 = getCookie('xxx')"
+            ],
+            "class": "Utils",
+            "module": "Utils"
+        },
+        {
+            "file": "src/utils/utils.js",
+            "line": 42,
+            "description": "增加X-CSRFToken头信息",
+            "itemtype": "event",
+            "name": "beforePost",
+            "params": [
+                {
+                    "name": "request",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "Utils",
+            "module": "Utils"
+        },
+        {
+            "file": "src/utils/utils.js",
+            "line": 54,
+            "description": "从数据库获取信息",
+            "itemtype": "event",
+            "name": "getListFromDB",
+            "params": [
+                {
+                    "name": "obj",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "返回数据库中的信息",
+                "type": "Object"
+            },
+            "example": [
+                "\n // res1.id为1\n\n var res1 = getListFromDB({\n     key: {id: 1}\n })\n\n // res2.id为1\n\n var res2 = getListFromDB({\n     key1: {id: 1},\n     key2: {id: 2}\n })\n\n // res3为null\n\n var res3 = getListFromDB(null)"
+            ],
+            "class": "Utils",
+            "module": "Utils"
+        },
+        {
+            "file": "src/utils/utils.js",
+            "line": 86,
+            "description": "如果是JSON字符串，那么返回给定 JSON 字符串转换后的对象",
+            "itemtype": "method",
+            "name": "isJSON",
+            "params": [
+                {
+                    "name": "str",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "传入 JSON 字符串则返回转换后的对象，否则返回false",
+                "type": "Object|Boolean"
+            },
+            "example": [
+                "\n // res1.a为\"Hello\",res1.b为\"World\"\n\n var res1 =isJSON('{\"a\": \"Hello\", \"b\": \"World\"}')\n\n // res2为false\n\n var res2 = isJSON('Hello World')\n\n // res3为false\n\n var res3 = isJSON(123)"
+            ],
+            "class": "Utils",
+            "module": "Utils"
+        },
+        {
+            "file": "src/utils/utils.js",
+            "line": 118,
+            "description": "将对象转为JSON字符串",
+            "itemtype": "method",
+            "name": "Obj2JSON",
+            "params": [
+                {
+                    "name": "obj",
+                    "description": "",
+                    "type": "Any type"
+                }
+            ],
+            "return": {
+                "description": "如果传入的是对象，则返回相应类型的JSON字符串，否则返回false",
+                "type": "String|Boolean"
+            },
+            "class": "Utils",
+            "module": "Utils"
+        },
+        {
+            "file": "src/utils/utils.js",
+            "line": 138,
+            "description": "转换时间格式",
+            "itemtype": "method",
+            "name": "getFormatTime",
+            "params": [
+                {
+                    "name": "inTime",
+                    "description": "按秒计的时间",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "\"hh:mm:ss\"格式",
+                "type": "String"
+            },
+            "class": "Utils",
+            "module": "Utils"
+        },
+        {
+            "file": "src/utils/utils.js",
+            "line": 155,
+            "description": "转换日期格式",
+            "itemtype": "method",
+            "name": "getFormatDate",
+            "params": [
+                {
+                    "name": "inDate",
+                    "description": "从数据库传来的时间戳\"yyyy-m/mm-dd hh:mm:ss\"",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "\"yyyymmdd\"格式",
+                "type": "String"
+            },
+            "class": "Utils",
+            "module": "Utils"
+        }
+    ],
+    "warnings": [
+        {
+            "message": "unknown tag: defult",
+            "line": " src/components/Codedemo.js:139"
+        }
+    ]
+}

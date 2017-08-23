@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src/components/tinyComponents/UploadButton.js</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="icon" href="../assets/favicon.ico">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+                <h1><img src="../assets/css/logo.png" title="" width="117" height="52"></h1>
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+                    <h2 class="off-left">APIs</h2>
+                    <div id="api-tabview" class="tabview">
+                        <ul class="tabs">
+                            <li><a href="#api-classes">Classes</a></li>
+                            <li><a href="#api-elements">Elements</a></li>
+                            <li><a href="#api-modules">Modules</a></li>
+                        </ul>
+                
+                        <div id="api-tabview-filter">
+                            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+                        </div>
+                
+                        <div id="api-tabview-panel">
+                            <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/Actions.html">Actions</a></li>
+                                <li><a href="../classes/Canvas.html">Canvas</a></li>
+                                <li><a href="../classes/CanvasInfo.html">CanvasInfo</a></li>
+                                <li><a href="../classes/Chat.html">Chat</a></li>
+                                <li><a href="../classes/Checks.html">Checks</a></li>
+                                <li><a href="../classes/CloseButton.html">CloseButton</a></li>
+                                <li><a href="../classes/CodeMirror.html">CodeMirror</a></li>
+                                <li><a href="../classes/Const.html">Const</a></li>
+                                <li><a href="../classes/Getters.html">Getters</a></li>
+                                <li><a href="../classes/Home.html">Home</a></li>
+                                <li><a href="../classes/Index.html">Index</a></li>
+                                <li><a href="../classes/Live.html">Live</a></li>
+                                <li><a href="../classes/LogIn.html">LogIn</a></li>
+                                <li><a href="../classes/Mp4Player.html">Mp4Player</a></li>
+                                <li><a href="../classes/PPT.html">PPT</a></li>
+                                <li><a href="../classes/Progress.html">Progress</a></li>
+                                <li><a href="../classes/ProgressBar.html">ProgressBar</a></li>
+                                <li><a href="../classes/Room.html">Room</a></li>
+                                <li><a href="../classes/SignUp.html">SignUp</a></li>
+                                <li><a href="../classes/StudentRTC.html">StudentRTC</a></li>
+                                <li><a href="../classes/Studio.html">Studio</a></li>
+                                <li><a href="../classes/TeacherRTC.html">TeacherRTC</a></li>
+                                <li><a href="../classes/Topbar.html">Topbar</a></li>
+                                <li><a href="../classes/UploadButton.html">UploadButton</a></li>
+                                <li><a href="../classes/Utils.html">Utils</a></li>
+                                <li><a href="../classes/Verification.html">Verification</a></li>
+                                <li><a href="../classes/Welcome.html">Welcome</a></li>
+                            </ul>
+                
+                                <ul id="api-elements" class="apis elements">
+                                    <li><a href="../elements/CREATORID.html">&lt;CREATORID&gt;</a></li>
+                                    <li><a href="../elements/HEIGHT.html">&lt;HEIGHT&gt;</a></li>
+                                    <li><a href="../elements/WIDTH.html">&lt;WIDTH&gt;</a></li>
+                                </ul>
+                
+                            <ul id="api-modules" class="apis modules">
+                                <li><a href="../modules/Store.html">Store</a></li>
+                                <li><a href="../modules/TinyComponents.html">TinyComponents</a></li>
+                                <li><a href="../modules/Utils.html">Utils</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+                    Show:
+                    <label for="api-show-inherited">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </div>
+            
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<h1 class="file-heading">File: src/components/tinyComponents/UploadButton.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+&lt;template&gt;
+&lt;div&gt;
+    &lt;Upload 
+        :headers=&quot;{
+            &#x27;X-CSRFToken&#x27;: getCookie()
+        }&quot;
+        :name=&quot;chooseName&quot;
+        type=&quot;drag&quot;
+        :before-upload=&quot;ONBEFORE&quot;
+        :on-success=&quot;ONSUCCESS&quot;
+        :on-error=&quot;ONERROR&quot;
+        :on-format-error=&quot;onFormatError&quot;
+        :on-exceeded-size=&quot;onExceededSize&quot;
+        :show-upload-list=&quot;showList&quot;
+        :format=&quot;chooseFormat&quot;
+        :max-size=&quot;chooseMaxSize&quot;
+        :action=&quot;chooseAction&quot;&gt;
+        &lt;div&gt;
+            &lt;img :src=&quot;IMGSRC&quot; :id=&quot;chooseId&quot;&gt;
+            &lt;div class=&quot;upload-text&quot;&gt;{{chooseMessage}}&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/Upload&gt;
+&lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+/**
+ *Module TinyComponents
+ *
+ *@module TinyComponents
+ *@requires Utils
+ */
+import { beforePost, getCookie } from &#x27;../../utils/utils&#x27;
+import { CONST } from &#x27;../../utils/const&#x27;
+
+/**
+ *上传按钮
+ *@class UploadButton
+ *@constructor
+ */
+export default {
+    props: {
+        UPLOADTYPE: String,
+        ONBEFORE: Function,
+        ONSUCCESS: Function,
+        ONERROR: {
+            type: Function,
+            default: () =&gt; {
+                alert(CONST.failure(&#x27;Upload file&#x27;))
+            }
+        },
+        IMGSRC: {
+            type: String,
+            default: &#x27;../../../static/img/PPT.png&#x27;
+        }
+    },
+    computed: {
+        /**
+         *选择上传按钮名称
+         *@method chooseName
+         *@return {String} 返回父组件传入的上传按钮名称
+         */
+        chooseName () {
+            return this.UPLOADTYPE
+        },
+        /**
+         *选择格式错误回调函数
+         *@method onFormatError
+         *@return {Function} 返回父组件指定类型上传按钮的格式错误回调函数
+         */
+        onFormatError () {
+            if (this.UPLOADTYPE === &#x27;thumbnail&#x27; || this.UPLOADTYPE === &#x27;avatar&#x27;) {
+                return this.imageTypeError
+            } else if (this.UPLOADTYPE === &#x27;slide&#x27;) {
+                return this.slideTypeError
+            }
+        },
+        /**
+         *选择文件大小错误回调函数
+         *@method onExceededSize
+         *@return {Function} 返回父组件指定类型上传按钮的文件大小错误回调函数
+         */
+        onExceededSize () {
+            if (this.UPLOADTYPE === &#x27;thumbnail&#x27;) {
+                return this.thumbnailSizeError
+            } else if (this.UPLOADTYPE === &#x27;slide&#x27;) {
+                return this.slideSizeError
+            } else if (this.UPLOADTYPE === &#x27;avatar&#x27;) {
+                return this.avatarSizeError
+            }
+        },
+        /**
+         *选择是否显示上传文件列表
+         *@method showList
+         *@return {Boolean} 返回父组件指定类型上传按钮是否显示上传列表
+         */
+        showList () {
+            if (this.UPLOADTYPE === &#x27;thumbnail&#x27;) {
+                return false
+            } else if (this.UPLOADTYPE === &#x27;slide&#x27;) {
+                return true
+            } else if (this.UPLOADTYPE === &#x27;avatar&#x27;) {
+                return false
+            }
+        },
+        /**
+         *选择上传文件类型
+         *@method chooseFormat
+         *@return {Object} 返回父组件指定类型上传按钮的上传文件类型（字符串数组）
+         */
+        chooseFormat () {
+            if (this.UPLOADTYPE === &#x27;thumbnail&#x27; || this.UPLOADTYPE === &#x27;avatar&#x27;) {
+                return [&#x27;jpg&#x27;, &#x27;jpeg&#x27;, &#x27;png&#x27;, &#x27;gif&#x27;, &#x27;bmp&#x27;]
+            } else if (this.UPLOADTYPE === &#x27;slide&#x27;) {
+                return [&#x27;ppt&#x27;, &#x27;pptx&#x27;, &#x27;key&#x27;]
+            }
+        },
+        /**
+         *选择上传文件大小限制
+         *@method chooseMaxSize
+         *@return {Number} 返回父组件指定类型上传按钮的上传文件大小限制
+         */
+        chooseMaxSize () {
+            if (this.UPLOADTYPE === &#x27;thumbnail&#x27;) {
+                return 300
+            } else if (this.UPLOADTYPE === &#x27;slide&#x27;) {
+                return 5 * 1024
+            } else if (this.UPLOADTYPE === &#x27;avatar&#x27;) {
+                return 200
+            }
+        },
+        /**
+         *选择上传文件地址
+         *@method chooseAction
+         *@return {String} 返回父组件指定类型上传按钮的上传文件地址
+         */
+        chooseAction () {
+            if (this.UPLOADTYPE === &#x27;thumbnail&#x27;) {
+                return &#x27;/setthumbnail/&#x27;
+            } else if (this.UPLOADTYPE === &#x27;slide&#x27;) {
+                return &#x27;/uploadslide/&#x27;
+            } else if (this.UPLOADTYPE === &#x27;avatar&#x27;) {
+                return &#x27;/changeavatar/&#x27;
+            }
+        },
+        /**
+         *选择图标id
+         *@method chooseId
+         *@return {String} 返回父组件指定类型上传按钮的图标id
+         */
+        chooseId () {
+            if (this.UPLOADTYPE === &#x27;thumbnail&#x27;) {
+                return &#x27;show-thumbnail&#x27;
+            } else if (this.UPLOADTYPE === &#x27;slide&#x27;) {
+                return &#x27;show-slide&#x27;
+            } else if (this.UPLOADTYPE === &#x27;avatar&#x27;) {
+                return &#x27;show-avatar&#x27;
+            }
+        },
+        /**
+         *选择提示信息
+         *@method chooseMessage
+         *@return {String} 返回父组件指定类型上传按钮的提示信息
+         */
+        chooseMessage () {
+            if (this.UPLOADTYPE === &#x27;thumbnail&#x27;) {
+                return &#x27;click image or drag to update your thumbnail of live&#x27;
+            } else if (this.UPLOADTYPE === &#x27;slide&#x27;) {
+                return &#x27;click image or drag to upload your slide&#x27;
+            } else if (this.UPLOADTYPE === &#x27;avatar&#x27;) {
+                return &#x27;click image or drag to update your avatar&#x27;
+            }
+        }
+    },
+    methods: {
+        getCookie () {
+            return getCookie(&#x27;csrftoken&#x27;)
+        },
+        /**
+         *上传图片类型错误回调函数
+         *@event imageTypeError
+         */
+        imageTypeError (file, fileList) {
+            this.$Message.error(&#x27;Image must be jpg jpeg png gif bmp&#x27;)
+        },
+        /**
+         *上传PPT类型错误回调函数
+         *@event slideTypeError
+         */
+        slideTypeError (file, fileList) {
+            this.$Message.error(&#x27;slide must be ppt pptx key&#x27;)
+        },
+        /**
+         *上传房间缩略图超过大小限制回调函数
+         *@event thumbnailSizeError
+         */
+        thumbnailSizeError (file, fileList) {
+            this.$Message.error(&#x27;thumbnail must under 300K&#x27;)
+        },
+        /**
+         *上传PPT超过大小限制回调函数
+         *@event slideSizeError
+         */
+        slideSizeError (file, fileList) {
+            this.$Message.error(&#x27;slide must under 5M&#x27;)
+        },
+        /**
+         *上传头像超过大小限制回调函数
+         *@event avatarSizeError
+         */
+        avatarSizeError (file, fileList) {
+            this.$Message.error(&#x27;Image size must be under 200K&#x27;)
+        }
+    }
+}
+&lt;/script&gt;
+
+&lt;style scoped&gt;
+    #show-thumbnail {
+        width: 150px;
+        height: 90px;
+        padding-top: 10px;
+    }
+
+    #show-slide {
+        width: 64px;
+        height: 64px;
+        padding-top: 10px;
+    }
+
+    #show-avatar {
+        display: inline-block;
+        margin-top: 10px; 
+        height: 90px;
+        width: 90px;
+        border-radius: 50%;
+        border: 2px solid rgba(180,230,180,0.7);
+    }
+
+    .upload-text {
+        font-size: 15px;
+        margin-top: 10px;
+        color: #5cadff;
+    }
+&lt;/style&gt;
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

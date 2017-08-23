@@ -82,8 +82,8 @@ const defaultProps = {
 }
 
 /**
- *聊天室
- *@class Chat
+ *画板
+ *@class Canvas
  *@constructor
  */
 export default {

@@ -79,6 +79,12 @@
 </template>
 
 <script>
+/**
+ *Module TinyComponents
+ *
+ *@module TinyComponents
+ *@requires Utils
+ */
 import verification from 'verification-code'
 import { checkPassword, checkRePassword, checkVerification, checkForm, checkPhone, checkEmail, checkUsername } from '../utils/checks'
 import { mapGetters, mapMutations, mapActions } from 'vuex'
@@ -86,6 +92,11 @@ import { beforePost } from '../utils/utils'
 import { CONST } from '../utils/const'
 import Verification from './tinyComponents/Verification' // component
 
+/**
+ *登录页
+ *@class LogIn
+ *@constructor
+ */
 export default {
     components: {
         Verification
@@ -176,17 +187,29 @@ export default {
             loginSubmit: 'login',
             findBackSubmit: 'findBackPass'
         }),
+        /**
+         *显示登录页的验证码图片
+         *@event showPinImg
+         */
         showPinImg () {
             let result = verification.create()
             this.pincode = result.code
             this.pinurl = result.dataURL
             // console.log(this.pinurl)
         },
+        /**
+         *处理找回密码/找回密码后返回的state、retrieve.user等的改变
+         *@event changeState
+         */
         changeState () {
             this.state = (this.state === 0) ? 1 : 0
             this.retrieve.user = (this.state === 1) ? this.form.user : this.retrieve.user
             this.form.user = (this.state === 0) ? this.retrieve.user : this.form.user
         },
+        /**
+         *登录函数
+         *@event login
+         */
         login () {
             const that = this
             checkForm(this, this.$refs['form'], () => {
@@ -203,6 +226,10 @@ export default {
                 })
             })
         },
+        /**
+         *确认修改密码时的表单
+         *@event confirm
+         */
         confirm () {
             const that = this
             checkForm(this, this.$refs['retrieveForm'], () => {

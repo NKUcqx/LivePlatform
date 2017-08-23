@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src/components/Studio.js</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="icon" href="../assets/favicon.ico">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+                <h1><img src="../assets/css/logo.png" title="" width="117" height="52"></h1>
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+                    <h2 class="off-left">APIs</h2>
+                    <div id="api-tabview" class="tabview">
+                        <ul class="tabs">
+                            <li><a href="#api-classes">Classes</a></li>
+                            <li><a href="#api-elements">Elements</a></li>
+                            <li><a href="#api-modules">Modules</a></li>
+                        </ul>
+                
+                        <div id="api-tabview-filter">
+                            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+                        </div>
+                
+                        <div id="api-tabview-panel">
+                            <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/Actions.html">Actions</a></li>
+                                <li><a href="../classes/Canvas.html">Canvas</a></li>
+                                <li><a href="../classes/CanvasInfo.html">CanvasInfo</a></li>
+                                <li><a href="../classes/Chat.html">Chat</a></li>
+                                <li><a href="../classes/Checks.html">Checks</a></li>
+                                <li><a href="../classes/CloseButton.html">CloseButton</a></li>
+                                <li><a href="../classes/CodeMirror.html">CodeMirror</a></li>
+                                <li><a href="../classes/Const.html">Const</a></li>
+                                <li><a href="../classes/Getters.html">Getters</a></li>
+                                <li><a href="../classes/Home.html">Home</a></li>
+                                <li><a href="../classes/Index.html">Index</a></li>
+                                <li><a href="../classes/Live.html">Live</a></li>
+                                <li><a href="../classes/LogIn.html">LogIn</a></li>
+                                <li><a href="../classes/Mp4Player.html">Mp4Player</a></li>
+                                <li><a href="../classes/PPT.html">PPT</a></li>
+                                <li><a href="../classes/Progress.html">Progress</a></li>
+                                <li><a href="../classes/ProgressBar.html">ProgressBar</a></li>
+                                <li><a href="../classes/Room.html">Room</a></li>
+                                <li><a href="../classes/SignUp.html">SignUp</a></li>
+                                <li><a href="../classes/StudentRTC.html">StudentRTC</a></li>
+                                <li><a href="../classes/Studio.html">Studio</a></li>
+                                <li><a href="../classes/TeacherRTC.html">TeacherRTC</a></li>
+                                <li><a href="../classes/Topbar.html">Topbar</a></li>
+                                <li><a href="../classes/UploadButton.html">UploadButton</a></li>
+                                <li><a href="../classes/Utils.html">Utils</a></li>
+                                <li><a href="../classes/Verification.html">Verification</a></li>
+                                <li><a href="../classes/Welcome.html">Welcome</a></li>
+                            </ul>
+                
+                                <ul id="api-elements" class="apis elements">
+                                    <li><a href="../elements/CREATORID.html">&lt;CREATORID&gt;</a></li>
+                                    <li><a href="../elements/HEIGHT.html">&lt;HEIGHT&gt;</a></li>
+                                    <li><a href="../elements/WIDTH.html">&lt;WIDTH&gt;</a></li>
+                                </ul>
+                
+                            <ul id="api-modules" class="apis modules">
+                                <li><a href="../modules/Store.html">Store</a></li>
+                                <li><a href="../modules/TinyComponents.html">TinyComponents</a></li>
+                                <li><a href="../modules/Utils.html">Utils</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+                    Show:
+                    <label for="api-show-inherited">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </div>
+            
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<h1 class="file-heading">File: src/components/Studio.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+&lt;template&gt;
+    &lt;div id=&quot;studio&quot; :style=&quot;wholeSize&quot;&gt;
+        &lt;topbar TYPE=&quot;studio&quot; id=&quot;topbar&quot; ref=&quot;topBar&quot; :AUTHORITY=&quot;authority&quot;&gt;&lt;/topbar&gt;
+        &lt;Modal v-model=&quot;uploadModal&quot; id=&quot;upload-modal&quot;&gt;
+            &lt;upload-button UPLOADTYPE=&quot;thumbnail&quot; :ONSUCCESS=&quot;changeThumbnail&quot; :IMGSRC=&quot;roomInfo.img&quot;&gt;&lt;/upload-button&gt;
+            &lt;upload-button UPLOADTYPE=&quot;slide&quot; :ONSUCCESS=&quot;uploadSlide&quot; :ONERROR=&quot;uploadSlideTimeout&quot; :ONBEFORE=&quot;startLoading&quot;&gt;&lt;/upload-button&gt;
+            &lt;div slot=&quot;footer&quot; id=&quot;modal-footer&quot;&gt;
+                &lt;Button type=&quot;primary&quot; @click=&quot;readyForLive()&quot;&gt;Ready&lt;/Button&gt;
+            &lt;/div&gt;
+        &lt;/Modal&gt;
+        &lt;div id=&quot;fortop&quot;&gt;&lt;/div&gt;
+            &lt;div class=&quot;infobar left-part&quot;&gt;
+                &lt;img :src=&quot;roomInfo.img&quot; id=&quot;teacher-avatar&quot; :class=&quot;(authority)?&#x27;creator-avatar&#x27;:&#x27;&#x27;&quot; alt=&quot;thum&quot; :width=&quot;img.size&quot; :height=&quot;img.size&quot; @click=&quot;showUploadModal()&quot;&gt;
+                &lt;div id=&quot;studio-info&quot;&gt;
+                    &lt;div id=&quot;title&quot;&gt;
+                        &lt;h2 id=&quot;title-content&quot;&gt;{{roomInfo.title}}&lt;/h2&gt;
+                        &lt;Button id=&quot;switch-section&quot; type=&quot;ghost&quot; @click=&quot;changeSection()&quot; v-if=&quot;type===1&quot;&gt;&lt;Icon type=&quot;arrow-swap&quot;&gt;&lt;/Icon&gt;&lt;/Button&gt;
+                        &lt;Button id=&quot;switch-section&quot; type=&quot;ghost&quot; @click=&quot;openMinor()&quot; v-else&gt;&lt;Icon type=&quot;android-open&quot;&gt;&lt;/Icon&gt;&lt;/Button&gt;
+                    &lt;/div&gt;
+                    &lt;div id=&quot;footer&quot;&gt;
+                        &lt;Tag type=&quot;border&quot; color=&quot;yellow&quot; id=&quot;roomid&quot;&gt;&lt;Icon type=&quot;home&quot;&gt;&lt;/Icon&gt; {{roomInfo.id}}&lt;/Tag&gt;
+                        &lt;Tag type=&quot;border&quot; color=&quot;red&quot; id=&quot;vip&quot;&gt;&lt;Icon type=&quot;trophy&quot;&gt;&lt;/Icon&gt; vip&lt;/Tag&gt;
+                        &lt;Tag type=&quot;border&quot; color=&quot;green&quot; id=&quot;audience&quot;&gt;&lt;Icon type=&quot;person-stalker&quot;&gt;&lt;/Icon&gt; {{roomInfo.audience}}&lt;/Tag&gt;
+                        &lt;Tag type=&quot;border&quot; color=&quot;blue&quot; id=&quot;teacher&quot;&gt;&lt;Icon type=&quot;person&quot;&gt;&lt;/Icon&gt; {{roomInfo.teacher}}&lt;/Tag&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div :class=&quot;vedioClass&quot; v-show=&quot;isVedioShow&quot;&gt;
+                &lt;close-button class=&quot;close-button&quot; @close=&quot;closeVideo()&quot; :isWork=&quot;false&quot;&gt;&lt;/close-button&gt;
+                &lt;keep-alive v-if=&quot;this.roomInfo.is_living&quot;&gt;
+                    &lt;teacher-rtc :WIDTH=&quot;vedioSize.width&quot; :HEIGHT=&quot;vedioSize.height&quot; :ROOM=&quot;roomInfo.id+&#x27;&#x27;&quot; v-if=&quot;authority&quot; @endroom=&#x27;endRoom&#x27;&gt;&lt;/teacher-rtc&gt;
+                    &lt;student-rtc :WIDTH=&quot;vedioSize.width&quot; :HEIGHT=&quot;vedioSize.height&quot; :ROOM=&quot;roomInfo.id+&#x27;&#x27;&quot; v-else&gt;&lt;/student-rtc&gt;
+                &lt;/keep-alive&gt;
+                &lt;keep-alive v-else&gt;
+                    &lt;mp4player :WIDTH=&quot;vedioSize.width&quot; :HEIGHT=&quot;vedioSize.height&quot;&gt;&lt;/mp4player&gt;
+                &lt;/keep-alive&gt;
+            &lt;/div&gt;
+            &lt;div :class=&quot;workClass&quot; v-show=&quot;isWorkShow&quot;&gt;
+                &lt;close-button class=&quot;close-button&quot; @close=&quot;closeWork()&quot; @change=&quot;changePanel&quot; @send=&quot;emitChangeSection&quot; :isWork=&quot;true&quot; :INIT=&quot;style&quot; ref=&quot;closeButton&quot; :AUTHORITY=&quot;authority&quot;&gt;&lt;/close-button&gt;
+                &lt;keep-alive&gt;
+                    &lt;ppt ref=&quot;slide&quot; :WIDTH=&quot;workSize.width&quot; :HEIGHT=&quot;workSize.height&quot; :LOADING=&quot;loading&quot; @send=&quot;emitSlide&quot; v-show=&quot;style===0||style===3&quot; :AUTHORITY=&quot;authority&quot;&gt;&lt;/ppt&gt;
+                &lt;/keep-alive&gt;
+                &lt;keep-alive&gt;
+                    &lt;codedemo ref=&quot;code&quot; :WIDTH=&quot;workSize.width&quot; :HEIGHT=&quot;workSize.height&quot; @send=&quot;emitCode&quot; v-show=&quot;style===1||style===4&quot; :AUTHORITY=&quot;authority&quot;&gt;&lt;/codedemo&gt;
+                &lt;/keep-alive&gt;
+                &lt;keep-alive&gt;
+                    &lt;my-canvas ref=&quot;canvas&quot; :SIZE=&quot;(style&lt;3)?&#x27;&#x27;:&#x27;small&#x27;&quot; @send=&quot;emitCanvas&quot; :WIDTH=&quot;workSize.width&quot; :HEIGHT=&quot;workSize.height&quot; id=&quot;canvas&quot; v-show=&quot;style===2||style===5&quot; :AUTHORITY=&quot;authority&quot;&gt;&lt;/my-canvas&gt;
+                &lt;/keep-alive&gt;
+            &lt;/div&gt;
+            &lt;div :class=&quot;chatClass&quot;&gt;
+                &lt;chatdemo ref=&quot;chat&quot; :AUTHORITY=&quot;authority&quot; :WIDTH=&quot;chatSize.width&quot; :HEIGHT=&quot;chatSize.height&quot; @send=&quot;emitChat&quot;&gt;&lt;/chatdemo&gt;     
+            &lt;/div&gt; 
+    &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+/**
+ *Module TinyComponents
+ *
+ *@module TinyComponents
+ *@requires Utils
+ */
+import Topbar from &#x27;./tinyComponents/Topbar&#x27;
+import MyCanvas from &#x27;./tinyComponents/Canvas&#x27;
+import CloseButton from &#x27;./tinyComponents/CloseButton&#x27;
+import TeacherRtc from &#x27;./tinyComponents/TeacherRTC&#x27;
+import StudentRtc from &#x27;./tinyComponents/StudentRTC&#x27;
+import Mp4player from &#x27;./tinyComponents/Mp4player&#x27;
+import UploadButton from &#x27;./tinyComponents/UploadButton&#x27;
+import Codedemo from &#x27;./Codedemo&#x27;
+import Ppt from &#x27;./PPT&#x27;
+import Chatdemo from &#x27;./Chat&#x27;
+import { mapGetters, mapActions, mapMutations } from &#x27;vuex&#x27;
+import { isValid } from &#x27;../utils/checks&#x27;
+import { beforePost, getCookie } from &#x27;../utils/utils&#x27;
+import { CONST } from &#x27;../utils/const&#x27;
+
+const STYLESTATES = {
+    0: &#x27;ppt and video&#x27;,
+    1: &#x27;code and video&#x27;,
+    2: &#x27;canvas and video&#x27;,
+    3: &#x27;video and ppt&#x27;,
+    4: &#x27;video and code&#x27;,
+    5: &#x27;video and canvas&#x27;
+}
+
+const TYPESTATES = {
+    0: &#x27;work and chat&#x27;,
+    1: &#x27;work and video and chat&#x27;,
+    2: &#x27;video and chat,&#x27;
+}
+/**
+ *直播页
+ *@class Studio
+ *@constructor
+ */
+export default {
+    components: {
+        Topbar,
+        MyCanvas,
+        CloseButton,
+        Codedemo,
+        Chatdemo,
+        Ppt,
+        TeacherRtc,
+        StudentRtc,
+        UploadButton,
+        Mp4player
+    },
+    data () {
+        return {
+            loading: false,
+            style: 0,
+            type: 1,
+            uploadModal: false,
+            closePosition: {
+                right: &#x27;&#x27;,
+                top: &#x27;&#x27;
+            },
+            wholeSize: {
+                width: &#x27;100%&#x27;,
+                height: 0 + &#x27;px&#x27;
+            },
+            WIDTH: 0,
+            img: {
+                size: 50
+            },
+            isEnd: false,
+            isFirtCodeMirror: true
+        }
+    },
+    watch: {
+        // 奇技淫巧,避免BUG
+        style: function (newVal, oldVal) {
+            if ((newVal === 1 || newVal === 4) &amp;&amp; this.isFirtCodeMirror) {
+                let history = this.$refs[&#x27;code&#x27;].getHistory()
+                console.log(history)
+                let that = this
+                setTimeout(function () {
+                    that.$refs[&#x27;code&#x27;].receive({
+                        data: {
+                            type: &#x27;code&#x27;,
+                            data: CONST.codeDrawing
+                        }
+                    })
+                    setTimeout(function () {
+                        that.$refs[&#x27;code&#x27;].receive({
+                            data: {
+                                type: &#x27;code&#x27;,
+                                data: history.data
+                            }
+                        })
+                    }, 1500)
+                }, 100)
+                this.isFirtCodeMirror = false
+            }
+        }
+    },
+    computed: {
+        ...mapGetters({
+            user: &#x27;getUser&#x27;,
+            roomInfo: &#x27;getRoomInfo&#x27;,
+            socket: &#x27;getSocket&#x27;
+        }),
+        workClass () {
+            return (this.style &lt; 3) ? &#x27;main-section left-part&#x27; : &#x27;minor-section right-part studio-relative&#x27;
+        },
+        vedioClass () {
+            return (this.style &gt;= 3) ? &#x27;main-section left-part&#x27; : &#x27;minor-section right-part&#x27;
+        },
+        chatClass () {
+            let str = &#x27;chat-section right-part&#x27;
+            if (this.style &gt;= 3 || this.type !== 1) {
+                str += &#x27; studio-relative&#x27;
+            }
+            return str
+        },
+        isWorkShow () {
+            return (this.type &lt;= 1) ? true : false
+        },
+        isVedioShow () {
+            return (this.type &gt;= 1) ? true : false
+        },
+        workSize () {
+            let theWidth = (this.WIDTH &lt; 800) ? 800 : this.WIDTH
+            return {
+                width: (this.style &lt; 3) ? theWidth * 0.5 : theWidth * 0.35,
+                height: (this.style &lt; 3) ? theWidth * 0.5 * 0.65 : theWidth * 0.35 * 0.65
+            }
+        },
+        vedioSize () {
+            let theWidth = (this.WIDTH &lt; 800) ? 800 : this.WIDTH
+            return {
+                width: (this.style &gt;= 3) ? theWidth * 0.5 : theWidth * 0.35,
+                height: (this.style &gt;= 3) ? theWidth * 0.5 * 0.65 : theWidth * 0.35 * 0.65
+            }
+        },
+        chatSize () {
+            let theWidth = (this.WIDTH &lt; 800) ? 800 : this.WIDTH
+            return {
+                width: theWidth * 0.35,
+                height: (this.type === 1) ? theWidth * 0.195 * 0.5 + 90 : theWidth * 0.5 * 0.65 + 100
+            }
+        },
+        authority () {
+            return this.roomInfo.creator_id.toString() === this.user.userid.toString() &amp;&amp; this.roomInfo.is_living
+        }
+    },
+    methods: {
+        ...mapActions({
+            destroyLive: &#x27;destroyLive&#x27;
+        }),
+        ...mapMutations({
+            emptyRoomInfo: &#x27;emptyRoomInfo&#x27;,
+            setRoomInfo: &#x27;setRoomInfo&#x27;,
+            setSocket: &#x27;setSocket&#x27;
+        }),
+        /**
+         *获取cookie
+         *@method getCookie
+         *@return {String} coockieValue
+         */
+        getCookie () {
+            return getCookie(&#x27;csrftoken&#x27;)
+        },
+        /**
+         *处理上传ppt的加载事件（弹出框区域，不是教学区域）
+         *@method startLoading
+         *@return {Boolean} true
+         */
+        startLoading () {
+            this.loading = true
+            console.log(this.loading)
+            return true
+        },
+        /**
+         *导出被关闭的教学/视频区域
+         *@event openMinor
+         */
+        openMinor () {
+            this.type = 1
+        },
+        /**
+         *关闭教学区域
+         *@event closeWork
+         */
+        closeWork () {
+            if (this.style &lt; 3 &amp;&amp; this.type === 1) {
+                this.changeSection()
+                this.type = 2
+            } else if (this.style &gt;= 3 &amp;&amp; this.type === 1) {
+                this.type = 2
+            }
+        },
+        /**
+         *关闭视频区域
+         *@event closeVideo
+         */
+        closeVideo () {
+            console.log(this.type)
+            if (this.style &gt;= 3 &amp;&amp; this.type === 1) {
+                this.changeSection()
+                this.type = 0
+            } else if (this.style &lt; 3 &amp;&amp; this.type === 1) {
+                this.type = 0
+            }
+        },
+        /**
+         *教学区域和视频区域的相关操作
+         *@event changeSection
+         */
+        changeSection () {
+            this.style = (this.style &lt; 3) ? this.style + 3 : this.style - 3
+        },
+        /**
+         *教学区域切换面板（ppt，画板，代码编辑器）
+         *@event changePanel
+         */
+        changePanel (index) {
+            this.style = (this.style &lt; 3) ? index : index + 3
+        },
+        /**
+         *结束直播
+         *@event endRoom
+         */
+        endRoom () {
+            let that = this
+            this.destroyLive().then(function () {
+                that.isEnd = true
+                // window.location.reload(true)
+                setTimeout(function () {
+                    window.location.reload(true)
+                }, 1000)
+                that.$router.push({ name: &#x27;home&#x27; })
+            }, function (res) {
+                alert(res)
+            })
+        },
+        /**
+         *加载历史
+         *@event loadHistory
+         *@param {Object} toWhom
+         */
+        loadHistory (toWhom) {
+            // get current content
+            let slideHistory = this.$refs[&#x27;slide&#x27;].getHistory()
+            let canvasHistory = this.$refs[&#x27;canvas&#x27;].getHistory()
+            let codeHistory = this.$refs[&#x27;code&#x27;].getHistory()
+            let sectionHistory = this.$refs[&#x27;closeButton&#x27;].getHistory()
+            console.log(codeHistory)
+            this.emit(slideHistory, &#x27;slide&#x27;, toWhom)
+            this.emit(codeHistory, &#x27;code&#x27;, toWhom)
+            this.emit(canvasHistory, &#x27;canvas&#x27;, toWhom)
+            this.emit(sectionHistory, &#x27;closeButton&#x27;, toWhom)
+            // this.emcanvasHistory(history, &#x27;chat&#x27;)
+        },
+        /**
+         *重载，发送现在的状态
+         *@event reloadClear
+         */
+        reloadClear () {
+            this.$refs[&#x27;slide&#x27;].reloadClear()
+            this.$refs[&#x27;canvas&#x27;].reloadClear()
+            this.$refs[&#x27;code&#x27;].reloadClear()
+            this.$refs[&#x27;closeButton&#x27;].reloadClear()
+        },
+        /**
+         *和socketio服务端建立连接
+         *@event buildConnect
+         */
+        buildConnect () {
+            let that = this
+            this.setSocket()
+            this.listen(&#x27;connect&#x27;, () =&gt; {
+                this.listen(&#x27;loadHistory&#x27;, (data) =&gt; {
+                    const toWhom = data
+                    this.loadHistory(toWhom)
+                    console.log(&#x27;loadHistory: &#x27;, toWhom)
+                })
+                this.listen(&#x27;Error&#x27;, (data) =&gt; { // this receiver will get error msg directly
+                    console.log(&#x27;Error: &#x27;, data)
+                })
+                this.listen(&#x27;updateMessage&#x27;, (data) =&gt; {
+                    console.log(&#x27;updateMessage:&#x27;, data)
+                    this.$refs[data.dataType].receive(data)
+                })
+                if (this.roomInfo.is_living) {
+                    this.emit(this.user.id, null, &#x27;&#x27;, 0, &#x27;liveJoin&#x27;)
+                } else {
+                    this.emit(this.user.id, null, &#x27;&#x27;, 0, &#x27;pastJoin&#x27;)
+                }
+            })
+        },
+        /**
+         *发出画板相应消息
+         *@event emitCanvas
+         */
+        emitCanvas (data) {
+            this.emit(data, &#x27;canvas&#x27;, null)
+        },
+        /**
+         *发出聊天区相应消息
+         *@event emitChat
+         */
+        emitChat (data, to = null, isKick = false) {
+            this.emit(data, &#x27;chat&#x27;, to, 2, isKick ? &#x27;kickout&#x27; : &#x27;sendMessage&#x27;)
+        },
+        /**
+         *发出codemirror相应消息
+         *@event emitCode
+         */
+        emitCode (data) {
+            this.emit(data, &#x27;code&#x27;) // default is 1
+        },
+        /**
+         *发出ppt相应消息
+         *@event emitCode
+         */
+        emitSlide (data) {
+            this.emit(data, &#x27;slide&#x27;)
+        },
+        /**
+         *发出改变教学区和视频区的位置经过改变的相应消息
+         *@event emitChangeSection
+         */
+        emitChangeSection (data) {
+            this.emit(data, &#x27;closeButton&#x27;)
+        },
+        /**
+         *发送消息
+         *@event emit
+         *@param {Object} data
+         *@param {String} dataType
+         *@param {Number} [to = null]
+         *@param {Number} [type = 1]
+         *@param {String} [signal = &#x27;sendMessage&#x27;]
+         */
+        emit (data, dataType, to = null, type = 1, signal = &#x27;sendMessage&#x27;) { // to which user he wanna send to
+            const pack = {
+                id: this.user.userid,
+                room_name: this.roomInfo.room_name,
+                content: {
+                    id: this.user.userid,
+                    nickname: this.user.nickname,
+                    data: data,
+                    dataType: dataType
+                },
+                type: type,
+                signal: signal,
+                to: to // that user&#x27;s id, once it is a valid id, server will use type 0 directly whatever the &#x27;type&#x27; is !!!
+            }
+            this.socket.emit(signal, pack)
+        },
+        /**
+         *接收消息
+         *@event listen
+         *@param {String} signal
+         *@param {Function} func
+         */
+        listen (signal, func) { // func is a callback
+            if (isValid(signal) &amp;&amp; isValid(func, &#x27;function&#x27;)) {
+                this.socket.on(signal, (data) =&gt; {
+                    func(data)
+                })
+            } else {
+                throw Error(&#x27;param format error&#x27;)
+            }
+        },
+        /**
+         *更换房间缩略图
+         *@event changeThumbnail
+         *@param {Result} res
+         *@param {File} file
+         */
+        changeThumbnail (res, file) {
+            console.log(this.roomInfo.room_name + &#x27;/&#x27; + file.name)
+            let that = this
+            setTimeout(function () {
+                that.setRoomInfo({ thumbnail_path: that.roomInfo.room_name + &#x27;/&#x27; + file.name })
+            }, 5000)
+            this.$Message.success(CONST.success(&#x27;Upload Thumbnail&#x27;))
+        },
+        /**
+         *上传ppt
+         *@event uploadSlide
+         *@param {Result} res
+         *@param {File} file
+         */
+        uploadSlide (res, file) {
+            console.log(res.room.slide_path)
+            this.loading = false
+            this.setRoomInfo({ slide_path: res.room.slide_path, slide_num: res.room.file_amount })
+            this.$Message.success(CONST.success(&#x27;Upload Slide&#x27;))
+        },
+        /**
+         *上传ppt过大失败
+         *@event uploadSlideTimeout
+         *@param {Event} e
+         *@param {Result} res
+         *@param {File} file
+         */
+        uploadSlideTimeout (e, file, fileList) {
+            this.loading = false
+            alert(CONST.failure(&#x27;Upload Slide&#x27;) + &#x27;Please upload smaller slide.&#x27;)
+        },
+        /**
+         *准备好直播（没有弹出框，信息准备好）
+         *@event readyForLive
+         */
+        readyForLive () {
+            this.uploadModal = false
+            this.$Notice.info({
+                title: &#x27;Reopen the modal&#x27;,
+                desc: &#x27;You can click the avatar on your left to change your thumbnail and ppt!&#x27;,
+                duration: 4
+            })
+        },
+        /**
+         *显示上传弹出框
+         *@event showUploadModal
+         */
+        showUploadModal () {
+            if (this.roomInfo.creator_id.toString() === this.user.userid.toString() &amp;&amp; this.roomInfo.is_living) {
+                this.uploadModal = true
+            }
+        }
+    },
+    created () {
+        console.log(this.roomInfo)
+    },
+    mounted () {
+        console.log(&#x27;mounted&#x27;)
+        this.WIDTH = document.documentElement.clientWidth
+        this.WIDTH = (this.WIDTH &lt; 800) ? 800 : this.WIDTH
+        this.wholeSize.height = document.documentElement.clientHeight.toString() + &#x27;px&#x27;
+        window.addEventListener(&#x27;resize&#x27;, () =&gt; {
+            this.WIDTH = document.documentElement.clientWidth
+            this.wholeSize.height = document.documentElement.clientHeight.toString() + &#x27;px&#x27;
+        })
+        this.buildConnect()
+        if (this.authority) {
+            this.uploadModal = true
+            this.reloadClear()
+        }
+    },
+    beforeDestroy () {
+        this.emptyRoomInfo()
+        console.log(&#x27;distory:&#x27;, this.roomInfo.is_living)
+        if (this.authority &amp;&amp; !(this.isEnd)) {
+            this.endRoom()
+        }
+    }
+}
+&lt;/script&gt;
+
+&lt;style scoped&gt;
+    #topbar {
+        min-width: 800px;
+        width: 100%;
+        position: fixed;
+        z-index: 500;  /*middle*/
+        overflow: hidden;
+    }
+    #fortop{
+        min-width: 800px;
+        width: 100%;
+        height: 60px;
+    }
+    #studio {
+        width: 100%;
+        min-width: 800px;
+        min-height: 600px;
+        text-align: left;
+        background-color: rgb(239,239,239);
+        vertical-align:left;
+        overflow: hidden;
+    }
+    #studio #upload-modal {
+        text-align: center;
+    }
+    #studio .left-part {
+        margin: 20px 5% 20px 5%; 
+        display: inline-block;
+        width: 50%;
+        min-width: 400px;
+        float: left;
+    }
+    #studio .infobar {
+        height: 80px;
+        border: 1px solid rgb(241,241,241);
+    }
+    #studio #teacher-avatar {  
+        padding: 0px;
+        border: 2px solid rgba(180,230,180,0.7);
+        background-color: rgb(210,210,210);
+        border-radius: 50%;
+        margin: 15px 10px 15px 10px;
+    }
+    #studio .creator-avatar {
+        cursor: pointer;
+    }
+    #studio #studio-info {
+        display: inline-block;
+        width: calc(100% - 50px - 30px);
+        height: 80px;
+    }
+    #studio #studio-info *{
+       overflow: hidden;
+    }
+    #studio #studio-info #title {
+        width: 100%;
+        height: 48px;
+    }
+    #studio #studio-info #title #title-content{
+        float: left;
+        font-size: 26px;
+        padding: 5px 0px 5px 30px;
+        width: 85%;
+        height: 48px;
+    }
+    #studio #studio-info #footer {
+        width: 100%;
+        height: 32px;
+    }
+    #studio #studio-info #switch-section {
+        height: 30px;
+        float: right;
+        margin: 9px 5px 9px 5px;
+    }
+    #studio #studio-info #teacher {
+        height: 26px;
+        float: right;
+    }
+    #studio #studio-info #audience {
+        height: 26px;
+        float: right;
+    }
+    #studio #studio-info #vip {
+        float: left;
+        height: 24px;
+    }
+    #studio #studio-info #roomid {
+        margin-left: 30px;
+        float: left;
+        height: 24px;
+    }
+    #studio .main-section {
+        height: 0;
+        padding-bottom: calc( 65% * 0.5 );
+        background-color: white;
+    }
+    #studio .right-part {
+        display: inline-block;
+        width: 35%;
+        min-width: 280px;
+        float: right;
+    }
+    #studio .infobar, .minor-section, .chat-section, .main-section {
+        -moz-box-shadow:2px 2px 10px #A1A1A1;
+        -webkit-box-shadow:2px 2px 10px #A1A1A1; 
+        box-shadow: 2px 2px 10px #A1A1A1;
+        background-color: white;
+    }
+    #studio .minor-section {
+        margin: 20px 5% 0px 0%; 
+        height: 0;
+        padding-bottom: calc( 65% * 0.35 );
+    }
+    #studio .chat-section {
+        margin: 30px 5% 0px 0%; 
+    }
+    #studio .studio-relative {
+        position: relative !important;
+        top: -120px;
+    }
+    #studio #upload-ppt {
+        margin-top: 40px;
+    }
+    #modal-footer {
+        text-align: center;
+        padding: 15px;
+    }
+&lt;/style&gt;
+
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

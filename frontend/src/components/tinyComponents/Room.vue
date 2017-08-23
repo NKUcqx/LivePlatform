@@ -22,7 +22,18 @@
 </template>
 
 <script>
+/**
+ *Module TinyComponents
+ *
+ *@module TinyComponents
+ *@requires Utils
+ */
 import { mapMutations } from 'vuex'
+/**
+ *首页的房间组件
+ *@class Room
+ *@constructor
+ */
 export default {
     props: {
         item: Object
@@ -38,6 +49,10 @@ export default {
         ...mapMutations({
             setRoomInfo: 'setRoomInfo'
         }),
+        /**
+         *进入房间
+         *@event enterRoom
+         */
         enterRoom () {
             console.log(this.item)
             this.setRoomInfo(this.item)

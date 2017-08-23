@@ -29,10 +29,20 @@
 </template>
 
 <script>
+/**
+ *Module TinyComponents
+ *
+ *@module TinyComponents
+ *@requires Utils
+ */
 import Login from './Login'
 import Signup from './Signup'
 import { mapGetters, mapMutations } from 'vuex'
-
+/**
+ *欢迎页，调用Store里的Welcome类
+ *@class Welcome
+ *@constructor
+ */
 export default {
     components: {
         Login,
