@@ -28,7 +28,7 @@
  *@module TinyComponents
  *@requires Utils
  */
-import { mapMutations } from 'vuex'
+import { mapGetters, mapActions, mapMutations } from 'vuex'
 /**
  *首页的房间组件
  *@class Room
@@ -45,7 +45,15 @@ export default {
             }
         }
     },
+    computed: {
+        ...mapGetters({
+            userid: 'getUserId'
+        })
+    },
     methods: {
+        ...mapActions({
+            checkEnter: 'checkEnter'
+        }),
         ...mapMutations({
             setRoomInfo: 'setRoomInfo'
         }),
@@ -54,10 +62,8 @@ export default {
          *@event enterRoom
          */
         enterRoom () {
-            console.log(this.item)
             this.setRoomInfo(this.item)
-            window.open('/#/studio')
-            // this.$router.push({ name: 'studio' })
+            this.checkEnter({user_id: this.userid, room_id: this.item.id.toString()})
         }
     },
     mounted () {
@@ -66,7 +72,6 @@ export default {
     },
     beforeUpdate () {
         this.background.backgroundImage = 'url(' + this.item.thumbnail_path + ')'
-        console.log('update: ', this.background.backgroundImage)
     }
 }
 </script>
