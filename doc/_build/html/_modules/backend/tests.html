@@ -1,0 +1,362 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>backend.tests &#8212; Group3 1.0.0 文档</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/translations.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>backend.tests 源代码</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">django.test</span> <span class="k">import</span> <span class="n">TestCase</span><span class="p">,</span> <span class="n">Client</span>
+<span class="kn">from</span> <span class="nn">backend.myview</span> <span class="k">import</span> <span class="n">room_view</span><span class="p">,</span> <span class="n">user_view</span><span class="p">,</span> <span class="n">toolkits</span>
+<span class="kn">from</span> <span class="nn">backend.models</span> <span class="k">import</span> <span class="n">LiveRoom</span><span class="p">,</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">django.utils</span> <span class="k">import</span> <span class="n">timezone</span>
+<span class="kn">from</span> <span class="nn">django.forms.models</span> <span class="k">import</span> <span class="n">model_to_dict</span>
+<span class="kn">from</span> <span class="nn">backend.models</span> <span class="k">import</span> <span class="n">User</span><span class="p">,</span><span class="n">LiveRoom</span>
+<span class="kn">from</span> <span class="nn">backend.myview.user_view</span> <span class="k">import</span> <span class="n">random_str</span>
+<span class="kn">from</span> <span class="nn">backend.myview.user_view</span> <span class="k">import</span> <span class="n">test_phone</span>
+<span class="kn">from</span> <span class="nn">backend.myview.user_view</span> <span class="k">import</span> <span class="n">test_email</span>
+<span class="kn">from</span> <span class="nn">backend.myview.user_view</span> <span class="k">import</span> <span class="n">create_user_folder</span>
+<span class="kn">from</span> <span class="nn">backend.myview.user_view</span> <span class="k">import</span> <span class="n">getUser</span>
+<span class="kn">from</span> <span class="nn">backend.myview.user_view</span> <span class="k">import</span> <span class="n">sendTo</span>
+<span class="kn">from</span> <span class="nn">backend.myview.user_view</span> <span class="k">import</span> <span class="n">signupSubmit</span>
+<span class="kn">from</span> <span class="nn">backend.myview.user_view</span> <span class="k">import</span> <span class="n">loginSubmit</span>
+<span class="kn">from</span> <span class="nn">backend.myview.user_view</span> <span class="k">import</span> <span class="n">testUsername</span>
+<span class="kn">from</span> <span class="nn">backend.myview.user_view</span> <span class="k">import</span> <span class="n">changeAvatar</span>
+<span class="kn">from</span> <span class="nn">backend.myview.user_view</span> <span class="k">import</span> <span class="n">changeGenderAndNickname</span>
+<span class="kn">from</span> <span class="nn">backend.myview.user_view</span> <span class="k">import</span> <span class="n">changePassword</span>
+<span class="kn">from</span> <span class="nn">backend.myview.user_view</span> <span class="k">import</span> <span class="n">getUserFromSession</span>
+<span class="sd">&#39;&#39;&#39;from backend.myview.punishment_base import banSpeakOne</span>
+<span class="sd">from backend.myview.punishment_base import banSpeakPublic</span>
+<span class="sd">from backend.myview.punishment_base import outOne</span>
+<span class="sd">from backend.myview.punishment_base import clean_table</span>
+<span class="sd">from backend.myview.punishment_base import is_out</span>
+<span class="sd">from backend.myview.punishment_base import is_ban_speak&#39;&#39;&#39;</span>
+<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="k">import</span> <span class="n">auth</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="c1"># Create your tests here.</span>
+
+
+<div class="viewcode-block" id="UserTestCase"><a class="viewcode-back" href="../../backend.html#backend.tests.UserTestCase">[文档]</a><span class="k">class</span> <span class="nc">UserTestCase</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="UserTestCase.setUp"><a class="viewcode-back" href="../../backend.html#backend.tests.UserTestCase.setUp">[文档]</a>    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user1</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+            <span class="n">username</span><span class="o">=</span><span class="s1">&#39;HIHA&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;1234&#39;</span><span class="p">,</span> <span class="n">phone</span><span class="o">=</span><span class="s1">&#39;15302178925&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user2</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+            <span class="n">username</span><span class="o">=</span><span class="s1">&#39;baobao&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;1234&#39;</span><span class="p">,</span> <span class="n">phone</span><span class="o">=</span><span class="s1">&#39;15222856278&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user3</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+            <span class="n">username</span><span class="o">=</span><span class="s1">&#39;xiaolaotou&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;1234&#39;</span><span class="p">,</span> <span class="n">phone</span><span class="o">=</span><span class="s1">&#39;13752652469&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user4</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+            <span class="n">username</span><span class="o">=</span><span class="s1">&#39;chenqixiang&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;1234&#39;</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="s1">&#39;892670992@qq.com&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UserTestCase.test_create_user"><a class="viewcode-back" href="../../backend.html#backend.tests.UserTestCase.test_create_user">[文档]</a>    <span class="k">def</span> <span class="nf">test_create_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1">#self.assertEqual(self.user1.avatar.name, &#39;frontend/static/users/default_avatar/avatar.jpg&#39;)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user1</span><span class="o">.</span><span class="n">role</span><span class="p">,</span> <span class="s1">&#39;S&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user1</span><span class="o">.</span><span class="n">phone</span><span class="p">,</span> <span class="s1">&#39;15302178925&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user1</span><span class="o">.</span><span class="n">gender</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user4</span><span class="o">.</span><span class="n">phone</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user1</span><span class="o">.</span><span class="n">email</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UserTestCase.test_random_str"><a class="viewcode-back" href="../../backend.html#backend.tests.UserTestCase.test_random_str">[文档]</a>    <span class="k">def</span> <span class="nf">test_random_str</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">random_str</span><span class="p">()),</span> <span class="mi">4</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">random_str</span><span class="p">(</span><span class="mi">5</span><span class="p">)),</span> <span class="mi">5</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">random_str</span><span class="p">()</span><span class="o">.</span><span class="n">isdigit</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="UserTestCase.test_test_email"><a class="viewcode-back" href="../../backend.html#backend.tests.UserTestCase.test_test_email">[文档]</a>    <span class="k">def</span> <span class="nf">test_test_email</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">test_email</span><span class="p">(</span><span class="s1">&#39;15302178925@163.com&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">test_email</span><span class="p">(</span><span class="s1">&#39;2020263746@qq.com&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">test_email</span><span class="p">(</span><span class="s1">&#39;dongbaobao94@gmail.com&#39;</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="UserTestCase.test_test_phone"><a class="viewcode-back" href="../../backend.html#backend.tests.UserTestCase.test_test_phone">[文档]</a>    <span class="k">def</span> <span class="nf">test_test_phone</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">test_phone</span><span class="p">(</span><span class="s1">&#39;15302178925&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">test_phone</span><span class="p">(</span><span class="s1">&#39;15222856278&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">test_phone</span><span class="p">(</span><span class="s1">&#39;13752652469&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">test_phone</span><span class="p">(</span><span class="s1">&#39;13662197063&#39;</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="UserTestCase.test_sendTo"><a class="viewcode-back" href="../../backend.html#backend.tests.UserTestCase.test_sendTo">[文档]</a>    <span class="k">def</span> <span class="nf">test_sendTo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">user_dic</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="s2">&quot;15302178925@163.com&quot;</span><span class="p">,</span> <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="s2">&quot;4345&quot;</span><span class="p">}</span>
+        <span class="n">user_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">user_dic</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="s1">&#39;/sendemail/&#39;</span><span class="p">,</span> <span class="n">user_json</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;application/json&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UserTestCase.test_signupSubmit"><a class="viewcode-back" href="../../backend.html#backend.tests.UserTestCase.test_signupSubmit">[文档]</a>    <span class="k">def</span> <span class="nf">test_signupSubmit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">user_dic</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;15032002730&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;phone&quot;</span><span class="p">:</span> <span class="s2">&quot;15032002730&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="s2">&quot;cqx1997215&quot;</span>
+        <span class="p">}</span>
+        <span class="n">user_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">user_dic</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="s1">&#39;/signup/&#39;</span><span class="p">,</span> <span class="n">user_json</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;application/json&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span></div></div>
+<span class="sd">&#39;&#39;&#39;class PunishmentTestCase(TestCase):</span>
+<span class="sd">    def setUp(self):</span>
+<span class="sd">        self.user1=User.objects.create_user(username=&#39;HIHA&#39;,password=&#39;1234&#39;,phone=&#39;15302178925&#39;)</span>
+<span class="sd">        self.user2=User.objects.create_user(username=&#39;baobao&#39;,password=&#39;1234&#39;,phone=&#39;15222856278&#39;)</span>
+<span class="sd">        self.user3=User.objects.create_user(username=&#39;xiaolaotou&#39;,password=&#39;1234&#39;,phone=&#39;13752652469&#39;)</span>
+<span class="sd">        self.user4=User.objects.create_user(username=&#39;chenqixiang&#39;,password=&#39;1234&#39;,email=&#39;892670992@qq.com&#39;)</span>
+<span class="sd">        self.room1=LiveRoom(name=&#39;toutouroom&#39;,creater=self.user3)</span>
+<span class="sd">        self.room1.save()</span>
+<span class="sd">        self.room2=LiveRoom(name=&#39;baobaoroom&#39;,creater=self.user2)</span>
+<span class="sd">        self.room2.save()</span>
+<span class="sd">    def test_banSpeakOne(self):</span>
+<span class="sd">        banSpeakOne(self.room1,self.user1)</span>
+<span class="sd">        banSpeakOne(self.room1,self.user2)</span>
+<span class="sd">        punishment1=Punishment.objects.filter(room=self.room1,user=self.user1,punishment=&#39;S&#39;)</span>
+<span class="sd">        punishment2=Punishment.objects.filter(room=self.room1,user=self.user2,punishment=&#39;S&#39;)</span>
+<span class="sd">        self.assertEqual(len(punishment1),1)</span>
+<span class="sd">        self.assertEqual(len(punishment2),1)</span>
+<span class="sd">    def test_banSpeakPublic(self):</span>
+<span class="sd">        banSpeakPublic(self.room1,[self.user1,self.user2])</span>
+<span class="sd">        punishment1=Punishment.objects.filter(room=self.room1,punishment=&#39;S&#39;)</span>
+<span class="sd">        self.assertEqual(len(punishment1),2)</span>
+<span class="sd">    def test_outOne(self):</span>
+<span class="sd">        outOne(self.room2,self.user1)</span>
+<span class="sd">        outOne(self.room2,self.user2)</span>
+<span class="sd">        self.assertEqual(len(Punishment.objects.filter(room=self.room2,user=self.user1,punishment=&#39;K&#39;)),1)</span>
+<span class="sd">        self.assertEqual(len(Punishment.objects.filter(room=self.room2,user=self.user2,punishment=&#39;K&#39;)),1)</span>
+<span class="sd">    def test_clean_table(self):</span>
+<span class="sd">        banSpeakOne(self.room1,self.user1)</span>
+<span class="sd">        banSpeakOne(self.room2,self.user1)</span>
+<span class="sd">        outOne(self.room2,self.user1)</span>
+<span class="sd">        outOne(self.room2,self.user2)</span>
+<span class="sd">        clean_table(self.room1)</span>
+<span class="sd">        self.assertEqual(len(Punishment.objects.filter(room=self.room1)),0)</span>
+<span class="sd">    def test_is_ban_speak(self):</span>
+<span class="sd">        banSpeakOne(self.room1,self.user1)</span>
+<span class="sd">        banSpeakOne(self.room1,self.user2)</span>
+<span class="sd">        self.assertTrue(is_ban_speak(self.room1,self.user1))</span>
+<span class="sd">        self.assertEqual(is_ban_speak(self.room1,self.user3),False)</span>
+<span class="sd">    def test_is_out(self):</span>
+<span class="sd">        outOne(self.room1,self.user1)</span>
+<span class="sd">        outOne(self.room1,self.user2)</span>
+<span class="sd">        self.assertTrue(is_out(self.room1,self.user1))</span>
+<span class="sd">        self.assertEqual(is_out(self.room1,self.user3),False) &#39;&#39;&#39;</span>
+<div class="viewcode-block" id="RoomViewTestCase"><a class="viewcode-back" href="../../backend.html#backend.tests.RoomViewTestCase">[文档]</a><span class="k">class</span> <span class="nc">RoomViewTestCase</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="RoomViewTestCase.setUp"><a class="viewcode-back" href="../../backend.html#backend.tests.RoomViewTestCase.setUp">[文档]</a>    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
+        <span class="n">user_dic</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;15032002730&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;phone&quot;</span><span class="p">:</span> <span class="s2">&quot;15032002730&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="s2">&quot;cqx1997215&quot;</span>
+        <span class="p">}</span>
+        <span class="n">user_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">user_dic</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;/signup/&#39;</span><span class="p">,</span> <span class="n">user_json</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;application/json&quot;</span><span class="p">)</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+            <span class="n">username</span><span class="o">=</span><span class="s2">&quot;15032002730&quot;</span><span class="p">,</span>
+            <span class="n">phone</span><span class="o">=</span><span class="s2">&quot;15032002730&quot;</span><span class="p">,</span>
+            <span class="n">password</span><span class="o">=</span><span class="s2">&quot;cqx1997215&quot;</span><span class="p">,</span>
+            <span class="n">role</span><span class="o">=</span><span class="s2">&quot;T&quot;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="n">user_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
+            <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;15032002730&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="s2">&quot;cqx1997215&quot;</span>
+        <span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;/login/&#39;</span><span class="p">,</span> <span class="n">user_json</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;application/json&quot;</span><span class="p">)</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="RoomViewTestCase.test_create_folder"><a class="viewcode-back" href="../../backend.html#backend.tests.RoomViewTestCase.test_create_folder">[文档]</a>    <span class="k">def</span> <span class="nf">test_create_folder</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">room_view</span><span class="o">.</span><span class="n">create_folder</span><span class="p">(</span><span class="s2">&quot;unittest&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">&quot;unittest&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="s2">&quot;unittest&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s2">&quot;unittest/log.txt&quot;</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="RoomViewTestCase.test_create_get_end_room"><a class="viewcode-back" href="../../backend.html#backend.tests.RoomViewTestCase.test_create_get_end_room">[文档]</a>    <span class="k">def</span> <span class="nf">test_create_get_end_room</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">room</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test_room1&quot;</span><span class="p">}</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;/createroom/&#39;</span><span class="p">,</span> <span class="n">room</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;/endroom/&#39;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+        <span class="n">room</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test_room2&quot;</span><span class="p">,</span> <span class="s2">&quot;is_silence&quot;</span><span class="p">:</span> <span class="s2">&quot;true&quot;</span><span class="p">}</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;/createroom/&#39;</span><span class="p">,</span> <span class="n">room</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;/endroom/&#39;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+        <span class="c1"># test the trigger</span>
+        <span class="n">room</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test_room3&quot;</span><span class="p">}</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;/createroom/&#39;</span><span class="p">,</span> <span class="n">room</span><span class="p">)</span>
+        <span class="n">room</span> <span class="o">=</span> <span class="n">LiveRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;test_room3&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">room</span><span class="o">.</span><span class="n">end_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="n">req</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;audience_amount&#39;</span><span class="p">:</span> <span class="s1">&#39;999&#39;</span><span class="p">}</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;/updateroom/&#39;</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;application/json&quot;</span><span class="p">)</span>
+        <span class="n">room</span> <span class="o">=</span> <span class="n">LiveRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;test_room3&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">room</span><span class="o">.</span><span class="n">audience_amount</span><span class="p">,</span> <span class="mi">999</span><span class="p">)</span>
+
+        <span class="n">req</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;new_room_name&#39;</span><span class="p">}</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;/updateroom/&#39;</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;application/json&quot;</span><span class="p">)</span>
+        <span class="n">rooms</span> <span class="o">=</span> <span class="n">LiveRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;new_room_name&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rooms</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">rooms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;new_room_name&#39;</span><span class="p">)</span>
+
+        <span class="n">req</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/getroom/&#39;</span><span class="p">,</span> <span class="n">req</span><span class="p">)</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">[</span><span class="s1">&#39;rooms&#39;</span><span class="p">]),</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">}</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/getroom/&#39;</span><span class="p">,</span> <span class="n">req</span><span class="p">)</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">[</span><span class="s1">&#39;rooms&#39;</span><span class="p">]),</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;order_by&quot;</span><span class="p">:</span> <span class="s2">&quot;name&quot;</span><span class="p">}</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/getroom/&#39;</span><span class="p">,</span> <span class="n">req</span><span class="p">)</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">[</span><span class="s1">&#39;rooms&#39;</span><span class="p">]),</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;is_living&quot;</span><span class="p">:</span> <span class="s2">&quot;true&quot;</span><span class="p">}</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/getroom/&#39;</span><span class="p">,</span> <span class="n">req</span><span class="p">)</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">[</span><span class="s1">&#39;rooms&#39;</span><span class="p">]),</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;is_living&quot;</span><span class="p">:</span> <span class="s2">&quot;false&quot;</span><span class="p">}</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/getroom/&#39;</span><span class="p">,</span> <span class="n">req</span><span class="p">)</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">[</span><span class="s1">&#39;rooms&#39;</span><span class="p">]),</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;limit&quot;</span><span class="p">:</span> <span class="s2">&quot;2&quot;</span><span class="p">}</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/getroom/&#39;</span><span class="p">,</span> <span class="n">req</span><span class="p">)</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">[</span><span class="s1">&#39;rooms&#39;</span><span class="p">]),</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;limit&quot;</span><span class="p">:</span> <span class="s2">&quot;3&quot;</span><span class="p">,</span> <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">}</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/getroom/&#39;</span><span class="p">,</span> <span class="n">req</span><span class="p">)</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">[</span><span class="s1">&#39;rooms&#39;</span><span class="p">]),</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;limit&quot;</span><span class="p">:</span> <span class="s2">&quot;3&quot;</span><span class="p">,</span> <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="s2">&quot;2&quot;</span><span class="p">}</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/getroom/&#39;</span><span class="p">,</span> <span class="n">req</span><span class="p">)</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">[</span><span class="s1">&#39;rooms&#39;</span><span class="p">]),</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/getroomamount/&#39;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">content</span><span class="p">[</span><span class="s1">&#39;living_amount&#39;</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">content</span><span class="p">[</span><span class="s1">&#39;end_amount&#39;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span></div>
+        
+<div class="viewcode-block" id="RoomViewTestCase.tearDown"><a class="viewcode-back" href="../../backend.html#backend.tests.RoomViewTestCase.tearDown">[文档]</a>    <span class="k">def</span> <span class="nf">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div></div>
+
+
+<div class="viewcode-block" id="ToolkitsTestCase"><a class="viewcode-back" href="../../backend.html#backend.tests.ToolkitsTestCase">[文档]</a><span class="k">class</span> <span class="nc">ToolkitsTestCase</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="ToolkitsTestCase.setUp"><a class="viewcode-back" href="../../backend.html#backend.tests.ToolkitsTestCase.setUp">[文档]</a>    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="ToolkitsTestCase.test_encode_json"><a class="viewcode-back" href="../../backend.html#backend.tests.ToolkitsTestCase.test_encode_json">[文档]</a>    <span class="k">def</span> <span class="nf">test_encode_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">toolkits</span><span class="o">.</span><span class="n">encode_json</span><span class="p">(</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">result</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">))</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">toolkits</span><span class="o">.</span><span class="n">encode_json</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">result</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">))</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">toolkits</span><span class="o">.</span><span class="n">encode_json</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s2">&quot;123&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">result</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="s2">&quot;10&quot;</span><span class="p">))</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">toolkits</span><span class="o">.</span><span class="n">encode_json</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ToolkitsTestCase.test_change_prefix"><a class="viewcode-back" href="../../backend.html#backend.tests.ToolkitsTestCase.test_change_prefix">[文档]</a>    <span class="k">def</span> <span class="nf">test_change_prefix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">toolkits</span><span class="o">.</span><span class="n">change_prefix</span><span class="p">(</span><span class="s1">&#39;1/2/3&#39;</span><span class="p">),</span> <span class="s1">&#39;1/2/3&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">toolkits</span><span class="o">.</span><span class="n">change_prefix</span><span class="p">(</span><span class="s1">&#39;1/2/static/3&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span> <span class="s1">&#39;/static/3&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">toolkits</span><span class="o">.</span><span class="n">change_prefix</span><span class="p">(</span><span class="s1">&#39;1/2/3&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">),</span> <span class="s1">&#39;/0/1/2/3&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">toolkits</span><span class="o">.</span><span class="n">change_prefix</span><span class="p">(</span><span class="s1">&#39;1/2/3&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">),</span> <span class="s1">&#39;/2/3&#39;</span><span class="p">)</span></div>
+<div class="viewcode-block" id="ToolkitsTestCase.test_get_file_amount"><a class="viewcode-back" href="../../backend.html#backend.tests.ToolkitsTestCase.test_get_file_amount">[文档]</a>    <span class="k">def</span> <span class="nf">test_get_file_amount</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">toolkits</span><span class="o">.</span><span class="n">get_file_amount</span><span class="p">(</span><span class="s1">&#39;backend/record&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">toolkits</span><span class="o">.</span><span class="n">get_file_amount</span><span class="p">(</span><span class="s1">&#39;backend/record&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">toolkits</span><span class="o">.</span><span class="n">get_file_amount</span><span class="p">(</span><span class="s1">&#39;backend/record&#39;</span><span class="p">),</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span></div>
+    <span class="sd">&#39;&#39;&#39;def test_bi2obj(self):</span>
+<span class="sd">        json_data = json.dumps({&#39;bool&#39;: True, &#39;integer&#39;: 1, &#39;NoneType&#39;: None, &#39;Null&#39;: &#39;null&#39;, &#39;undefiend&#39;: &#39;undefiend&#39;})</span>
+<span class="sd">        request = json.dumps({body:json_data})</span>
+<span class="sd">        pass&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="ToolkitsTestCase.tearDown"><a class="viewcode-back" href="../../backend.html#backend.tests.ToolkitsTestCase.tearDown">[文档]</a>    <span class="k">def</span> <span class="nf">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Group3</a></h1>
+
+
+
+
+
+
+
+
+<h3>导航</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">模块代码</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>快速搜索</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="转向" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, LDJ.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

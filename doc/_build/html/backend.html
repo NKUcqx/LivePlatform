@@ -1,0 +1,934 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>backend package &#8212; Group3 1.0.0 文档</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="backend-package">
+<h1>backend package<a class="headerlink" href="#backend-package" title="永久链接至标题">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="永久链接至标题">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="backend.migrations.html">backend.migrations package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="backend.migrations.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backend.migrations.html#module-backend.migrations.0001_initial">backend.migrations.0001_initial module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backend.migrations.html#module-backend.migrations">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="backend.myview.html">backend.myview package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="backend.myview.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backend.myview.html#module-backend.myview.toolkits">backend.myview.toolkits  module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backend.myview.html#module-backend.myview.punishment_view">backend.myview.punishment_views module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backend.myview.html#module-backend.myview.room_view">backend.myview.room_views module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backend.myview.html#module-backend.myview.user_view">backend.myview.user_views module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backend.myview.html#module-backend.myview">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="永久链接至标题">¶</a></h2>
+</div>
+<div class="section" id="module-backend.admin">
+<span id="backend-admin-module"></span><h2>backend.admin module<a class="headerlink" href="#module-backend.admin" title="永久链接至标题">¶</a></h2>
+</div>
+<div class="section" id="module-backend.apps">
+<span id="backend-apps-module"></span><h2>backend.apps module<a class="headerlink" href="#module-backend.apps" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="backend.apps.BackendConfig">
+<em class="property">class </em><code class="descclassname">backend.apps.</code><code class="descname">BackendConfig</code><span class="sig-paren">(</span><em>app_name</em>, <em>app_module</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/apps.html#BackendConfig"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.apps.BackendConfig" title="永久链接至目标">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.apps.config.AppConfig</span></code></p>
+<dl class="attribute">
+<dt id="backend.apps.BackendConfig.name">
+<code class="descname">name</code><em class="property"> = 'backend'</em><a class="headerlink" href="#backend.apps.BackendConfig.name" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-backend.conf">
+<span id="backend-conf-module"></span><h2>backend.conf module<a class="headerlink" href="#module-backend.conf" title="永久链接至标题">¶</a></h2>
+</div>
+<div class="section" id="module-backend.forms">
+<span id="backend-forms-module"></span><h2>backend.forms module<a class="headerlink" href="#module-backend.forms" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="backend.forms.LiveRoomForm">
+<em class="property">class </em><code class="descclassname">backend.forms.</code><code class="descname">LiveRoomForm</code><span class="sig-paren">(</span><em>data=None</em>, <em>files=None</em>, <em>auto_id='id_%s'</em>, <em>prefix=None</em>, <em>initial=None</em>, <em>error_class=&lt;class 'django.forms.utils.ErrorList'&gt;</em>, <em>label_suffix=None</em>, <em>empty_permitted=False</em>, <em>instance=None</em>, <em>use_required_attribute=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/forms.html#LiveRoomForm"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.forms.LiveRoomForm" title="永久链接至目标">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.forms.models.ModelForm</span></code></p>
+<dl class="class">
+<dt id="backend.forms.LiveRoomForm.Meta">
+<em class="property">class </em><code class="descname">Meta</code><a class="reference internal" href="_modules/backend/forms.html#LiveRoomForm.Meta"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.forms.LiveRoomForm.Meta" title="永久链接至目标">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="backend.forms.LiveRoomForm.Meta.fields">
+<code class="descname">fields</code><em class="property"> = ('name', 'creator')</em><a class="headerlink" href="#backend.forms.LiveRoomForm.Meta.fields" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="backend.forms.LiveRoomForm.Meta.model">
+<code class="descname">model</code><a class="headerlink" href="#backend.forms.LiveRoomForm.Meta.model" title="永久链接至目标">¶</a></dt>
+<dd><p><code class="xref py py-class docutils literal"><span class="pre">LiveRoom</span></code> 的别名</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="backend.forms.LiveRoomForm.base_fields">
+<code class="descname">base_fields</code><em class="property"> = OrderedDict([('name', &lt;django.forms.fields.CharField object&gt;), ('creator', &lt;django.forms.models.ModelChoiceField object&gt;)])</em><a class="headerlink" href="#backend.forms.LiveRoomForm.base_fields" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="backend.forms.LiveRoomForm.declared_fields">
+<code class="descname">declared_fields</code><em class="property"> = OrderedDict()</em><a class="headerlink" href="#backend.forms.LiveRoomForm.declared_fields" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="backend.forms.LiveRoomForm.media">
+<code class="descname">media</code><a class="headerlink" href="#backend.forms.LiveRoomForm.media" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="backend.forms.TestForm">
+<em class="property">class </em><code class="descclassname">backend.forms.</code><code class="descname">TestForm</code><span class="sig-paren">(</span><em>data=None</em>, <em>files=None</em>, <em>auto_id='id_%s'</em>, <em>prefix=None</em>, <em>initial=None</em>, <em>error_class=&lt;class 'django.forms.utils.ErrorList'&gt;</em>, <em>label_suffix=None</em>, <em>empty_permitted=False</em>, <em>instance=None</em>, <em>use_required_attribute=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/forms.html#TestForm"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.forms.TestForm" title="永久链接至目标">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.forms.models.ModelForm</span></code></p>
+<dl class="class">
+<dt id="backend.forms.TestForm.Meta">
+<em class="property">class </em><code class="descname">Meta</code><a class="reference internal" href="_modules/backend/forms.html#TestForm.Meta"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.forms.TestForm.Meta" title="永久链接至目标">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="backend.forms.TestForm.Meta.fields">
+<code class="descname">fields</code><em class="property"> = ('content',)</em><a class="headerlink" href="#backend.forms.TestForm.Meta.fields" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="backend.forms.TestForm.Meta.model">
+<code class="descname">model</code><a class="headerlink" href="#backend.forms.TestForm.Meta.model" title="永久链接至目标">¶</a></dt>
+<dd><p><code class="xref py py-class docutils literal"><span class="pre">Test</span></code> 的别名</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="backend.forms.TestForm.base_fields">
+<code class="descname">base_fields</code><em class="property"> = OrderedDict([('content', &lt;django.forms.fields.CharField object&gt;)])</em><a class="headerlink" href="#backend.forms.TestForm.base_fields" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="backend.forms.TestForm.declared_fields">
+<code class="descname">declared_fields</code><em class="property"> = OrderedDict()</em><a class="headerlink" href="#backend.forms.TestForm.declared_fields" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="backend.forms.TestForm.media">
+<code class="descname">media</code><a class="headerlink" href="#backend.forms.TestForm.media" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="backend.forms.UserForm">
+<em class="property">class </em><code class="descclassname">backend.forms.</code><code class="descname">UserForm</code><span class="sig-paren">(</span><em>data=None</em>, <em>files=None</em>, <em>auto_id='id_%s'</em>, <em>prefix=None</em>, <em>initial=None</em>, <em>error_class=&lt;class 'django.forms.utils.ErrorList'&gt;</em>, <em>label_suffix=None</em>, <em>empty_permitted=False</em>, <em>instance=None</em>, <em>use_required_attribute=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/forms.html#UserForm"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.forms.UserForm" title="永久链接至目标">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.forms.models.ModelForm</span></code></p>
+<dl class="class">
+<dt id="backend.forms.UserForm.Meta">
+<em class="property">class </em><code class="descname">Meta</code><a class="reference internal" href="_modules/backend/forms.html#UserForm.Meta"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.forms.UserForm.Meta" title="永久链接至目标">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="backend.forms.UserForm.Meta.fields">
+<code class="descname">fields</code><em class="property"> = ('username', 'password', 'gender', 'nickname')</em><a class="headerlink" href="#backend.forms.UserForm.Meta.fields" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="backend.forms.UserForm.Meta.model">
+<code class="descname">model</code><a class="headerlink" href="#backend.forms.UserForm.Meta.model" title="永久链接至目标">¶</a></dt>
+<dd><p><code class="xref py py-class docutils literal"><span class="pre">User</span></code> 的别名</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="backend.forms.UserForm.base_fields">
+<code class="descname">base_fields</code><em class="property"> = OrderedDict([('username', &lt;django.forms.fields.CharField object&gt;), ('password', &lt;django.forms.fields.CharField object&gt;), ('gender', &lt;django.forms.fields.BooleanField object&gt;), ('nickname', &lt;django.forms.fields.CharField object&gt;)])</em><a class="headerlink" href="#backend.forms.UserForm.base_fields" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="backend.forms.UserForm.declared_fields">
+<code class="descname">declared_fields</code><em class="property"> = OrderedDict()</em><a class="headerlink" href="#backend.forms.UserForm.declared_fields" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="backend.forms.UserForm.media">
+<code class="descname">media</code><a class="headerlink" href="#backend.forms.UserForm.media" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-backend.models">
+<span id="backend-models-module"></span><h2>backend.models module<a class="headerlink" href="#module-backend.models" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="backend.models.LiveRoom">
+<em class="property">class </em><code class="descclassname">backend.models.</code><code class="descname">LiveRoom</code><span class="sig-paren">(</span><em>id</em>, <em>name</em>, <em>creator</em>, <em>audience_amount</em>, <em>is_living</em>, <em>create_time</em>, <em>end_time</em>, <em>file_name</em>, <em>slide_path</em>, <em>thumbnail_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/models.html#LiveRoom"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.models.LiveRoom" title="永久链接至目标">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
+<dl class="exception">
+<dt id="backend.models.LiveRoom.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#backend.models.LiveRoom.DoesNotExist" title="永久链接至目标">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="backend.models.LiveRoom.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#backend.models.LiveRoom.MultipleObjectsReturned" title="永久链接至目标">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="backend.models.LiveRoom.audience_amount">
+<code class="descname">audience_amount</code><a class="headerlink" href="#backend.models.LiveRoom.audience_amount" title="永久链接至目标">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="backend.models.LiveRoom.create_time">
+<code class="descname">create_time</code><a class="headerlink" href="#backend.models.LiveRoom.create_time" title="永久链接至目标">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="backend.models.LiveRoom.creator">
+<code class="descname">creator</code><a class="headerlink" href="#backend.models.LiveRoom.creator" title="永久链接至目标">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="backend.models.LiveRoom.creator_id">
+<code class="descname">creator_id</code><a class="headerlink" href="#backend.models.LiveRoom.creator_id" title="永久链接至目标">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="backend.models.LiveRoom.end_time">
+<code class="descname">end_time</code><a class="headerlink" href="#backend.models.LiveRoom.end_time" title="永久链接至目标">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="backend.models.LiveRoom.file_name">
+<code class="descname">file_name</code><a class="headerlink" href="#backend.models.LiveRoom.file_name" title="永久链接至目标">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="backend.models.LiveRoom.get_next_by_create_time">
+<code class="descname">get_next_by_create_time</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#backend.models.LiveRoom.get_next_by_create_time" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="backend.models.LiveRoom.get_previous_by_create_time">
+<code class="descname">get_previous_by_create_time</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#backend.models.LiveRoom.get_previous_by_create_time" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="backend.models.LiveRoom.id">
+<code class="descname">id</code><a class="headerlink" href="#backend.models.LiveRoom.id" title="永久链接至目标">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="backend.models.LiveRoom.is_living">
+<code class="descname">is_living</code><a class="headerlink" href="#backend.models.LiveRoom.is_living" title="永久链接至目标">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="backend.models.LiveRoom.name">
+<code class="descname">name</code><a class="headerlink" href="#backend.models.LiveRoom.name" title="永久链接至目标">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="backend.models.LiveRoom.objects">
+<code class="descname">objects</code><em class="property"> = &lt;backend.models.LiveRoomManager object&gt;</em><a class="headerlink" href="#backend.models.LiveRoom.objects" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="backend.models.LiveRoom.punishment_set">
+<code class="descname">punishment_set</code><a class="headerlink" href="#backend.models.LiveRoom.punishment_set" title="永久链接至目标">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="backend.models.LiveRoom.save">
+<code class="descname">save</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/models.html#LiveRoom.save"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.models.LiveRoom.save" title="永久链接至目标">¶</a></dt>
+<dd><p>On save, create timestamps</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="backend.models.LiveRoom.slide_path">
+<code class="descname">slide_path</code><a class="headerlink" href="#backend.models.LiveRoom.slide_path" title="永久链接至目标">¶</a></dt>
+<dd><p>The descriptor for the file attribute on the model instance. Returns a
+FieldFile when accessed so you can do stuff like:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">myapp.models</span> <span class="k">import</span> <span class="n">MyModel</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">size</span>
+</pre></div>
+</div>
+<p>Assigns a file object on assignment so you can do:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;/path/to/hello.world&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">instance</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="backend.models.LiveRoom.thumbnail_path">
+<code class="descname">thumbnail_path</code><a class="headerlink" href="#backend.models.LiveRoom.thumbnail_path" title="永久链接至目标">¶</a></dt>
+<dd><p>Just like the FileDescriptor, but for ImageFields. The only difference is
+assigning the width/height to the width_field/height_field, if appropriate.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="backend.models.LiveRoomManager">
+<em class="property">class </em><code class="descclassname">backend.models.</code><code class="descname">LiveRoomManager</code><a class="reference internal" href="_modules/backend/models.html#LiveRoomManager"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.models.LiveRoomManager" title="永久链接至目标">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
+<dl class="method">
+<dt id="backend.models.LiveRoomManager.audience_count">
+<code class="descname">audience_count</code><span class="sig-paren">(</span><em>room_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/models.html#LiveRoomManager.audience_count"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.models.LiveRoomManager.audience_count" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="backend.models.LiveRoomManager.room_audience_count">
+<code class="descname">room_audience_count</code><span class="sig-paren">(</span><em>amount_to</em>, <em>amount_from=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/models.html#LiveRoomManager.room_audience_count"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.models.LiveRoomManager.room_audience_count" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="backend.models.LiveRoomManager.room_count">
+<code class="descname">room_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/models.html#LiveRoomManager.room_count"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.models.LiveRoomManager.room_count" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="backend.models.LiveRoomManager.room_creator_count">
+<code class="descname">room_creator_count</code><span class="sig-paren">(</span><em>creator_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/models.html#LiveRoomManager.room_creator_count"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.models.LiveRoomManager.room_creator_count" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="backend.models.LiveRoomManager.room_living_count">
+<code class="descname">room_living_count</code><span class="sig-paren">(</span><em>is_living</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/models.html#LiveRoomManager.room_living_count"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.models.LiveRoomManager.room_living_count" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="backend.models.Punishment">
+<em class="property">class </em><code class="descclassname">backend.models.</code><code class="descname">Punishment</code><span class="sig-paren">(</span><em>id</em>, <em>room</em>, <em>user</em>, <em>punishment</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/models.html#Punishment"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.models.Punishment" title="永久链接至目标">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
+<dl class="exception">
+<dt id="backend.models.Punishment.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#backend.models.Punishment.DoesNotExist" title="永久链接至目标">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="backend.models.Punishment.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#backend.models.Punishment.MultipleObjectsReturned" title="永久链接至目标">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="backend.models.Punishment.get_punishment_display">
+<code class="descname">get_punishment_display</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#backend.models.Punishment.get_punishment_display" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="backend.models.Punishment.id">
+<code class="descname">id</code><a class="headerlink" href="#backend.models.Punishment.id" title="永久链接至目标">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="backend.models.Punishment.objects">
+<code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#backend.models.Punishment.objects" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="backend.models.Punishment.punishment">
+<code class="descname">punishment</code><a class="headerlink" href="#backend.models.Punishment.punishment" title="永久链接至目标">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="backend.models.Punishment.punishment_choice">
+<code class="descname">punishment_choice</code><em class="property"> = (('K', 'kicked out'), ('S', 'can not speak'))</em><a class="headerlink" href="#backend.models.Punishment.punishment_choice" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="backend.models.Punishment.room">
+<code class="descname">room</code><a class="headerlink" href="#backend.models.Punishment.room" title="永久链接至目标">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="backend.models.Punishment.room_id">
+<code class="descname">room_id</code><a class="headerlink" href="#backend.models.Punishment.room_id" title="永久链接至目标">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="backend.models.Punishment.user">
+<code class="descname">user</code><a class="headerlink" href="#backend.models.Punishment.user" title="永久链接至目标">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="backend.models.Punishment.user_id">
+<code class="descname">user_id</code><a class="headerlink" href="#backend.models.Punishment.user_id" title="永久链接至目标">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="backend.models.Test">
+<em class="property">class </em><code class="descclassname">backend.models.</code><code class="descname">Test</code><span class="sig-paren">(</span><em>id</em>, <em>content</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/models.html#Test"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.models.Test" title="永久链接至目标">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
+<dl class="exception">
+<dt id="backend.models.Test.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#backend.models.Test.DoesNotExist" title="永久链接至目标">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="backend.models.Test.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#backend.models.Test.MultipleObjectsReturned" title="永久链接至目标">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="backend.models.Test.content">
+<code class="descname">content</code><a class="headerlink" href="#backend.models.Test.content" title="永久链接至目标">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="backend.models.Test.id">
+<code class="descname">id</code><a class="headerlink" href="#backend.models.Test.id" title="永久链接至目标">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="backend.models.Test.objects">
+<code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#backend.models.Test.objects" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="backend.models.User">
+<em class="property">class </em><code class="descclassname">backend.models.</code><code class="descname">User</code><span class="sig-paren">(</span><em>id</em>, <em>password</em>, <em>last_login</em>, <em>is_superuser</em>, <em>username</em>, <em>first_name</em>, <em>last_name</em>, <em>is_staff</em>, <em>is_active</em>, <em>email</em>, <em>phone</em>, <em>nickname</em>, <em>date_joined</em>, <em>gender</em>, <em>avatar</em>, <em>role</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/models.html#User"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.models.User" title="永久链接至目标">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.contrib.auth.models.AbstractUser</span></code></p>
+<dl class="exception">
+<dt id="backend.models.User.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#backend.models.User.DoesNotExist" title="永久链接至目标">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="backend.models.User.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#backend.models.User.MultipleObjectsReturned" title="永久链接至目标">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="backend.models.User.avatar">
+<code class="descname">avatar</code><a class="headerlink" href="#backend.models.User.avatar" title="永久链接至目标">¶</a></dt>
+<dd><p>The descriptor for the file attribute on the model instance. Returns a
+FieldFile when accessed so you can do stuff like:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">myapp.models</span> <span class="k">import</span> <span class="n">MyModel</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">size</span>
+</pre></div>
+</div>
+<p>Assigns a file object on assignment so you can do:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;/path/to/hello.world&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">instance</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="backend.models.User.gender">
+<code class="descname">gender</code><a class="headerlink" href="#backend.models.User.gender" title="永久链接至目标">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="backend.models.User.get_next_by_date_joined">
+<code class="descname">get_next_by_date_joined</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#backend.models.User.get_next_by_date_joined" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="backend.models.User.get_previous_by_date_joined">
+<code class="descname">get_previous_by_date_joined</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#backend.models.User.get_previous_by_date_joined" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="backend.models.User.get_role_display">
+<code class="descname">get_role_display</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#backend.models.User.get_role_display" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="backend.models.User.groups">
+<code class="descname">groups</code><a class="headerlink" href="#backend.models.User.groups" title="永久链接至目标">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the forward and reverse sides of
+a many-to-many relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Pizza</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">toppings</span> <span class="o">=</span> <span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Topping</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;pizzas&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">pizza.toppings</span></code> and <code class="docutils literal"><span class="pre">topping.pizzas</span></code> are <code class="docutils literal"><span class="pre">ManyToManyDescriptor</span></code>
+instances.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="backend.models.User.id">
+<code class="descname">id</code><a class="headerlink" href="#backend.models.User.id" title="永久链接至目标">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="backend.models.User.liveroom_set">
+<code class="descname">liveroom_set</code><a class="headerlink" href="#backend.models.User.liveroom_set" title="永久链接至目标">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="backend.models.User.logentry_set">
+<code class="descname">logentry_set</code><a class="headerlink" href="#backend.models.User.logentry_set" title="永久链接至目标">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="backend.models.User.nickname">
+<code class="descname">nickname</code><a class="headerlink" href="#backend.models.User.nickname" title="永久链接至目标">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="backend.models.User.phone">
+<code class="descname">phone</code><a class="headerlink" href="#backend.models.User.phone" title="永久链接至目标">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="backend.models.User.punishment_set">
+<code class="descname">punishment_set</code><a class="headerlink" href="#backend.models.User.punishment_set" title="永久链接至目标">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="backend.models.User.role">
+<code class="descname">role</code><a class="headerlink" href="#backend.models.User.role" title="永久链接至目标">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="backend.models.User.role_choices">
+<code class="descname">role_choices</code><em class="property"> = (('T', 'teacher'), ('S', 'student'))</em><a class="headerlink" href="#backend.models.User.role_choices" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="backend.models.User.user_permissions">
+<code class="descname">user_permissions</code><a class="headerlink" href="#backend.models.User.user_permissions" title="永久链接至目标">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the forward and reverse sides of
+a many-to-many relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Pizza</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">toppings</span> <span class="o">=</span> <span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Topping</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;pizzas&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">pizza.toppings</span></code> and <code class="docutils literal"><span class="pre">topping.pizzas</span></code> are <code class="docutils literal"><span class="pre">ManyToManyDescriptor</span></code>
+instances.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="backend.models.checkDirExistence">
+<code class="descclassname">backend.models.</code><code class="descname">checkDirExistence</code><span class="sig-paren">(</span><em>sender</em>, <em>instance</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/models.html#checkDirExistence"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.models.checkDirExistence" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="backend.models.checkEndAndLiving">
+<code class="descclassname">backend.models.</code><code class="descname">checkEndAndLiving</code><span class="sig-paren">(</span><em>sender</em>, <em>instance</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/models.html#checkEndAndLiving"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.models.checkEndAndLiving" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="backend.models.checkPhoneAndEmail">
+<code class="descclassname">backend.models.</code><code class="descname">checkPhoneAndEmail</code><span class="sig-paren">(</span><em>sender</em>, <em>instance</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/models.html#checkPhoneAndEmail"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.models.checkPhoneAndEmail" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="backend.models.cleanUserRoom">
+<code class="descclassname">backend.models.</code><code class="descname">cleanUserRoom</code><span class="sig-paren">(</span><em>sender</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/models.html#cleanUserRoom"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.models.cleanUserRoom" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="backend.models.gen_room_slide">
+<code class="descclassname">backend.models.</code><code class="descname">gen_room_slide</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/models.html#gen_room_slide"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.models.gen_room_slide" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="backend.models.gen_room_thumbnail">
+<code class="descclassname">backend.models.</code><code class="descname">gen_room_thumbnail</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/models.html#gen_room_thumbnail"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.models.gen_room_thumbnail" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="backend.models.gen_user_avatar">
+<code class="descclassname">backend.models.</code><code class="descname">gen_user_avatar</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/models.html#gen_user_avatar"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.models.gen_user_avatar" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="backend.models.gen_user_nickname">
+<code class="descclassname">backend.models.</code><code class="descname">gen_user_nickname</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/models.html#gen_user_nickname"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.models.gen_user_nickname" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="backend.models.get_Room">
+<code class="descclassname">backend.models.</code><code class="descname">get_Room</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/models.html#get_Room"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.models.get_Room" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="backend.models.get_User">
+<code class="descclassname">backend.models.</code><code class="descname">get_User</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/models.html#get_User"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.models.get_User" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="backend.models.get_dir_path">
+<code class="descclassname">backend.models.</code><code class="descname">get_dir_path</code><span class="sig-paren">(</span><em>instance=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/models.html#get_dir_path"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.models.get_dir_path" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="backend.models.get_file_path">
+<code class="descclassname">backend.models.</code><code class="descname">get_file_path</code><span class="sig-paren">(</span><em>instance</em>, <em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/models.html#get_file_path"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.models.get_file_path" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="backend.models.get_user_path">
+<code class="descclassname">backend.models.</code><code class="descname">get_user_path</code><span class="sig-paren">(</span><em>instance</em>, <em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/models.html#get_user_path"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.models.get_user_path" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-backend.tests">
+<span id="backend-tests-module"></span><h2>backend.tests module<a class="headerlink" href="#module-backend.tests" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="backend.tests.RoomViewTestCase">
+<em class="property">class </em><code class="descclassname">backend.tests.</code><code class="descname">RoomViewTestCase</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/tests.html#RoomViewTestCase"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.tests.RoomViewTestCase" title="永久链接至目标">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="backend.tests.RoomViewTestCase.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/tests.html#RoomViewTestCase.setUp"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.tests.RoomViewTestCase.setUp" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="backend.tests.RoomViewTestCase.tearDown">
+<code class="descname">tearDown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/tests.html#RoomViewTestCase.tearDown"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.tests.RoomViewTestCase.tearDown" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="backend.tests.RoomViewTestCase.test_create_folder">
+<code class="descname">test_create_folder</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/tests.html#RoomViewTestCase.test_create_folder"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.tests.RoomViewTestCase.test_create_folder" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="backend.tests.RoomViewTestCase.test_create_get_end_room">
+<code class="descname">test_create_get_end_room</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/tests.html#RoomViewTestCase.test_create_get_end_room"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.tests.RoomViewTestCase.test_create_get_end_room" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="backend.tests.ToolkitsTestCase">
+<em class="property">class </em><code class="descclassname">backend.tests.</code><code class="descname">ToolkitsTestCase</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/tests.html#ToolkitsTestCase"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.tests.ToolkitsTestCase" title="永久链接至目标">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="backend.tests.ToolkitsTestCase.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/tests.html#ToolkitsTestCase.setUp"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.tests.ToolkitsTestCase.setUp" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="backend.tests.ToolkitsTestCase.tearDown">
+<code class="descname">tearDown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/tests.html#ToolkitsTestCase.tearDown"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.tests.ToolkitsTestCase.tearDown" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="backend.tests.ToolkitsTestCase.test_change_prefix">
+<code class="descname">test_change_prefix</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/tests.html#ToolkitsTestCase.test_change_prefix"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.tests.ToolkitsTestCase.test_change_prefix" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="backend.tests.ToolkitsTestCase.test_encode_json">
+<code class="descname">test_encode_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/tests.html#ToolkitsTestCase.test_encode_json"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.tests.ToolkitsTestCase.test_encode_json" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="backend.tests.ToolkitsTestCase.test_get_file_amount">
+<code class="descname">test_get_file_amount</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/tests.html#ToolkitsTestCase.test_get_file_amount"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.tests.ToolkitsTestCase.test_get_file_amount" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="backend.tests.UserTestCase">
+<em class="property">class </em><code class="descclassname">backend.tests.</code><code class="descname">UserTestCase</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/tests.html#UserTestCase"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.tests.UserTestCase" title="永久链接至目标">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="backend.tests.UserTestCase.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/tests.html#UserTestCase.setUp"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.tests.UserTestCase.setUp" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="backend.tests.UserTestCase.test_create_user">
+<code class="descname">test_create_user</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/tests.html#UserTestCase.test_create_user"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.tests.UserTestCase.test_create_user" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="backend.tests.UserTestCase.test_random_str">
+<code class="descname">test_random_str</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/tests.html#UserTestCase.test_random_str"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.tests.UserTestCase.test_random_str" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="backend.tests.UserTestCase.test_sendTo">
+<code class="descname">test_sendTo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/tests.html#UserTestCase.test_sendTo"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.tests.UserTestCase.test_sendTo" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="backend.tests.UserTestCase.test_signupSubmit">
+<code class="descname">test_signupSubmit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/tests.html#UserTestCase.test_signupSubmit"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.tests.UserTestCase.test_signupSubmit" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="backend.tests.UserTestCase.test_test_email">
+<code class="descname">test_test_email</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/tests.html#UserTestCase.test_test_email"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.tests.UserTestCase.test_test_email" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="backend.tests.UserTestCase.test_test_phone">
+<code class="descname">test_test_phone</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/tests.html#UserTestCase.test_test_phone"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.tests.UserTestCase.test_test_phone" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-backend.urls">
+<span id="backend-urls-module"></span><h2>backend.urls module<a class="headerlink" href="#module-backend.urls" title="永久链接至标题">¶</a></h2>
+</div>
+<div class="section" id="module-backend.views">
+<span id="backend-views-module"></span><h2>backend.views module<a class="headerlink" href="#module-backend.views" title="永久链接至标题">¶</a></h2>
+<dl class="function">
+<dt id="backend.views.insert">
+<code class="descclassname">backend.views.</code><code class="descname">insert</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/views.html#insert"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.views.insert" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="backend.views.login_submit">
+<code class="descclassname">backend.views.</code><code class="descname">login_submit</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/views.html#login_submit"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.views.login_submit" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="backend.views.query_repeat_username">
+<code class="descclassname">backend.views.</code><code class="descname">query_repeat_username</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/views.html#query_repeat_username"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.views.query_repeat_username" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="backend.views.signup_submit">
+<code class="descclassname">backend.views.</code><code class="descname">signup_submit</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/views.html#signup_submit"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.views.signup_submit" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="backend.views.websocket">
+<code class="descclassname">backend.views.</code><code class="descname">websocket</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/backend/views.html#websocket"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#backend.views.websocket" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-backend">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-backend" title="永久链接至标题">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Group3</a></h1>
+
+
+
+
+
+
+
+
+<h3>导航</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>快速搜索</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="转向" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, LDJ.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/backend.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

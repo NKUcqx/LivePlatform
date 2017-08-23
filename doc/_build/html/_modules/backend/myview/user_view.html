@@ -1,0 +1,401 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>backend.myview.user_view &#8212; Group3 1.0.0 文档</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/translations.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>backend.myview.user_view 源代码</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">django.http</span> <span class="k">import</span> <span class="n">HttpResponse</span><span class="p">,</span> <span class="n">JsonResponse</span>
+<span class="kn">from</span> <span class="nn">django.forms.models</span> <span class="k">import</span> <span class="n">model_to_dict</span>
+<span class="kn">from</span> <span class="nn">django.views.decorators.http</span> <span class="k">import</span> <span class="n">require_POST</span><span class="p">,</span> <span class="n">require_GET</span>
+<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="k">import</span> <span class="n">auth</span>
+<span class="kn">from</span> <span class="nn">django.contrib.sessions.models</span> <span class="k">import</span> <span class="n">Session</span>
+<span class="kn">from</span> <span class="nn">django.views.decorators.csrf</span> <span class="k">import</span> <span class="n">csrf_exempt</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="k">import</span> <span class="n">Random</span>
+<span class="kn">from</span> <span class="nn">django.core.mail</span> <span class="k">import</span> <span class="n">send_mail</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">toolkits</span>
+<span class="kn">from</span> <span class="nn">backend.models</span> <span class="k">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">backend.forms</span> <span class="k">import</span> <span class="n">UserForm</span>
+
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="c1"># Create your views here.</span>
+
+<span class="n">CODE</span> <span class="o">=</span> <span class="n">toolkits</span><span class="o">.</span><span class="n">CODE</span>
+<span class="n">bi2obj</span> <span class="o">=</span> <span class="n">toolkits</span><span class="o">.</span><span class="n">bi2obj</span>
+<span class="n">model_to_json</span> <span class="o">=</span> <span class="n">toolkits</span><span class="o">.</span><span class="n">model_to_json</span>
+<span class="n">change_prefix</span> <span class="o">=</span> <span class="n">toolkits</span><span class="o">.</span><span class="n">change_prefix</span>
+<span class="c1"># 生成随机字段</span>
+
+
+<div class="viewcode-block" id="random_str"><a class="viewcode-back" href="../../../backend.myview.html#backend.myview.user_view.random_str">[文档]</a><span class="k">def</span> <span class="nf">random_str</span><span class="p">(</span><span class="n">randomlength</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    生成随机字段并返回</span>
+<span class="sd">    参数: </span>
+<span class="sd">        randomlength: 字符串长度，默认为4位</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">chars</span> <span class="o">=</span> <span class="s1">&#39;1234567890&#39;</span>
+    <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">chars</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">random</span> <span class="o">=</span> <span class="n">Random</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">randomlength</span><span class="p">):</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="n">chars</span><span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">length</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="n">string</span></div>
+
+
+<span class="c1"># 检测邮箱是否有效</span>
+
+
+<div class="viewcode-block" id="test_email"><a class="viewcode-back" href="../../../backend.myview.html#backend.myview.user_view.test_email">[文档]</a><span class="k">def</span> <span class="nf">test_email</span><span class="p">(</span><span class="n">email</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    检测邮箱是否符合规范，规范时返回 TRUE</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">email</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s2">&quot;[a-zA-Z0-9]+\@+[a-zA-Z0-9]+\.+[a-zA-Z]&quot;</span><span class="p">,</span>
+                    <span class="n">email</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="test_phone"><a class="viewcode-back" href="../../../backend.myview.html#backend.myview.user_view.test_phone">[文档]</a><span class="k">def</span> <span class="nf">test_phone</span><span class="p">(</span><span class="n">phone</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    检测手机是否符合规范: 联通、电信、移动</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;^0\d{2,3}\d{7,8}$|^1[358]\d</span><span class="si">{9}</span><span class="s1">$|^147\d</span><span class="si">{8}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">phonematch</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">phone</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">phonematch</span> <span class="k">else</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="create_user_folder"><a class="viewcode-back" href="../../../backend.myview.html#backend.myview.user_view.create_user_folder">[文档]</a><span class="k">def</span> <span class="nf">create_user_folder</span><span class="p">(</span><span class="n">username</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    为用户创建个人文件夹来保存头像及其他资料</span>
+<span class="sd">    当已存在用户资料夹时返回False</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;frontend&#39;</span><span class="p">,</span> <span class="s1">&#39;static&#39;</span><span class="p">,</span> <span class="s1">&#39;users&#39;</span><span class="p">,</span> <span class="n">username</span><span class="p">))):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;frontend&#39;</span><span class="p">,</span> <span class="s1">&#39;static&#39;</span><span class="p">,</span> <span class="s1">&#39;users&#39;</span><span class="p">,</span> <span class="n">username</span><span class="p">))</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="get_session_key"><a class="viewcode-back" href="../../../backend.myview.html#backend.myview.user_view.get_session_key">[文档]</a><span class="k">def</span> <span class="nf">get_session_key</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    返回当前会话的session_key，若没有则创建</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">session_key</span><span class="p">):</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">session_key</span></div>
+
+<div class="viewcode-block" id="wrap_user"><a class="viewcode-back" href="../../../backend.myview.html#backend.myview.user_view.wrap_user">[文档]</a><span class="k">def</span> <span class="nf">wrap_user</span><span class="p">(</span><span class="n">user</span><span class="p">):</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">model_to_json</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+    <span class="n">user</span><span class="p">[</span><span class="s1">&#39;avatar&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">change_prefix</span><span class="p">(</span><span class="n">user</span><span class="p">[</span><span class="s1">&#39;avatar&#39;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">user</span></div>
+
+<div class="viewcode-block" id="getUser"><a class="viewcode-back" href="../../../backend.myview.html#backend.myview.user_view.getUser">[文档]</a><span class="nd">@require_GET</span>
+<span class="k">def</span> <span class="nf">getUser</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    使用GET方式根据id获得指定用户</span>
+<span class="sd">    用户不存在时返回401</span>
+<span class="sd">    GET请求中未找到user_id时返回400</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;user_id&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">user_id</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="n">wrap_user</span><span class="p">(</span><span class="n">user</span><span class="p">)})</span>
+        <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">CODE</span><span class="p">[</span><span class="s1">&#39;12&#39;</span><span class="p">],</span> <span class="n">status</span><span class="o">=</span><span class="mi">401</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># must have a user_id</span>
+        <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">CODE</span><span class="p">[</span><span class="s1">&#39;4&#39;</span><span class="p">],</span> <span class="n">status</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span></div>
+
+
+<span class="c1"># 发送邮件</span>
+
+
+<div class="viewcode-block" id="sendTo"><a class="viewcode-back" href="../../../backend.myview.html#backend.myview.user_view.sendTo">[文档]</a><span class="nd">@require_POST</span>
+<span class="k">def</span> <span class="nf">sendTo</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    使用POST发送邮件，需要在POST中提供email和code(验证码)字段</span>
+<span class="sd">    邮箱不合法时返回400</span>
+<span class="sd">    未知错误返回500</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="n">bi2obj</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">body</span><span class="p">[</span><span class="s1">&#39;email&#39;</span><span class="p">]</span>
+    <span class="n">code</span> <span class="o">=</span> <span class="n">body</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">test_email</span><span class="p">(</span><span class="n">email</span><span class="p">)):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="sa">u</span><span class="s2">&quot;您的注册码为&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+            <span class="n">send_mail</span><span class="p">(</span>
+                <span class="sa">u</span><span class="s1">&#39;注册用户验证信息&#39;</span><span class="p">,</span>
+                <span class="n">message</span><span class="p">,</span>
+                <span class="s1">&#39;15302178925@163.com&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">email</span><span class="p">],</span>
+                <span class="n">fail_silently</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">CODE</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">])</span>
+        <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
+            <span class="c1"># i don&#39;t know where or what error will this receipt</span>
+            <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">CODE</span><span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">],</span> <span class="n">status</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">CODE</span><span class="p">[</span><span class="s1">&#39;10&#39;</span><span class="p">],</span> <span class="n">status</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span></div>
+
+
+<span class="c1"># 注册执行的函数，接收GET请求，返回字符串</span>
+
+
+<div class="viewcode-block" id="signupSubmit"><a class="viewcode-back" href="../../../backend.myview.html#backend.myview.user_view.signupSubmit">[文档]</a><span class="nd">@require_POST</span>
+<span class="k">def</span> <span class="nf">signupSubmit</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    使用POST注册用户，并返回json格式的用户信息和用户的session_key</span>
+<span class="sd">    需要在POST提供必要字段，详情参考models</span>
+<span class="sd">    如果用户在数据库不存在，但在文件夹中存在则返回500(因为不是正常现象)</span>
+<span class="sd">    表单缺少必要字段时返回 400</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="n">bi2obj</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+    <span class="n">form</span> <span class="o">=</span> <span class="n">UserForm</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">()):</span>
+        <span class="n">instance</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">commit</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">create_user_folder</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">username</span><span class="p">)):</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+                <span class="n">username</span><span class="o">=</span><span class="n">instance</span><span class="o">.</span><span class="n">username</span><span class="p">,</span>
+                <span class="n">password</span><span class="o">=</span><span class="n">instance</span><span class="o">.</span><span class="n">password</span><span class="p">,</span>
+                <span class="n">gender</span><span class="o">=</span><span class="n">instance</span><span class="o">.</span><span class="n">gender</span><span class="p">,</span>
+                <span class="n">nickname</span><span class="o">=</span><span class="n">instance</span><span class="o">.</span><span class="n">nickname</span><span class="p">,</span>
+                <span class="n">email</span><span class="o">=</span><span class="n">instance</span><span class="o">.</span><span class="n">username</span>
+                <span class="k">if</span> <span class="n">test_email</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">username</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="n">phone</span><span class="o">=</span><span class="n">instance</span><span class="o">.</span><span class="n">username</span>
+                <span class="k">if</span> <span class="n">test_phone</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">username</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">commit</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">auth</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+            <span class="n">session_key</span> <span class="o">=</span> <span class="n">get_session_key</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span>
+                <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="n">wrap_user</span><span class="p">(</span><span class="n">user</span><span class="p">),</span>
+                <span class="s1">&#39;session_key&#39;</span><span class="p">:</span> <span class="n">session_key</span>
+            <span class="p">})</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">CODE</span><span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">],</span> <span class="n">status</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">CODE</span><span class="p">[</span><span class="s1">&#39;4&#39;</span><span class="p">],</span> <span class="n">status</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span></div>
+
+
+<span class="c1"># 登录执行的函数，接收POST请求，返回字符串</span>
+
+<div class="viewcode-block" id="loginSubmit"><a class="viewcode-back" href="../../../backend.myview.html#backend.myview.user_view.loginSubmit">[文档]</a><span class="nd">@csrf_exempt</span>
+<span class="nd">@require_POST</span>
+<span class="k">def</span> <span class="nf">loginSubmit</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    使用POST进行用户登陆，成功时返回值同注册</span>
+<span class="sd">    当用户名与密码不匹配时返回401</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="n">bi2obj</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">auth</span><span class="o">.</span><span class="n">authenticate</span><span class="p">(</span>
+        <span class="n">request</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">],</span> <span class="n">password</span><span class="o">=</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;password&#39;</span><span class="p">])</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">user</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">auth</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+        <span class="n">session_key</span> <span class="o">=</span> <span class="n">get_session_key</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span>
+            <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="n">wrap_user</span><span class="p">(</span><span class="n">user</span><span class="p">),</span>
+            <span class="s1">&#39;session_key&#39;</span><span class="p">:</span> <span class="n">session_key</span>
+        <span class="p">})</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">CODE</span><span class="p">[</span><span class="s1">&#39;13&#39;</span><span class="p">],</span> <span class="n">status</span><span class="o">=</span><span class="mi">401</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="logoutSubmit"><a class="viewcode-back" href="../../../backend.myview.html#backend.myview.user_view.logoutSubmit">[文档]</a><span class="nd">@require_POST</span>
+<span class="k">def</span> <span class="nf">logoutSubmit</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    用户登出</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">auth</span><span class="o">.</span><span class="n">logout</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">CODE</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">],</span> <span class="n">status</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span></div>
+
+<span class="c1"># check the username exists</span>
+
+
+<div class="viewcode-block" id="testUsername"><a class="viewcode-back" href="../../../backend.myview.html#backend.myview.user_view.testUsername">[文档]</a><span class="nd">@require_GET</span>
+<span class="k">def</span> <span class="nf">testUsername</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    使用GET方式验证用户名是否存在，成功时返回200，不存在时返回401</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">get_username</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">get_username</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">CODE</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">])</span>
+    <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">status</span><span class="o">=</span><span class="mi">401</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="changeAvatar"><a class="viewcode-back" href="../../../backend.myview.html#backend.myview.user_view.changeAvatar">[文档]</a><span class="nd">@require_POST</span>
+<span class="k">def</span> <span class="nf">changeAvatar</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    使用POST修改用户头像，成功时返回值同注册</span>
+<span class="sd">    未找到新头像时返回 415</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+    <span class="n">avatar</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;avatar&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">avatar</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">avatar</span> <span class="o">=</span> <span class="n">avatar</span>
+        <span class="n">auth</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="n">wrap_user</span><span class="p">(</span><span class="n">user</span><span class="p">)})</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">CODE</span><span class="p">[</span><span class="s1">&#39;25&#39;</span><span class="p">],</span> <span class="n">status</span><span class="o">=</span><span class="mi">415</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="changeGenderAndNickname"><a class="viewcode-back" href="../../../backend.myview.html#backend.myview.user_view.changeGenderAndNickname">[文档]</a><span class="nd">@require_POST</span>
+<span class="k">def</span> <span class="nf">changeGenderAndNickname</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    改变性别或昵称，成功时返回值同注册</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="n">bi2obj</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+    <span class="n">gender</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;gender&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">nickname</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;nickname&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">gender</span> <span class="o">!=</span> <span class="n">gender</span> <span class="ow">and</span> <span class="n">gender</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">gender</span> <span class="o">=</span> <span class="n">gender</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">nickname</span> <span class="o">!=</span> <span class="n">nickname</span> <span class="ow">and</span> <span class="n">nickname</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">nickname</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">nickname</span> <span class="o">=</span> <span class="n">nickname</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+    <span class="n">auth</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="n">wrap_user</span><span class="p">(</span><span class="n">user</span><span class="p">)})</span></div>
+
+
+<div class="viewcode-block" id="changePassword"><a class="viewcode-back" href="../../../backend.myview.html#backend.myview.user_view.changePassword">[文档]</a><span class="nd">@require_POST</span>
+<span class="k">def</span> <span class="nf">changePassword</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    更换密码，包括直接修改密码和忘记密码时的找回密码，成功时返回值同注册</span>
+<span class="sd">    未提供用户名或新密码；修改密码时，未正确输入原密码；未找到指定用户名的用户时都会返回 401</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="n">bi2obj</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+    <span class="n">forget_pw</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;forget_pw&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">username</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">password</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;password&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">new_password</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;new_password&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">res_pack</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">username</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">new_password</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">CODE</span><span class="p">[</span><span class="s1">&#39;4&#39;</span><span class="p">],</span> <span class="n">status</span><span class="o">=</span><span class="mi">401</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">forget_pw</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># means he just wants to reset pw, which need verify his status</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">auth</span><span class="o">.</span><span class="n">authenticate</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># means this poor guy has forget his pw, reset directly</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">)</span>
+        <span class="n">res_pack</span><span class="p">[</span><span class="s1">&#39;session_key&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_session_key</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">user</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">set_password</span><span class="p">(</span><span class="n">new_password</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="n">auth</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+        <span class="n">res_pack</span><span class="p">[</span><span class="s1">&#39;user&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">wrap_user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">(</span><span class="n">res_pack</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">CODE</span><span class="p">[</span><span class="s1">&#39;13&#39;</span><span class="p">],</span> <span class="n">status</span><span class="o">=</span><span class="mi">401</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="getUserFromSession"><a class="viewcode-back" href="../../../backend.myview.html#backend.myview.user_view.getUserFromSession">[文档]</a><span class="nd">@require_GET</span>
+<span class="k">def</span> <span class="nf">getUserFromSession</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    使用GET根据提供的session_key(由注册或登录时返回)找到指定用户并返回，用于近期免登陆</span>
+<span class="sd">    当未找到该用户时返回400</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">session_key</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;session_key&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">session_key</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">session_key</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">session</span> <span class="o">=</span> <span class="n">Session</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">session_key</span><span class="o">=</span><span class="n">session_key</span><span class="p">)</span>
+            <span class="n">uid</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get_decoded</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;_auth_user_id&#39;</span><span class="p">)</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">uid</span><span class="p">)</span>
+            <span class="n">user_json</span> <span class="o">=</span> <span class="n">wrap_user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="n">user_json</span><span class="p">})</span>
+        <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">CODE</span><span class="p">[</span><span class="s1">&#39;12&#39;</span><span class="p">],</span> <span class="n">status</span><span class="o">=</span><span class="mi">401</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">CODE</span><span class="p">[</span><span class="s1">&#39;4&#39;</span><span class="p">],</span> <span class="n">status</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">Group3</a></h1>
+
+
+
+
+
+
+
+
+<h3>导航</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">模块代码</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>快速搜索</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="转向" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, LDJ.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
