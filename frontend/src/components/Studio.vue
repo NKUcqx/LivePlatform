@@ -130,7 +130,6 @@ export default {
         }
     },
     watch: {
-        // 奇技淫巧,避免BUG
         style: function (newVal, oldVal) {
             if ((newVal === 1 || newVal === 4) && this.isFirtCodeMirror) {
                 let history = this.$refs['code'].getHistory()
@@ -154,13 +153,19 @@ export default {
                 }, 100)
                 this.isFirtCodeMirror = false
             }
+        },
+        isLiveStart: function (newVal, oldVal) {
+            if (oldVal===false && newVal===true) {
+                this.buildConnect()
+            }
         }
     },
     computed: {
         ...mapGetters({
             user: 'getUser',
             roomInfo: 'getRoomInfo',
-            socket: 'getSocket'
+            socket: 'getSocket',
+            isLiveStart: 'isLiveStart'
         }),
         workClass () {
             return (this.style < 3) ? 'main-section left-part' : 'minor-section right-part studio-relative'
@@ -497,10 +502,11 @@ export default {
             this.WIDTH = document.documentElement.clientWidth
             this.wholeSize.height = document.documentElement.clientHeight.toString() + 'px'
         })
-        this.buildConnect()
         if (this.authority) {
             this.uploadModal = true
             this.reloadClear()
+        } else {
+            this.buildConnect()
         }
     },
     beforeDestroy () {
