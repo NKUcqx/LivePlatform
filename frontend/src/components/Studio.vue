@@ -14,7 +14,7 @@
                 <div id="studio-info">
                     <div id="title">
                         <h2 id="title-content">{{roomInfo.title}}</h2>
-                        <Button id="switch-section" type="ghost" @click="changeSection()" v-if="type===1"><Icon type="arrow-swap"></Icon></Button>
+                        <Button id="switch-section" type="ghost" @click="emitPause()" v-if="type===1"><Icon type="arrow-swap"></Icon></Button>
                         <Button id="switch-section" type="ghost" @click="openMinor()" v-else><Icon type="android-open"></Icon></Button>
                     </div>
                     <div id="footer">
@@ -309,6 +309,9 @@ export default {
         emitChangeSection (data) {
             this.emit(data, 'closeButton')
         },
+        emitPause () {
+            this.emit('', '', '', '', 'pause')
+        },
         emit (data, dataType, to = null, type = 1, signal = 'sendMessage') { // to which user he wanna send to
             const pack = {
                 id: this.user.userid,
@@ -345,7 +348,7 @@ export default {
         uploadSlide (res, file) {
             console.log(res.room.slide_path)
             this.loading = false
-            this.setRoomInfo({ slide_path: res.room.slide_path, slide_num: res.room.file_amount })
+            this.setRoomInfo({ slide_path: res.room.slide_path })
             this.$Message.success(CONST.success('Upload Slide'))
         },
         uploadSlideTimeout (e, file, fileList) {
@@ -471,19 +474,23 @@ export default {
     #studio #studio-info #teacher {
         height: 26px;
         float: right;
+        cursor: default;
     }
     #studio #studio-info #audience {
         height: 26px;
         float: right;
+        cursor: default;
     }
     #studio #studio-info #vip {
         float: left;
         height: 24px;
+        cursor: default;
     }
     #studio #studio-info #roomid {
         margin-left: 30px;
         float: left;
         height: 24px;
+        cursor: default;
     }
     #studio .main-section {
         height: 0;

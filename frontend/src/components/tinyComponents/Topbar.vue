@@ -240,7 +240,8 @@
                     this.createLive(formData).then(function (res) {
                         console.log(getListFromDB(res.body))
                         that.setRoomInfo(getListFromDB(res.body))
-                        that.$router.push({ name: 'studio' })
+                        window.open('/#/studio')
+                        //that.$router.push({ name: 'studio' })
                     }, function (res) {
                         alert(res.body)
                     })
