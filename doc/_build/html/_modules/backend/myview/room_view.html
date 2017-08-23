@@ -1,0 +1,472 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>backend.myview.room_view &#8212; Group3 1.0.0 文档</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/translations.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>backend.myview.room_view 源代码</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="k">import</span> <span class="n">login_required</span>
+<span class="kn">from</span> <span class="nn">django.http</span> <span class="k">import</span> <span class="n">HttpResponse</span><span class="p">,</span> <span class="n">JsonResponse</span>
+<span class="kn">from</span> <span class="nn">backend.models</span> <span class="k">import</span> <span class="n">User</span><span class="p">,</span> <span class="n">LiveRoom</span><span class="p">,</span> <span class="n">Punishment</span>
+<span class="kn">from</span> <span class="nn">django.forms.models</span> <span class="k">import</span> <span class="n">model_to_dict</span>
+<span class="kn">from</span> <span class="nn">django.utils</span> <span class="k">import</span> <span class="n">timezone</span>
+<span class="kn">from</span> <span class="nn">django.views.decorators.http</span> <span class="k">import</span> <span class="n">require_POST</span><span class="p">,</span> <span class="n">require_GET</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">toolkits</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">zipfile</span>
+<span class="kn">import</span> <span class="nn">cloudconvert</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="n">CODE</span> <span class="o">=</span> <span class="n">toolkits</span><span class="o">.</span><span class="n">CODE</span>  <span class="c1"># assign to local name to reduce the usage of its long prefix</span>
+<span class="n">bi2obj</span> <span class="o">=</span> <span class="n">toolkits</span><span class="o">.</span><span class="n">bi2obj</span>
+<span class="n">change_prefix</span> <span class="o">=</span> <span class="n">toolkits</span><span class="o">.</span><span class="n">change_prefix</span>
+<span class="n">get_file_amount</span> <span class="o">=</span> <span class="n">toolkits</span><span class="o">.</span><span class="n">get_file_amount</span>
+<span class="c1"># change ImageFieldFile or some other field type into str for JsonResponse</span>
+<span class="n">model_to_json</span> <span class="o">=</span> <span class="n">toolkits</span><span class="o">.</span><span class="n">model_to_json</span>
+<span class="n">API_key</span> <span class="o">=</span> <span class="p">[</span> <span class="c1"># to get more free conversion chances ..</span>
+            <span class="s1">&#39;1ExrXf1WpChC9gvOxnzuR5_unapQx1RqigB4Kmyc-teB3tp8kSybrSU-nrcELHwJWYxljLt8euwJwtgFTrdFsQ&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;LRxCwzT2-CLqFqr936dWjknyulqsjFtXVL1GQLcmJhsgG_Ad7503sH98cGcSvFhQe5pRUWmuR4tb448MvgarEg&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;dTYHUsdA7JW7piDR_UK7qkVtlxFaoNMh8Mq7uf_7GpRh3JAc1ZjPrT9a4Uzgtm19ZFLbmHZH_R1lZwQmRMKa_g&#39;</span>
+        <span class="p">]</span>
+<span class="n">IMG_LIST</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;.jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;.jpeg&#39;</span><span class="p">,</span> <span class="s1">&#39;.png&#39;</span><span class="p">,</span> <span class="s1">&#39;.svg&#39;</span><span class="p">,</span> <span class="s1">&#39;.gif&#39;</span><span class="p">)</span>
+<span class="n">SLIDE_LIST</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;.ppt&#39;</span><span class="p">,</span> <span class="s1">&#39;.pptx&#39;</span><span class="p">,</span> <span class="s1">&#39;.pps&#39;</span><span class="p">,</span> <span class="s1">&#39;.pdf&#39;</span><span class="p">)</span>
+<span class="n">processes</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># converting process of cloudconvert, to check the status</span>
+
+<span class="c1">#model_to_dict = toolkits.model_to_dict</span>
+
+
+<div class="viewcode-block" id="generate_room_path"><a class="viewcode-back" href="../../../backend.myview.html#backend.myview.room_view.generate_room_path">[文档]</a><span class="k">def</span> <span class="nf">generate_room_path</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    用当前时间(年月日时分秒)加自然分布的随机数通过md5生成房间名并返回</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">now</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+    <span class="n">now</span> <span class="o">=</span> <span class="n">now</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%M</span><span class="si">%d</span><span class="s1">%H%m%S&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+    <span class="n">md5</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">()</span>
+    <span class="n">md5</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">md5</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;frontend&#39;</span><span class="p">,</span> <span class="s1">&#39;static&#39;</span><span class="p">,</span> <span class="s1">&#39;rooms&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="create_folder"><a class="viewcode-back" href="../../../backend.myview.html#backend.myview.room_view.create_folder">[文档]</a><span class="k">def</span> <span class="nf">create_folder</span><span class="p">(</span><span class="n">file_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    在指定房间路径下创建房间文件夹，并在下面自动创建log.txt</span>
+<span class="sd">    参数：</span>
+<span class="sd">        file_name: 房间路径,根目录为项目根目录</span>
+<span class="sd">    文件夹已存在时返回 False</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">file_name</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mknod</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s1">&#39;log.txt&#39;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="upload_thumbnail"><a class="viewcode-back" href="../../../backend.myview.html#backend.myview.room_view.upload_thumbnail">[文档]</a><span class="k">def</span> <span class="nf">upload_thumbnail</span><span class="p">(</span><span class="n">room_id</span><span class="p">,</span> <span class="n">thumbnail</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    上传房间缩略图</span>
+<span class="sd">    参数：</span>
+<span class="sd">        room_id: 房间 id</span>
+<span class="sd">        thumbnail: 房间缩略图文件</span>
+<span class="sd">    返回LiveRoom Object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">room</span> <span class="o">=</span> <span class="n">LiveRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">room_id</span><span class="p">)</span>
+    <span class="n">room</span><span class="o">.</span><span class="n">thumbnail_path</span> <span class="o">=</span> <span class="n">thumbnail</span>
+    <span class="n">room</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">room</span></div>
+
+<div class="viewcode-block" id="upload_slide"><a class="viewcode-back" href="../../../backend.myview.html#backend.myview.room_view.upload_slide">[文档]</a><span class="k">def</span> <span class="nf">upload_slide</span><span class="p">(</span><span class="n">room_id</span><span class="p">,</span> <span class="n">slide</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    上传幻灯片</span>
+<span class="sd">    参数:</span>
+<span class="sd">        room_id: 房间 id</span>
+<span class="sd">        slide: 房间幻灯片文件</span>
+<span class="sd">    返回LiveRoom Object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">room</span> <span class="o">=</span> <span class="n">LiveRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span> <span class="o">=</span> <span class="n">room_id</span><span class="p">)</span>
+    <span class="n">room</span><span class="o">.</span><span class="n">slide_path</span> <span class="o">=</span> <span class="n">slide</span>
+    <span class="n">room</span><span class="o">.</span><span class="n">save</span><span class="p">()</span> <span class="c1"># save the .ppt</span>
+    <span class="c1"># upload the slide and download the conversion to room.filename</span>
+    <span class="n">converted_file</span> <span class="o">=</span> <span class="n">convert_file</span><span class="p">(</span><span class="n">room</span><span class="o">.</span><span class="n">slide_path</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">room</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">room</span><span class="o">.</span><span class="n">file_name</span><span class="p">)</span>
+    <span class="n">unziped_file</span> <span class="o">=</span> <span class="n">un_zip</span><span class="p">(</span><span class="n">converted_file</span><span class="p">)</span>
+    <span class="n">room</span><span class="o">.</span><span class="n">slide_path</span> <span class="o">=</span> <span class="n">unziped_file</span>
+    <span class="n">room</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">room</span></div>
+
+
+<div class="viewcode-block" id="convert_file"><a class="viewcode-back" href="../../../backend.myview.html#backend.myview.room_view.convert_file">[文档]</a><span class="k">def</span> <span class="nf">convert_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">process_id</span><span class="p">,</span> <span class="n">upload_to</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    使用第三方服务(cloudconvert)进行文档转换,生成zip压缩包并保存到指定路径下，同步方式</span>
+<span class="sd">    参数:</span>
+<span class="sd">        file: 需要转换的文件的路径</span>
+<span class="sd">        process_id: 服务进程id</span>
+<span class="sd">        upload_to: 转换后的文件保存路径</span>
+<span class="sd">    返回转换后的压缩文件路径(全路径)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># TODO: if(type(file) )</span>
+    <span class="n">file_handler</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
+    <span class="n">api</span> <span class="o">=</span> <span class="n">cloudconvert</span><span class="o">.</span><span class="n">Api</span><span class="p">(</span><span class="n">API_key</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># TODO: random.randint(0,1)</span>
+    <span class="n">split_arr</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">file_handler</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">realname</span> <span class="o">=</span> <span class="n">split_arr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">postfix</span> <span class="o">=</span> <span class="n">split_arr</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">process</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">convert</span><span class="p">({</span>
+        <span class="s1">&#39;inputformat&#39;</span><span class="p">:</span> <span class="n">postfix</span><span class="p">,</span>
+        <span class="s1">&#39;outputformat&#39;</span><span class="p">:</span> <span class="s1">&#39;jpg&#39;</span><span class="p">,</span>  <span class="c1"># TODO: will change to any type laterly </span>
+        <span class="s1">&#39;input&#39;</span><span class="p">:</span> <span class="s1">&#39;upload&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;filename&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">realname</span><span class="p">,</span> <span class="n">postfix</span><span class="p">),</span>
+        <span class="s1">&#39;file&#39;</span><span class="p">:</span> <span class="n">file_handler</span>
+    <span class="p">})</span>
+    <span class="n">processes</span><span class="p">[</span><span class="n">process_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">process</span>
+    <span class="n">process</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+    <span class="n">process</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="n">upload_to</span><span class="p">)</span>
+    <span class="c1">#return upload_to + realname + &#39;.zip&#39; # TODO: So ugly..</span>
+    <span class="k">return</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">.zip&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">upload_to</span><span class="p">,</span> <span class="n">realname</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="un_zip"><a class="viewcode-back" href="../../../backend.myview.html#backend.myview.room_view.un_zip">[文档]</a><span class="k">def</span> <span class="nf">un_zip</span><span class="p">(</span><span class="n">file_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    解压文件，并保存在同一级路径下</span>
+<span class="sd">    参数：</span>
+<span class="sd">        file_name: 需要被解压的文件路径</span>
+<span class="sd">    返回解压后的文件夹路径(全路径)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">zip_file</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+    <span class="c1"># file with postfix i.e. &#39;frontend/static/rooms/ertfhg3456yhj/slide (without .ppt)&#39;</span>
+    <span class="n">split_str</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">file_name</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">split_str</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">split_str</span><span class="p">)</span>
+    <span class="n">zip_file</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">split_str</span><span class="p">)</span>
+    <span class="n">zip_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">split_str</span></div>
+
+
+<div class="viewcode-block" id="wrap_room"><a class="viewcode-back" href="../../../backend.myview.html#backend.myview.room_view.wrap_room">[文档]</a><span class="k">def</span> <span class="nf">wrap_room</span><span class="p">(</span><span class="n">room</span><span class="p">):</span>  <span class="c1"># room instance</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    用于将LiveRoom Object对象包装为更方便前端使用的格式(包括修改资源路径)</span>
+<span class="sd">    参数:</span>
+<span class="sd">        room: 被包装的LiveRoom Object</span>
+<span class="sd">    返回json格式的房间信息</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">room</span> <span class="o">=</span> <span class="n">model_to_json</span><span class="p">(</span><span class="n">room</span><span class="p">)</span>
+    <span class="n">room</span><span class="p">[</span><span class="s1">&#39;creator_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">room</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;creator&#39;</span><span class="p">,</span> <span class="n">room</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;creator_id&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+    <span class="n">room</span><span class="p">[</span><span class="s1">&#39;creator_nickname&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+        <span class="n">pk</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">room</span><span class="p">[</span><span class="s1">&#39;creator_id&#39;</span><span class="p">]))</span><span class="o">.</span><span class="n">nickname</span>
+    <span class="c1">#room[&#39;create_time&#39;] = room[&#39;create_time&#39;].strftime(&#39;%Y-%-m-%d %H:%m:%S&#39;)</span>
+    <span class="c1">#room[&#39;end_time&#39;] = room[&#39;end_time&#39;].strftime(&#39;%Y-%-m-%d %H:%m:%S&#39;) if room.get(&#39;end_time&#39;, None) is not None else &#39;&#39;</span>
+    <span class="n">room</span><span class="p">[</span><span class="s1">&#39;file_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">change_prefix</span><span class="p">(</span><span class="n">room</span><span class="p">[</span><span class="s1">&#39;file_name&#39;</span><span class="p">])</span>
+    <span class="n">room</span><span class="p">[</span><span class="s1">&#39;thumbnail_path&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">change_prefix</span><span class="p">(</span><span class="n">room</span><span class="p">[</span><span class="s1">&#39;thumbnail_path&#39;</span><span class="p">])</span>
+    <span class="n">room</span><span class="p">[</span><span class="s1">&#39;file_amount&#39;</span><span class="p">],</span><span class="n">_</span> <span class="o">=</span> <span class="n">get_file_amount</span><span class="p">(</span><span class="n">room</span><span class="p">[</span><span class="s1">&#39;slide_path&#39;</span><span class="p">])</span> <span class="c1"># just need file amount</span>
+    <span class="n">room</span><span class="p">[</span><span class="s1">&#39;slide_path&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">change_prefix</span><span class="p">(</span><span class="n">room</span><span class="p">[</span><span class="s1">&#39;slide_path&#39;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">room</span></div>
+
+
+<div class="viewcode-block" id="getRooms"><a class="viewcode-back" href="../../../backend.myview.html#backend.myview.room_view.getRooms">[文档]</a><span class="nd">@login_required</span>
+<span class="nd">@require_GET</span>
+<span class="k">def</span> <span class="nf">getRooms</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    使用GET获得指定信息和数量的房间</span>
+<span class="sd">    成功时返回将满足条件的房间以列表形式放入json格式的返回值中</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">rooms</span> <span class="o">=</span> <span class="n">LiveRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;order_by&#39;</span><span class="p">,</span> <span class="s1">&#39;-audience_amount&#39;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;id&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">):</span>
+        <span class="n">rooms</span> <span class="o">=</span> <span class="n">rooms</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;creator_id&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">):</span>
+        <span class="n">rooms</span> <span class="o">=</span> <span class="n">rooms</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">creator_id</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;creator_id&#39;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;is_living&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">):</span>
+        <span class="n">rooms</span> <span class="o">=</span> <span class="n">rooms</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">is_living</span><span class="o">=</span><span class="kc">True</span> <span class="k">if</span>
+                             <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;is_living&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;true&#39;</span> <span class="k">else</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;limit&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">):</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="n">limit</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;limit&#39;</span><span class="p">))</span>
+        <span class="n">rooms</span> <span class="o">=</span> <span class="n">rooms</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">limit</span><span class="p">]</span>
+    <span class="n">room_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">rooms</span><span class="p">:</span>
+        <span class="n">room_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wrap_room</span><span class="p">(</span><span class="n">item</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s1">&#39;rooms&#39;</span><span class="p">:</span> <span class="n">room_list</span><span class="p">})</span></div>
+
+
+<div class="viewcode-block" id="getRoomAmount"><a class="viewcode-back" href="../../../backend.myview.html#backend.myview.room_view.getRoomAmount">[文档]</a><span class="nd">@login_required</span>
+<span class="nd">@require_GET</span>
+<span class="k">def</span> <span class="nf">getRoomAmount</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    获取房间数目，分别返回直播房间数量和录播房间数量</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">living_amount</span> <span class="o">=</span> <span class="n">LiveRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">room_living_count</span><span class="p">(</span><span class="n">is_living</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">end_amount</span> <span class="o">=</span> <span class="n">LiveRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">room_living_count</span><span class="p">(</span><span class="n">is_living</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span>
+        <span class="s1">&#39;living_amount&#39;</span><span class="p">:</span> <span class="n">living_amount</span><span class="p">,</span>
+        <span class="s1">&#39;end_amount&#39;</span><span class="p">:</span> <span class="n">end_amount</span>
+    <span class="p">})</span></div>
+
+
+<div class="viewcode-block" id="uploadThumbnail"><a class="viewcode-back" href="../../../backend.myview.html#backend.myview.room_view.uploadThumbnail">[文档]</a><span class="nd">@login_required</span>
+<span class="nd">@require_POST</span>
+<span class="k">def</span> <span class="nf">uploadThumbnail</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    使用POST上传房间缩略图，成功时返回值同新建房间</span>
+<span class="sd">    当未创建房间时(即未在session中找到房间信息时)返回400</span>
+<span class="sd">    当上传者不是房间的创建者时返回401</span>
+<span class="sd">    当上传文件的格式不支持(参见IMG_LIST)时返回415</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># must satisfy: login and is a teacher and has created a live room</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;room&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">):</span>
+        <span class="n">room</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s1">&#39;room&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> <span class="o">==</span> <span class="n">room</span><span class="p">[</span><span class="s1">&#39;creator_id&#39;</span><span class="p">]):</span>
+            <span class="n">thumbnail</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;thumbnail&#39;</span><span class="p">)</span>
+            <span class="n">thumbnail_type</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">thumbnail</span><span class="o">.</span><span class="n">name</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;type: &#39;</span><span class="p">,</span> <span class="n">thumbnail_type</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">thumbnail_type</span> <span class="ow">in</span> <span class="n">IMG_LIST</span><span class="p">):</span>
+                <span class="n">room</span> <span class="o">=</span> <span class="n">upload_thumbnail</span><span class="p">(</span><span class="n">room</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="n">thumbnail</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s1">&#39;room&#39;</span><span class="p">:</span> <span class="n">wrap_room</span><span class="p">(</span><span class="n">room</span><span class="p">)})</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39; not in the list&#39;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">CODE</span><span class="p">[</span><span class="s1">&#39;20&#39;</span><span class="p">],</span> <span class="n">status</span><span class="o">=</span><span class="mi">415</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">CODE</span><span class="p">[</span><span class="s1">&#39;12&#39;</span><span class="p">],</span> <span class="n">status</span><span class="o">=</span><span class="mi">401</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;no&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">CODE</span><span class="p">[</span><span class="s1">&#39;24&#39;</span><span class="p">],</span> <span class="n">status</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="uploadSlide"><a class="viewcode-back" href="../../../backend.myview.html#backend.myview.room_view.uploadSlide">[文档]</a><span class="nd">@login_required</span>
+<span class="nd">@require_POST</span>
+<span class="k">def</span> <span class="nf">uploadSlide</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    上传房间幻灯片，用法同上传缩略图。 因为是同步方式转换文件，所以HTTP请求时间较长</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;room&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">):</span>
+        <span class="n">room</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s1">&#39;room&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> <span class="o">==</span> <span class="n">room</span><span class="p">[</span><span class="s1">&#39;creator_id&#39;</span><span class="p">]):</span>
+            <span class="n">slide</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;slide&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">slide</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+                <span class="n">slide_type</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">slide</span><span class="o">.</span><span class="n">name</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">slide_type</span> <span class="ow">in</span> <span class="n">SLIDE_LIST</span><span class="p">):</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;start uploading file: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">slide</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                    <span class="n">room</span> <span class="o">=</span> <span class="n">upload_slide</span><span class="p">(</span><span class="n">room</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="n">slide</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;finish uploading .&#39;</span><span class="p">)</span>
+                    <span class="n">room_dict</span> <span class="o">=</span> <span class="n">wrap_room</span><span class="p">(</span><span class="n">room</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s1">&#39;room&#39;</span><span class="p">:</span> <span class="n">room_dict</span><span class="p">})</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">CODE</span><span class="p">[</span><span class="s1">&#39;20&#39;</span><span class="p">],</span> <span class="n">status</span><span class="o">=</span><span class="mi">415</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">CODE</span><span class="p">[</span>
+                <span class="s1">&#39;5&#39;</span><span class="p">])</span>  <span class="c1"># no changes, but it is nobody&#39;s fault, return 200</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">CODE</span><span class="p">[</span><span class="s1">&#39;12&#39;</span><span class="p">],</span> <span class="n">status</span><span class="o">=</span><span class="mi">401</span><span class="p">)</span>
+    <span class="c1"># because each person can not create other rooms while living</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">CODE</span><span class="p">[</span><span class="s1">&#39;24&#39;</span><span class="p">],</span> <span class="n">status</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="get_root_path"><a class="viewcode-back" href="../../../backend.myview.html#backend.myview.room_view.get_root_path">[文档]</a><span class="k">def</span> <span class="nf">get_root_path</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;frontend&#39;</span><span class="p">,</span> <span class="s1">&#39;static&#39;</span><span class="p">,</span> <span class="s1">&#39;record&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="video_thread"><a class="viewcode-back" href="../../../backend.myview.html#backend.myview.room_view.video_thread">[文档]</a><span class="k">def</span> <span class="nf">video_thread</span><span class="p">(</span><span class="n">roomid</span><span class="p">,</span><span class="n">roomname</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    专门用来转换mp4的线程</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;video start&#39;</span><span class="p">)</span>
+    <span class="n">createtime</span><span class="o">=</span><span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">localtime</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()))</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;backend/record/Recorder_local --appId &quot;0c6a0a8f844c49d78a9aac0907dfc1d8&quot; --uid 0 --channel &#39;</span><span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">roomid</span><span class="p">)</span> <span class="o">+</span><span class="s1">&#39; --appliteDir &quot;backend/record/bin/&quot; --channelProfile 1 --idle 120 --recordFileRootDir &#39;</span><span class="o">+</span> <span class="n">get_root_path</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;video convert&#39;</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;python3.6 backend/record/video_convert.py &#39;</span><span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">get_root_path</span><span class="p">(),</span> <span class="n">createtime</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">roomid</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;*&#39;</span><span class="p">))</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;mv &#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">get_root_path</span><span class="p">(),</span> <span class="n">createtime</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">roomid</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;* &#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">get_root_path</span><span class="p">(),</span> <span class="n">createtime</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">roomid</span><span class="p">))))</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;mv &#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">get_root_path</span><span class="p">(),</span> <span class="n">createtime</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">roomid</span><span class="p">),</span> <span class="s1">&#39;*.mp4&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">get_root_path</span><span class="p">(),</span> <span class="n">createtime</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">roomid</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">roomid</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.mp4&#39;</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="start_thread"><a class="viewcode-back" href="../../../backend.myview.html#backend.myview.room_view.start_thread">[文档]</a><span class="k">def</span> <span class="nf">start_thread</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">file_name</span><span class="p">):</span>
+    <span class="n">threads</span> <span class="o">=</span> <span class="p">[]</span>    <span class="c1"># TODO: what is this for ? A global list ?</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;thread--start&#39;</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">video_thread</span><span class="p">,</span><span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">file_name</span><span class="p">))</span>
+    <span class="n">threads</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;thread--real&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="createRoom"><a class="viewcode-back" href="../../../backend.myview.html#backend.myview.room_view.createRoom">[文档]</a><span class="nd">@login_required</span>
+<span class="nd">@require_POST</span>
+<span class="k">def</span> <span class="nf">createRoom</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    使用POST创建房间，并为其创建资源文件夹，需要至少提供房间名称，默认创建直播房间。同时后台启动线程进行视频录制监听</span>
+<span class="sd">    成功时返回前端友好的json格式数据(已修改资源路径)</span>
+<span class="sd">    房间在数据库不存在但资源文件夹存在时返回500 (服务器无法解决)</span>
+<span class="sd">    用户已拥有一个直播房间后，重复创建房间时 返回400</span>
+<span class="sd">    用户没有老师权限时，返回401</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">role</span> <span class="o">==</span> <span class="s1">&#39;T&#39;</span> <span class="ow">and</span> <span class="s1">&#39;room&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">):</span>
+        <span class="n">creator_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+        <span class="n">is_living</span> <span class="o">=</span> <span class="kc">False</span> <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;is_living&#39;</span><span class="p">,</span>
+                                              <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">True</span>
+        <span class="n">file_name</span> <span class="o">=</span> <span class="n">generate_room_path</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">create_folder</span><span class="p">(</span><span class="n">file_name</span><span class="p">)):</span>
+            <span class="n">room</span> <span class="o">=</span> <span class="n">LiveRoom</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">creator_id</span><span class="o">=</span><span class="n">creator_id</span><span class="p">,</span>
+                <span class="n">file_name</span><span class="o">=</span><span class="n">file_name</span><span class="p">,</span>
+                <span class="c1">#is_silence=is_silence,</span>
+                <span class="n">is_living</span><span class="o">=</span><span class="n">is_living</span><span class="p">)</span>
+            <span class="n">room</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">start_thread</span><span class="p">(</span><span class="n">room</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">room</span><span class="o">.</span><span class="n">file_name</span><span class="p">)</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s1">&#39;room&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">wrap_room</span><span class="p">(</span><span class="n">room</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s1">&#39;room&#39;</span><span class="p">:</span> <span class="n">wrap_room</span><span class="p">(</span><span class="n">room</span><span class="p">)})</span>  <span class="c1"># return the new room&#39;s id</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">CODE</span><span class="p">[</span><span class="s1">&#39;6&#39;</span><span class="p">],</span> <span class="n">status</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;room&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">):</span>
+        <span class="c1"># because each person can not create other rooms while living</span>
+        <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">CODE</span><span class="p">[</span><span class="s1">&#39;21&#39;</span><span class="p">],</span> <span class="n">status</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">CODE</span><span class="p">[</span><span class="s1">&#39;12&#39;</span><span class="p">],</span> <span class="n">status</span><span class="o">=</span><span class="mi">401</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="updateRoom"><a class="viewcode-back" href="../../../backend.myview.html#backend.myview.room_view.updateRoom">[文档]</a><span class="nd">@login_required</span>
+<span class="nd">@require_POST</span>
+<span class="k">def</span> <span class="nf">updateRoom</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    使用POST更新房间信息，包括房间名、在线人数。返回值同新建房间</span>
+<span class="sd">    当请求发起者不是房间创建者时返回401</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
+    <span class="n">room</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;room&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="n">bi2obj</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">room</span> <span class="ow">and</span> <span class="n">user</span> <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> <span class="o">==</span> <span class="n">room</span><span class="p">[</span><span class="s1">&#39;creator_id&#39;</span><span class="p">]):</span>
+        <span class="n">room_db</span> <span class="o">=</span> <span class="n">LiveRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">room</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]))</span>
+        <span class="n">new_amount</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;audience_amount&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">new_name</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">new_amount</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">new_amount</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
+            <span class="n">room_db</span><span class="o">.</span><span class="n">audience_amount</span> <span class="o">=</span> <span class="n">new_amount</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">new_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">new_name</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
+            <span class="n">room_db</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">new_name</span>
+        <span class="n">room_db</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="n">room</span> <span class="o">=</span> <span class="n">wrap_room</span><span class="p">(</span><span class="n">room_db</span><span class="p">)</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s1">&#39;room&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">room</span>  <span class="c1"># update session&#39;s room</span>
+        <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s1">&#39;room&#39;</span><span class="p">:</span> <span class="n">room</span><span class="p">})</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">CODE</span><span class="p">[</span><span class="s1">&#39;12&#39;</span><span class="p">],</span> <span class="n">status</span><span class="o">=</span><span class="mi">401</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="endRoom"><a class="viewcode-back" href="../../../backend.myview.html#backend.myview.room_view.endRoom">[文档]</a><span class="nd">@login_required</span>
+<span class="nd">@require_POST</span>
+<span class="k">def</span> <span class="nf">endRoom</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    结束房间,同时清除session</span>
+<span class="sd">    当未在session中找到房间时返回404</span>
+<span class="sd">    当请求者不是创建者时返回401</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
+    <span class="n">room</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;room&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">room</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">user</span> <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> <span class="o">==</span> <span class="n">room</span><span class="p">[</span><span class="s1">&#39;creator_id&#39;</span><span class="p">]):</span>
+            <span class="n">LiveRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">room</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]))</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">is_living</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="k">del</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s1">&#39;room&#39;</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">CODE</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">CODE</span><span class="p">[</span><span class="s1">&#39;12&#39;</span><span class="p">],</span> <span class="n">status</span><span class="o">=</span><span class="mi">401</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">CODE</span><span class="p">[</span><span class="s1">&#39;24&#39;</span><span class="p">],</span> <span class="n">status</span><span class="o">=</span><span class="mi">404</span><span class="p">)</span></div>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">@login_required</span>
+<span class="sd">@require_POST</span>
+<span class="sd">def silenceRoom(request):</span>
+<span class="sd">    body = bi2obj(request)</span>
+<span class="sd">    user = request.user</span>
+<span class="sd">    if (user.role == &#39;T&#39; and &#39;room&#39; in request.session</span>
+<span class="sd">            and user.id == request.session.get(&#39;room&#39;).get(&#39;creator_id&#39;)):</span>
+<span class="sd">        room = request.session.get(&#39;room&#39;)</span>
+<span class="sd">        room_db = LiveRoom.objects.get(pk=int(room[&#39;id&#39;]))</span>
+<span class="sd">        room_db.is_silence = body[&#39;is_silence&#39;]</span>
+<span class="sd">        room_db.save()</span>
+<span class="sd">        return JsonResponse(content=wrap_room(room_db))</span>
+<span class="sd">    else:</span>
+<span class="sd">        return HttpResponse(content=CODE[&#39;12&#39;], status=401)&#39;&#39;&#39;</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">Group3</a></h1>
+
+
+
+
+
+
+
+
+<h3>导航</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">模块代码</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>快速搜索</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="转向" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, LDJ.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

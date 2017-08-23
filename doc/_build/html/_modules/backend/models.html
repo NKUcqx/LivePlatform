@@ -1,0 +1,276 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>backend.models &#8212; Group3 1.0.0 文档</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/translations.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>backend.models 源代码</h1><div class="highlight"><pre>
+<span></span><span class="c1">#from django.conf import settings</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="k">import</span> <span class="n">AbstractUser</span><span class="p">,</span> <span class="n">UserManager</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth.signals</span> <span class="k">import</span> <span class="n">user_logged_out</span>
+<span class="kn">from</span> <span class="nn">django.core.validators</span> <span class="k">import</span> <span class="n">MinLengthValidator</span>
+<span class="kn">from</span> <span class="nn">django.db</span> <span class="k">import</span> <span class="n">models</span>
+<span class="kn">from</span> <span class="nn">django.db.models.signals</span> <span class="k">import</span> <span class="n">pre_save</span><span class="p">,</span> <span class="n">post_save</span>
+<span class="kn">from</span> <span class="nn">django.dispatch</span> <span class="k">import</span> <span class="n">receiver</span>
+<span class="kn">from</span> <span class="nn">django.utils</span> <span class="k">import</span> <span class="n">timezone</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">random</span>
+
+<span class="c1"># Create your models here.</span>
+
+
+<div class="viewcode-block" id="get_User"><a class="viewcode-back" href="../../backend.html#backend.forms.get_User">[文档]</a><span class="k">def</span> <span class="nf">get_User</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="get_Room"><a class="viewcode-back" href="../../backend.html#backend.forms.get_Room">[文档]</a><span class="k">def</span> <span class="nf">get_Room</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">LiveRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="get_file_path"><a class="viewcode-back" href="../../backend.html#backend.forms.get_file_path">[文档]</a><span class="k">def</span> <span class="nf">get_file_path</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="nb">str</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">file_name</span><span class="p">),</span> <span class="n">filename</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="get_user_path"><a class="viewcode-back" href="../../backend.html#backend.forms.get_user_path">[文档]</a><span class="k">def</span> <span class="nf">get_user_path</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;frontend&#39;</span><span class="p">,</span> <span class="s1">&#39;static&#39;</span><span class="p">,</span> <span class="s1">&#39;users&#39;</span><span class="p">,</span> <span class="n">instance</span><span class="o">.</span><span class="n">username</span><span class="p">,</span>
+                        <span class="n">filename</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_dir_path"><a class="viewcode-back" href="../../backend.html#backend.forms.get_dir_path">[文档]</a><span class="k">def</span> <span class="nf">get_dir_path</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">now</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+    <span class="n">now</span> <span class="o">=</span> <span class="n">now</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%M</span><span class="si">%d</span><span class="s1">%H%m%S&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+    <span class="n">md5</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">()</span>
+    <span class="n">md5</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;frontend&#39;</span><span class="p">,</span> <span class="s1">&#39;static&#39;</span><span class="p">,</span> <span class="s1">&#39;rooms&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">md5</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()))</span></div>
+
+
+<div class="viewcode-block" id="gen_user_nickname"><a class="viewcode-back" href="../../backend.html#backend.forms.gen_user_nickname">[文档]</a><span class="k">def</span> <span class="nf">gen_user_nickname</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s2">&quot;User_Nick_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">99999</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="gen_user_avatar"><a class="viewcode-back" href="../../backend.html#backend.forms.gen_user_avatar">[文档]</a><span class="k">def</span> <span class="nf">gen_user_avatar</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;frontend&#39;</span><span class="p">,</span> <span class="s1">&#39;static&#39;</span><span class="p">,</span> <span class="s1">&#39;users&#39;</span><span class="p">,</span> <span class="s1">&#39;default_avatar&#39;</span><span class="p">,</span> <span class="s1">&#39;avatar-&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;.jpg&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="gen_room_thumbnail"><a class="viewcode-back" href="../../backend.html#backend.forms.gen_room_thumbnail">[文档]</a><span class="k">def</span> <span class="nf">gen_room_thumbnail</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;frontend&#39;</span><span class="p">,</span> <span class="s1">&#39;static&#39;</span><span class="p">,</span> <span class="s1">&#39;rooms&#39;</span><span class="p">,</span> <span class="s1">&#39;default_thumbnail&#39;</span><span class="p">,</span> <span class="s1">&#39;default_thumbnail-&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">7</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;.jpg&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="gen_room_slide"><a class="viewcode-back" href="../../backend.html#backend.forms.gen_room_slide">[文档]</a><span class="k">def</span> <span class="nf">gen_room_slide</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;frontend&#39;</span><span class="p">,</span> <span class="s1">&#39;static&#39;</span><span class="p">,</span> <span class="s1">&#39;rooms&#39;</span><span class="p">,</span> <span class="s1">&#39;default_slide&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Test"><a class="viewcode-back" href="../../backend.html#backend.forms.Test">[文档]</a><span class="k">class</span> <span class="nc">Test</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="User"><a class="viewcode-back" href="../../backend.html#backend.forms.User">[文档]</a><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">AbstractUser</span><span class="p">):</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">254</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">phone</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">nickname</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">gen_user_nickname</span><span class="p">)</span>
+    <span class="n">date_joined</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span>
+        <span class="n">auto_now_add</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;date joined&#39;</span><span class="p">)</span>
+    <span class="n">gender</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">avatar</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">FileField</span><span class="p">(</span>
+        <span class="n">upload_to</span><span class="o">=</span><span class="n">get_user_path</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">gen_user_avatar</span>
+    <span class="p">)</span>  <span class="c1"># create a personal folder to hold resources later by DB or Django</span>
+    <span class="n">role_choices</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;T&#39;</span><span class="p">,</span> <span class="s1">&#39;teacher&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;S&#39;</span><span class="p">,</span> <span class="s1">&#39;student&#39;</span><span class="p">))</span>
+    <span class="n">role</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">role_choices</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;S&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__unicode__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;ID : </span><span class="si">{}</span><span class="s1">, UserName: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ID</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">)</span></div>
+
+
+<span class="c1"># clean the liveroom hold by the leaving user</span>
+<div class="viewcode-block" id="cleanUserRoom"><a class="viewcode-back" href="../../backend.html#backend.forms.cleanUserRoom">[文档]</a><span class="nd">@receiver</span><span class="p">(</span><span class="n">user_logged_out</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="n">User</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">cleanUserRoom</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">room</span> <span class="ow">in</span> <span class="n">LiveRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+            <span class="n">creator_id</span><span class="o">=</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;request&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">is_living</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">room</span><span class="o">.</span><span class="n">is_living</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">room</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="checkPhoneAndEmail"><a class="viewcode-back" href="../../backend.html#backend.forms.checkPhoneAndEmail">[文档]</a><span class="nd">@receiver</span><span class="p">(</span><span class="n">pre_save</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="n">User</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">checkPhoneAndEmail</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">if</span> <span class="p">((</span><span class="n">instance</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span> <span class="ow">or</span> <span class="n">instance</span><span class="o">.</span><span class="n">email</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">phone</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span> <span class="ow">or</span> <span class="n">instance</span><span class="o">.</span><span class="n">phone</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Must Fill either a email or a phone number !&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">phone</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span> <span class="ow">and</span> <span class="n">instance</span><span class="o">.</span><span class="n">phone</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">instance</span><span class="o">.</span><span class="n">phone</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">phone</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">phone</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">11</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Format Invalid !&#39;</span><span class="p">)</span>
+        <span class="n">users</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">phone</span><span class="o">=</span><span class="n">instance</span><span class="o">.</span><span class="n">phone</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">users</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">users</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">username</span> <span class="o">!=</span> <span class="n">instance</span><span class="o">.</span><span class="n">username</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Phone Num has already in use .&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">email</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span> <span class="ow">and</span> <span class="n">instance</span><span class="o">.</span><span class="n">email</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">users</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="n">instance</span><span class="o">.</span><span class="n">email</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">users</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">users</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">username</span> <span class="o">!=</span> <span class="n">instance</span><span class="o">.</span><span class="n">username</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Email address has already in use .&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LiveRoomManager"><a class="viewcode-back" href="../../backend.html#backend.forms.LiveRoomManager">[文档]</a><span class="k">class</span> <span class="nc">LiveRoomManager</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Manager</span><span class="p">):</span>
+<div class="viewcode-block" id="LiveRoomManager.room_count"><a class="viewcode-back" href="../../backend.html#backend.forms.LiveRoomManager.room_count">[文档]</a>    <span class="k">def</span> <span class="nf">room_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="LiveRoomManager.room_creator_count"><a class="viewcode-back" href="../../backend.html#backend.forms.LiveRoomManager.room_creator_count">[文档]</a>    <span class="k">def</span> <span class="nf">room_creator_count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">creator_id</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">creator_id</span><span class="o">=</span><span class="n">creator_id</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="LiveRoomManager.room_audience_count"><a class="viewcode-back" href="../../backend.html#backend.forms.LiveRoomManager.room_audience_count">[文档]</a>    <span class="k">def</span> <span class="nf">room_audience_count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount_to</span><span class="p">,</span> <span class="n">amount_from</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+            <span class="n">audience_amount__gte</span><span class="o">=</span><span class="n">amount_from</span><span class="p">,</span>
+            <span class="n">audience_amount__lte</span><span class="o">=</span><span class="n">amount_to</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="LiveRoomManager.room_living_count"><a class="viewcode-back" href="../../backend.html#backend.forms.LiveRoomManager.room_living_count">[文档]</a>    <span class="k">def</span> <span class="nf">room_living_count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_living</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">is_living</span><span class="o">=</span><span class="n">is_living</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="LiveRoomManager.audience_count"><a class="viewcode-back" href="../../backend.html#backend.forms.LiveRoomManager.audience_count">[文档]</a>    <span class="k">def</span> <span class="nf">audience_count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">room_id</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">room_id</span><span class="p">)</span><span class="o">.</span><span class="n">audience_amount</span></div>
+
+    <span class="sd">&#39;&#39;&#39;def room_name_contains(self,name):</span>
+<span class="sd">        return self.filter(name__icontains = name)</span>
+<span class="sd">    &#39;&#39;&#39;</span></div>
+
+
+<div class="viewcode-block" id="LiveRoom"><a class="viewcode-back" href="../../backend.html#backend.forms.LiveRoom">[文档]</a><span class="k">class</span> <span class="nc">LiveRoom</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>  <span class="c1"># ,db_index = True</span>
+    <span class="n">creator</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span>
+        <span class="n">User</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">get_User</span><span class="p">)</span>  <span class="c1"># no need to CASCADE when user get deleted ,right?</span>
+    <span class="n">audience_amount</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">PositiveIntegerField</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">0</span>
+    <span class="p">)</span>  <span class="c1"># present total audience amount</span>
+    <span class="n">is_living</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1">#is_silence = models.BooleanField(default=False)</span>
+    <span class="n">create_time</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">()</span>
+    <span class="n">end_time</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span>
+        <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>  <span class="c1"># identified whether it&#39;s A Live or not by whether end_time is null</span>
+    <span class="n">file_name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">get_dir_path</span><span class="p">)</span>
+    <span class="n">slide_path</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">FileField</span><span class="p">(</span>
+        <span class="n">upload_to</span><span class="o">=</span><span class="n">get_file_path</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">gen_room_slide</span><span class="p">)</span>
+    <span class="n">thumbnail_path</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ImageField</span><span class="p">(</span>
+        <span class="n">upload_to</span><span class="o">=</span><span class="n">get_file_path</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">gen_room_thumbnail</span><span class="p">)</span>
+    <span class="n">objects</span> <span class="o">=</span> <span class="n">LiveRoomManager</span><span class="p">()</span>
+<div class="viewcode-block" id="LiveRoom.save"><a class="viewcode-back" href="../../backend.html#backend.forms.LiveRoom.save">[文档]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; On save, create timestamps &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_time</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">LiveRoom</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__unicode__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;ID : </span><span class="si">{}</span><span class="s2">, RoomName: </span><span class="si">{}</span><span class="s2"> , creator: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ID</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">creator</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="checkEndAndLiving"><a class="viewcode-back" href="../../backend.html#backend.forms.checkEndAndLiving">[文档]</a><span class="nd">@receiver</span><span class="p">(</span><span class="n">pre_save</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="n">LiveRoom</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">checkEndAndLiving</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">is_living</span> <span class="ow">and</span> <span class="n">instance</span><span class="o">.</span><span class="n">end_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Living Room can&#39;t have property end_time&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">is_living</span> <span class="o">==</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="c1">#instance.is_silence = True</span>
+        <span class="n">instance</span><span class="o">.</span><span class="n">end_time</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="checkDirExistence"><a class="viewcode-back" href="../../backend.html#backend.forms.checkDirExistence">[文档]</a><span class="nd">@receiver</span><span class="p">(</span><span class="n">post_save</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="n">LiveRoom</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">checkDirExistence</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">file_name</span><span class="p">)):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">file_name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">file_name</span><span class="p">,</span> <span class="s1">&#39;log.txt&#39;</span><span class="p">))):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mknod</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">file_name</span><span class="p">,</span> <span class="s1">&#39;log.txt&#39;</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Punishment"><a class="viewcode-back" href="../../backend.html#backend.forms.Punishment">[文档]</a><span class="k">class</span> <span class="nc">Punishment</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">room</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span>
+        <span class="n">LiveRoom</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">get_Room</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">get_User</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
+    <span class="n">punishment_choice</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;K&#39;</span><span class="p">,</span> <span class="s1">&#39;kicked out&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;S&#39;</span><span class="p">,</span> <span class="s1">&#39;can not speak&#39;</span><span class="p">))</span>
+    <span class="n">punishment</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span>
+        <span class="n">max_length</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">punishment_choice</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;S&#39;</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Group3</a></h1>
+
+
+
+
+
+
+
+
+<h3>导航</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">模块代码</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>快速搜索</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="转向" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, LDJ.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
