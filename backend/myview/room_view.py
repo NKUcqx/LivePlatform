@@ -217,6 +217,8 @@ def createRoom(request):
         name = request.POST.get('name')
         is_living = False if request.POST.get('is_living',
                                               None) is not None else True
+        is_silence = True if request.POST.get('is_living',
+                                              None) is not None else False
         file_name = generate_room_path()
         if (create_folder(file_name)):
             room = LiveRoom(

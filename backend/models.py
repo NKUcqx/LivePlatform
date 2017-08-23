@@ -158,7 +158,7 @@ def checkEndAndLiving(sender, instance, **kwargs):
     if (instance.is_living and instance.end_time is not None):
         raise TypeError("Living Room can't have property end_time")
     if (instance.is_living == False):
-        #instance.is_silence = True
+        instance.is_silence = True
         instance.end_time = timezone.now()
 
 
