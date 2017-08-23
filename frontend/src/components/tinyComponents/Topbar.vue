@@ -225,7 +225,7 @@
             logout () {
                 const that = this
                 this.logoutSubmit().then(function () {
-                    alert(CONST.success('Logout'))
+                    that.$Message.info(CONST.success('Logout'))
                     that.$router.push({path: '/'})
                 }, function (res) {
                     alert(res)
@@ -254,6 +254,7 @@
              *@event modifyPass
              */
             modifyPass () {
+                let that = this
                 checkForm(this, this.$refs.modifyForm, () => {
                     let data = {
                         username: this.user.username,
@@ -261,7 +262,7 @@
                         new_password: this.form.newPassword
                     }
                     this.changePass(data).then(function () {
-                        alert(CONST.success('Modify Password'))
+                        that.$Message.info(CONST.success('Modify Password'))
                     }, function (res) {
                         alert(res)
                     })
@@ -280,7 +281,7 @@
                         console.log(getListFromDB(res.body))
                         that.setRoomInfo(getListFromDB(res.body))
                         window.open('/#/studio')
-                        //that.$router.push({ name: 'studio' })
+                        // that.$router.push({ name: 'studio' })
                     }, function (res) {
                         alert(res.body)
                     })

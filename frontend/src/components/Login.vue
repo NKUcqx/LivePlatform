@@ -219,7 +219,7 @@ export default {
                     password: this.form.password
                 }
                 this.loginSubmit(data).then(function () {
-                    alert(CONST.success('Login'))
+                    that.$Message.info(CONST.success('Login'))
                     that.$router.push({path: '/home'})
                 }, function (res) {
                     alert(res)

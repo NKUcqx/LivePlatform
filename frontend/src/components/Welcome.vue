@@ -94,7 +94,7 @@ export default {
 }
 
 #welcome {
-    padding-top: calc(25% - 100px - 20px);
+    padding-top: calc(18% - 100px - 20px);
 }
 
 .link {

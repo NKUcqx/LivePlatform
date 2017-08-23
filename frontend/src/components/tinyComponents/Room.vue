@@ -57,7 +57,7 @@ export default {
             console.log(this.item)
             this.setRoomInfo(this.item)
             window.open('/#/studio')
-            //this.$router.push({ name: 'studio' })
+            // this.$router.push({ name: 'studio' })
         }
     },
     mounted () {
