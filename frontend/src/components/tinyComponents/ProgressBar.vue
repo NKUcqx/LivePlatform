@@ -55,7 +55,7 @@ export default {
             'setCurrentTime',
             'setTotalTime'
         ]),
-        emit (signal = 'pause') {
+        emit () {
             const pack = {
                 id: this.user.userid,
                 room_name: this.roomInfo.room_name,
@@ -66,7 +66,7 @@ export default {
                     dataType: ''
                 },
                 type: '',
-                signal: '',
+                signal: 'pause',
                 to: ''
             }
             this.socket.emit(signal, pack)

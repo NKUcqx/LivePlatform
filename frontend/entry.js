@@ -7,7 +7,7 @@ let fs = require('fs')
 let redis = require('redis')
 
 // max message list length threshold, write into file when archive this
-const MESSAGE_THRESHOLD = 400
+const MESSAGE_THRESHOLD = 500
 const LOAD_THRESHOLD = 0.2 // push new msg when length < 0.1 * threshold
 const ERROR_MESSAGE = ['Format Invalid', 'Miss ', 'Must Join this room first', 'Unsupported Type, Choose between 0~3', 'Room not exists', 'Permission Denied']
 //const TIME_DELAY = 4 // consider of recursion invoke or other complex stuff
@@ -45,7 +45,6 @@ function writeFile (room_name, clear = false) {
                 clearRoom(room_name)
             } else {
                 room_msg_list[room_name].splice(0, MESSAGE_THRESHOLD)
-                // room_msg_list[room_name] = room_msg_list[room_name].slice(MESSAGE_THRESHOLD)
             }
             console.log('finish')
         })
@@ -250,7 +249,7 @@ function listenPastJoin (socket) {
 function listenSendMessage (socket) {
     // on sendMessage
     listenSignal(socket, 3, (data) => {
-        console.log('send_message %s', data.type)
+        console.log('send_message %s', data.content.dataType)
         if (isPackValid(data)) {
             if (isValid(data.to)) {
                 const sock = room_audience_list[data.room_name][data.to]
@@ -265,8 +264,7 @@ function listenSendMessage (socket) {
 }
 
 function listenPause (socket) {
-    // on rejust
-    console.log('out')
+    // on pause
     listenSignal(socket, 8, (data) => {
         // update audience amount(or list)
         console.log('in pause')

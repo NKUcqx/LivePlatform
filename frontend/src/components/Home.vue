@@ -130,7 +130,8 @@
             },
             enterRoom (index) {
                 this.setRoomInfo(this.mostPopular[index])
-                this.$router.push({ name: 'studio' })
+                window.open('/#/studio')
+                //this.$router.push({ name: 'studio' })
             },
             changeVideoPage (page) {
                 console.log('start: ', (page - 1) * this.pageSize)

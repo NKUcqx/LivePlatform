@@ -471,19 +471,23 @@ export default {
     #studio #studio-info #teacher {
         height: 26px;
         float: right;
+        cursor: default;
     }
     #studio #studio-info #audience {
         height: 26px;
         float: right;
+        cursor: default;
     }
     #studio #studio-info #vip {
         float: left;
         height: 24px;
+        cursor: default;
     }
     #studio #studio-info #roomid {
         margin-left: 30px;
         float: left;
         height: 24px;
+        cursor: default;
     }
     #studio .main-section {
         height: 0;
