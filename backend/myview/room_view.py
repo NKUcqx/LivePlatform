@@ -68,15 +68,14 @@ def upload_slide(room_id, slide):
 
 
 def convert_file(file, process_id, upload_to):
-    # TODO: if(type(file) )
     file_handler = open(file, 'rb')
-    api = cloudconvert.Api(API_key[1])  # TODO: random.randint(0,1)
+    api = cloudconvert.Api(API_key[random.randint(0,2)])
     split_arr = os.path.splitext(file_handler.name)
     realname = split_arr[0].split('/')[-1]
     postfix = split_arr[1][1:]
     process = api.convert({
         'inputformat': postfix,
-        'outputformat': 'jpg',  # TODO: will change to any type laterly 
+        'outputformat': 'jpg',
         'input': 'upload',
         'filename': '%s.%s' % (realname, postfix),
         'file': file_handler
@@ -84,7 +83,6 @@ def convert_file(file, process_id, upload_to):
     processes[process_id] = process
     process.wait()
     process.download(upload_to)
-    #return upload_to + realname + '.zip' # TODO: So ugly..
     return '%s/%s.zip' % (upload_to, realname)
 
 
@@ -165,7 +163,6 @@ def uploadThumbnail(request):
         else:
             return HttpResponse(content=CODE['12'], status=401)
     else:
-        print('no')
         return HttpResponse(content=CODE['24'], status=400)
 
 
@@ -207,10 +204,8 @@ def video_thread(roomid,roomname):
     os.system('mv ' + os.path.join(get_root_path(), createtime, str(roomid), '*.mp4') + ' ' + os.path.join(get_root_path(), createtime, str(roomid), str(roomid) + '.mp4'))
 
 def start_thread(id, file_name):
-    threads = []    # TODO: what is this for ? A global list ?
     print('thread--start')
     t = threading.Thread(target=video_thread,args=(id, file_name))
-    threads.append(t)
     t.start()
     print('thread--real')
 
@@ -228,7 +223,7 @@ def createRoom(request):
                 name=name,
                 creator_id=creator_id,
                 file_name=file_name,
-                #is_silence=is_silence,
+                is_silence=is_silence,
                 is_living=is_living)
             room.save()
             start_thread(room.id, room.file_name)

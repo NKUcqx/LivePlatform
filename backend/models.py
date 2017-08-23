@@ -130,7 +130,7 @@ class LiveRoom(models.Model):
         default=0
     )  # present total audience amount
     is_living = models.BooleanField(default=True)
-    #is_silence = models.BooleanField(default=False)
+    is_silence = models.BooleanField(default=False)
     create_time = models.DateTimeField()
     end_time = models.DateTimeField(
         null=True, blank=True

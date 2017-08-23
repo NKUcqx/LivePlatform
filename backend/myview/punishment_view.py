@@ -11,11 +11,8 @@ model_to_json = toolkits.model_to_json
 
 
 def echo(request):
-    print('--echo--')
     get_userid = request.GET.get('username')
     get_roomid = request.GET.get('roomid')
-    print(get_userid)
-    print(get_roomid)
     room = LiveRoom.objects.get(id=get_roomid)
     user = User.objects.get(id=get_userid)
     if room.is_silence == True:
@@ -32,7 +29,6 @@ def echo(request):
 def banpublic(request):
     print('--banpulic--')
     get_roomid = request.GET.get('roomid')
-    print(get_roomid)
     room = LiveRoom.objects.get(id=get_roomid)
     room.is_silence = True
     room.save()
@@ -42,7 +38,6 @@ def banpublic(request):
 def canpublic(request):
     print('--canpublic--')
     get_roomid = request.GET.get('roomid')
-    print(get_roomid)
     room = LiveRoom.objects.get(id=get_roomid)
     room.is_silence = False
     room.save()
@@ -53,7 +48,6 @@ def outone(request):
     print('--outone--')
     get_userid = request.GET.get('username')
     get_roomid = request.GET.get('roomid')
-    print(get_roomid)
     room = LiveRoom.objects.get(id=get_roomid)
     user = User.objects.get(id=get_userid)
     new_punishment = Punishment(room=room, user=user, punishment='K')
