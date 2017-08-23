@@ -54,6 +54,12 @@
 </template>
 
 <script>
+/**
+ *Module TinyComponents
+ *
+ *@module TinyComponents
+ *@requires Utils
+ */
 import Topbar from './tinyComponents/Topbar'
 import MyCanvas from './tinyComponents/Canvas'
 import CloseButton from './tinyComponents/CloseButton'
@@ -83,7 +89,11 @@ const TYPESTATES = {
     1: 'work and video and chat',
     2: 'video and chat,'
 }
-
+/**
+ *直播页
+ *@class Studio
+ *@constructor
+ */
 export default {
     components: {
         Topbar,
@@ -205,17 +215,35 @@ export default {
             setRoomInfo: 'setRoomInfo',
             setSocket: 'setSocket'
         }),
+        /**
+         *获取cookie
+         *@method getCookie
+         *@return {String} coockieValue
+         */
         getCookie () {
             return getCookie('csrftoken')
         },
+        /**
+         *处理上传ppt的加载事件（弹出框区域，不是教学区域）
+         *@method startLoading
+         *@return {Boolean} true
+         */
         startLoading () {
             this.loading = true
             console.log(this.loading)
             return true
         },
+        /**
+         *导出被关闭的教学/视频区域
+         *@event openMinor
+         */
         openMinor () {
             this.type = 1
         },
+        /**
+         *关闭教学区域
+         *@event closeWork
+         */
         closeWork () {
             if (this.style < 3 && this.type === 1) {
                 this.changeSection()
@@ -224,6 +252,10 @@ export default {
                 this.type = 2
             }
         },
+        /**
+         *关闭视频区域
+         *@event closeVideo
+         */
         closeVideo () {
             console.log(this.type)
             if (this.style >= 3 && this.type === 1) {
@@ -233,12 +265,24 @@ export default {
                 this.type = 0
             }
         },
+        /**
+         *教学区域和视频区域的相关操作
+         *@event changeSection
+         */
         changeSection () {
             this.style = (this.style < 3) ? this.style + 3 : this.style - 3
         },
+        /**
+         *教学区域切换面板（ppt，画板，代码编辑器）
+         *@event changePanel
+         */
         changePanel (index) {
             this.style = (this.style < 3) ? index : index + 3
         },
+        /**
+         *结束直播
+         *@event endRoom
+         */
         endRoom () {
             let that = this
             this.destroyLive().then(function () {
@@ -252,6 +296,11 @@ export default {
                 alert(res)
             })
         },
+        /**
+         *加载历史
+         *@event loadHistory
+         *@param {Object} toWhom
+         */
         loadHistory (toWhom) {
             // get current content
             let slideHistory = this.$refs['slide'].getHistory()
@@ -265,12 +314,20 @@ export default {
             this.emit(sectionHistory, 'closeButton', toWhom)
             // this.emcanvasHistory(history, 'chat')
         },
+        /**
+         *重载，发送现在的状态
+         *@event reloadClear
+         */
         reloadClear () {
             this.$refs['slide'].reloadClear()
             this.$refs['canvas'].reloadClear()
             this.$refs['code'].reloadClear()
             this.$refs['closeButton'].reloadClear()
         },
+        /**
+         *和socketio服务端建立连接
+         *@event buildConnect
+         */
         buildConnect () {
             let that = this
             this.setSocket()
@@ -294,21 +351,50 @@ export default {
                 }
             })
         },
+        /**
+         *发出画板相应消息
+         *@event emitCanvas
+         */
         emitCanvas (data) {
             this.emit(data, 'canvas', null)
         },
+        /**
+         *发出聊天区相应消息
+         *@event emitChat
+         */
         emitChat (data, to = null, isKick = false) {
             this.emit(data, 'chat', to, 2, isKick ? 'kickout' : 'sendMessage')
         },
+        /**
+         *发出codemirror相应消息
+         *@event emitCode
+         */
         emitCode (data) {
             this.emit(data, 'code') // default is 1
         },
+        /**
+         *发出ppt相应消息
+         *@event emitCode
+         */
         emitSlide (data) {
             this.emit(data, 'slide')
         },
+        /**
+         *发出改变教学区和视频区的位置经过改变的相应消息
+         *@event emitChangeSection
+         */
         emitChangeSection (data) {
             this.emit(data, 'closeButton')
         },
+        /**
+         *发送消息
+         *@event emit
+         *@param {Object} data
+         *@param {String} dataType
+         *@param {Number} [to = null]
+         *@param {Number} [type = 1]
+         *@param {String} [signal = 'sendMessage']
+         */
         emit (data, dataType, to = null, type = 1, signal = 'sendMessage') { // to which user he wanna send to
             const pack = {
                 id: this.user.userid,
@@ -325,6 +411,12 @@ export default {
             }
             this.socket.emit(signal, pack)
         },
+        /**
+         *接收消息
+         *@event listen
+         *@param {String} signal
+         *@param {Function} func
+         */
         listen (signal, func) { // func is a callback
             if (isValid(signal) && isValid(func, 'function')) {
                 this.socket.on(signal, (data) => {
@@ -334,6 +426,12 @@ export default {
                 throw Error('param format error')
             }
         },
+        /**
+         *更换房间缩略图
+         *@event changeThumbnail
+         *@param {Result} res
+         *@param {File} file
+         */
         changeThumbnail (res, file) {
             console.log(this.roomInfo.room_name + '/' + file.name)
             let that = this
@@ -342,16 +440,33 @@ export default {
             }, 5000)
             this.$Message.success(CONST.success('Upload Thumbnail'))
         },
+        /**
+         *上传ppt
+         *@event uploadSlide
+         *@param {Result} res
+         *@param {File} file
+         */
         uploadSlide (res, file) {
             console.log(res.room.slide_path)
             this.loading = false
             this.setRoomInfo({ slide_path: res.room.slide_path, slide_num: res.room.file_amount })
             this.$Message.success(CONST.success('Upload Slide'))
         },
+        /**
+         *上传ppt过大失败
+         *@event uploadSlideTimeout
+         *@param {Event} e
+         *@param {Result} res
+         *@param {File} file
+         */
         uploadSlideTimeout (e, file, fileList) {
             this.loading = false
             alert(CONST.failure('Upload Slide') + 'Please upload smaller slide.')
         },
+        /**
+         *准备好直播（没有弹出框，信息准备好）
+         *@event readyForLive
+         */
         readyForLive () {
             this.uploadModal = false
             this.$Notice.info({
@@ -360,6 +475,10 @@ export default {
                 duration: 4
             })
         },
+        /**
+         *显示上传弹出框
+         *@event showUploadModal
+         */
         showUploadModal () {
             if (this.roomInfo.creator_id.toString() === this.user.userid.toString() && this.roomInfo.is_living) {
                 this.uploadModal = true

@@ -45,11 +45,21 @@
 </template>
 
 <script>
+    /**
+     *Module TinyComponents
+     *
+     *@module TinyComponents
+     *@requires Utils
+     */
     import { mapGetters, mapActions, mapMutations } from 'vuex'
     import Room from './tinyComponents/Room'
     import Topbar from './tinyComponents/Topbar'
     import { beforePost } from '../utils/utils'
-
+    /**
+     *主页
+     *@class Home
+     *@constructor
+     */
     export default {
         name: 'videoList',
         components: {
@@ -99,12 +109,29 @@
                 getRoomsFromDB: 'getRoomsFromDB',
                 getRoomAmountFromDB: 'getRoomAmountFromDB'
             }),
+            /**
+             *依据index，返回轮播的背景图片
+             *@method carouselBackground
+             *@param {Number} index
+             *@return {String} url(路径)
+             */
             carouselBackground (index) {
                 return 'url(' + this.mostPopular[index].thumbnail_path + ')'
             },
+            /**
+             *处理鼠标悬停在轮播的其中一个图片上的事件
+             *@event flipOver
+             *@param {Number} index
+             */
             flipOver (index) {
                 this.carousel = index
             },
+            /**
+             *依据index，设置轮播的index为index的图的式样(返回一个对象有高度和背景图属性)
+             *@method carouselStyle
+             *@param {Number} index
+             *@return {Object} {height:...px,backgroundImage:url(...)}
+             */
             carouselStyle (index) {
                 const that = this
                 return {
@@ -112,6 +139,12 @@
                     backgroundImage: that.carouselBackground(index)
                 }
             },
+            /**
+             *设置轮播的侧栏式样
+             *@method asideStyle
+             *@param {Number} index
+             *@return {Object} {height:...px,backgroundImage:url(...),border:...}
+             */
             asideStyle (index) {
                 const that = this
                 if (index === this.carousel) {
@@ -128,16 +161,31 @@
                     }
                 }
             },
+            /**
+             *进入房间事件（设置房间信息，进入房间页面）
+             *@event enterRoom
+             *@param {Number} index
+             */
             enterRoom (index) {
                 this.setRoomInfo(this.mostPopular[index])
                 this.$router.push({ name: 'studio' })
             },
+            /**
+             *改变录播区域的所处第几页，房间随着页数变化
+             *@event changeVideoPage
+             *@param {Number} page
+             */
             changeVideoPage (page) {
                 console.log('start: ', (page - 1) * this.pageSize)
                 console.log('changeVideoPage: ', this.pageSize)
                 this.livePage = page
                 this.getRoomsFromDB({ isLive: false, start: (page - 1) * this.pageSize })
             },
+            /**
+             *改变直播区域的所处第几页，房间随着页数变化
+             *@event changeLivePage
+             *@param {Number} page
+             */
             changeLivePage (page) {
                 this.videoPage = page
                 this.getRoomsFromDB({ isLive: true, start: (page - 1) * this.pageSize })

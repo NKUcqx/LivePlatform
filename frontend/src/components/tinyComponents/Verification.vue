@@ -17,10 +17,21 @@
 </template>
 
 <script>
+/**
+ *Module TinyComponents
+ *
+ *@module TinyComponents
+ *@requires Utils
+ */
 import { mapActions } from 'vuex'
 import { checkVerification, checkPhone, checkEmail, checkForm } from '../../utils/checks'
 import { beforePost } from '../../utils/utils'
 const countDownNum = 60
+/**
+ *验证码
+ *@class Verification
+ *@constructor
+ */
 export default {
     data () {
         const validateVerification = (rule, value, callback) => {
@@ -55,6 +66,10 @@ export default {
         ...mapActions({
             testUser: 'testUsername'
         }),
+        /**
+         *开始倒计时
+         *@event beginCountdown
+         */
         beginCountdown () {
             const countDown = () => {
                 this.time -= 1
@@ -66,6 +81,10 @@ export default {
             }
             let interval = setInterval(function () { countDown() }, 1000)
         },
+        /**
+         *获取验证码（发送信息或email，状态变为sent）
+         *@event beginCountdown
+         */
         achieveVerification () {
             if (this.sendType === 0 && checkPhone(this.username)) {
                 this.state = 'sent'
@@ -78,9 +97,19 @@ export default {
                 this.$Message.success('Send Success')
             }
         },
+        /**
+         *测试表单是否正确
+         *@method validateForm
+         *@param {Fuction} 表单正确时的回调函数
+         *@return {Object} checkForm的值
+         */
         validateForm (todo) {
             return checkForm(this, this.$refs['verification'], todo)
         },
+        /**
+         *发送邮箱邮件
+         *@event sendEmail
+         */
         sendEmail () {
             this.code = this.randomCode
             let data = {
@@ -98,6 +127,10 @@ export default {
                 alert(res.body)
             })
         },
+        /**
+         *发送手机短信
+         *@event sendMessage
+         */
         sendMessage () {
             this.code = this.randomCode
             let data = {
@@ -120,6 +153,10 @@ export default {
                     // console.log(res.status)
                 })
         },
+        /**
+         *测试用户名是否存在
+         *@event testUsername
+         */
         testUsername () {
             let that = this
             let data = {

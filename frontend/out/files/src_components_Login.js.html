@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src/components/Login.js</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="icon" href="../assets/favicon.ico">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+                <h1><img src="../assets/css/logo.png" title="" width="117" height="52"></h1>
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+                    <h2 class="off-left">APIs</h2>
+                    <div id="api-tabview" class="tabview">
+                        <ul class="tabs">
+                            <li><a href="#api-classes">Classes</a></li>
+                            <li><a href="#api-elements">Elements</a></li>
+                            <li><a href="#api-modules">Modules</a></li>
+                        </ul>
+                
+                        <div id="api-tabview-filter">
+                            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+                        </div>
+                
+                        <div id="api-tabview-panel">
+                            <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/Actions.html">Actions</a></li>
+                                <li><a href="../classes/Canvas.html">Canvas</a></li>
+                                <li><a href="../classes/CanvasInfo.html">CanvasInfo</a></li>
+                                <li><a href="../classes/Chat.html">Chat</a></li>
+                                <li><a href="../classes/Checks.html">Checks</a></li>
+                                <li><a href="../classes/CloseButton.html">CloseButton</a></li>
+                                <li><a href="../classes/CodeMirror.html">CodeMirror</a></li>
+                                <li><a href="../classes/Const.html">Const</a></li>
+                                <li><a href="../classes/Getters.html">Getters</a></li>
+                                <li><a href="../classes/Home.html">Home</a></li>
+                                <li><a href="../classes/Index.html">Index</a></li>
+                                <li><a href="../classes/Live.html">Live</a></li>
+                                <li><a href="../classes/LogIn.html">LogIn</a></li>
+                                <li><a href="../classes/Mp4Player.html">Mp4Player</a></li>
+                                <li><a href="../classes/PPT.html">PPT</a></li>
+                                <li><a href="../classes/Progress.html">Progress</a></li>
+                                <li><a href="../classes/ProgressBar.html">ProgressBar</a></li>
+                                <li><a href="../classes/Room.html">Room</a></li>
+                                <li><a href="../classes/SignUp.html">SignUp</a></li>
+                                <li><a href="../classes/StudentRTC.html">StudentRTC</a></li>
+                                <li><a href="../classes/Studio.html">Studio</a></li>
+                                <li><a href="../classes/TeacherRTC.html">TeacherRTC</a></li>
+                                <li><a href="../classes/Topbar.html">Topbar</a></li>
+                                <li><a href="../classes/UploadButton.html">UploadButton</a></li>
+                                <li><a href="../classes/Utils.html">Utils</a></li>
+                                <li><a href="../classes/Verification.html">Verification</a></li>
+                                <li><a href="../classes/Welcome.html">Welcome</a></li>
+                            </ul>
+                
+                                <ul id="api-elements" class="apis elements">
+                                    <li><a href="../elements/CREATORID.html">&lt;CREATORID&gt;</a></li>
+                                    <li><a href="../elements/HEIGHT.html">&lt;HEIGHT&gt;</a></li>
+                                    <li><a href="../elements/WIDTH.html">&lt;WIDTH&gt;</a></li>
+                                </ul>
+                
+                            <ul id="api-modules" class="apis modules">
+                                <li><a href="../modules/Store.html">Store</a></li>
+                                <li><a href="../modules/TinyComponents.html">TinyComponents</a></li>
+                                <li><a href="../modules/Utils.html">Utils</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+                    Show:
+                    <label for="api-show-inherited">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </div>
+            
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<h1 class="file-heading">File: src/components/Login.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+&lt;template&gt;
+    &lt;div class=&quot;login&quot;&gt;
+    &lt;Row&gt;
+        &lt;Col span=&quot;1&quot; offset=&quot;0&quot;&gt;
+            &lt;Button type=&quot;text&quot; class=&quot;link&quot; @click=&quot;goLeft()&quot; id=&quot;go-left&quot;&gt;&lt;Icon type=&quot;reply&quot;&gt;&lt;/Icon&gt; Signup&lt;/Button&gt;
+        &lt;/Col&gt;
+        &lt;Col span=&quot;1&quot; offset=&quot;22&quot;&gt;
+            &lt;Button type=&quot;text&quot; class=&quot;link&quot; @click=&quot;goRight()&quot; id=&quot;go-right&quot;&gt;Introduce &lt;Icon type=&quot;forward&quot;&gt;&lt;/Icon&gt;&lt;/Button&gt;
+        &lt;/Col&gt;
+    &lt;/Row&gt;
+        &lt;Row id=&quot;cardrow&quot;&gt;
+            &lt;Col span=&quot;6&quot; offset=&quot;9&quot;&gt;
+                &lt;Card shadow class=&quot;card&quot; id=&quot;login-card&quot; v-if=&quot;state === 0&quot;&gt;
+                    &lt;p slot=&quot;title&quot; class=&quot;title&quot;&gt;Log in&lt;/p&gt;
+                    &lt;Form ref=&quot;form&quot; :model=&quot;form&quot; :rules=&quot;rule&quot; class=&quot;form&quot;&gt;
+                        &lt;Form-item prop=&quot;user&quot;&gt;
+                            &lt;Input type=&quot;text&quot; v-model=&quot;form.user&quot; size=&quot;large&quot; placeholder=&quot;Username&quot;&gt;
+                                &lt;Icon type=&quot;ios-person-outline&quot; slot=&quot;prepend&quot;&gt;&lt;/Icon&gt;
+                            &lt;/Input&gt;
+                        &lt;/Form-item&gt;
+                        &lt;Form-item prop=&quot;password&quot;&gt;
+                            &lt;Input type=&quot;password&quot; v-model=&quot;form.password&quot; size=&quot;large&quot; placeholder=&quot;Password&quot;&gt;
+                                &lt;Icon type=&quot;ios-locked-outline&quot; slot=&quot;prepend&quot;&gt;&lt;/Icon&gt;
+                            &lt;/Input&gt;
+                        &lt;/Form-item&gt;
+                        &lt;Form-item prop=&quot;pin&quot;&gt;
+                            &lt;Row&gt;
+                                &lt;Col span=&quot;18&quot;&gt;
+                                    &lt;Input v-model=&quot;form.pin&quot; size=&quot;large&quot; placeholder=&quot;Verification&quot;&gt;
+                                        &lt;Icon type=&quot;star&quot; slot=&quot;prepend&quot;&gt;&lt;/Icon&gt;
+                                    &lt;/Input&gt;
+                                &lt;/Col&gt;
+                                &lt;Col span=&quot;6&quot;&gt;
+                                    &lt;img :src=&quot;pinurl&quot; id=&quot;pin-code&quot;  @click=&quot;showPinImg()&quot;/&gt;
+                                &lt;/Col&gt;
+                            &lt;/Row&gt;
+                        &lt;/Form-item&gt;
+                        &lt;Form-item id=&quot;buttons-item&quot;&gt;
+                            &lt;Button type=&quot;primary&quot; @click=&quot;login()&quot; class=&quot;button&quot;&gt;Login&lt;/Button&gt;
+                            &lt;Button type=&quot;text&quot; class=&quot;button&quot; @click=&quot;changeState()&quot;&gt;Retrieve&lt;/Button&gt;
+                        &lt;/Form-item&gt;
+
+                        &lt;!--&lt;input type=&quot;file&quot; name=&quot;awd&quot; @change=&quot;sendFile($event.target.files)&quot;/&gt;--&gt;
+
+                    &lt;/Form&gt;
+                &lt;/Card&gt;
+                &lt;Card shadow class=&quot;card&quot; id=&quot;retrieve-card&quot; v-else&gt;
+                    &lt;p slot=&quot;title&quot; class=&quot;title&quot;&gt;Retrieve password&lt;/p&gt;
+                    &lt;Form ref=&quot;retrieveForm&quot; :model=&quot;retrieve&quot; :rules=&quot;rule2&quot; class=&quot;form&quot;&gt;
+                        &lt;Form-item prop=&quot;user&quot;&gt;
+                            &lt;Input type=&quot;text&quot; v-model=&quot;retrieve.user&quot; size=&quot;large&quot; placeholder=&quot;Username&quot;&gt;
+                                &lt;Icon type=&quot;ios-person-outline&quot; slot=&quot;prepend&quot;&gt;&lt;/Icon&gt;
+                            &lt;/Input&gt;
+                        &lt;/Form-item&gt;
+                        &lt;Form-item prop=&quot;newPassword&quot;&gt;
+                            &lt;Input type=&quot;password&quot; v-model=&quot;retrieve.newPassword&quot; size=&quot;large&quot; placeholder=&quot;New Password&quot;&gt;
+                                &lt;Icon type=&quot;ios-locked-outline&quot; slot=&quot;prepend&quot;&gt;&lt;/Icon&gt;
+                            &lt;/Input&gt;
+                        &lt;/Form-item&gt;
+                        &lt;Form-item prop=&quot;reNewPassword&quot;&gt;
+                            &lt;Input type=&quot;password&quot; v-model=&quot;retrieve.reNewPassword&quot; size=&quot;large&quot; placeholder=&quot;Repeat New password&quot;&gt;
+                                &lt;Icon type=&quot;eye-disabled&quot; slot=&quot;prepend&quot;&gt;&lt;/Icon&gt;
+                            &lt;/Input&gt;
+                        &lt;/Form-item&gt;
+                        &lt;Form-item prop=&quot;pin&quot;&gt;
+                            &lt;!--NEED MODIFY--&gt;
+                            &lt;verification :send-type=&quot;typeOfUsername&quot; :username=&quot;retrieve.user&quot; father=&quot;login&quot; ref=&quot;veri&quot;&gt;&lt;/verification&gt;
+                        &lt;/Form-item&gt;
+                        &lt;Form-item id=&quot;buttons-item&quot;&gt;
+                            &lt;Button type=&quot;primary&quot; @click=&quot;confirm()&quot; class=&quot;button&quot;&gt;Confirm&lt;/Button&gt;
+                            &lt;Button type=&quot;text&quot; class=&quot;button&quot; @click=&quot;changeState()&quot;&gt;Back&lt;/Button&gt;
+                        &lt;/Form-item&gt;
+
+                    &lt;/Form&gt;
+                &lt;/Card&gt;
+            &lt;/Col&gt;
+        &lt;/Row&gt;
+    &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+/**
+ *Module TinyComponents
+ *
+ *@module TinyComponents
+ *@requires Utils
+ */
+import verification from &#x27;verification-code&#x27;
+import { checkPassword, checkRePassword, checkVerification, checkForm, checkPhone, checkEmail, checkUsername } from &#x27;../utils/checks&#x27;
+import { mapGetters, mapMutations, mapActions } from &#x27;vuex&#x27;
+import { beforePost } from &#x27;../utils/utils&#x27;
+import { CONST } from &#x27;../utils/const&#x27;
+import Verification from &#x27;./tinyComponents/Verification&#x27; // component
+
+/**
+ *登录页
+ *@class LogIn
+ *@constructor
+ */
+export default {
+    components: {
+        Verification
+    },
+    data () {
+        const validatePin = (rule, value, callback) =&gt; {
+            checkVerification(rule, value, callback, this.pincode)
+        }
+        const validatePass = (rule, value, callback) =&gt; {
+            checkPassword(rule, value, callback, this.retrieve.reNewPassword, this.$refs.retrieveForm, &#x27;reNewPassword&#x27;)
+        }
+        const validatePassCheck = (rule, value, callback) =&gt; {
+            checkRePassword(rule, value, callback, this.retrieve.newPassword)
+        }
+        const validateUsername = (rule, value, callback) =&gt; {
+            if (value === &#x27;&#x27;) {
+                callback(new Error(&#x27;please input username&#x27;))
+            } else if (!(checkPhone(value) || checkEmail(value))) {
+                callback(new Error(&#x27;this is not phone or email&#x27;))
+            } else {
+                checkUsername(rule, value, callback, &#x27;login&#x27;)
+            }
+        }
+        return {
+            // 0 means login 1 means retrieve password
+            state: 0,
+            form: {
+                user: &#x27;&#x27;,
+                password: &#x27;&#x27;,
+                pin: &#x27;&#x27;
+            },
+            retrieve: {
+                user: &#x27;&#x27;,
+                newPassword: &#x27;&#x27;,
+                reNewPassword: &#x27;&#x27;
+            },
+            rule: {
+                user: [
+                    { required: true, validator: validateUsername, trigger: &#x27;blur&#x27; }
+                ],
+                password: [
+                    { required: true, message: &#x27;Please input password&#x27;, trigger: &#x27;blur&#x27; },
+                    { type: &#x27;string&#x27;, min: 6, max: 25, message: &#x27;Password should be 6 to 25 chars&#x27;, trigger: &#x27;blur&#x27; }
+                ],
+                pin: [
+                    { required: true, validator: validatePin, trigger: &#x27;blur&#x27; },
+                    { type: &#x27;string&#x27;, min: 4, max: 4, message: &#x27;pin code must be 4 numbers&#x27;, trigger: &#x27;blur&#x27; }
+                ]
+            },
+            rule2: {
+                user: [
+                    { required: true, validator: validateUsername, trigger: &#x27;blur&#x27; }
+                ],
+                newPassword: [
+                    { required: true, validator: validatePass, trigger: &#x27;blur&#x27; },
+                    { type: &#x27;string&#x27;, min: 6, max: 25, message: &#x27;password must be more than 6 chars less than 25&#x27;, trigger: &#x27;blur&#x27; }
+                ],
+                reNewPassword: [
+                    { required: true, validator: validatePassCheck, trigger: &#x27;blur&#x27; }
+                ]
+            },
+            pinurl: &#x27;&#x27;,
+            pincode: &#x27;&#x27;
+        }
+    },
+    mounted: function () {
+        this.showPinImg()
+    },
+    computed: {
+        ...mapGetters({
+            page: &#x27;getPage&#x27;
+        }),
+        typeOfUsername () {
+            if (checkEmail(this.retrieve.user)) {
+                return 1
+            } else if (checkPhone(this.retrieve.user)) {
+                return 0
+            }
+            return -1
+        }
+    },
+    methods: {
+        ...mapMutations({
+            goLeft: &#x27;goLeft&#x27;,
+            goRight: &#x27;goRight&#x27;
+        }),
+        ...mapActions({
+            loginSubmit: &#x27;login&#x27;,
+            findBackSubmit: &#x27;findBackPass&#x27;
+        }),
+        /**
+         *显示登录页的验证码图片
+         *@event showPinImg
+         */
+        showPinImg () {
+            let result = verification.create()
+            this.pincode = result.code
+            this.pinurl = result.dataURL
+            // console.log(this.pinurl)
+        },
+        /**
+         *处理找回密码/找回密码后返回的state、retrieve.user等的改变
+         *@event changeState
+         */
+        changeState () {
+            this.state = (this.state === 0) ? 1 : 0
+            this.retrieve.user = (this.state === 1) ? this.form.user : this.retrieve.user
+            this.form.user = (this.state === 0) ? this.retrieve.user : this.form.user
+        },
+        /**
+         *登录函数
+         *@event login
+         */
+        login () {
+            const that = this
+            checkForm(this, this.$refs[&#x27;form&#x27;], () =&gt; {
+                that.showPinImg()
+                let data = {
+                    username: this.form.user,
+                    password: this.form.password
+                }
+                this.loginSubmit(data).then(function () {
+                    alert(CONST.success(&#x27;Login&#x27;))
+                    that.$router.push({path: &#x27;/home&#x27;})
+                }, function (res) {
+                    alert(res)
+                })
+            })
+        },
+        /**
+         *确认修改密码时的表单
+         *@event confirm
+         */
+        confirm () {
+            const that = this
+            checkForm(this, this.$refs[&#x27;retrieveForm&#x27;], () =&gt; {
+                this.$refs[&#x27;veri&#x27;].validateForm(() =&gt; {
+                    let data = {
+                        forget_pw: true,
+                        username: this.retrieve.user,
+                        new_password: this.retrieve.newPassword
+                    }
+                    this.findBackSubmit(data).then(function () {
+                        alert(CONST.success(&#x27;Find Back&#x27;))
+                        that.$router.push({path: &#x27;/home&#x27;})
+                    }, function (res) {
+                        alert(res)
+                    })
+                })
+            })
+        }
+    }
+}
+&lt;/script&gt;
+
+&lt;!-- Add &quot;scoped&quot; attribute to limit CSS to this component only --&gt;
+&lt;style scoped&gt;
+* {
+    font-family: &quot;Helvetica Neue&quot;,Helvetica,&quot;PingFang SC&quot;,&quot;Hiragino Sans GB&quot;,&quot;Microsoft YaHei&quot;,&quot;微软雅黑&quot;,Arial,sans-serif;
+}
+
+#cardrow {
+    clear: both;
+}
+
+.title {
+    /*font-size: 20px;*/
+    /*color: white;*/
+    text-align: left;
+    /*height: 35px;*/
+    margin-left: 3%;
+}
+
+.card {
+    margin-top: 20%;
+    background-color: rgba(255, 255, 255, 0.95);
+}
+
+.button {
+    /*background-color: rgb(200, 200, 200);*/
+    float: right;
+}
+
+.form {
+    margin-top: 10%;
+}
+
+#buttons-item {
+    margin-top: 20%;
+}
+
+#pin-code {
+    display: inline-block;
+    width: 100%;
+    margin-top: 1px; 
+    height: 36px;
+    border-radius: 10%;
+}
+
+.link {
+    /*padding-top: 30px;*/
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 20px;
+}
+
+.link:hover {
+    color: rgb(255, 255, 255);
+    font-size: 22px;
+    padding-bottom: 0px;
+}
+
+#go-right {
+    float: right;
+}
+
+#go-left {
+    float: left;
+}
+&lt;/style&gt;
+
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

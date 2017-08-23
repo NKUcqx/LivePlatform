@@ -85,12 +85,22 @@
 </template>
 
 <script>
+    /**
+     *Module TinyComponents
+     *
+     *@module TinyComponents
+     *@requires Utils
+     */
     import { beforePost, getListFromDB, getCookie } from '../../utils/utils'
     import { CONST } from '../../utils/const'
     import { checkPassword, checkRePassword, checkForm } from '../../utils/checks'
     import { mapGetters, mapActions, mapMutations } from 'vuex'
     import UploadButton from './UploadButton'
-
+    /**
+     *顶栏
+     *@class Topbar
+     *@constructor
+     */
     export default {
         components: {
             UploadButton
@@ -180,9 +190,18 @@
                 destroyLive: 'destroyLive',
                 createLive: 'createLive'
             }),
+            /**
+             *获取cookie
+             *@method getCookie
+             *@return {String} coockieValue
+             */
             getCookie () {
                 return getCookie('csrftoken')
             },
+            /**
+             *返回首页
+             *@event goHome
+             */
             goHome () {
                 if (this.AUTHORITY) {
                     (confirm('Are you sure to leave home ?')) ? this.$router.push({name: 'home'}) : ''
@@ -190,11 +209,19 @@
                     this.$router.push({name: 'home'})
                 }
             },
+            /**
+             *触发修改个人信息的弹出框
+             *@event makeIndoModal
+             */
             makeIndoModal () {
                 this.person.nickname = this.user.nickname
                 this.person.gender = (this.user.gender) ? 'male' : 'female'
                 this.infoModal = true
             },
+            /**
+             *注销账号，登出
+             *@event logout
+             */
             logout () {
                 const that = this
                 this.logoutSubmit().then(function () {
@@ -204,6 +231,10 @@
                     alert(res)
                 })
             },
+            /**
+             *可以修改昵称和性别，也可以不修改
+             *@event modifyInfo
+             */
             modifyInfo () {
                 checkForm(this, this.$refs.infoForm, () => {
                     let gender = (this.person.gender === 'male') ? true : false
@@ -218,6 +249,10 @@
                     })
                 })
             },
+            /**
+             *修改密码
+             *@event modifyPass
+             */
             modifyPass () {
                 checkForm(this, this.$refs.modifyForm, () => {
                     let data = {
@@ -232,6 +267,10 @@
                     })
                 })
             },
+            /**
+             *创建房间
+             *@event createRoom
+             */
             createRoom () {
                 let that = this
                 checkForm(this, this.$refs.createForm, () => {
@@ -246,6 +285,10 @@
                     })
                 })
             },
+            /**
+             *换头像
+             *@event changeAvatar
+             */
             changeAvatar (res, file) {
                 let that = this
                 setTimeout(function () {
@@ -254,12 +297,24 @@
                 }, 4000)
                 this.$Message.success(CONST.success('Upload Success!'))
             },
+            /**
+             *响应头像太大的错误事件
+             *@event avatarSizeError
+             */
             avatarSizeError (file, fileList) {
                 this.$Message.error('Image size must be under 200K')
             },
+            /**
+             *响应头像的文件格式错误事件
+             *@event avatarTypeError
+             */
             avatarTypeError (file, fileList) {
                 this.$Message.error('Image must be jpg jpeg png gif bmp')
             },
+            /**
+             *结束直播
+             *@event endLive
+             */
             endLive () {
                 let that = this
                 this.$Modal.confirm({

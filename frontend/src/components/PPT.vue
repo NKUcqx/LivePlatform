@@ -45,8 +45,19 @@
 </div>
 </template>
 <script>
+    /**
+     *Module TinyComponents
+     *
+     *@module TinyComponents
+     *@requires Utils
+     */
     import { mapGetters } from 'vuex'
     import { getFileNameFromPath } from '../utils/utils'
+    /**
+     *PPT
+     *@class PPT
+     *@constructor
+     */
     export default {
         props: {
             WIDTH: {
@@ -127,6 +138,10 @@
             this.updateSlide()
         },
         methods: {
+            /**
+             *更新幻灯片，从指定文件夹获取图片地址push到this.imgs里
+             *@event updateSlide
+             */
             updateSlide () {
                 // *************** NEED MODIFY ***************  this.slideInfo.slide_num
                 this.imgs = []
@@ -135,30 +150,67 @@
                     this.imgs.push(this.slideInfo.slide_path + '/' + getFileNameFromPath(this.slideInfo.slide_path) + '-' + i + '.jpg')
                 }
             },
+            /**
+             *返回现在是ppt的第几页
+             *@method getHistory
+             *@return {Object} this.index
+             */
             getHistory () {
                 return this.index
             },
+            /**
+             *发送现在是ppt的第几页的消息
+             *@event reloadClear
+             */
             reloadClear () {
                 this.send(this.index)
             },
+            /**
+             *设置自动播放功能
+             *@event changeAuto
+             */
             changeAuto () {
                 this.setautoplay = true
             },
+            /**
+             *关闭自动播放功能
+             *@event changePause
+             */
             changePause () {
                 this.setautoplay = false
             },
+            /**
+             *减慢自动播放功能的播放速度
+             *@event minusSpeed
+             */
             minusSpeed () {
                 this.autoplayspeed = (this.autoplayspeed < 10000) ? this.autoplayspeed + 1000 : this.autoplayspeed
             },
+            /**
+             *加快自动播放功能的播放速度
+             *@event addSpeed
+             */
             addSpeed () {
                 this.autoplayspeed = (this.autoplayspeed > 1000) ? this.autoplayspeed - 1000 : this.autoplayspeed
             },
+            /**
+             *发送消息
+             *@event send
+             */
             send (data) {
                 this.$emit('send', data)
             },
+            /**
+             *接收消息（给this.index赋值）
+             *@event send
+             */
             receive (data) {
                 this.index = data.data
             },
+            /**
+             *对权限进行判断，只有老师才能用socketio发送对ppt进行操作的消息
+             *@event changeppt
+             */
             changeppt: function (oldValue, value) {
                 console.log(value)
                 console.log('çhange')

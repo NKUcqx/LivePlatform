@@ -22,7 +22,18 @@
 </template>
 
 <script>
+/**
+ *Module TinyComponents
+ *
+ *@module TinyComponents
+ *@requires Utils
+ */
 import { CONST } from '../../utils/const'
+/**
+ *关闭按钮
+ *@class CloseButton
+ *@constructor
+ */
 export default {
     props: {
         isWork: {
@@ -45,28 +56,61 @@ export default {
         }
     },
     methods: {
+        /**
+         *获得现在的状态（是ppt还是代码编辑器还是画板）
+         *@method getHistory
+         *@return {Number} 返回0或1或2，0代表ppt，1代表代码编辑器，2代表白板
+         */
         getHistory () {
             return this.state
         },
+        /**
+         *发送现在的状态
+         *@event reloadClear
+         */
         reloadClear () {
             this.send(this.state)
         },
+        /**
+         *发送信息
+         *@event send
+         *@param {Object} data
+         */
         send (data) {
             this.$emit('send', data)
         },
+        /**
+         *接收信息
+         *@event receive
+         *@param {Object} data
+         */
         receive (data) {
             this.state = data.data
             this.$emit('change', this.state)
         },
+        /**
+         *现在正在操作的按钮上显示 √
+         *@event showIcon
+         *@param {Number} index
+         */
         showIcon (index) {
             if (index === this.state) {
                 return true
             }
             return false
         },
+        /**
+         *关闭面板
+         *@event closePanel
+         */
         closePanel () {
             this.$emit('close', '')
         },
+        /**
+         *切换面板，换一个面板显示
+         *@event changePanel
+         *@param {Number} index
+         */
         changePanel (index) {
             if (this.AUTHORITY) {
                 this.state = index

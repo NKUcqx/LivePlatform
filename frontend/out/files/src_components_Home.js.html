@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src/components/Home.js</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="icon" href="../assets/favicon.ico">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+                <h1><img src="../assets/css/logo.png" title="" width="117" height="52"></h1>
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+                    <h2 class="off-left">APIs</h2>
+                    <div id="api-tabview" class="tabview">
+                        <ul class="tabs">
+                            <li><a href="#api-classes">Classes</a></li>
+                            <li><a href="#api-elements">Elements</a></li>
+                            <li><a href="#api-modules">Modules</a></li>
+                        </ul>
+                
+                        <div id="api-tabview-filter">
+                            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+                        </div>
+                
+                        <div id="api-tabview-panel">
+                            <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/Actions.html">Actions</a></li>
+                                <li><a href="../classes/Canvas.html">Canvas</a></li>
+                                <li><a href="../classes/CanvasInfo.html">CanvasInfo</a></li>
+                                <li><a href="../classes/Chat.html">Chat</a></li>
+                                <li><a href="../classes/Checks.html">Checks</a></li>
+                                <li><a href="../classes/CloseButton.html">CloseButton</a></li>
+                                <li><a href="../classes/CodeMirror.html">CodeMirror</a></li>
+                                <li><a href="../classes/Const.html">Const</a></li>
+                                <li><a href="../classes/Getters.html">Getters</a></li>
+                                <li><a href="../classes/Home.html">Home</a></li>
+                                <li><a href="../classes/Index.html">Index</a></li>
+                                <li><a href="../classes/Live.html">Live</a></li>
+                                <li><a href="../classes/LogIn.html">LogIn</a></li>
+                                <li><a href="../classes/Mp4Player.html">Mp4Player</a></li>
+                                <li><a href="../classes/PPT.html">PPT</a></li>
+                                <li><a href="../classes/Progress.html">Progress</a></li>
+                                <li><a href="../classes/ProgressBar.html">ProgressBar</a></li>
+                                <li><a href="../classes/Room.html">Room</a></li>
+                                <li><a href="../classes/SignUp.html">SignUp</a></li>
+                                <li><a href="../classes/StudentRTC.html">StudentRTC</a></li>
+                                <li><a href="../classes/Studio.html">Studio</a></li>
+                                <li><a href="../classes/TeacherRTC.html">TeacherRTC</a></li>
+                                <li><a href="../classes/Topbar.html">Topbar</a></li>
+                                <li><a href="../classes/UploadButton.html">UploadButton</a></li>
+                                <li><a href="../classes/Utils.html">Utils</a></li>
+                                <li><a href="../classes/Verification.html">Verification</a></li>
+                                <li><a href="../classes/Welcome.html">Welcome</a></li>
+                            </ul>
+                
+                                <ul id="api-elements" class="apis elements">
+                                    <li><a href="../elements/CREATORID.html">&lt;CREATORID&gt;</a></li>
+                                    <li><a href="../elements/HEIGHT.html">&lt;HEIGHT&gt;</a></li>
+                                    <li><a href="../elements/WIDTH.html">&lt;WIDTH&gt;</a></li>
+                                </ul>
+                
+                            <ul id="api-modules" class="apis modules">
+                                <li><a href="../modules/Store.html">Store</a></li>
+                                <li><a href="../modules/TinyComponents.html">TinyComponents</a></li>
+                                <li><a href="../modules/Utils.html">Utils</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+                    Show:
+                    <label for="api-show-inherited">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </div>
+            
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<h1 class="file-heading">File: src/components/Home.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+&lt;template&gt;
+    &lt;div id=&quot;home&quot;&gt;
+        &lt;topbar TYPE=&quot;home&quot; id=&quot;topbar&quot;&gt;&lt;/topbar&gt;
+        &lt;div id=&quot;fortop&quot;&gt;&lt;/div&gt;
+        &lt;div id=&quot;showbar&quot; :style=&quot;style&quot;&gt;
+            &lt;div id=&quot;carousel-containter&quot;&gt;
+                &lt;Carousel v-model=&quot;carousel&quot; autoplay=&quot;auto&quot; :autoplay-speed=&quot;3000&quot; id=&quot;carousel&quot; trigger=&quot;hover&quot; arrow=&quot;always&quot; dots=&quot;none&quot; :style=&quot;height&quot;&gt;
+                    &lt;Carousel-item v-for=&quot;(livesItem, index) in mostPopular&quot; class=&quot;carousel-item&quot; &gt;
+                        &lt;div class=&quot;carousl-background&quot; :style=&quot;carouselStyle(index)&quot; @click=&quot;enterRoom(index)&quot;&gt;&lt;/div&gt;
+                    &lt;/Carousel-item&gt;
+                &lt;/Carousel&gt;
+            &lt;/div&gt;
+            &lt;div id=&quot;carousel-aside&quot;&gt;
+                &lt;div class=&quot;aside-item&quot; v-for=&quot;(livesItem, index) in mostPopular&quot; @mouseover=&quot;flipOver(index)&quot; :style=&quot;asideStyle(index)&quot; @click=&quot;enterRoom(index)&quot;&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div id=&quot;container&quot; :style=&quot;style&quot;&gt;
+            &lt;Card shadow class=&quot;card&quot; id=&quot;live&quot;&gt;
+                &lt;h3 slot=&quot;title&quot; class=&quot;headersection&quot;&gt;
+                    &lt;Icon type=&quot;social-twitch-outline&quot;&gt;&lt;/Icon&gt;
+                    正在直播
+                &lt;/h3&gt;
+                &lt;section class=&quot;flexcontainer&quot;&gt;
+                    &lt;room v-for=&quot;livesItem in livesList&quot; :item=&quot;livesItem&quot;&gt;&lt;/room&gt;
+                    &lt;div class=&quot;pagediv&quot;&gt;
+                        &lt;Page :current=&quot;1&quot; :total=&quot;roomAmount.liveAmount&quot; :page-size=&quot;pageSize&quot; @on-change=&quot;changeLivePage&quot; simple&gt;&lt;/Page&gt;
+                    &lt;/div&gt;
+                &lt;/section&gt;
+            &lt;/Card&gt;
+            &lt;Card shadow  class=&quot;card&quot; id=&quot;video&quot;&gt;
+                &lt;h3 slot=&quot;title&quot; class=&quot;headersection&quot;&gt;
+                    &lt;Icon type=&quot;ios-videocam&quot;&gt;&lt;/Icon&gt;
+                    录播视频
+                &lt;/h3&gt;
+                &lt;section class=&quot;flexcontainer&quot;&gt;
+                    &lt;room v-for=&quot;videoItem in videosList&quot; :item=&quot;videoItem&quot;&gt;&lt;/room&gt;
+                    &lt;div class=&quot;pagediv&quot;&gt;
+                        &lt;Page :current=&quot;1&quot; :total=&quot;roomAmount.videoAmount&quot; :page-size=&quot;pageSize&quot; @on-change=&quot;changeVideoPage&quot; simple&gt;&lt;/Page&gt;
+                    &lt;/div&gt;
+                &lt;/section&gt;
+            &lt;/Card&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+    /**
+     *Module TinyComponents
+     *
+     *@module TinyComponents
+     *@requires Utils
+     */
+    import { mapGetters, mapActions, mapMutations } from &#x27;vuex&#x27;
+    import Room from &#x27;./tinyComponents/Room&#x27;
+    import Topbar from &#x27;./tinyComponents/Topbar&#x27;
+    import { beforePost } from &#x27;../utils/utils&#x27;
+    /**
+     *主页
+     *@class Home
+     *@constructor
+     */
+    export default {
+        name: &#x27;videoList&#x27;,
+        components: {
+            Room,
+            Topbar
+        },
+        data () {
+            return {
+                WIDTH: window.document.documentElement.clientWidth,
+                HEIGHT: document.documentElement.clientHeight,
+                carousel: 0,
+                numOfLine: 0,
+                livePage: 1,
+                videoPage: 1,
+                style: {
+                    width: &#x27;600px&#x27;
+                }
+            }
+        },
+        watch: {
+            WIDTH: function (newVal, oldVal) {
+                this.numOfLine = parseInt((newVal - 35) / 270)
+                this.style.width = (this.numOfLine * 270 + 35).toString() + &#x27;px&#x27;
+            },
+            numOfLine: function () {
+                console.log(this.numOfLine)
+                this.setPageSize(this.numOfLine * 2)
+                this.changeLivePage(this.livePage)
+                this.changeVideoPage(this.videoPage)
+            }
+        },
+        computed: {
+            ...mapGetters({
+                livesList: &#x27;getLiveRooms&#x27;,
+                videosList: &#x27;getVideoRooms&#x27;,
+                roomAmount: &#x27;getRoomAmount&#x27;,
+                pageSize: &#x27;getPageSize&#x27;,
+                mostPopular: &#x27;getMostPopular&#x27;
+            })
+        },
+        methods: {
+            ...mapMutations({
+                setPageSize: &#x27;setPageSize&#x27;,
+                setRoomInfo: &#x27;setRoomInfo&#x27;
+            }),
+            ...mapActions({
+                getRoomsFromDB: &#x27;getRoomsFromDB&#x27;,
+                getRoomAmountFromDB: &#x27;getRoomAmountFromDB&#x27;
+            }),
+            /**
+             *依据index，返回轮播的背景图片
+             *@method carouselBackground
+             *@param {Number} index
+             *@return {String} url(路径)
+             */
+            carouselBackground (index) {
+                return &#x27;url(&#x27; + this.mostPopular[index].thumbnail_path + &#x27;)&#x27;
+            },
+            /**
+             *处理鼠标悬停在轮播的其中一个图片上的事件
+             *@event flipOver
+             *@param {Number} index
+             */
+            flipOver (index) {
+                this.carousel = index
+            },
+            /**
+             *依据index，设置轮播的index为index的图的式样(返回一个对象有高度和背景图属性)
+             *@method carouselStyle
+             *@param {Number} index
+             *@return {Object} {height:...px,backgroundImage:url(...)}
+             */
+            carouselStyle (index) {
+                const that = this
+                return {
+                    height: ((this.numOfLine * 270 + 35) * 0.75 * 0.60).toString() + &#x27;px&#x27;,
+                    backgroundImage: that.carouselBackground(index)
+                }
+            },
+            /**
+             *设置轮播的侧栏式样
+             *@method asideStyle
+             *@param {Number} index
+             *@return {Object} {height:...px,backgroundImage:url(...),border:...}
+             */
+            asideStyle (index) {
+                const that = this
+                if (index === this.carousel) {
+                    return {
+                        height: ((this.numOfLine * 270 + 35) * 0.75 * 0.60 * 0.25).toString() + &#x27;px&#x27;,
+                        backgroundImage: that.carouselBackground(index),
+                        border: &#x27;3px solid #5cadff&#x27;
+                    }
+                } else {
+                    return {
+                        height: ((this.numOfLine * 270 + 35) * 0.75 * 0.60 * 0.25).toString() + &#x27;px&#x27;,
+                        backgroundImage: that.carouselBackground(index),
+                        border: &#x27;1px solid rgb(191, 191, 191)&#x27;
+                    }
+                }
+            },
+            /**
+             *进入房间事件（设置房间信息，进入房间页面）
+             *@event enterRoom
+             *@param {Number} index
+             */
+            enterRoom (index) {
+                this.setRoomInfo(this.mostPopular[index])
+                this.$router.push({ name: &#x27;studio&#x27; })
+            },
+            /**
+             *改变录播区域的所处第几页，房间随着页数变化
+             *@event changeVideoPage
+             *@param {Number} page
+             */
+            changeVideoPage (page) {
+                console.log(&#x27;start: &#x27;, (page - 1) * this.pageSize)
+                console.log(&#x27;changeVideoPage: &#x27;, this.pageSize)
+                this.livePage = page
+                this.getRoomsFromDB({ isLive: false, start: (page - 1) * this.pageSize })
+            },
+            /**
+             *改变直播区域的所处第几页，房间随着页数变化
+             *@event changeLivePage
+             *@param {Number} page
+             */
+            changeLivePage (page) {
+                this.videoPage = page
+                this.getRoomsFromDB({ isLive: true, start: (page - 1) * this.pageSize })
+            }
+        },
+        mounted: function () {
+            this.getRoomsFromDB({ isLive: true })
+            this.getRoomsFromDB({ isLive: false })
+            this.getRoomAmountFromDB()
+            window.addEventListener(&#x27;resize&#x27;, () =&gt; {
+                this.WIDTH = (document.documentElement.clientWidth &lt; 800) ? 800 : document.documentElement.clientWidth
+            })
+        },
+        created: function () {
+            this.WIDTH = (document.documentElement.clientWidth &lt; 800) ? 800 : document.documentElement.clientWidth
+            this.numOfLine = parseInt((this.WIDTH - 35) / 270)
+            this.setPageSize(this.numOfLine * 2)
+            this.style.width = (this.numOfLine * 270 + 35).toString() + &#x27;px&#x27;
+        }
+    }
+&lt;/script&gt;
+&lt;style scoped&gt;
+* {
+    font-family: &quot;Helvetica Neue&quot;,Helvetica,&quot;PingFang SC&quot;,&quot;Hiragino Sans GB&quot;,&quot;Microsoft YaHei&quot;,&quot;微软雅黑&quot;,Arial,sans-serif;
+}
+#topbar {
+    width: 100%;
+    position: fixed;
+    z-index: 500;
+    overflow: hidden;
+}
+#fortop{
+    width: 100%;
+    height: 60px;
+}
+#showbar {
+    display: inline-block;
+    clear: both;
+    overflow: hidden;
+    -moz-box-shadow:2px 2px 10px #A1A1A1;
+    -webkit-box-shadow:2px 2px 10px #A1A1A1; 
+    box-shadow: 2px 2px 10px #A1A1A1;
+    /*background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-image: url(../assets/bg5.jpg);*/
+}
+
+#carousel {
+    background-color: rgb(1, 1, 1);
+}
+
+.carousl-background {
+    width: 100%;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+
+#carousel-containter {
+    display: inline-block;
+    width: 75%;
+    float: left;
+}
+
+#carousel-containter:hover {
+    cursor: pointer;
+}
+
+#carousel-aside {
+    display: inline-block;
+    width: calc(25% - 5px);
+    background-color: rgba(0, 0, 0, 0);
+    float: right;
+}
+
+#carousel-aside:hover {
+    cursor: pointer;
+}
+
+.aside-item {
+    width: 100%;
+    background-color: rgb(255, 255, 255);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    border: 1px solid rgb(191, 191, 191);
+}
+
+.aside-item:hover {
+    border: 3px solid rgb(0, 180, 0);
+    -moz-box-shadow:0px 0px 5px #878787;
+    -webkit-box-shadow:0px 0px 5px #878787;
+    box-shadow:0px 0px 5px #878787;
+}
+
+
+#home {
+    background: rgb(249,249,249);
+    text-align: center;
+    min-width: 800px;
+}
+
+#container {
+    display: inline-block;
+    text-align: center;
+}
+
+.card {
+    display: inline-block;
+    width: 100%;
+    margin: 30px 0px;
+    -moz-box-shadow:2px 2px 10px #A1A1A1;
+    -webkit-box-shadow:2px 2px 10px #A1A1A1; 
+    box-shadow: 2px 2px 10px #A1A1A1;
+}
+
+.headersection {
+    /*border: 1px red solid;*/
+    padding: 10px 15px;
+    text-align: left;
+}
+
+.flexcontainer {
+    text-align: left;
+}
+
+.pagediv {
+    margin-top: 30px;
+    width: 100%;
+    text-align: center;
+}
+
+.line-center {
+    text-align: center
+}
+&lt;/style&gt;
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

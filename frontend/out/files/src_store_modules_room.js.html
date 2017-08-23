@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src/store/modules/room.js</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="icon" href="../assets/favicon.ico">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+                <h1><img src="../assets/css/logo.png" title="" width="117" height="52"></h1>
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+                    <h2 class="off-left">APIs</h2>
+                    <div id="api-tabview" class="tabview">
+                        <ul class="tabs">
+                            <li><a href="#api-classes">Classes</a></li>
+                            <li><a href="#api-elements">Elements</a></li>
+                            <li><a href="#api-modules">Modules</a></li>
+                        </ul>
+                
+                        <div id="api-tabview-filter">
+                            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+                        </div>
+                
+                        <div id="api-tabview-panel">
+                            <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/Actions.html">Actions</a></li>
+                                <li><a href="../classes/Canvas.html">Canvas</a></li>
+                                <li><a href="../classes/CanvasInfo.html">CanvasInfo</a></li>
+                                <li><a href="../classes/Chat.html">Chat</a></li>
+                                <li><a href="../classes/Checks.html">Checks</a></li>
+                                <li><a href="../classes/CloseButton.html">CloseButton</a></li>
+                                <li><a href="../classes/CodeMirror.html">CodeMirror</a></li>
+                                <li><a href="../classes/Const.html">Const</a></li>
+                                <li><a href="../classes/Getters.html">Getters</a></li>
+                                <li><a href="../classes/Home.html">Home</a></li>
+                                <li><a href="../classes/Index.html">Index</a></li>
+                                <li><a href="../classes/Live.html">Live</a></li>
+                                <li><a href="../classes/LogIn.html">LogIn</a></li>
+                                <li><a href="../classes/Mp4Player.html">Mp4Player</a></li>
+                                <li><a href="../classes/PPT.html">PPT</a></li>
+                                <li><a href="../classes/Progress.html">Progress</a></li>
+                                <li><a href="../classes/ProgressBar.html">ProgressBar</a></li>
+                                <li><a href="../classes/Room.html">Room</a></li>
+                                <li><a href="../classes/SignUp.html">SignUp</a></li>
+                                <li><a href="../classes/StudentRTC.html">StudentRTC</a></li>
+                                <li><a href="../classes/Studio.html">Studio</a></li>
+                                <li><a href="../classes/TeacherRTC.html">TeacherRTC</a></li>
+                                <li><a href="../classes/Topbar.html">Topbar</a></li>
+                                <li><a href="../classes/UploadButton.html">UploadButton</a></li>
+                                <li><a href="../classes/Utils.html">Utils</a></li>
+                                <li><a href="../classes/Verification.html">Verification</a></li>
+                                <li><a href="../classes/Welcome.html">Welcome</a></li>
+                            </ul>
+                
+                                <ul id="api-elements" class="apis elements">
+                                    <li><a href="../elements/CREATORID.html">&lt;CREATORID&gt;</a></li>
+                                    <li><a href="../elements/HEIGHT.html">&lt;HEIGHT&gt;</a></li>
+                                    <li><a href="../elements/WIDTH.html">&lt;WIDTH&gt;</a></li>
+                                </ul>
+                
+                            <ul id="api-modules" class="apis modules">
+                                <li><a href="../modules/Store.html">Store</a></li>
+                                <li><a href="../modules/TinyComponents.html">TinyComponents</a></li>
+                                <li><a href="../modules/Utils.html">Utils</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+                    Show:
+                    <label for="api-show-inherited">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </div>
+            
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<h1 class="file-heading">File: src/store/modules/room.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+/**
+ *Module Store
+ *
+ *@module Store
+ *@requires Utils
+ *@class Room
+ *@constructor
+ */
+import { isJSON, Obj2JSON } from &#x27;../../utils/utils&#x27;
+import { isNotNull } from &#x27;../../utils/checks&#x27;
+
+/**
+ *将房间信息存入sessionStorage
+ *@event setRoomSessionStorage
+ *@param {Object} data roomInfo
+ */
+const setRoomSessionStorage = (data) =&gt; {
+    console.log(Obj2JSON(data))
+    window.sessionStorage.setItem(&#x27;roomInfo&#x27;, Obj2JSON(data))
+}
+
+/**
+ *从sessionStorage中取房间信息
+ *@method getRoomSessionStorage
+ *@return {String} 从JSON格式转成字符串的roomInfo
+ */
+const getRoomSessionStorage = () =&gt; {
+    console.log(isJSON(window.sessionStorage.getItem(&#x27;roomInfo&#x27;)))
+    return isJSON(window.sessionStorage.getItem(&#x27;roomInfo&#x27;))
+}
+
+/**
+ *判断sessionStorage中是否有房间信息
+ *@method isStorage
+ *@return {Boolean}
+ */
+const isStorage = () =&gt; {
+    if (getRoomSessionStorage()) {
+        return true
+    } else {
+        return false
+    }
+}
+
+const state = {
+    /**
+     *房间信息（id、title、teacher/教师昵称、audience/在线人数、
+     *room_name、creator_id、is_living、img/缩略图路径、slide/幻灯片路径、
+     *create_time、slide_num/幻灯片张数
+     *@property roomInfo
+     *@type Object
+     */
+    roomInfo: {
+        id: 0,
+        title: &#x27;Welcome To Our World&#x27;,
+        teacher: &#x27;gongyansongisgood&#x27;,
+        audience: 3000,
+        room_name: &#x27;&#x27;,
+        creator_id: 0,
+        is_living: false,
+        img: &#x27;&#x27;,
+        slide: &#x27;&#x27;,
+        create_time: &#x27;&#x27;,
+        slide_num: &#x27;&#x27;
+    }
+}
+
+const getters = {
+    /**
+     *获取房间信息
+     *@method getRoomInfo
+     *@return {Object} roomInfo
+     */
+    getRoomInfo: (state) =&gt; {
+        if (isStorage() &amp;&amp; state.roomInfo.id === 0) {
+            state.roomInfo = getRoomSessionStorage()
+        }
+        return state.roomInfo
+    },
+    /**
+     *获取幻灯片信息
+     *@method getSlideInfo
+     *@return {Object} 返回的对象中包括slide_path和slide_num
+     */
+    getSlideInfo: (state) =&gt; {
+        return {
+            slide_path: state.roomInfo.slide,
+            slide_num: state.roomInfo.slide_num
+        }
+    },
+    /**
+     *获取MediaPlayer信息
+     *@method getPlayerInfo
+     *@return {Object} 返回的对象中包括create_time和id
+     */
+    getPlayerInfo: (state) =&gt; {
+        return {
+            create_time: state.roomInfo.create_time,
+            id: state.roomInfo.id
+        }
+    },
+    /**
+     *获取房间id
+     *@method getRoomId
+     *@return {Number} roomInfo.id
+     */
+    getRoomId: (state) =&gt; {
+        return state.roomInfo.id
+    }
+}
+
+const mutations = {
+    /**
+     *设置房间信息并存入sessionStorage
+     *@event setRoomInfo
+     *@param {Object} 包括id、creator_nickname(对应teacher)、audience_amount、
+     *name(对应title)、creator_id、is_living、thumbnail_path、slide_path、
+     *file_name(对应room_name)、create_time
+     */
+    setRoomInfo (state, { id,
+        creator_nickname,
+        audience_amount,
+        name,
+        creator_id,
+        is_living,
+        thumbnail_path,
+        slide_path,
+        slide_num,
+        file_name,
+        create_time }) {
+        (isNotNull(id)) ? state.roomInfo.id = id : &#x27;&#x27;;
+        (isNotNull(creator_nickname)) ? state.roomInfo.teacher = creator_nickname : &#x27;&#x27;;
+        (isNotNull(audience_amount)) ? state.roomInfo.audience = audience_amount : &#x27;&#x27;;
+        (isNotNull(name)) ? state.roomInfo.title = name : &#x27;&#x27;;
+        (isNotNull(creator_id)) ? state.roomInfo.creator_id = creator_id : &#x27;&#x27;;
+        (isNotNull(is_living)) ? state.roomInfo.is_living = is_living : &#x27;&#x27;;
+        (isNotNull(thumbnail_path)) ? state.roomInfo.img = thumbnail_path : &#x27;&#x27;;
+        (isNotNull(slide_path)) ? state.roomInfo.slide = slide_path : &#x27;&#x27;;
+        (isNotNull(slide_num)) ? state.roomInfo.slide_num = slide_num : &#x27;&#x27;;
+        (isNotNull(file_name)) ? state.roomInfo.room_name = file_name : &#x27;&#x27;;
+        (isNotNull(create_time)) ? state.roomInfo.create_time = create_time : &#x27;&#x27;
+        console.log(state.roomInfo)
+        setRoomSessionStorage(state.roomInfo)
+    },
+    /**
+     *清空房间信息并清空sessionStorage
+     *@event emptyRoomInfo
+     */
+    emptyRoomInfo (state) {
+        state.roomInfo.id = 0
+        state.roomInfo.teacher = &#x27;&#x27;
+        state.roomInfo.audience = 0
+        state.roomInfo.title = &#x27;&#x27;
+        state.roomInfo.creator_id = 0
+        state.roomInfo.is_living = false
+        state.roomInfo.img = &#x27;&#x27;
+        state.roomInfo.slide = &#x27;&#x27;
+        state.roomInfo.room_name = &#x27;&#x27;
+        state.roomInfo.create_time = &#x27;&#x27;
+        setRoomSessionStorage(null)
+    }
+}
+
+export default {
+    state,
+    getters,
+    mutations
+}
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>
