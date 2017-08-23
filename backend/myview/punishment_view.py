@@ -47,7 +47,6 @@ def canpublic(request):
 def outone(request):
     print('--outone--')
     get_userid, get_roomid = request.GET.get('username'), request.GET.get('roomid')
-    print(get_roomid)
     room = LiveRoom.objects.get(id=get_roomid)
     user = User.objects.get(id=get_userid)
     new_punishment = Punishment(room=room, user=user, punishment='K')
