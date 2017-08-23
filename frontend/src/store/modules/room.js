@@ -15,7 +15,6 @@ import { isNotNull } from '../../utils/checks'
  *@param {Object} data roomInfo
  */
 const setRoomSessionStorage = (data) => {
-    console.log(Obj2JSON(data))
     window.sessionStorage.setItem('roomInfo', Obj2JSON(data))
 }
 
