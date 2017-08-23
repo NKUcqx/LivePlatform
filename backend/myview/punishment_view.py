@@ -11,10 +11,13 @@ model_to_json = toolkits.model_to_json
 
 
 def echo(request):
+    print('--echo--')
     get_userid = request.GET.get('username')
     get_roomid = request.GET.get('roomid')
     room = LiveRoom.objects.get(id=get_roomid)
     user = User.objects.get(id=get_userid)
+    if room.is_living==False:
+        return HttpResponse('dead')
     if room.is_silence == True:
         return HttpResponse('allsilence')
     else:
