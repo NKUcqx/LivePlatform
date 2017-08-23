@@ -69,7 +69,7 @@ export default {
                 signal: 'pause',
                 to: ''
             }
-            this.socket.emit(signal, pack)
+            this.socket.emit('pause', pack)
         },
         /**
          *更改录播状态为播放
