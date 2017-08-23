@@ -130,7 +130,7 @@ class LiveRoom(models.Model):
         default=0
     )  # present total audience amount
     is_living = models.BooleanField(default=True)
-    #is_silence = models.BooleanField(default=False)
+    is_silence = models.BooleanField(default=False)
     create_time = models.DateTimeField()
     end_time = models.DateTimeField(
         null=True, blank=True
@@ -158,7 +158,7 @@ def checkEndAndLiving(sender, instance, **kwargs):
     if (instance.is_living and instance.end_time is not None):
         raise TypeError("Living Room can't have property end_time")
     if (instance.is_living == False):
-        #instance.is_silence = True
+        instance.is_silence = True
         instance.end_time = timezone.now()
 
 
