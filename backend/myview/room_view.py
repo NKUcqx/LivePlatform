@@ -108,7 +108,7 @@ def wrap_room(room):  # room instance
     #room['end_time'] = room['end_time'].strftime('%Y-%-m-%d %H:%m:%S') if room.get('end_time', None) is not None else ''
     room['file_name'] = change_prefix(room['file_name'])
     room['thumbnail_path'] = change_prefix(room['thumbnail_path'])
-    room['file_amount'],_ = get_file_amount(room['slide_path']) # just need file amount
+    room['slide_num'],_ = get_file_amount(room['slide_path']) # just need file amount
     room['slide_path'] = change_prefix(room['slide_path'])
     return room
 

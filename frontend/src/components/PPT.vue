@@ -91,11 +91,10 @@
         },
         watch: {
             slideInfo: function () {
-                console.log(this.slideInfo)
+                console.log('slideInfo: ', this.slideInfo)
                 this.updateSlide()
             },
             WIDTH: function () {
-                console.log('watch the size', this.WIDTH)
                 this.position.width = this.WIDTH.toString() + 'px'
                 this.toolbarStyle.width = this.WIDTH.toString() + 'px'
             },
@@ -106,32 +105,22 @@
                 let that = this
                 if (this.LOADING) {
                     window.setInterval(function () {
-                        console.log('yes')
                         that.stepCurrent = (that.stepCurrent < 3) ? that.stepCurrent + 1 : 0
                     }, 2000)
                 }
             }
         },
         mounted () {
-            console.log('mounted the size', this.WIDTH)
             this.position.width = this.WIDTH.toString() + 'px'
             this.position.height = this.HEIGHT.toString() + 'px'
-            console.log(this.slideInfo.slide_path)
-            console.log(getFileNameFromPath(this.slideInfo.slide_path))
         },
         created () {
-            // ***********NEED MODIFY***********
-            for (let i = 1; i <= parseInt(this.slideInfo.slide_num); i++) {
-                this.imgs.push(this.binpath + '/rooms/room1/' + 'bg' + i + '.jpg')
-            }
             this.updateSlide()
         },
         methods: {
             updateSlide () {
-                // *************** NEED MODIFY ***************  this.slideInfo.slide_num
                 this.imgs = []
                 for (let i = 1; i <= parseInt(this.slideInfo.slide_num); i++) {
-                    console.log(this.slideInfo.slide_path + '/' + getFileNameFromPath(this.slideInfo.slide_path) + '-' + i + '.jpg')
                     this.imgs.push(this.slideInfo.slide_path + '/' + getFileNameFromPath(this.slideInfo.slide_path) + '-' + i + '.jpg')
                 }
             },
@@ -160,8 +149,6 @@
                 this.index = data.data
             },
             changeppt: function (oldValue, value) {
-                console.log(value)
-                console.log('çhange')
                 if (this.AUTHORITY) {
                     this.send(value)
                 }
