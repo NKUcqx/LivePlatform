@@ -85,7 +85,6 @@
                 this.style.width = (this.numOfLine * 270 + 35).toString() + 'px'
             },
             numOfLine: function () {
-                console.log(this.numOfLine)
                 this.setPageSize(this.numOfLine * 2)
                 this.changeLivePage(this.livePage)
                 this.changeVideoPage(this.videoPage)
@@ -97,7 +96,8 @@
                 videosList: 'getVideoRooms',
                 roomAmount: 'getRoomAmount',
                 pageSize: 'getPageSize',
-                mostPopular: 'getMostPopular'
+                mostPopular: 'getMostPopular',
+                userid: 'getUserId'
             })
         },
         methods: {
@@ -107,7 +107,8 @@
             }),
             ...mapActions({
                 getRoomsFromDB: 'getRoomsFromDB',
-                getRoomAmountFromDB: 'getRoomAmountFromDB'
+                getRoomAmountFromDB: 'getRoomAmountFromDB',
+                checkEnter: 'checkEnter'
             }),
             /**
              *依据index，返回轮播的背景图片
@@ -168,8 +169,7 @@
              */
             enterRoom (index) {
                 this.setRoomInfo(this.mostPopular[index])
-                window.open('/#/studio')
-                //this.$router.push({ name: 'studio' })
+                this.checkEnter({user_id: this.userid, room_id: this.mostPopular[index].id})
             },
             /**
              *改变录播区域的所处第几页，房间随着页数变化
@@ -177,8 +177,6 @@
              *@param {Number} page
              */
             changeVideoPage (page) {
-                console.log('start: ', (page - 1) * this.pageSize)
-                console.log('changeVideoPage: ', this.pageSize)
                 this.livePage = page
                 this.getRoomsFromDB({ isLive: false, start: (page - 1) * this.pageSize })
             },
