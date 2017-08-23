@@ -2,8 +2,12 @@
     <div class="dialog" id='test' :style="position">
         <div class="head">
             <h1>
+            <Poptip trigger="hover" content="全体禁言 ">
                 <Icon type="android-notifications" v-if='allspeak' class='icon' id='midicon' @click.native='banspeakpublic'></Icon>
+            </Poptip>
+            <Poptip trigger="hover" content="全体解禁 ">
                 <Icon type="android-notifications-off" v-if='allsilence' class='icon' id='midicon' @click.native='canspeakpublic'></Icon>
+            </Poptip>
             </h1>
         </div>
         <div class="historymessage">
@@ -37,7 +41,7 @@
             </ul>
         </div>
         <div class="input">
-            <Input class="messageInput" v-model="message" placeholder='please enter' :disabled='silence ||!isLiveStart ' @on-enter='sendmsg'>
+            <Input class="messageInput" v-model="message" placeholder='please enter' :disabled='silence ||!start ' @on-enter='sendmsg'>
             <Button id="sendBtn" type="primary" slot="append" @click='sendmsg' :disabled="message.trim()==''">Send</Button>
             </Input>
         </div>
@@ -93,6 +97,7 @@
                 message: '',
                 history: [],
                 out: [],
+                start: false,
                 dialog1: false,
                 dialog2: false,
                 dialog3: false,
@@ -120,35 +125,42 @@
             },
             'roomid': function () {
                 const that = this
-                if (isLiveStart) {
-                    console.log('MOUNTED :', this.roomid)
-                    this.$http({
-                        url: '/echo/',
-                        method: 'GET',
-                        params: {
-                            username: this.user.userid,
-                            roomid: this.roomid
-                        }
-                    }).then(function (res) {
-                        var k = res.body
-                        console.log(k)
-                        if (k === 'allslience') {
-                            this.allsilence = true
-                            this.allspeak = false
-                            if (!this.AUTHORITY) {
-                                this.speak = false
-                                this.silence = true
-                            }
-                        } else if (k === 'banone') {
+                console.log('MOUNTED :', this.roomid)
+                this.$http({
+                    url: '/echo/',
+                    method: 'GET',
+                    params: {
+                        username: this.user.userid,
+                        roomid: this.roomid
+                    }
+                }).then(function (res) {
+                    var k = res.body
+                    console.log(k)
+                    if (k === 'allslience') {
+                        consile.log('before-mounted')
+                        this.allsilence = true
+                        this.allspeak = false
+                        if (!this.AUTHORITY) {
                             this.speak = false
                             this.silence = true
                         }
-                    }, function () {
-                        alert('ajax failure')
-                    })
-                }
+                    } else if (k === 'banone') {
+                        consile.log('before-mounted')
+                        this.speak = false
+                        this.silence = true
+                    }
+                }, function () {
+                    alert('ajax failure')
+                })
                 console.log(this.isLiveStart)
+            },
+            'isLiveStart': function () {
+                console.log('islivestartchagr')
+                this.start = this.isLiveStart
+                console.log(this.start)
+                this.send({chattype: 'isLiveStart', value: this.start})
             }
+    
         },
         mounted () {
             console.log('--mounted--')
@@ -486,6 +498,7 @@
              *@param {Object} data（接受的信息）
              */
             receive (data) {
+                console.log(this.isLiveStart)
                 if (data.data.chattype === 'message') {
                     console.log('recive')
                     this.messolve(data)
@@ -505,6 +518,11 @@
                 }
                 if (data.data.chattype === 'canspeak') {
                     this.canspeaksolve(data)
+                }
+                if (data.data.chattype === 'isLiveStart') {
+                    console.log('islivestartrecie')
+                    this.start = data.data.value
+                    console.log(this.start)
                 }
             }
         }
