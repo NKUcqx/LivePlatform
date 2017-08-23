@@ -41,7 +41,7 @@
             </ul>
         </div>
         <div class="input">
-            <Input class="messageInput" v-model="message" placeholder='please enter' :disabled='silence ||!start ' @on-enter='sendmsg'>
+            <Input class="messageInput" v-model="message" placeholder='please enter' :disabled='silence' @on-enter='sendmsg'>
             <Button id="sendBtn" type="primary" slot="append" @click='sendmsg' :disabled="message.trim()==''">Send</Button>
             </Input>
         </div>
@@ -148,17 +148,14 @@
                         consile.log('before-mounted')
                         this.speak = false
                         this.silence = true
+                    } else if (k === 'dead') {
+                        console.log('dead--room')
+                        this.speak = false
+                        this.silence = true
                     }
                 }, function () {
-                    alert('ajax failure')
+                    alert('nono')
                 })
-                console.log(this.isLiveStart)
-            },
-            'isLiveStart': function () {
-                console.log('islivestartchagr')
-                this.start = this.isLiveStart
-                console.log(this.start)
-                this.send({chattype: 'isLiveStart', value: this.start})
             }
     
         },
@@ -167,7 +164,40 @@
             this.position.width = this.WIDTH.toString() + 'px'
             this.position.height = (this.HEIGHT).toString() + 'px'
             this.position.border = this.BORDER + 'px'
-            console.log(this.isLiveStart)
+            console.log(this.roomid)
+            const that = this
+            console.log('MOUNTED :', this.roomid)
+            this.$http({
+                url: '/echo/',
+                method: 'GET',
+                params: {
+                    username: this.user.userid,
+                    roomid: this.roomid
+                }
+            }).then(function (res) {
+                var k = res.body
+                console.log(k)
+                if (k === 'allsilence') {
+                    console.log('before-mounted')
+                    this.allsilence = true
+                    this.allspeak = false
+                    if (!this.AUTHORITY) {
+                        this.speak = false
+                        this.silence = true
+                    }
+                } else if (k === 'banone') {
+                    console.log('before-mounted')
+                    this.speak = false
+                    this.silence = true
+                } else if (k === 'dead') {
+                    console.log('dead--room')
+                    this.speak = false
+                    this.silence = true
+                }
+            }, function () {
+                alert('ajax failure')
+            })
+            console.log('--mounted--')
         },
         methods: {
             /**
@@ -272,6 +302,7 @@
              *@param {Object} data
              */
             handleCheckAll: function (data) {
+                console.log('check-all')
                 if (this.indeterminate) {
                     this.checkAll = false
                 } else {
@@ -280,7 +311,8 @@
                 this.indeterminate = false
                 console.log(data)
                 for (var i = 0; i < this.bans.length; i++) { this.cans.push(this.bans[i].userid) }
-                console.log(this.cans)
+                console.log(this.cans.length)
+                console.log('check-all')
             },
             /**
              *处理解禁时的单个解禁按钮被点击的事件（如果每个被禁言的人都被点击解禁，即为全选）
@@ -311,6 +343,7 @@
              */
             canspeak: function () {
                 console.log('---canspeak---')
+                console.log(this.cans.length)
                 for (var index = 0; index < this.cans.length; index++) {
                     console.log(this.cans[index])
                     this.send({
@@ -326,12 +359,12 @@
                         }
                     }).then(function (res) {
                     }, function () {
-                        alert('ajax failure')
                     })
                     // this.socket.send({type:'canspeak',userid:this.cans[index].userid,roomid:this.roomid})
-                    this.indeterminate = true
-                    this.checkAll = false
                 }
+                this.cans.length = 0
+                this.indeterminate = true
+                this.checkAll = false
                 console.log('---canspeak---')
             },
             /**
@@ -354,6 +387,7 @@
                 var self = this
                 for (let i = 0; i < self.bans.length; i++) {
                     if (this.bans[i].userid === userid) {
+                        this.$Message.info('you have banned ' + nickname + ' to speak')
                         return
                     }
                 }
@@ -371,7 +405,7 @@
                             roomid: this.roomid
                         }
                     }).then(function (res) {
-                        this.$Message.info('you have been banned to speak')
+                        this.$Message.info('you ban ' + nickname + ' to speak')
                     }, function () {
                         alert('ajax failure')
                     })
@@ -397,7 +431,6 @@
                             roomid: this.roomid
                         }
                     }).then(function (res) {
-                        this.$Message.info('you out!')
                     }, function () {
                         alert('ajax failure')
                     })
@@ -423,7 +456,7 @@
              */
             outsolve (data) {
                 if (data.data.userid === this.user.userid) {
-                    this.$router.go(-1)
+                    window.close()
                 }
             },
             /**
@@ -463,6 +496,10 @@
             allspeaksolve (data) {
                 this.allsilence = false
                 this.allspeak = true
+                this.silence = false
+                this.speak = true
+                this.bans.length = 0
+                this.cans.length = 0
                 if (this.AUTHORITY === false) {
                     this.$Message.info('全局解禁')
                 }
@@ -483,9 +520,9 @@
                         console.log(this.bans[index].userid)
                         this.bans.splice(index, 1)
                     }
-                    console.log(this.bans.length)
+                    console.log('banspeaklength', this.bans.length)
                 }
-                if (data.data.userid === this.user.userid && this.isLiveStart) {
+                if (data.data.userid === this.user.userid) {
                     this.silence = false
                     this.speak = true
                     this.$Message.info('您被解除禁言')
@@ -498,7 +535,6 @@
              *@param {Object} data（接受的信息）
              */
             receive (data) {
-                console.log(this.isLiveStart)
                 if (data.data.chattype === 'message') {
                     console.log('recive')
                     this.messolve(data)
@@ -518,11 +554,6 @@
                 }
                 if (data.data.chattype === 'canspeak') {
                     this.canspeaksolve(data)
-                }
-                if (data.data.chattype === 'isLiveStart') {
-                    console.log('islivestartrecie')
-                    this.start = data.data.value
-                    console.log(this.start)
                 }
             }
         }
