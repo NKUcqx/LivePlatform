@@ -50,6 +50,9 @@
             <div :class="chatClass">
                 <chatdemo ref="chat" :AUTHORITY="authority" :WIDTH="chatSize.width" :HEIGHT="chatSize.height" @send="emitChat"></chatdemo>     
             </div> 
+            <div v-show="!(roomInfo.is_living)" id="progress-bar">
+                <progress-bar></progress-bar>
+            <div>
     </div>
 </template>
 
@@ -67,6 +70,7 @@ import TeacherRtc from './tinyComponents/TeacherRTC'
 import StudentRtc from './tinyComponents/StudentRTC'
 import Mp4player from './tinyComponents/Mp4player'
 import UploadButton from './tinyComponents/UploadButton'
+import ProgressBar from './tinyComponents/ProgressBar'
 import Codedemo from './Codedemo'
 import Ppt from './PPT'
 import Chatdemo from './Chat'
@@ -105,7 +109,8 @@ export default {
         TeacherRtc,
         StudentRtc,
         UploadButton,
-        Mp4player
+        Mp4player,
+        ProgressBar
     },
     data () {
         return {
@@ -155,7 +160,7 @@ export default {
             }
         },
         isLiveStart: function (newVal, oldVal) {
-            if (oldVal===false && newVal===true) {
+            if (oldVal === false && newVal === true) {
                 this.buildConnect()
             }
         }
@@ -296,7 +301,8 @@ export default {
                 setTimeout(function () {
                     window.location.reload(true)
                 }, 1000)
-                that.$router.push({ name: 'home' })
+                // that.$router.push({ name: 'home' })
+                window.close()
             }, function (res) {
                 alert(res)
             })
@@ -649,5 +655,7 @@ export default {
     #modal-footer {
         text-align: center;
         padding: 15px;
+    }
+    #progress-bar {
     }
 </style>
