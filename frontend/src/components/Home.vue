@@ -16,7 +16,7 @@
             </div>
         </div>
         <div id="container" :style="style">
-            <Card shadow class="card" id="live">
+            <Card dis-hover class="card" id="live">
                 <h3 slot="title" class="headersection">
                     <Icon type="social-twitch-outline"></Icon>
                     正在直播
@@ -28,7 +28,7 @@
                     </div>
                 </section>
             </Card>
-            <Card shadow  class="card" id="video">
+            <Card dis-hover class="card" id="video">
                 <h3 slot="title" class="headersection">
                     <Icon type="ios-videocam"></Icon>
                     录播视频
@@ -294,9 +294,9 @@
     display: inline-block;
     width: 100%;
     margin: 30px 0px;
-    -moz-box-shadow:2px 2px 10px #A1A1A1;
+    /*-moz-box-shadow:2px 2px 10px #A1A1A1;
     -webkit-box-shadow:2px 2px 10px #A1A1A1; 
-    box-shadow: 2px 2px 10px #A1A1A1;
+    box-shadow: 2px 2px 10px #A1A1A1;*/
 }
 
 .headersection {
