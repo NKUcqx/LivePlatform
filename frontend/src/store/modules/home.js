@@ -188,6 +188,21 @@ const actions = {
         }, function (res) {
             //alert('getRoomAmountFromDB ajax failure')
         })
+    },
+    checkEnter: ({state}, {user_id, room_id}) => {
+        Vue.http({
+            url: '/checkpermission/',
+            method: 'GET',
+            params: {
+                user_id: user_id,
+                room_id: room_id,
+                punishment: 'K'
+            }
+        }).then(function (res) {
+            window.open('/#/studio')
+        }, function () {
+            alert('You can\'t enter the room where you get kicked !')
+        })
     }
 }
 
