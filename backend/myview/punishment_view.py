@@ -38,7 +38,6 @@ def banpublic(request):
 def canpublic(request):
     print('--canpublic--')
     get_roomid = request.GET.get('roomid')
-    print(get_roomid)
     room = LiveRoom.objects.get(id=get_roomid)
     room.is_silence = False
     room.save()

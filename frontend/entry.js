@@ -104,7 +104,6 @@ function kickoutUser (room_name, user) {
     }
 }
 
-// TODO: no need to check room_name anymore since i can get it from socket
 function isPackValid (data) {
     return isValid(data.room_name) &&
             isValid(data.content, 'object') &&
@@ -151,7 +150,6 @@ function sendNextMessage (id, old_msg) {
     }
 }
 
-// TODO: omit room_name param, get it from socket
 function sendMessage (socket, signal, content, type = 0, room_name = '', log = false) {
     let error = false
     //let room_name = getRoomName(socket)
@@ -239,7 +237,7 @@ function listenPastJoin (socket) {
                 'msg_play': false,
                 'msg_queue': []
             }
-            //readFile(data.room_name, data.id)
+            // readFile(data.room_name, data.id)
             readDB(data.room_name, data.id, 0, MESSAGE_THRESHOLD, true)
             listenPause(socket)
         }
@@ -313,7 +311,7 @@ function listenDisConnecting (socket) {
         console.log(reason)
         let room_name = Object.keys(socket.rooms)[1]
         if (room_creator_list[room_name] && room_creator_list[room_name].id === socket.id) { // if creator is leaving, flush the msg list, kick out audiences, delete all data lists
-            writeFile(room_name, true) // TODO: what if remaining data less than threshold ?
+            writeFile(room_name, true)
             writeDB(room_name)
         } else { // if uesr leaving, just clear him in audience_list
             kickoutUser(room_name, socket)
