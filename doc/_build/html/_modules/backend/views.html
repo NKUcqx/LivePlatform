@@ -1,0 +1,186 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>backend.views &#8212; Group3 1.0.0 文档</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/translations.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>backend.views 源代码</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">django.http</span> <span class="k">import</span> <span class="n">HttpResponse</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="k">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">Test</span>
+<span class="kn">from</span> <span class="nn">.forms</span> <span class="k">import</span> <span class="n">TestForm</span>
+<span class="kn">from</span> <span class="nn">dwebsocket.decorators</span> <span class="k">import</span> <span class="n">accept_websocket</span><span class="p">,</span> <span class="n">require_websocket</span>
+<span class="kn">from</span> <span class="nn">django.views.decorators.csrf</span> <span class="k">import</span> <span class="n">csrf_exempt</span>
+<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="k">import</span> <span class="n">auth</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="c1"># Create your views here.</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">defaultdict</span>
+
+<span class="c1"># 保存所有接入的用户地址</span>
+<span class="n">allconn</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+<span class="n">num</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="c1"># 注册执行的函数，接收GET请求，返回字符串</span>
+
+
+<div class="viewcode-block" id="signup_submit"><a class="viewcode-back" href="../../backend.html#backend.views.signup_submit">[文档]</a><span class="k">def</span> <span class="nf">signup_submit</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">username</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">)</span>
+    <span class="n">password</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;password&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">username</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">password</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s2">&quot;signup success&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s2">&quot;signup failure&quot;</span><span class="p">)</span></div>
+
+
+<span class="c1"># 登录执行的函数，接收POST请求，返回字符串，注意@csrf_exempt目前来说必不可少</span>
+<span class="c1">#@csrf_exempt</span>
+
+
+<div class="viewcode-block" id="login_submit"><a class="viewcode-back" href="../../backend.html#backend.views.login_submit">[文档]</a><span class="k">def</span> <span class="nf">login_submit</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+    <span class="n">body_unicode</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">body_unicode</span><span class="p">)</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">auth</span><span class="o">.</span><span class="n">authenticate</span><span class="p">(</span>
+        <span class="n">request</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">],</span> <span class="n">password</span><span class="o">=</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;password&#39;</span><span class="p">])</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">user</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s2">&quot;login failure&quot;</span><span class="p">)</span>
+    <span class="n">auth</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s2">&quot;login success&quot;</span><span class="p">)</span></div>
+
+
+<span class="c1"># 查找用户名是否存在函数，接收GET请求，返回字符串</span>
+
+
+<div class="viewcode-block" id="query_repeat_username"><a class="viewcode-back" href="../../backend.html#backend.views.query_repeat_username">[文档]</a><span class="k">def</span> <span class="nf">query_repeat_username</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">get_username</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;reusername&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">get_username</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">has_email</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">get_username</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">has_email</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s2">&quot;username repeat&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s2">&quot;username is ok&quot;</span><span class="p">)</span></div>
+
+
+<span class="c1"># 向一个TEST表中写入数据，通过django的form形式，比较简单，注意forms.py这个文件</span>
+
+
+<div class="viewcode-block" id="insert"><a class="viewcode-back" href="../../backend.html#backend.views.insert">[文档]</a><span class="k">def</span> <span class="nf">insert</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span> <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">form</span> <span class="o">=</span> <span class="n">PostForm</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+        <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s2">&quot;insert success&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s2">&quot;insert failure&quot;</span><span class="p">)</span></div>
+
+
+<span class="c1"># websocket的服务器端，接收消息返回消息</span>
+
+
+<div class="viewcode-block" id="websocket"><a class="viewcode-back" href="../../backend.html#backend.views.websocket">[文档]</a><span class="nd">@require_websocket</span>
+<span class="k">def</span> <span class="nf">websocket</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">num</span>
+    <span class="k">global</span> <span class="n">allconn</span>
+    <span class="n">num</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="c1"># 将链接(请求？)存入全局字典中</span>
+    <span class="n">allconn</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">num</span><span class="p">)]</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">websocket</span>
+    <span class="c1"># 遍历请求地址中的消息</span>
+    <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">websocket</span><span class="p">:</span>
+        <span class="c1"># 将信息发至自己的聊天框</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">websocket</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="c1"># 将信息发至其他所有用户的聊天框</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">allconn</span><span class="p">:</span>
+            <span class="n">allconn</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Group3</a></h1>
+
+
+
+
+
+
+
+
+<h3>导航</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">模块代码</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>快速搜索</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="转向" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, LDJ.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
