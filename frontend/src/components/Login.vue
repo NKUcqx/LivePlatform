@@ -219,7 +219,7 @@ export default {
                     password: this.form.password
                 }
                 this.loginSubmit(data).then(function () {
-                    that.$Message.info(CONST.success('Login'))
+                    that.$Message.success(CONST.success('Login'))
                     that.$router.push({path: '/home'})
                 }, function (res) {
                     alert(res)
@@ -240,7 +240,7 @@ export default {
                         new_password: this.retrieve.newPassword
                     }
                     this.findBackSubmit(data).then(function () {
-                        alert(CONST.success('Find Back'))
+                        that.$Message.success(CONST.success('Find Back'))
                         that.$router.push({path: '/home'})
                     }, function (res) {
                         alert(res)

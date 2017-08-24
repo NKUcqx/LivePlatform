@@ -43,10 +43,10 @@
 				<Button :size="SIZE" type="default" shape="circle" icon="minus" @click="minusWidth()" class="buttons" :Disabled="!AUTHORITY"></Button>
 			</Poptip>
 			<Poptip trigger="hover" :content="getFontSize" placement="bottom"   class="buttons">
-				<Button :size="SIZE" type="default" shape="circle" icon="plus-round" @click="addFontSize()"  class="buttons" :Disabled="!AUTHORITY"></Button>
+				<Button :size="SIZE" type="default" shape="circle" icon="plus-circled" @click="addFontSize()"  class="buttons" :Disabled="!AUTHORITY"></Button>
 			</Poptip>
 			<Poptip trigger="hover" :content="getFontSize" placement="bottom"   class="buttons">
-				<Button :size="SIZE" type="default" shape="circle" icon="minus-round" @click="minusFontSize()" class="buttons" :Disabled="!AUTHORITY"></Button>
+				<Button :size="SIZE" type="default" shape="circle" icon="minus-circled" @click="minusFontSize()" class="buttons" :Disabled="!AUTHORITY"></Button>
 			</Poptip>
 		</div>
 		<Modal v-model="showColorPicker" :width="250" :closable="false" id="modal">

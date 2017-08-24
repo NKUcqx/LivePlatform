@@ -226,7 +226,7 @@
             logout () {
                 const that = this
                 this.logoutSubmit().then(function () {
-                    that.$Message.info(CONST.success('Logout'))
+                    that.$Message.success(CONST.success('Logout'))
                     that.$router.push({path: '/'})
                 }, function (res) {
                     alert(res)
@@ -238,13 +238,14 @@
              */
             modifyInfo () {
                 checkForm(this, this.$refs.infoForm, () => {
+                    const that = this
                     let gender = (this.person.gender === 'male') ? true : false
                     let data = {
                         nickname: this.person.nickname,
                         gender: gender
                     }
                     this.changeInfo(data).then(function () {
-                        alert(CONST.success('Modify Infomation'))
+                        that.$Message.success(CONST.success('Modify Infomation'))
                     }, function (res) {
                         alert(res)
                     })
@@ -263,7 +264,7 @@
                         new_password: this.form.newPassword
                     }
                     this.changePass(data).then(function () {
-                        that.$Message.info(CONST.success('Modify Password'))
+                        that.$Message.success(CONST.success('Modify Password'))
                     }, function (res) {
                         alert(res)
                     })
