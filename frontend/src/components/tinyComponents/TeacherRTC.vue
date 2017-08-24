@@ -7,10 +7,10 @@
                 <div id="toolbar" :style="toolbarStyle" v-show="isBarShown">
                     <!--Button class="join buttons" :disabled="isJoin" @click="join()" type="ghost">Start</Button>
                     <Button class="leave buttons" :disabled="!(isJoin)" @click="leave()" type="ghost">End</Button-->
-                    <Button icon="arrow-right-b" v-show="hasVideo===false" @click="enableVideo()" type="circle" class="buttons left" size="small"></Button>
-                    <Button icon="ios-pause" v-show="hasVideo===true" @click="disableVideo()" type="circle" class="buttons left" size="small"></Button>
-                    <Button icon="ios-mic-off" v-show="hasAudio===false" @click="enableAudio()" type="circle" class="buttons right" size="small"></Button>
-                    <Button icon="ios-mic-outline" v-show="hasAudio===true" @click="disableAudio()" type="circle" class="buttons right" size="small"></Button>
+                    <Button shape="circle" type="primary" class="buttons left" size="small" icon="arrow-right-b" v-show="hasVideo===false" @click="enableVideo()"></Button>
+                    <Button shape="circle" type="primary" class="buttons left" size="small" icon="ios-pause" v-show="hasVideo===true" @click="disableVideo()"></Button>
+                    <Button shape="circle" type="primary" class="buttons right" size="small" icon="ios-mic-off" v-show="hasAudio===false" @click="enableAudio()"></Button>
+                    <Button shape="circle" type="primary" class="buttons right" size="small" icon="ios-mic-outline" v-show="hasAudio===true" @click="disableAudio()"></Button>
                 </div>
             </div>
         </div>
@@ -262,8 +262,8 @@ export default {
 }
 
 .teacherRTC .buttons {
-    color: rgb(45,140,240);
-    background-color: rgba(0,0,0,0) !important;
+    color: white;
+    background-color: #2d8cf0;
     margin: 0px 10px 0px 10px;
 }
 
