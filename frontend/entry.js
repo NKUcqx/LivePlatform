@@ -133,7 +133,7 @@ function logMessage (room_name, content, type, signal = 'sendMessage') {
 }
 
 function sendNextMessage (id, old_msg) {
-    console.log(old_msg['time'])
+    console.log('+++', old_msg['content']['dataType'])
     let list = room_past_audience_list[id]
     if (list['msg_queue'].length <= 0) {
         console.log('record finish')
@@ -152,7 +152,7 @@ function sendNextMessage (id, old_msg) {
 
 function sendMessage (socket, signal, content, type = 0, room_name = '', log = false) {
     let error = false
-    //let room_name = getRoomName(socket)
+    // let room_name = getRoomName(socket)
     switch (type) {
         case 0: // send to himself
             socket.emit(signal, content)
@@ -238,7 +238,7 @@ function listenPastJoin (socket) {
                 'msg_queue': []
             }
             // readFile(data.room_name, data.id)
-            readDB(data.room_name, data.id, 0, MESSAGE_THRESHOLD, true)
+            readDB(data.room_name, data.id, 0, MESSAGE_THRESHOLD)
             listenPause(socket)
         }
     })
