@@ -2,11 +2,11 @@
 <div id="topbar">
     <Menu  ref="topmenu" mode="horizontal" active-name="3" class="menu" theme="light" id="topmenu">
         <Menu-item class="longer">
-            <img src="../../assets/logo1.png" class="logo-image" :width="img.size" :height="img.size" @click="goHome()"> 
+            <img src="../../assets/logo2.png" class="logo-image" :height="img.size" @click="goHome()"> 
         </Menu-item>
-        <Menu-item name="1">
-            <span @click="goHome()">教育直播平台</span>
-        </Menu-item>
+        <!--<Menu-item name="1">
+            <span @click="goHome()" id = "ourtitle">DebugNow</span>
+        </Menu-item>-->
         <Menu-item name="2" class="top-right" v-if="user.role==='T'">
             <span id="createroom" @click="createModal = true"><Icon type="ios-plus" size="30" color="#5cadff" v-if="TYPE === 'home'"></Icon></span>
             <span id="startlive" @click="startLive()"><Icon type="ios-play" size="30" color="rgb(0,180,0)" v-if="TYPE==='studio'&&!isLiveStart&&AUTHORITY"></Icon></span>

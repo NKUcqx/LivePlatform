@@ -155,7 +155,7 @@ def loginSubmit(request):
     else:
         return HttpResponse(content=CODE['13'], status=401)
 
-
+@csrf_exempt
 @require_POST
 def logoutSubmit(request):
     auth.logout(request)
@@ -173,7 +173,7 @@ def testUsername(request):
     except BaseException:
         return HttpResponse(status=401)
 
-
+@csrf_exempt
 @require_POST
 def changeAvatar(request):
     user = User.objects.get(pk=request.user.id)
@@ -186,7 +186,7 @@ def changeAvatar(request):
     else:
         return HttpResponse(content=CODE['25'], status=415)
 
-
+@csrf_exempt
 @require_POST
 def changeGenderAndNickname(request):
     body = bi2obj(request)
@@ -202,7 +202,7 @@ def changeGenderAndNickname(request):
     auth.login(request, user)
     return JsonResponse({'user': wrap_user(user)})
 
-
+@csrf_exempt
 @require_POST
 def changePassword(request):
     body = bi2obj(request)

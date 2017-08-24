@@ -263,7 +263,7 @@ export default {
 
 .teacherRTC .buttons {
     color: white;
-    background-color: #2d8cf0;
+    background-color: #5cadff;
     margin: 0px 10px 0px 10px;
 }
 

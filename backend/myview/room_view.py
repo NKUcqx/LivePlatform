@@ -3,6 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from backend.models import User, LiveRoom, Punishment
 from django.forms.models import model_to_dict
 from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
 from . import toolkits
 import os
@@ -110,7 +111,6 @@ def wrap_room(room):  # room instance
     room['slide_path'] = change_prefix(room['slide_path'])
     return room
 
-
 @login_required
 @require_GET
 def getRooms(request):
@@ -144,6 +144,7 @@ def getRoomAmount(request):
     })
 
 
+@csrf_exempt
 @login_required
 @require_POST
 def uploadThumbnail(request):
@@ -166,6 +167,7 @@ def uploadThumbnail(request):
         return HttpResponse(content=CODE['24'], status=400)
 
 
+@csrf_exempt
 @login_required
 @require_POST
 def uploadSlide(request):
@@ -209,6 +211,7 @@ def start_thread(id, file_name):
     t.start()
     print('thread--real')
 
+@csrf_exempt
 @login_required
 @require_POST
 def createRoom(request):
@@ -239,7 +242,7 @@ def createRoom(request):
     else:
         return HttpResponse(content=CODE['12'], status=401)
 
-
+@csrf_exempt
 @login_required
 @require_POST
 def updateRoom(request):
@@ -261,7 +264,7 @@ def updateRoom(request):
     else:
         return HttpResponse(content=CODE['12'], status=401)
 
-
+@csrf_exempt
 @login_required
 @require_POST
 def endRoom(request):
@@ -276,19 +279,3 @@ def endRoom(request):
             return HttpResponse(content=CODE['12'], status=401)
     else:
         return HttpResponse(content=CODE['24'], status=404)
-
-'''
-@login_required
-@require_POST
-def silenceRoom(request):
-    body = bi2obj(request)
-    user = request.user
-    if (user.role == 'T' and 'room' in request.session
-            and user.id == request.session.get('room').get('creator_id')):
-        room = request.session.get('room')
-        room_db = LiveRoom.objects.get(pk=int(room['id']))
-        room_db.is_silence = body['is_silence']
-        room_db.save()
-        return JsonResponse(content=wrap_room(room_db))
-    else:
-        return HttpResponse(content=CODE['12'], status=401)'''
