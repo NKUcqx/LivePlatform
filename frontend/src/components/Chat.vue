@@ -2,10 +2,10 @@
     <div class="dialog" id='test' :style="position">
         <div class="head">
             <h1>
-            <Poptip trigger="hover" content="全体禁言 ">
+            <Poptip trigger="hover" v-if='allspeak' content="全体禁言 ">
                 <Icon type="android-notifications" v-if='allspeak' class='icon' id='midicon' @click.native='banspeakpublic'></Icon>
             </Poptip>
-            <Poptip trigger="hover" content="全体解禁 ">
+            <Poptip trigger="hover" v-if='allsilence' content="全体解禁 ">
                 <Icon type="android-notifications-off" v-if='allsilence' class='icon' id='midicon' @click.native='canspeakpublic'></Icon>
             </Poptip>
             </h1>
