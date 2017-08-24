@@ -2,7 +2,7 @@
 <div class="player">
     <video ref="video" :src="getVideoSrc" :style="position" 
         @canplay="initPlay" @timeupdate="changeTime" @ended="restore" id="video"></video>
-    <progress-bar></progress-bar>
+    <!--progress-bar></progress-bar-->
 </div>
 </template>
 

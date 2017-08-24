@@ -9,7 +9,7 @@ CODE = { # 0~10 Common Stuff    10~20 Login/Signup Stuff  20~30 Index Stuff  40~
     "1" : "Error, Unknown Reason",
     "2" : "HTTP Method Type Error , Change to Get",
     "3" : "HTTP Method Type Error , Change to Post",
-    "4" : "Post Format Invalid, Not Consist With Form Format",
+    "4" : "Format Invalid",
     "5" : "No Changes Detect",
     "6" : "Folder has already been created",
     "7" : "Index out of range",

@@ -16,7 +16,6 @@ urlpatterns = [
     url(r'^changeinfo/$',
         user_view.changeGenderAndNickname,
         name='change_info'),
-    # url(r'^findre/$', user_view.query_repeat_username, name = 'findre'),
     url(r'^websocket/$', views.websocket, name='websocket'),
     url(r'^codechannel/$', views.websocket, name='websocket'),
     url(r'^canvaschannel/$', views.websocket, name='websocket'),
@@ -33,4 +32,5 @@ urlpatterns = [
     url(r'^outone/$', punishment_view.outone, name='outone'),
     url(r'^banone/$', punishment_view.banone, name='banone'),
     url(r'^canspeakone/$', punishment_view.canspeakone, name='canspeakone'),
+    url(r'^checkpermission/$', punishment_view.checkPermission, name = 'checkpermission')
 ]

@@ -188,7 +188,8 @@
                 changePass: 'changePass',
                 changeInfo: 'changeInfo',
                 destroyLive: 'destroyLive',
-                createLive: 'createLive'
+                createLive: 'createLive',
+                checkEnter: 'checkEnter'
             }),
             /**
              *获取cookie
@@ -278,10 +279,8 @@
                     let formData = new FormData()
                     formData.append('name', that.createform.title)
                     this.createLive(formData).then(function (res) {
-                        console.log(getListFromDB(res.body))
                         that.setRoomInfo(getListFromDB(res.body))
-                        window.open('/#/studio')
-                        // that.$router.push({ name: 'studio' })
+                        that.checkEnter({user_id: that.user.userid, room_id: res.body.room.id})
                     }, function (res) {
                         alert(res.body)
                     })

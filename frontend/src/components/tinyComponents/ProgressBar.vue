@@ -1,16 +1,19 @@
 <template>
-    <div class="controls">
-        <Button icon="arrow-right-b" class="controlButton" v-show="!(isPlay)" type="circle" @click="play" size="small"></Button>
-        <Button icon="ios-pause" class="controlButton" v-show="isPlay" type="circle" @click="pause" size="small"></Button>
-        <div class="progress" ref="progress" @click="skipTime">
+    <div class="controls" @mouseleave="isShow=false">
+        <span class="squire" @mouseenter="isShow=true">
+            <span @click="play"><Icon type="arrow-right-b" size="20" class="icons" v-show="!(isPlay)"></Icon></span>
+            <span @click="pause"><Icon type="ios-pause" size="20" class="icons" v-show="isPlay"></Icon></span>
+        </span>
+        <span class="timer" v-show="isShow">
+            <span class="time current">{{ currentTimeStr }}</span>
+            <span class="time total">{{ totalTimeStr }}</span>
+        </span>
+        <span class="progress" ref="progress" @click="skipTime"  v-show="isShow">
             <div class="loaded" ref="loaded"></div>
             <div class="line"></div>
             <div class="bar"></div>
-        </div>
-        <div class="timer">
-            <span class="current">{{ currentTimeStr }}</span>
-            <span class="total">{{ totalTimeStr }}</span>
-        </div>
+        </span>
+        <span class="triangle" @mouseenter="isShow=true"></span>
     </div>
 </template>
 
@@ -36,7 +39,8 @@ export default {
     data () {
         return {
             currentTimeStr: '00:00:00',
-            totalTimeStr: '00:00:00'
+            totalTimeStr: '00:00:00',
+            isShow: false
         }
     },
     computed: {
@@ -115,43 +119,78 @@ export default {
 
 <style scoped>
 .controls {
-    width: 720px;
-    height: 40px;
-    background-color: #2196F3;
-    position: absolute;
+    width: 100%;
+    min-width: 800px;
+    height: 32px;
+    position: fixed;
     left: 0;
-    bottom: -40px;
-    z-index: 99;
+    bottom: 0px;
+    z-index: 555;
+    /* border: 1px blue solid; */
     opacity: 0.7;
 }
 
 .controlButton {
-    display: 'inline-block';
+    display: inline-block;
+    width: 40px;
+    height: 32px;
+    background-color: #5cadff;
+    color: white;
+    float: left;
+    /* border: 1px red solid; */
+}
+
+.squire {
+    display: inline-block;
+    float: left;
+    width: 40px;
+    height: 32px;
+    background-color: #5cadff;
+    color: white;
+}
+
+.squire .icons {
+    margin-left: 12px;
+    margin-top: 8px;
+    cursor: pointer;
+}
+
+.squire .icons:hover {
+    color: gray;
+}
+
+.triangle {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-bottom: 32px solid #5cadff;
+    border-right: 32px solid transparent;
+    float: left;
 }
 
 .progress {
-    width: 430px;
-    height: 10px;
+    width: 50%;
+    height: 5px;
     border-radius: 3px;
     overflow: hidden;
-    background-color: #555;
+    background-color: #5cadff;
     cursor: pointer;
     position: absolute;
-    top: 16px;
-    left: 45px;
+    top: 23px;
+    right: 5%;
 }
 
 /*已播放进度*/
 .progress .loaded {
     width: 0;
     height: 100%;
-    background-color: blue;
+    background-color: gray;
 }
 
 .progress .line {
     width: 0;
     height: 100%;
-    background-color: #FFF;
+    background-color: #5cadff;
     position: absolute;
     top: 0;
     left: 0;
@@ -168,12 +207,16 @@ export default {
 }
 
 .timer {
-    height: 20px;
-    line-height: 20px;
-    position: absolute;
-    left: 490px;
-    top: 11px;
-    color: #FFF;
-    font-size: 14px;
+    height: 32px;
+    width: 150px;
+    background-color: #5cadff;
+    color: white;
+    font-size: 16px;
+    float: left;
+}
+
+.timer .time {
+    display: inline-block;
+    margin-top: 6px;
 }
 </style>
