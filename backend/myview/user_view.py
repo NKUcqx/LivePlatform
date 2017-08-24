@@ -184,7 +184,7 @@ def changeAvatar(request):
     else:
         return HttpResponse(content=CODE['25'], status=415)
 
-
+@csrf_exempt
 @require_POST
 def changeGenderAndNickname(request):
     body = bi2obj(request)
@@ -200,7 +200,7 @@ def changeGenderAndNickname(request):
     auth.login(request, user)
     return JsonResponse({'user': wrap_user(user)})
 
-
+@csrf_exempt
 @require_POST
 def changePassword(request):
     body = bi2obj(request)

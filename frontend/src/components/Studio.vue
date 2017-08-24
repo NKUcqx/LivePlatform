@@ -162,6 +162,7 @@ export default {
         isLiveStart: function (newVal, oldVal) {
             if (oldVal === false && newVal === true) {
                 this.buildConnect()
+                this.emitStartLive()
             }
         }
     },
@@ -396,6 +397,9 @@ export default {
          */
         emitChangeSection (data) {
             this.emit(data, 'closeButton')
+        },
+        emitStartLive () {
+            this.emit('', 'startLive') // just hold position
         },
         /**
          *发送消息
