@@ -76,5 +76,5 @@ export const setAvatar = (state, url) => {
 }
 
 export const setSocket = (state) => {
-    state.socket = io('http://localhost:8002', {transports: ['websocket'], upgrade: false})
+    state.socket = io('http://192.168.1.144:8002', {transports: ['websocket'], upgrade: false})
 }
