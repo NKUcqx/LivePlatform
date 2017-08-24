@@ -105,8 +105,7 @@ def sendTo(request):
 
 
 # 注册执行的函数，接收GET请求，返回字符串
-
-
+@csrf_exempt
 @require_POST
 def signupSubmit(request):
     body = bi2obj(request)
@@ -138,7 +137,6 @@ def signupSubmit(request):
 
 
 # 登录执行的函数，接收POST请求，返回字符串
-
 @csrf_exempt
 @require_POST
 def loginSubmit(request):
@@ -155,7 +153,7 @@ def loginSubmit(request):
     else:
         return HttpResponse(content=CODE['13'], status=401)
 
-
+@csrf_exempt
 @require_POST
 def logoutSubmit(request):
     auth.logout(request)
@@ -173,7 +171,7 @@ def testUsername(request):
     except BaseException:
         return HttpResponse(status=401)
 
-
+@csrf_exempt
 @require_POST
 def changeAvatar(request):
     user = User.objects.get(pk=request.user.id)
