@@ -180,7 +180,7 @@
                             nickname: this.signinfo.nickname
                         }
                         this.signupSummit(data).then(function () {
-                            alert(CONST.success('Signup'))
+                            that.$Message.success(CONST.success('Signup'))
                             that.$router.push({path: '/home'})
                         }, function (res) {
                             alert(res)
